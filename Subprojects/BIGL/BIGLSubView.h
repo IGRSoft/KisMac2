@@ -25,8 +25,6 @@
 
 
 #import <Foundation/Foundation.h>
-#import <OpenGL/gl.h>
-#import <OpenGL/CGLContext.h>
 
 @interface BIGLSubView : NSObject {
     NSMutableArray* _subViews;

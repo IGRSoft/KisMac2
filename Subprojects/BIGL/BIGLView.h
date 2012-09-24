@@ -24,7 +24,8 @@
 */
 
 #import <AppKit/AppKit.h>
-#import "BIGLSubView.h"
+
+@class BIGLSubView;
 
 @interface BIGLView : NSOpenGLView {
     BOOL            _initialized;

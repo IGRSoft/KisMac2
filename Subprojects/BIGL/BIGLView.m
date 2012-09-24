@@ -29,6 +29,7 @@
 #import <OpenGL/glext.h>
 #import <OpenGL/glu.h>
 #import "BIGLCocoaView.h"
+#import "BIGLSubView.h"
 
 NSString *const BIGLMainViewResized = @"BIGLMainViewResized";
 
