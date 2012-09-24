@@ -135,7 +135,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @"Wireless Card Driver",
                    self,
                    @selector(setImage:),
-                   [NSImage imageNamed:@"KisMAC"],
+                   [NSImage imageNamed:@"driver"],
                    @selector(changeView:),
                    nil);
 

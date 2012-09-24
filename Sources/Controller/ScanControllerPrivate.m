@@ -232,17 +232,11 @@
     [_detailsDrawerMenu setTitle: NSLocalizedString(@"Show Details", "menu item")];
     _detailsPaneVisibile = NO;
     
-    //if ([aTabView indexOfTabViewItemWithIdentifier:@"details"]==NSNotFound)
-    //    [aTabView addTabViewItem:aDetails];
-    
     [self showDetails];
 }
 
 - (void)hideDetails {
-    //if ([aTabView indexOfTabViewItemWithIdentifier:@"details"]!=NSNotFound) {
-    //    [aTabView removeTabViewItem:[aTabView tabViewItemAtIndex:[aTabView indexOfTabViewItemWithIdentifier:@"details"]]];
-    //    _visibleTab = tabNetworks;
-    //}
+    
 }
 
 #pragma mark -
