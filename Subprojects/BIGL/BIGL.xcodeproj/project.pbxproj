@@ -22,7 +22,6 @@
 		00A299F90693EC1500E39953 /* BIGLPolyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A299F70693EC1500E39953 /* BIGLPolyView.m */; };
 		00C134710694ACDB004F02A8 /* BIGLGraphView.h in Headers */ = {isa = PBXBuildFile; fileRef = 00C1346F0694ACDB004F02A8 /* BIGLGraphView.h */; settings = {ATTRIBUTES = (); }; };
 		00C134720694ACDB004F02A8 /* BIGLGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C134700694ACDB004F02A8 /* BIGLGraphView.m */; };
-		00C43BA3070728E30012D907 /* BIGL.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* BIGL.framework */; };
 		00F514C806944F0500F4D67C /* BIGLLineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 00F514C606944F0500F4D67C /* BIGLLineView.h */; settings = {ATTRIBUTES = (); }; };
 		00F514C906944F0500F4D67C /* BIGLLineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00F514C706944F0500F4D67C /* BIGLLineView.m */; };
 		00F514DF0694559400F4D67C /* BIGLImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 00F514DD0694559400F4D67C /* BIGLImageView.h */; settings = {ATTRIBUTES = (); }; };
@@ -41,16 +40,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		00AE3079070723FF00DEE83F /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = ../../../files;
-			dstSubfolderSpec = 16;
-			files = (
-				00C43BA3070728E30012D907 /* BIGL.framework in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		00F57A4306A875990035AE2F /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -232,7 +221,6 @@
 				8DC2EF540486A6940098B216 /* Sources */,
 				8DC2EF560486A6940098B216 /* Frameworks */,
 				00F57A4306A875990035AE2F /* CopyFiles */,
-				00AE3079070723FF00DEE83F /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -250,7 +238,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = 00B4DCBB086C6A35009A8F23 /* Build configuration list for PBXProject "BIGL" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -316,19 +304,19 @@
 		00B4DCB8086C6A35009A8F23 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
-				DEBUGGING_SYMBOLS = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = "";
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_GC = required;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = BIGL_Prefix.pch;
@@ -355,34 +343,32 @@
 					"-Wno-unknown-pragmas",
 				);
 				WRAPPER_EXTENSION = framework;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		00B4DCBC086C6A35009A8F23 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
-				GCC_ENABLE_OBJC_GC = required;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
 			};
 			name = Development;
 		};
 		69DFB5DA0F8B1675000E5AF7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				GCC_ENABLE_OBJC_GC = required;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
 		69DFB5DB0F8B1675000E5AF7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
@@ -392,6 +378,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = BIGL_Prefix.pch;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -417,7 +404,6 @@
 					"-Wno-unknown-pragmas",
 				);
 				WRAPPER_EXTENSION = framework;
-				ZERO_LINK = NO;
 			};
 			name = Release;
 		};

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		002E7A6C06A8625700C9D931 /* BLAuthentication.h in Headers */ = {isa = PBXBuildFile; fileRef = 002E7A6606A8625700C9D931 /* BLAuthentication.h */; settings = {ATTRIBUTES = (); }; };
 		002E7A6D06A8625700C9D931 /* BLAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 002E7A6706A8625700C9D931 /* BLAuthentication.m */; };
-		002E7A7F06A8657400C9D931 /* BIGeneric.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* BIGeneric.framework */; };
 		002E7A8206A865D500C9D931 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002E7A8106A865D500C9D931 /* Security.framework */; };
 		002E7E4B06A874ED00C9D931 /* BINSExtensions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 008E0F2006A441E60064AB5C /* BINSExtensions.h */; };
 		002E7E4C06A874ED00C9D931 /* BIGeneric.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 00C135750695B632004F02A8 /* BIGeneric.h */; };
@@ -22,7 +21,6 @@
 		004A8B75069EC85F00CC8FAB /* NSBezierPath_AMAdditons.m in Sources */ = {isa = PBXBuildFile; fileRef = 004A8B6F069EC85F00CC8FAB /* NSBezierPath_AMAdditons.m */; };
 		0057F2FA07A428BD00D2EF91 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0057F2F907A428BD00D2EF91 /* libz.dylib */; };
 		0057F2FC07A428CD00D2EF91 /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0057F2FB07A428CD00D2EF91 /* libcrypto.dylib */; };
-		005D9B15069DB00100A4BA7B /* BIGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005D9B14069DB00100A4BA7B /* BIGL.framework */; };
 		008E0F2206A441E60064AB5C /* BINSExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 008E0F2006A441E60064AB5C /* BINSExtensions.h */; settings = {ATTRIBUTES = (); }; };
 		008E0F2306A441E60064AB5C /* BINSExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 008E0F2106A441E60064AB5C /* BINSExtensions.m */; };
 		0090B52707B289E7005FEEB1 /* BICompressor.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0090B52507B289E7005FEEB1 /* BICompressor.h */; };
@@ -50,19 +48,27 @@
 		8DC2EF510486A6940098B216 /* BIGeneric_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32DBCF5E0370ADEE00C91783 /* BIGeneric_Prefix.pch */; settings = {ATTRIBUTES = (); }; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
+		A5282F131608B0BB00F56AE3 /* BIGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5282F101608B0A800F56AE3 /* BIGL.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		002E7A7E06A8652700C9D931 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = ../../../files;
-			dstSubfolderSpec = 16;
-			files = (
-				002E7A7F06A8657400C9D931 /* BIGeneric.framework in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
+/* Begin PBXContainerItemProxy section */
+		A5282F0F1608B0A800F56AE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A5282F081608B0A800F56AE3 /* BIGL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = BIGL;
 		};
+		A5282F111608B0B500F56AE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A5282F081608B0A800F56AE3 /* BIGL.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = BIGL;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
 		002E7E4A06A874BC00C9D931 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -121,6 +127,7 @@
 		32DBCF5E0370ADEE00C91783 /* BIGeneric_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BIGeneric_Prefix.pch; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* BIGeneric.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BIGeneric.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5282F081608B0A800F56AE3 /* BIGL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BIGL.xcodeproj; path = ../BIGL/BIGL.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,8 +135,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5282F131608B0BB00F56AE3 /* BIGL.framework in Frameworks */,
 				8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */,
-				005D9B15069DB00100A4BA7B /* BIGL.framework in Frameworks */,
 				002E7A8206A865D500C9D931 /* Security.framework in Frameworks */,
 				00F57CC006A99EBA0035AE2F /* Carbon.framework in Frameworks */,
 				0057F2FA07A428BD00D2EF91 /* libz.dylib in Frameworks */,
@@ -167,6 +174,7 @@
 				089C1665FE841158C02AAC07 /* Resources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
+				A5282F081608B0A800F56AE3 /* BIGL.xcodeproj */,
 			);
 			name = BIGeneric;
 			sourceTree = "<group>";
@@ -246,6 +254,14 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
+		A5282F091608B0A800F56AE3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A5282F101608B0A800F56AE3 /* BIGL.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -282,11 +298,11 @@
 				8DC2EF540486A6940098B216 /* Sources */,
 				8DC2EF560486A6940098B216 /* Frameworks */,
 				002E7E4A06A874BC00C9D931 /* CopyFiles */,
-				002E7A7E06A8652700C9D931 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A5282F121608B0B500F56AE3 /* PBXTargetDependency */,
 			);
 			name = BIGeneric;
 			productInstallPath = "$(HOME)/Library/Frameworks";
@@ -300,7 +316,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = 00B4DCCE086C6B8F009A8F23 /* Build configuration list for PBXProject "BIGeneric" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -315,12 +331,28 @@
 			mainGroup = 0867D691FE84028FC02AAC07 /* BIGeneric */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = A5282F091608B0A800F56AE3 /* Products */;
+					ProjectRef = A5282F081608B0A800F56AE3 /* BIGL.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				8DC2EF4F0486A6940098B216 /* BIGeneric */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		A5282F101608B0A800F56AE3 /* BIGL.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = BIGL.framework;
+			remoteRef = A5282F0F1608B0A800F56AE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		8DC2EF520486A6940098B216 /* Resources */ = {
@@ -353,6 +385,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		A5282F121608B0B500F56AE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = BIGL;
+			targetProxy = A5282F111608B0B500F56AE3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		089C1666FE841158C02AAC07 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -368,15 +408,14 @@
 		00B4DCCB086C6B8F009A8F23 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../files";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../../../../../Library/Developer/Xcode/DerivedData/KisMac2-glgqfdargmfuqceypoiqkhqqlsip/Build/Products/Development\"";
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_GC = required;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -404,39 +443,37 @@
 					"-Wno-unknown-pragmas",
 				);
 				WRAPPER_EXTENSION = framework;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		00B4DCCF086C6B8F009A8F23 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
-				GCC_ENABLE_OBJC_GC = required;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
 			};
 			name = Development;
 		};
 		69DFB5E60F8B1681000E5AF7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				GCC_ENABLE_OBJC_GC = required;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
 		69DFB5E70F8B1681000E5AF7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../files";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../../../../../Library/Developer/Xcode/DerivedData/KisMac2-glgqfdargmfuqceypoiqkhqqlsip/Build/Products/Development\"";
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -451,7 +488,6 @@
 				LIBRARY_SEARCH_PATHS = "";
 				LIBRARY_STYLE = Dynamic;
 				MACH_O_TYPE = mh_dylib;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
@@ -465,7 +501,6 @@
 					"-Wno-unknown-pragmas",
 				);
 				WRAPPER_EXTENSION = framework;
-				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
