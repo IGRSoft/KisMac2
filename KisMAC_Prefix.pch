@@ -1,0 +1,13 @@
+//
+// Prefix header for all source files of the 'KisMAC' target in the 'KisMAC' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+    #import <BIGL/BIGL.h>
+    #import <BIGeneric/BIGeneric.h>
+    #import <AppKit/AppKit.h>
+    #import <Security/Security.h>
+    #import <CoreServices/CoreServices.h>
+	#import <UnitKit/UnitKit.h>
+#endif

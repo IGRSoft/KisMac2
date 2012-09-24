@@ -1,0 +1,71 @@
+/* 
+ This source is part of UnitKit, a unit test framework for Mac OS X 
+ development. You can find more information about UnitKit at:
+ 
+ http://x180.net/Code/UnitKit
+ 
+ Copyright (c)2004 James Duncan Davidson
+ 
+ Contributions by Michael Milvich
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ 
+ The use of the Apache License does not indicate that this project is
+ affiliated with the Apache Software Foundation.
+*/
+
+msgUKPass = "Passed";
+msgUKFail = "Failed";
+msgUKTrue.pass = "Passed, expected true, got true";
+msgUKTrue.fail = "Failed, expected true, got false";
+msgUKFalse.pass = "Passed, expected false, got false";
+msgUKFalse.fail = "Failed, expected false, got true";
+msgUKNil.pass = "Passed, expected nil, got nil";
+msgUKNil.fail = "Failed, expected nil, got %@";
+msgUKNotNil.pass = "Passed, expected not nil, got %@";
+msgUKNotNil.fail = "Failed, expected not nil, got nil";
+msgUKIntsEqual.pass = "Passed, expected %i, got %i";
+msgUKIntsEqual.fail = "Failed, expected %i, got %i";
+msgUKIntsNotEqual.pass = "Passed, didn't expect %i, got %i";
+msgUKIntsNotEqual.fail = "Failed, didn't expect %i, got %i";
+msgUKFloatsEqual.pass = "Passed, expected %f-%f, got %f";
+msgUKFloatsEqual.fail = "Failed, expected %f-%f, got %f";
+msgUKFloatsNotEqual.pass = "Passed, didn't expect %f-%f, got %f";
+msgUKFloatsNotEqual.fail = "Failed, didn't expect %f-%f, got %f";
+msgUKObjectsEqual.pass = "Passed, expected %@, got %@";
+msgUKObjectsEqual.fail = "Failed, expected %@, got %@";
+msgUKObjectsNotEqual.pass = "Passed, didn't expect %@, got %@";
+msgUKObjectsNotEqual.fail = "Failed, didn't expect %@, got %@";
+msgUKObjectsSame.pass = "Passed, expected %@, got %@";
+msgUKObjectsSame.fail = "Failed, expected %@, got %@";
+msgUKObjectsNotSame.pass = "Passed, didn't expect %@, got %@";
+msgUKObjectsNotSame.fail = "Failed, didn't expect %@, got %@";
+msgUKStringsEqual.pass = "Passed, expected %@, got %@";
+msgUKStringsEqual.fail = "Failed, expected %@, got %@";
+msgUKStringsNotEqual.pass = "Passed, didn't expect %@, got %@";
+msgUKStringsNotEqual.fail = "Failed, didn't expect %@, got %@";
+msgUKStringContains.pass = "Passed, %@ contains %@";
+msgUKStringContains.fail = "Failed, %@ doesn't contain %@";
+msgUKStringDoesNotContain.pass = "Passed, expected %@ to contain %@";
+msgUKStringDoesNotContain.fail = "Failed, %@ contains %@";
+
+msgUKExceptionRaised.pass = "Passed, raised exception %@";
+msgUKExecptionRaised.fail = "Failed, an exception was not raised";
+msgUKExceptionNotRaised.pass = "Passed, no exception was raised";
+msgUKExceptionNotRaised.fail = "Failed, an exeception %@ was raised";
+msgUKSpecificNSExceptionRaised.pass = "Passed, an NSException of type %@ was raised";
+msgUKSpecificNSExceptionRaised.fail = "Failed, an NSException of type %@ was not raised, got %@";
+msgUKSpecificNSExceptionRaised.failNotNSException = "Failed, expected NSException, got %@";
+msgUKRaisesSpecificClass.pass = "Passed, %@ was raised";
+msgUKRaisesSpecificClass.fail = "Failed, expected %@ to be raised, got %@";
+

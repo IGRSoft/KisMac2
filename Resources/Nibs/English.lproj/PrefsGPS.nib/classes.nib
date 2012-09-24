@@ -1,0 +1,39 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {setValueForSender = id; }; 
+            CLASS = PrefsClient; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {controlBox = NSView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = PrefsGPS; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "_gpsdHost" = NSTextField; 
+                "_gpsdPort" = NSTextField; 
+                "_noFix" = NSPopUpButton; 
+                "_traceOp" = NSPopUpButton; 
+                "_tripmateMode" = NSButton; 
+                aGPSSel = NSPopUpButton; 
+            }; 
+            SUPERCLASS = PrefsClient; 
+        }, 
+        {
+            ACTIONS = {playSound = id; playVoice = id; }; 
+            CLASS = PrefsSounds; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                aGeigerSensity = id; 
+                aGeigerSounds = id; 
+                aNOWEPSounds = id; 
+                aVoices = id; 
+                aWEPSounds = id; 
+            }; 
+            SUPERCLASS = PrefsClient; 
+        }
+    ); 
+    IBVersion = 1; 
+}
