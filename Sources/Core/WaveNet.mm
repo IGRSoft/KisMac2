@@ -1111,7 +1111,14 @@ NSInteger lengthSort(id string1, id string2, void *context)
     curSignalData += _curSignal;
     curPacketData++;
     
-    switch ([info.securityMode intValue])
+	CWSecurityMode sm = kCWSecurityModeOpen;
+	
+	for (; sm <= kCWSecurityModeWPS; sm++) {
+		if ([info supportsSecurity:sm])
+			break;
+	}
+	
+    switch (sm)
     {
         case kCWSecurityModeOpen:
             wep = encryptionTypeNone;

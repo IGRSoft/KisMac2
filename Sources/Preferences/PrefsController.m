@@ -164,7 +164,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @selector(changeView:),
                    nil);
 	
-	nibNamesDict[@"Advanced"] = @"PrefsAdvanced";
+	/*nibNamesDict[@"Advanced"] = @"PrefsAdvanced";
     classNamesDict[@"Advanced"] = @"PrefsAdvanced";
     addToolbarItem(toolbarItems,
                    @"Advanced",
@@ -175,7 +175,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @selector(setImage:),
                    [NSImage imageNamed:@"EnergySaver"],
                    @selector(changeView:),
-                   nil);
+                   nil);*/
 
     changesDict = [[NSMutableDictionary alloc] init];
     

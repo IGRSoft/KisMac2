@@ -179,7 +179,6 @@
 		A5282F731608C8E900F56AE3 /* PrefsSounds.xib in Resources */ = {isa = PBXBuildFile; fileRef = A5282F711608C8E900F56AE3 /* PrefsSounds.xib */; };
 		A5282F761608C98600F56AE3 /* PrefsTraffic.xib in Resources */ = {isa = PBXBuildFile; fileRef = A5282F741608C98600F56AE3 /* PrefsTraffic.xib */; };
 		A5282F791608C9AA00F56AE3 /* WayPointDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = A5282F771608C9AA00F56AE3 /* WayPointDialog.xib */; };
-		A5282F7F1608C9F200F56AE3 /* PrefsAdvanced.xib in Resources */ = {isa = PBXBuildFile; fileRef = A5282F7D1608C9F200F56AE3 /* PrefsAdvanced.xib */; };
 		A5282F811608CFB000F56AE3 /* BIToolbar.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A5282F801608CFB000F56AE3 /* BIToolbar.jpg */; };
 		A576DDA81609FC2B007CBA80 /* md5.m in Sources */ = {isa = PBXBuildFile; fileRef = A576DDA71609FC2B007CBA80 /* md5.m */; };
 		A57E644D1607BC9700BE1BCA /* AirCrackWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */; };
@@ -214,6 +213,7 @@
 		A597212F1610A306007CC31D /* toolbar-open.icns in Resources */ = {isa = PBXBuildFile; fileRef = A59721281610A306007CC31D /* toolbar-open.icns */; };
 		A59721301610A306007CC31D /* toolbar-preferences.icns in Resources */ = {isa = PBXBuildFile; fileRef = A59721291610A306007CC31D /* toolbar-preferences.icns */; };
 		A59721311610A306007CC31D /* toolbar-save.icns in Resources */ = {isa = PBXBuildFile; fileRef = A597212A1610A306007CC31D /* toolbar-save.icns */; };
+		A59721421610CB39007CC31D /* md4.c in Sources */ = {isa = PBXBuildFile; fileRef = A59721411610CB39007CC31D /* md4.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -574,7 +574,6 @@
 		A5282F721608C8E900F56AE3 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PrefsSounds.xib; sourceTree = "<group>"; };
 		A5282F751608C98600F56AE3 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PrefsTraffic.xib; sourceTree = "<group>"; };
 		A5282F781608C9AA00F56AE3 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/WayPointDialog.xib; sourceTree = "<group>"; };
-		A5282F7E1608C9F200F56AE3 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PrefsAdvanced.xib; sourceTree = "<group>"; };
 		A5282F801608CFB000F56AE3 /* BIToolbar.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = BIToolbar.jpg; sourceTree = "<group>"; };
 		A576DDA61609FC2B007CBA80 /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md5.h; sourceTree = "<group>"; };
 		A576DDA71609FC2B007CBA80 /* md5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = md5.m; sourceTree = "<group>"; };
@@ -621,6 +620,8 @@
 		A59721281610A306007CC31D /* toolbar-open.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "toolbar-open.icns"; sourceTree = "<group>"; };
 		A59721291610A306007CC31D /* toolbar-preferences.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "toolbar-preferences.icns"; sourceTree = "<group>"; };
 		A597212A1610A306007CC31D /* toolbar-save.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "toolbar-save.icns"; sourceTree = "<group>"; };
+		A59721401610CB38007CC31D /* md4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md4.h; sourceTree = "<group>"; };
+		A59721411610CB39007CC31D /* md4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md4.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -989,7 +990,6 @@
 		00F57C1606A886350035AE2F /* Nibs */ = {
 			isa = PBXGroup;
 			children = (
-				A5282F7D1608C9F200F56AE3 /* PrefsAdvanced.xib */,
 				A5282F771608C9AA00F56AE3 /* WayPointDialog.xib */,
 				A5282F741608C98600F56AE3 /* PrefsTraffic.xib */,
 				A5282F711608C8E900F56AE3 /* PrefsSounds.xib */,
@@ -1324,6 +1324,8 @@
 		A57E64371607BC9700BE1BCA /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
+				A59721401610CB38007CC31D /* md4.h */,
+				A59721411610CB39007CC31D /* md4.c */,
 				A576DDA61609FC2B007CBA80 /* md5.h */,
 				A576DDA71609FC2B007CBA80 /* md5.m */,
 				A57E64381607BC9700BE1BCA /* AirCrackWrapper.h */,
@@ -1530,7 +1532,6 @@
 				A5282F731608C8E900F56AE3 /* PrefsSounds.xib in Resources */,
 				A5282F761608C98600F56AE3 /* PrefsTraffic.xib in Resources */,
 				A5282F791608C9AA00F56AE3 /* WayPointDialog.xib in Resources */,
-				A5282F7F1608C9F200F56AE3 /* PrefsAdvanced.xib in Resources */,
 				A5282F811608CFB000F56AE3 /* BIToolbar.jpg in Resources */,
 				A597210616109F45007CC31D /* driver.icns in Resources */,
 				A597210716109F45007CC31D /* EnergySaver.icns in Resources */,
@@ -1693,6 +1694,7 @@
 				A57E646F1607BD6700BE1BCA /* MapDownload.m in Sources */,
 				A57E64731607BD8C00BE1BCA /* WaveWeakContainer.m in Sources */,
 				A576DDA81609FC2B007CBA80 /* md5.m in Sources */,
+				A59721421610CB39007CC31D /* md4.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1851,14 +1853,6 @@
 				A5282F781608C9AA00F56AE3 /* English */,
 			);
 			name = WayPointDialog.xib;
-			sourceTree = "<group>";
-		};
-		A5282F7D1608C9F200F56AE3 /* PrefsAdvanced.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A5282F7E1608C9F200F56AE3 /* English */,
-			);
-			name = PrefsAdvanced.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

@@ -26,7 +26,7 @@
 
 #include "LEAP.h"
 #include <unistd.h>
-#include <openssl/md4.h>
+#include "md4.h"
 #include <openssl/des.h>
 
 /*  taken from ppp/pppd/extra_crypto.c 
@@ -93,14 +93,6 @@ int gethashlast2(const unsigned char *challenge, const unsigned char *response, 
 }
 
 /* quick wrapper for easy md4 */
-void md4(unsigned char *from, int from_len, unsigned char *to)
-{
-    MD4_CTX Context;
-
-    MD4_Init(&Context);
-    MD4_Update(&Context, from, from_len);
-    MD4_Final(to, &Context);
-}
 
 void NtPasswordHash(char *secret, int secret_len, unsigned char *hash)
 {
