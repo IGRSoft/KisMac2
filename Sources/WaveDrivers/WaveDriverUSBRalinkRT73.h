@@ -23,7 +23,6 @@
 
 #import <Foundation/Foundation.h>
 #import "WaveDriverUSBIntersil.h"
-#import "../Driver/USBJack/RT73Jack.h"
 
 
 @interface WaveDriverUSBRalinkRT73 : WaveDriverUSB 

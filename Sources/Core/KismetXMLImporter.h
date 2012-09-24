@@ -7,8 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "WaveContainer.h"
 
+@class WaveContainer;
 
 @interface KismetXMLImporter : NSObject <NSXMLParserDelegate>
 {

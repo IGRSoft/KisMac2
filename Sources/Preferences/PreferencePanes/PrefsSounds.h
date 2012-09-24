@@ -9,7 +9,6 @@
 #import <AppKit/AppKit.h>
 
 #import "PrefsClient.h"
-#import "WaveHelper.h"
 
 @interface PrefsSounds : PrefsClient
 {

@@ -24,7 +24,6 @@
 
 #import <Cocoa/Cocoa.h>
 #import "BIView.h"
-#import <BIGeneric/BIValuePair.h>
 
 #define INVALIDPOINT NSMakePoint(-100, -100)
 

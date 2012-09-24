@@ -7,7 +7,7 @@
 //
 
 #import "PrefsTraffic.h"
-
+#import "PrefsController.h"
 
 @implementation PrefsTraffic
 

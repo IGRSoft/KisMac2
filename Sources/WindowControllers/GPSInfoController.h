@@ -22,8 +22,8 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "../Views/GPSSatInfo/GPSSatInfo.h"
 
+@class GPSSatInfo;
 
 @interface GPSInfoController : NSWindowController <NSWindowDelegate>
 {

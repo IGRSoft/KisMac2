@@ -24,6 +24,7 @@
 
 #import "ScanControllerScriptable.h"
 #import "ScanControllerPrivate.h"
+#import "WaveScanner.h"
 #import "SpinChannel.h"
 #import "WaveNetWEPCrack.h"
 #import "MapView.h"
@@ -31,6 +32,10 @@
 #import "KisMACNotifications.h"
 #import "WaveStorageController.h"
 #import "Trace.h"
+#import "WaveHelper.h"
+#import "GrowlController.h"
+#import "ImportController.h"
+#import "WaveContainer.h"
 
 @implementation ScanController(ScriptableAdditions)
 

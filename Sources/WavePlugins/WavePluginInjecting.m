@@ -7,7 +7,10 @@
 //
 
 #import "WavePluginInjecting.h"
-
+#import "WaveNet.h"
+#import "WaveHelper.h"
+#import "WaveDriver.h"
+#import "../Core/80211b.h"
 
 @implementation WavePluginInjecting
 

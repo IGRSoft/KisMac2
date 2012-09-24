@@ -24,8 +24,10 @@
 
 #import "WaveClient.h"
 #import "WaveHelper.h"
+#import "WavePacket.h"
 #import "WPA.h"
 #import "GrowlController.h"
+#import "80211b.h"
 
 @implementation WaveClient
 

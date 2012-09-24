@@ -23,7 +23,6 @@
 
 #import <Foundation/Foundation.h>
 #import "WaveDriverUSB.h"
-#import "../Driver/USBJack/rtl8187.h"
 
 
 @interface WaveDriverUSBRealtekRTL8187 : WaveDriverUSB 

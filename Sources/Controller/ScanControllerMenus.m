@@ -25,6 +25,7 @@
 #import "ScanController.h"
 #import "ScanControllerPrivate.h"
 #import "ScanControllerScriptable.h"
+#import "WaveScanner.h"
 #import "KisMACNotifications.h"
 #import "DecryptController.h"
 #import "GPSInfoController.h"
@@ -38,6 +39,15 @@
 #import "WaveStorageController.h"
 #import "WaveNet.h"
 #import "FSWindow.h"
+#import "InfoController.h"
+#import "PrefsController.h"
+#import "DownloadMapController.h"
+#import "ImportController.h"
+#import "WaveHelper.h"
+#import "WaveContainer.h"
+#import "WavePluginMidi.h"
+#import "../Core/80211b.h"
+#import "GPSController.h"
 
 @implementation ScanController(MenuExtension)
 

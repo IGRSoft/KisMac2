@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
-#import "PrefsController.h"
 
 @class PrefsController;
 

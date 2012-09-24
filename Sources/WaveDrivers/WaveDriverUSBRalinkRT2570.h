@@ -23,7 +23,6 @@
 
 #import <Foundation/Foundation.h>
 #import "WaveDriverUSB.h"
-#import "../Driver/USBJack/RalinkJack.h"
 
 
 @interface WaveDriverUSBRalinkRT2570 : WaveDriverUSB 

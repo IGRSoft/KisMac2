@@ -24,8 +24,6 @@
 
 #import <Foundation/Foundation.h>
 #import "WaveDriverUSB.h"
-#import "WaveHelper.h"
-#import "../Driver/USBJack/IntersilJack.h"
 
 @interface WaveDriverUSBIntersil : WaveDriverUSB 
 {

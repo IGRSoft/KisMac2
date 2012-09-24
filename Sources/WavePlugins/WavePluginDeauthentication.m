@@ -7,6 +7,11 @@
 //
 
 #import "WavePluginDeauthentication.h"
+#import "KisMAC80211.h"
+#import "WaveNet.h"
+#import "WaveDriver.h"
+#import "WaveContainer.h"
+#import "../Core/80211b.h"
 
 @implementation WavePluginDeauthentication
 - (id) initWithDriver:(WaveDriver *)driver andContainer:(WaveContainer *)container{

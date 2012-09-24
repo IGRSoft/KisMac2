@@ -7,12 +7,9 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <CoreFoundation/CoreFoundation.h>
-#include <mach/mach.h>
-#include <IOKit/IOKitLib.h>
-#include <IOKit/IOCFPlugIn.h>
-#include <IOKit/usb/IOUSBLib.h>
 
+#include <IOKit/IOKitLib.h>
+#include <IOKit/usb/IOUSBLib.h>
 
 @interface WaveSpectrumDriver : NSObject {
     bool _initialized;

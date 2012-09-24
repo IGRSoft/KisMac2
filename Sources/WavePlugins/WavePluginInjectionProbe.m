@@ -8,6 +8,13 @@
 
 #import "WavePluginInjectionProbe.h"
 
+#import "WaveDriver.h"
+#import "WaveNet.h"
+#import "WaveClient.h"
+#import "WaveHelper.h"
+#import "KisMAC80211.h"
+#import "../Core/80211b.h"
+
 @implementation WavePluginInjectionProbe
 
 - (bool) startTest: (WaveNet *)net withClient:(WaveClient *)client 

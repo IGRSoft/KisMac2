@@ -9,6 +9,8 @@
 #import <Cocoa/Cocoa.h>
 #import "WavePlugin.h"
 
+@class WaveClient;
+
 @interface WavePluginInjectionProbe : WavePlugin 
 {
     IBOutlet NSWindow *probeSheet;

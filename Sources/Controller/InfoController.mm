@@ -24,6 +24,7 @@
 #import "InfoController.h"
 #import "WaveClient.h"
 #import "WaveHelper.h"
+#import "WaveNet.h"
 
 enum _rowIndexes {
     indexSSID,

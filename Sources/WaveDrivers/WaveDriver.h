@@ -24,7 +24,7 @@
 */
 
 #import <Cocoa/Cocoa.h>
-#import "../Core/80211b.h"
+
 #import "../Core/KisMAC80211.h"
 #import "../Core/KMCommon.h"
 

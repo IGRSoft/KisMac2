@@ -8,6 +8,7 @@
 
 #import "PrefsMap.h"
 #import "WaveHelper.h"
+#import "PrefsController.h"
 
 @implementation PrefsMap
 

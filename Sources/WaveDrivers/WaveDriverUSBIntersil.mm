@@ -23,6 +23,7 @@
  */
 #import "WaveDriverUSBIntersil.h"
 #import "../Driver/USBJack/IntersilJack.h"
+#import "WaveHelper.h"
 
 @implementation WaveDriverUSBIntersil
 

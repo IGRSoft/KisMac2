@@ -22,7 +22,7 @@
  */
 
 #import "WaveDriverUSBRalinkRT2570.h"
-
+#import "../Driver/USBJack/RalinkJack.h"
 
 @implementation WaveDriverUSBRalinkRT2570
 

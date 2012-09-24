@@ -34,6 +34,10 @@
 #import "MapView.h"
 #import "MapViewAreaView.h"
 #import "GPSController.h"
+#import "WaveScanner.h"
+#import "InfoController.h"
+#import "ScanHierarch.h"
+#import "ImportController.h"
 
 @implementation ScanController(PrivateExtension) 
 

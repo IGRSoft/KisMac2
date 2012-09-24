@@ -27,6 +27,7 @@
 #import "../3rd Party/FCS.h"
 #import "KisMACNotifications.h"
 #import <BIGeneric/BINSExtensions.h>
+#import "ImportController.h"
 
 @implementation WaveNet(WEPBruteforceCrackExtension) 
 

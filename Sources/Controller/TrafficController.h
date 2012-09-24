@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
-#import "WavePacket.h"
 
 @class WaveNet;
 @class WaveContainer;
@@ -17,6 +16,8 @@
 @class BIGLLineView;
 @class BIGLTextView;
 @class BIGLImageView;
+
+#define MAX_YIELD_SIZE (int)1200
 
 @interface TrafficController : NSObject {
     IBOutlet BIGLView       *_view;

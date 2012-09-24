@@ -22,6 +22,7 @@
 
 #import "WavePluginMidi.h"
 #import "WaveHelper.h"
+#import "WavePacket.h"
 
 @implementation WavePluginMidi
 

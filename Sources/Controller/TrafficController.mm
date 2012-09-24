@@ -10,6 +10,8 @@
 #import "WaveScanner.h"
 #import "KisMACNotifications.h"
 #import "TrafficController.h"
+#import "WaveNet.h"
+#import "WaveContainer.h"
 
 @implementation TrafficController
 

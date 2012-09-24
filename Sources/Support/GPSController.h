@@ -23,7 +23,6 @@
 */
 
 #import <Foundation/Foundation.h>
-#import <BIGeneric/BIValuePair.h>
 #include <CoreLocation/CoreLocation.h>
 
 struct _position {

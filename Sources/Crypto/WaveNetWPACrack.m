@@ -26,8 +26,10 @@
 #import "WaveHelper.h"
 #import "WaveClient.h"
 #import "WPA.h"
+#import "ImportController.h"
 #import <openssl/sha.h>
 #import <openssl/md5.h>
+#import "80211b.h"
 
 struct clientData {
     UInt8 ptkInput[WPA_NONCE_LENGTH+WPA_NONCE_LENGTH+12];

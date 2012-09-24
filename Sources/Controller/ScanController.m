@@ -24,9 +24,11 @@
 #import "ScanController.h"
 #import "ScanControllerPrivate.h"
 #import "ScanControllerScriptable.h"
+#import "WaveScanner.h"
 #import "WaveHelper.h"
 #import "GPSController.h"
 #import "WaveClient.h"
+#import "WaveNet.h"
 #import "../WindowControllers/CrashReportController.h"
 #import "../Controller/TrafficController.h"
 #import "WaveContainer.h"
@@ -37,6 +39,13 @@
 #import <sys/sysctl.h>
 #import <BIGeneric/BIGeneric.h>
 #import <BIGL/BIGL.h>
+#import "InfoController.h"
+#import "ScanHierarch.h"
+#import "ImportController.h"
+#import "GrowlController.h"
+#include <IOKit/pwr_mgt/IOPMLib.h>
+#include <IOKit/IOMessage.h>
+#import "WavePluginMidi.h"
 
 NSString *const KisMACViewItemChanged       = @"KisMACViewItemChanged";
 NSString *const KisMACCrackDone             = @"KisMACCrackDone";

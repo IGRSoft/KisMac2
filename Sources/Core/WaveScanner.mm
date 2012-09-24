@@ -31,6 +31,16 @@
 #import "KisMAC80211.h"
 #include <unistd.h>
 #include <stdlib.h>
+#import "WaveSpectrumDriver.h"
+#import "GrowlController.h"
+#import "WaveContainer.h"
+#import "WavePcapDump.h"
+#import "WavePluginInjectionProbe.h"
+#import "WavePluginDeauthentication.h"
+#import "WavePluginInjecting.h"
+#import "WavePluginAuthenticationFlood.h"
+#import "WavePluginBeaconFlood.h"
+#import "WavePluginMidi.h"
 
 @implementation WaveScanner
 

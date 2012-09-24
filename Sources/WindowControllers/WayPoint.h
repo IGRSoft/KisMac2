@@ -23,7 +23,6 @@
 */
 
 #import <AppKit/AppKit.h>
-#import "GPSController.h"
 #import "MapView.h"
 
 @interface WayPoint : NSWindowController <NSWindowDelegate>

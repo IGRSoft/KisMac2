@@ -23,10 +23,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-#import "PrefsWindow.h"
-#import "PrefsClient.h"
-
 @class PrefsClient;
+@class PrefsWindow;
 
 #define defaults	[NSUserDefaults standardUserDefaults]
 

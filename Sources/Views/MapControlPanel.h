@@ -23,7 +23,7 @@
 */
 
 #import <AppKit/AppKit.h>
-#import "BIImageView.h"
+#import "BISubView.h"
 
 @class MapControlItem;
 

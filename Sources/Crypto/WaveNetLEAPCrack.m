@@ -27,6 +27,7 @@
 #import "WaveClient.h"
 #import "WaveHelper.h"
 #import <openssl/md4.h>
+#import "ImportController.h"
 
 struct leapClientData {
     const UInt8 *response;

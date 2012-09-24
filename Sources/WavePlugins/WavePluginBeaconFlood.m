@@ -7,7 +7,8 @@
 //
 
 #import "WavePluginBeaconFlood.h"
-
+#import "80211b.h"
+#import "WaveDriver.h"
 
 @implementation WavePluginBeaconFlood
 

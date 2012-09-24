@@ -32,6 +32,7 @@
 #import "WaveContainer.h"
 #import "Trace.h"
 #import "WaveSecret.h"
+#import "ImportController.h"
 
 #ifndef CRCFUNCTION
     #define CRCFUNCTION(s) @"00:00:00:00:00:00:00:00:00:00:00:00:00:00:FF"

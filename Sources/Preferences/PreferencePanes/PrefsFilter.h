@@ -9,7 +9,6 @@
 #import <AppKit/AppKit.h>
 
 #import "PrefsClient.h"
-#import "WaveHelper.h"
 
 @interface PrefsFilter : PrefsClient {
     IBOutlet NSButton* _addItem;

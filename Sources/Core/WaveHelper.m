@@ -39,6 +39,8 @@
 #import "GPSInfoController.h"
 #import "ImportController.h"
 
+#import "../Core/80211b.h"
+
 /*
  * generate 104-bit key based on the supplied string
  */

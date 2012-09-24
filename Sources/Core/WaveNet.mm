@@ -37,6 +37,9 @@
 #import "WaveWeakContainer.h"
 #import "WaveDriverAirport.h"
 
+#import "GrowlController.h"
+#import <CoreWLAN/CoreWLAN.h>
+
 #define WEP_GEM_ORANGE_LEVEL  80000
 #define WEP_GEM_GREEN_LEVEL   130000
 

@@ -24,6 +24,7 @@
 
 
 #import "PrefsScanning.h"
+#import "PrefsController.h"
 #import "WaveHelper.h"
 
 @implementation PrefsScanning

@@ -30,6 +30,7 @@
 #import "ScriptAdditions.h"
 #import "KisMACNotifications.h"
 #import "ScriptingEngine.h"
+#import "WaveNet.h"
 
 @implementation ScriptController
 

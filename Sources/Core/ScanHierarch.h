@@ -23,8 +23,8 @@
 */
 
 #import <Foundation/Foundation.h>
-#import "WaveNet.h"
-#import "WaveContainer.h"
+@class WaveNet;
+@class WaveContainer;
 
 // this the responsible structure for the tree view. very ugly and dirty
 @interface ScanHierarch : NSObject

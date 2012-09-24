@@ -22,7 +22,7 @@
  */
 
 #import "WaveDriverUSBRalinkRT73.h"
-
+#import "../Driver/USBJack/RT73Jack.h"
 
 @implementation WaveDriverUSBRalinkRT73
 

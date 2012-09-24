@@ -7,6 +7,7 @@
 //
 
 #import "PrefsDriver.h"
+#import "PrefsController.h"
 #import "WaveHelper.h"
 #import "WaveDriver.h"
 #import "WaveDriverAirportExtreme.h"

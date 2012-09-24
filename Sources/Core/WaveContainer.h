@@ -24,7 +24,9 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreWLAN/CoreWLAN.h>
-#import "WaveNet.h"
+#import "WavePacket.h"
+
+@class WaveNet;
 
 #define MAXNETS 1000000
 #define MAXCACHE 20

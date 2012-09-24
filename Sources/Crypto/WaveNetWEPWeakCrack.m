@@ -28,6 +28,7 @@
 #import "WaveWeakContainer.h"
 #import "WaveHelper.h"
 #import <BIGeneric/BINSExtensions.h>
+#import "ImportController.h"
 
 #define SRET { [[WaveHelper importController] terminateWithCode: 1]; return; }
 #define RET { [[WaveHelper importController] terminateWithCode: -1]; return; }

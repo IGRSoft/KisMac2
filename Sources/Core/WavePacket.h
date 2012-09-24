@@ -23,10 +23,7 @@
 */
 
 #import <Foundation/Foundation.h>
-//#import <UnitKit/UnitKit.h>
-#import "80211b.h"
 #import "KisMAC80211.h"
-#import "WavePacket.h"
 #import <sys/time.h>
 
 //#define DEBUG			//This has currently no meaning

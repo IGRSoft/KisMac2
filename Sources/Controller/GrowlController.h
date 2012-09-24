@@ -23,7 +23,6 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Growl/Growl.h>
-#import "WavePacket.h"
 
 @interface GrowlController : NSObject<GrowlApplicationBridgeDelegate> {
 }

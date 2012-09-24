@@ -23,12 +23,8 @@
 */
 
 #import <Cocoa/Cocoa.h>
-//#import <UnitKit/UnitKit.h>
-#include <QuickTime/QuickTime.h>
-#import <CoreWLAN/CoreWLAN.h>
+
 #import "WavePacket.h"
-#import "ImportController.h"
-#import "GrowlController.h"
 
 enum {
     trafficData,
@@ -51,6 +47,8 @@ struct graphStruct {
 
 @class NetView;
 @class WaveWeakContainer;
+@class CWNetwork;
+@class ImportController;
 
 @interface WaveNet : NSObject /*<UKTest>*/ {
     int					_netID;					//network ID

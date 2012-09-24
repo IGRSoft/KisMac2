@@ -24,6 +24,8 @@
 
 #import "ScanHierarch.h"
 #import "WaveHelper.h"
+#import "WaveNet.h"
+#import "WaveContainer.h"
 
 @implementation ScanHierarch
 static ScanHierarch *rootItem = nil;	//root item channels

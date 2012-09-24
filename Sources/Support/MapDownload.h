@@ -23,7 +23,6 @@
 */
 
 #import <Cocoa/Cocoa.h>
-#import <BIGeneric/BIValuePair.h>
 
 @interface MapDownload : NSObject {
     NSImage     *_img;

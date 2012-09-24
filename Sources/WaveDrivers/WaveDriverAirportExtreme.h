@@ -23,9 +23,7 @@
 */
 
 #import <Cocoa/Cocoa.h>
-#import <pcap.h>
 #import "WaveDriver.h"
-#import <CoreWLAN/CoreWLAN.h>
 
 enum APExtType 
 {
@@ -40,6 +38,7 @@ enum APExtType
 #define DLT_IEEE802_11_RADIO     127
 #define DLT_TYPE_ERR             -1
 
+@class CWInterface;
 
 @interface WaveDriverAirportExtreme : WaveDriver
 {

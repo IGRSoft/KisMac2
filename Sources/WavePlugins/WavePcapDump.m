@@ -7,7 +7,10 @@
 //
 
 #import "WavePcapDump.h"
-
+#import "WaveHelper.h"
+#import "WaveDriver.h"
+#import "WavePacket.h"
+#import "../Core/80211b.h"
 
 @implementation WavePcapDump
 

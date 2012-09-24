@@ -23,20 +23,6 @@
 */
 
 #import <Cocoa/Cocoa.h>
-#import "WaveScanner.h"
-#import "InfoController.h"
-#import "ImportController.h"
-#import "ScanHierarch.h"
-#import "PrefsController.h"
-#import "GrowlController.h"
-#import "GPSInfoController.h"
-#import "../WindowControllers/DownloadMapController.h"
-//sleep stuff
-#include <mach/mach_port.h>
-#include <mach/mach_interface.h>
-#include <mach/mach_init.h>
-#include <IOKit/pwr_mgt/IOPMLib.h>
-#include <IOKit/IOMessage.h>
 
 typedef enum {
     tabInvalid = -1,
@@ -53,6 +39,14 @@ typedef enum {
 @class BIZoomView;
 @class BIToolbarView;
 @class MapView;
+@class WaveScanner;
+@class InfoController;
+@class ScanHierarch;
+@class ImportController;
+@class PrefsController;
+@class GrowlController;
+@class GPSInfoController;
+@class DownloadMapController;
 
 io_connect_t  root_port;    // a reference to the Root Power Domain IOService
 

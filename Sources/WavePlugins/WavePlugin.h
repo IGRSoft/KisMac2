@@ -7,12 +7,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "WavePacket.h"
-#import "WaveDriver.h"
-#import "WaveNet.h"
-#import "WaveClient.h"
-#import "WaveHelper.h"
-#import "WaveContainer.h"
+
+@class WaveDriver;
+@class WaveNet;
+@class WavePacket;
 
 typedef enum _WavePluginStatus {
     WavePluginIdle            = 0,

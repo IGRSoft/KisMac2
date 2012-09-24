@@ -24,7 +24,6 @@
 
 #import <Cocoa/Cocoa.h>
 #import "KisMAC80211.h"
-#import "80211b.h"
 
 #ifdef __cplusplus
 extern "C" {

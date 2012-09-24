@@ -24,6 +24,7 @@
 
 #import "GPSInfoController.h"
 #import "WaveHelper.h"
+#import "GPSSatInfo.h"
 
 @implementation GPSInfoController
 

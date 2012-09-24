@@ -22,7 +22,7 @@
  */
 
 #import "WaveDriverUSBRealtekRTL8187.h"
-
+#import "../Driver/USBJack/rtl8187.h"
 
 @implementation WaveDriverUSBRealtekRTL8187
 

@@ -7,7 +7,8 @@
 //
 
 #import "WaveSpectrumDriver.h"
-
+#include <mach/mach.h>
+#include <IOKit/IOCFPlugIn.h>
 
 static void RawDeviceAdded(void* refcon, io_iterator_t iterator) {
     [(__bridge WaveSpectrumDriver*)refcon rawDeviceAdded:iterator];

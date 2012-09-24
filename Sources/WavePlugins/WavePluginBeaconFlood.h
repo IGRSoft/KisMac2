@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "WavePlugin.h"
+#import "KisMAC80211.h"
 
 @interface WavePluginBeaconFlood : WavePlugin {
     KFrame _beaconFrame;

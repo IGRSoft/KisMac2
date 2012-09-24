@@ -7,7 +7,8 @@
 //
 
 #import "KismetXMLImporter.h"
-
+#import "WaveContainer.h"
+#import "WaveNet.h"
 
 @implementation KismetXMLImporter
 

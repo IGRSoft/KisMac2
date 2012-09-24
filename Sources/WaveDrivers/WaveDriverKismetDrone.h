@@ -51,6 +51,7 @@
 
 #define SSID_SIZE 255
 
+@class WaveDriver;
 struct stream_frame_header {
     uint32_t frame_sentinel;
     uint8_t frame_type;

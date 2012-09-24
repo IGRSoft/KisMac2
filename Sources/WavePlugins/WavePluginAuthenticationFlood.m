@@ -7,7 +7,10 @@
 //
 
 #import "WavePluginAuthenticationFlood.h"
-
+#import "WavePacket.h"
+#import "WaveNet.h"
+#import "WaveDriver.h"
+#import "../Core/80211b.h"
 
 @implementation WavePluginAuthenticationFlood
 

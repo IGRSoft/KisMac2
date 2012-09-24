@@ -28,6 +28,7 @@
 #import "../3rd Party/Apple80211.h"
 #import "KisMACNotifications.h"
 #import <BIGeneric/BINSExtensions.h>
+#import "ImportController.h"
 
 #define SRET { [[WaveHelper importController] terminateWithCode: 1]; return; }
 #define RET { [[WaveHelper importController] terminateWithCode: -1]; return; }

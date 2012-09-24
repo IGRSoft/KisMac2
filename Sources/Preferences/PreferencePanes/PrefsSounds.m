@@ -7,7 +7,8 @@
 //
 
 #import "PrefsSounds.h"
-
+#import "PrefsController.h"
+#import "WaveHelper.h"
 
 @implementation PrefsSounds
 

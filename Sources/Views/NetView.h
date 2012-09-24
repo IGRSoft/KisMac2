@@ -25,7 +25,6 @@
 #import <AppKit/AppKit.h>
 #import "WavePacket.h"
 #import "BIImageView.h"
-#import <BIGeneric/BIValuePair.h>
 
 @class WaveNet;
 

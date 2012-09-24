@@ -8,6 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 #import "WavePlugin.h"
+#import "KisMAC80211.h"
+
+@class WaveNet;
 
 @interface WavePluginAuthenticationFlood : WavePlugin {
     KFrame _authFrame;

@@ -35,6 +35,7 @@
 #import "PointView.h"
 #import "WayPoint.h"
 #import "Trace.h"
+#import "GPSController.h"
 
 #define ZOOMFACT 1.5
 

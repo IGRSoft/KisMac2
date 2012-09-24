@@ -23,7 +23,8 @@
 */
 
 #import <Cocoa/Cocoa.h>
-#import <WaveNet.h>
+
+@class WaveNet;
 
 @interface InfoController : NSObject
 {

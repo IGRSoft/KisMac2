@@ -26,6 +26,7 @@
 #import "WaveHelper.h"
 #import "KisMACNotifications.h"
 #import "quicksort.h"
+#import "WaveNet.h"
 
 //TODO make _idList binary search compatible 
 // AVL trees?!

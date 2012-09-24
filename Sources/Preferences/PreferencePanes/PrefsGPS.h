@@ -25,7 +25,6 @@
 #import <AppKit/AppKit.h>
 
 #import "PrefsClient.h"
-#import "WaveHelper.h"
 
 @interface PrefsGPS : PrefsClient
 {

@@ -26,6 +26,9 @@
 #import "ImportController.h"
 #import "WaveHelper.h"
 #import <BIGeneric/BIGeneric.h>
+#import "../Core/80211b.h"
+#import <pcap.h>
+#import <CoreWLAN/CoreWLAN.h>
 
 //stolen from kismet
 // Hack around some headers that don't seem to define all of these

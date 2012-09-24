@@ -24,7 +24,8 @@
 
 
 #import <Foundation/Foundation.h>
-#import "WavePacket.h"
+
+@class WavePacket;
 
 @interface WaveClient : NSObject {
     NSString *_ID, *_vendor;

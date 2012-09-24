@@ -9,6 +9,8 @@
 #import <Cocoa/Cocoa.h>
 #import "WavePlugin.h"
 
+@class WaveContainer;
+
 @interface WavePluginDeauthentication : WavePlugin {
     WaveContainer *_container;
     bool _deauthing;

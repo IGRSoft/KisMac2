@@ -23,12 +23,13 @@
 */
 
 #import "PrefsGPS.h"
-//#import <FourCoordinates/FourCoordinates.h>
+#import "PrefsController.h"
 #include <unistd.h>
 #include <CoreFoundation/CoreFoundation.h>
 #include <IOKit/IOKitLib.h>
 #include <IOKit/serial/IOSerialKeys.h>
 #include <IOKit/IOBSD.h>
+#import "WaveHelper.h"
 
 @implementation PrefsGPS
 

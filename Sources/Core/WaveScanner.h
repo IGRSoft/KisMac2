@@ -25,18 +25,14 @@
 #import <AppKit/AppKit.h>
 #import <pcap.h>
 
-#import "WaveNet.h"
-#import "WavePacket.h"
-#import "WaveHelper.h"
-#import "WaveContainer.h"
-#import "WavePluginInjectionProbe.h"
-#import "WavePluginDeauthentication.h"
-#import "WavePluginInjecting.h"
-#import "WavePluginAuthenticationFlood.h"
-#import "WavePluginBeaconFlood.h"
-#import "WavePluginMidi.h"
-#import "WavePcapDump.h"
-#import "WaveSpectrumDriver.h"
+#import "KisMAC80211.h"
+
+@class WaveNet;
+@class WaveSpectrumDriver;
+@class WaveContainer;
+@class WaveClient;
+@class ImportController;
+@class ScanController;
 
 @interface WaveScanner : NSObject <NSSoundDelegate> 
 {    

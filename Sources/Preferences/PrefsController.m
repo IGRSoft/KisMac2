@@ -22,6 +22,8 @@
 */
 #import "PrefsController.h"
 #import "KisMACNotifications.h"
+#import "PrefsWindow.h"
+#import "PrefsClient.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
