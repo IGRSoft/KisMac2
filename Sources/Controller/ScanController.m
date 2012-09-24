@@ -153,7 +153,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
         return;
 
     [WaveHelper setScanController:self];
-    [_headerField setStringValue: [NSString stringWithFormat:@"KisMac v%@ - IGR Software", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]]];
+    [_headerField setStringValue: [NSString stringWithFormat:@"KisMac v%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]]];
     
     [ScanHierarch setContainer:_container];
     [WaveHelper setMainWindow:_window];
@@ -347,7 +347,8 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
 - (void)doUpdateViewItems:(id)anObject {
     [_container refreshView];
-    if (_lastSorted) [_container sortWithShakerByColumn:_lastSorted order:_ascending];
+    if (_lastSorted)
+		[_container sortWithShakerByColumn:_lastSorted order:_ascending];
     
     if (aNetHierarchVisible) {
         [ScanHierarch updateTree];

@@ -690,13 +690,19 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
         entry = _netCount - 1;
         memcpy(&_idList[entry].ID, ID, 6);
 		WaveNet *net = [[WaveNet alloc] initWithID:entry];
-        _idList[entry].net = net;
-        CFRetain((__bridge CFTypeRef)(_idList[entry].net));
-        _lookup[l] = entry;
-
-        [self addNetToView:entry];     
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:KisMACNetworkAdded object:self];   
+		if ([[net SSID] isEqualToString:@"<no ssid>"]) {
+			_idList[entry].net = net;
+			CFRetain((__bridge CFTypeRef)(_idList[entry].net));
+			_lookup[l] = entry;
+			
+			[self addNetToView:entry];
+			
+			[[NSNotificationCenter defaultCenter] postNotificationName:KisMACNetworkAdded object:self];
+		}
+		else
+		{
+			DBNSLog(@"Incorrect network");
+		}
     }
     
     if (l != lentry) {
