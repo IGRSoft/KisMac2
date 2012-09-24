@@ -7,7 +7,6 @@
  *
  */
 
-#include <Carbon/Carbon.h>
 #include <AppKit/AppKit.h>
 
 struct __tbvFlags {

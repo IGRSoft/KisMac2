@@ -22,7 +22,6 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include <Carbon/Carbon.h>
 #include <stdbool.h>
 
 void fast_hmac_md5(const unsigned char *text, int text_len, unsigned char *key, int key_len, void * digest);

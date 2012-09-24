@@ -72,6 +72,8 @@ typedef struct WaveNetEntry {
     
     NSArray *_netFields;
     NSMutableArray *_displayedNetFields;
+	
+	NSOperationQueue *queue;
 }
 
 //for initialisation etc...

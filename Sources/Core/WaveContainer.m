@@ -92,6 +92,8 @@ UInt32 hashForMAC(const UInt8* val) {
     for(i=0; i<LOOKUPSIZE; i++) _lookup[i]=LOOKUPSIZE;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSettings:) name:KisMACFiltersChanged object:nil];
     [self updateSettings:nil];
+	
+	queue = [[NSOperationQueue alloc] init];
     
     return self;
 }
@@ -531,107 +533,113 @@ int lastSeenSort(WaveSort* p, const int *index1, const int *index2) {
 typedef int (*SORTFUNC)(void *, const void *, const void *);
 
 - (void) sortByColumn:(NSString*)ident order:(bool)ascend {
-    WaveSort ws;
-    
-    if (![_sortLock tryLock]) return;
-    
-    _ascend = ascend;
-    ws.ascend = ascend ? 1 : -1;
-    ws.idList = _idList;
-    
-    if ([ident isEqualToString:@"channel"])         qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)channelSort);
-    else if ([ident isEqualToString:@"primaryChannel"])         qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)primaryChannelSort);
-    else if ([ident isEqualToString:@"id"])         qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)idSort);
-    else if ([ident isEqualToString:@"bssid"])      qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)bssidSort);
-    else if ([ident isEqualToString:@"ssid"])       qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)ssidSort);
-    else if ([ident isEqualToString:@"wep"])        qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)wepSort);
-    else if ([ident isEqualToString:@"type"])       qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)typeSort);
-    else if ([ident isEqualToString:@"signal"])     qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)signalSort);
-    else if ([ident isEqualToString:@"maxsignal"])  qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)maxSignalSort);
-    else if ([ident isEqualToString:@"avgsignal"])  qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)avgSignalSort);
-    else if ([ident isEqualToString:@"packets"])    qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)packetsSort);
-    else if ([ident isEqualToString:@"data"])       qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)dataSort);
-    else if ([ident isEqualToString:@"lastseen"])   qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)lastSeenSort);
-    else NSLog(@"Unknown sorting column. This is a bug and should never happen.");
-    
-    [_sortLock unlock];
+	[queue addOperationWithBlock:^{
+		WaveSort ws;
+		
+		if (![_sortLock tryLock]) return;
+		
+		_ascend = ascend;
+		ws.ascend = ascend ? 1 : -1;
+		ws.idList = _idList;
+		
+		if ([ident isEqualToString:@"channel"])         qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)channelSort);
+		else if ([ident isEqualToString:@"primaryChannel"])         qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)primaryChannelSort);
+		else if ([ident isEqualToString:@"id"])         qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)idSort);
+		else if ([ident isEqualToString:@"bssid"])      qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)bssidSort);
+		else if ([ident isEqualToString:@"ssid"])       qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)ssidSort);
+		else if ([ident isEqualToString:@"wep"])        qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)wepSort);
+		else if ([ident isEqualToString:@"type"])       qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)typeSort);
+		else if ([ident isEqualToString:@"signal"])     qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)signalSort);
+		else if ([ident isEqualToString:@"maxsignal"])  qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)maxSignalSort);
+		else if ([ident isEqualToString:@"avgsignal"])  qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)avgSignalSort);
+		else if ([ident isEqualToString:@"packets"])    qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)packetsSort);
+		else if ([ident isEqualToString:@"data"])       qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)dataSort);
+		else if ([ident isEqualToString:@"lastseen"])   qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)lastSeenSort);
+		else NSLog(@"Unknown sorting column. This is a bug and should never happen.");
+		
+		[_sortLock unlock];
+	}];
 }
 
 - (void) sortWithShakerByColumn:(NSString*)ident order:(bool)ascend {
-    SORTFUNC func;
-    bool sorted = YES;
-    int ret;
-    unsigned int w, x, y, z;
-    WaveSort ws;
+	
+	[queue addOperationWithBlock:^{
 
-    if (![_sortLock tryLock]) return;
-    
-    _ascend = ascend;
-    ws.ascend = ascend ? 1 : -1;
-    ws.idList = _idList;
-    ws.sortedList = _sortedList;
-    
-    if ([ident isEqualToString:@"channel"]) func = (SORTFUNC)channelSort;
-    else if ([ident isEqualToString:@"primaryChannel"]) func = (SORTFUNC)primaryChannelSort;
-    else if ([ident isEqualToString:@"id"]) func = (SORTFUNC)idSort;
-    else if ([ident isEqualToString:@"bssid"]) func = (SORTFUNC)bssidSort;
-    else if ([ident isEqualToString:@"ssid"]) func = (SORTFUNC)ssidSort;
-    else if ([ident isEqualToString:@"wep"]) func = (SORTFUNC)wepSort;
-    else if ([ident isEqualToString:@"type"]) func = (SORTFUNC)typeSort;
-    else if ([ident isEqualToString:@"signal"]) func = (SORTFUNC)signalSort;
-    else if ([ident isEqualToString:@"maxsignal"]) func = (SORTFUNC)maxSignalSort;
-    else if ([ident isEqualToString:@"avgsignal"]) func = (SORTFUNC)avgSignalSort;
-    else if ([ident isEqualToString:@"packets"]) func = (SORTFUNC)packetsSort;
-    else if ([ident isEqualToString:@"data"]) func = (SORTFUNC)dataSort;
-    else if ([ident isEqualToString:@"lastseen"]) func = (SORTFUNC)lastSeenSort;
-    else {
-        [_sortLock unlock];
-        NSLog(@"Unknown sorting column. This is a bug and should never happen.");
-        return;
-    }
-    
-    for (y = 1; y <= _sortedCount; y++) {
-
-        for (x = y - 1; x < (_sortedCount - y); x++) {
-            w = x + 1;
-            ret = (*func)(&ws, &_sortedList[x], &_sortedList[w]);
-            if (ret == NSOrderedDescending) {
-                sorted = NO;
-                
-                //switch places
-                z = _sortedList[x];
-                _sortedList[x] = _sortedList[w];
-                _sortedList[w] = z;
-                
-                _idList[_sortedList[x]].changed = YES;
-                _idList[_sortedList[w]].changed = YES;
-            }
-        }
-        
-        if (sorted) break;
-        sorted = YES;
-        
-        for (x = (_sortedCount - y); x >= y; x--) {
-            w = x - 1;
-            ret = (*func)(&ws, &_sortedList[w], &_sortedList[x]);
-            if (ret == NSOrderedDescending) {
-                sorted = NO;
-                
-                //switch places
-                z = _sortedList[x];
-                _sortedList[x] = _sortedList[w];
-                _sortedList[w] = z;
-                
-                _idList[_sortedList[x]].changed = YES;
-                _idList[_sortedList[w]].changed = YES;
-            }
-        }
-        
-        if (sorted) break;
-        sorted = YES;
-    }
-    
-    [_sortLock unlock];
+		SORTFUNC func;
+		bool sorted = YES;
+		int ret;
+		unsigned int w, x, y, z;
+		WaveSort ws;
+		
+		if (![_sortLock tryLock]) return;
+		
+		_ascend = ascend;
+		ws.ascend = ascend ? 1 : -1;
+		ws.idList = _idList;
+		ws.sortedList = _sortedList;
+		
+		if ([ident isEqualToString:@"channel"]) func = (SORTFUNC)channelSort;
+		else if ([ident isEqualToString:@"primaryChannel"]) func = (SORTFUNC)primaryChannelSort;
+		else if ([ident isEqualToString:@"id"]) func = (SORTFUNC)idSort;
+		else if ([ident isEqualToString:@"bssid"]) func = (SORTFUNC)bssidSort;
+		else if ([ident isEqualToString:@"ssid"]) func = (SORTFUNC)ssidSort;
+		else if ([ident isEqualToString:@"wep"]) func = (SORTFUNC)wepSort;
+		else if ([ident isEqualToString:@"type"]) func = (SORTFUNC)typeSort;
+		else if ([ident isEqualToString:@"signal"]) func = (SORTFUNC)signalSort;
+		else if ([ident isEqualToString:@"maxsignal"]) func = (SORTFUNC)maxSignalSort;
+		else if ([ident isEqualToString:@"avgsignal"]) func = (SORTFUNC)avgSignalSort;
+		else if ([ident isEqualToString:@"packets"]) func = (SORTFUNC)packetsSort;
+		else if ([ident isEqualToString:@"data"]) func = (SORTFUNC)dataSort;
+		else if ([ident isEqualToString:@"lastseen"]) func = (SORTFUNC)lastSeenSort;
+		else {
+			[_sortLock unlock];
+			NSLog(@"Unknown sorting column. This is a bug and should never happen.");
+			return;
+		}
+		
+		for (y = 1; y <= _sortedCount; y++) {
+			
+			for (x = y - 1; x < (_sortedCount - y); x++) {
+				w = x + 1;
+				ret = (*func)(&ws, &_sortedList[x], &_sortedList[w]);
+				if (ret == NSOrderedDescending) {
+					sorted = NO;
+					
+					//switch places
+					z = _sortedList[x];
+					_sortedList[x] = _sortedList[w];
+					_sortedList[w] = z;
+					
+					_idList[_sortedList[x]].changed = YES;
+					_idList[_sortedList[w]].changed = YES;
+				}
+			}
+			
+			if (sorted) break;
+			sorted = YES;
+			
+			for (x = (_sortedCount - y); x >= y; x--) {
+				w = x - 1;
+				ret = (*func)(&ws, &_sortedList[w], &_sortedList[x]);
+				if (ret == NSOrderedDescending) {
+					sorted = NO;
+					
+					//switch places
+					z = _sortedList[x];
+					_sortedList[x] = _sortedList[w];
+					_sortedList[w] = z;
+					
+					_idList[_sortedList[x]].changed = YES;
+					_idList[_sortedList[w]].changed = YES;
+				}
+			}
+			
+			if (sorted) break;
+			sorted = YES;
+		}
+		
+		[_sortLock unlock];
+	}];
 }
 
 #pragma mark -
@@ -913,6 +921,8 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [self clearAllEntries];
+	
+	[queue cancelAllOperations];
 }
 
 -(NSArray *)netFields {

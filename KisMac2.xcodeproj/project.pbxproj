@@ -285,7 +285,6 @@
 /* Begin PBXFileReference section */
 		000D15A406AAE47C00935F7C /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = /usr/lib/libcrypto.dylib; sourceTree = "<absolute>"; };
 		000D15A606AAE49700935F7C /* libpcap.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcap.dylib; path = /usr/lib/libpcap.dylib; sourceTree = "<absolute>"; };
-		000D3A3807C731D200485FDD /* UnitKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UnitKit.framework; path = UnitTest/UnitKit.framework; sourceTree = SOURCE_ROOT; };
 		00122EA406B1A7E5007FA5FE /* FCS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCS.h; sourceTree = "<group>"; };
 		00122EA506B1A7E5007FA5FE /* FCS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCS.m; sourceTree = "<group>"; };
 		002E7DF706A86C6F00C9D931 /* ImportController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ImportController.h; path = Sources/WindowControllers/ImportController.h; sourceTree = SOURCE_ROOT; };
@@ -647,6 +646,7 @@
 		A57E646D1607BD6700BE1BCA /* MapDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapDownload.m; sourceTree = "<group>"; };
 		A57E64701607BD8B00BE1BCA /* WaveWeakContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveWeakContainer.h; sourceTree = "<group>"; };
 		A57E64711607BD8C00BE1BCA /* WaveWeakContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveWeakContainer.m; sourceTree = "<group>"; };
+		A59720CF161072A8007CC31D /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1096,11 +1096,11 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A59720CF161072A8007CC31D /* SenTestingKit.framework */,
 				6CF938C310A7DFDF00B32F94 /* CoreWLAN.framework */,
 				6C32713312CFC4070033A649 /* CoreLocation.framework */,
 				6C03D76F09B547F2005B2316 /* Growl.framework */,
 				6CA3BCCA09B2A58F00DCB407 /* Accelerate.framework */,
-				000D3A3807C731D200485FDD /* UnitKit.framework */,
 				00F9C64E06DB37E200E357F0 /* Carbon.framework */,
 				00F9C64F06DB37E200E357F0 /* IOKit.framework */,
 				00F9C63F06DB378F00E357F0 /* Security.framework */,
@@ -1444,6 +1444,7 @@
 				French,
 				German,
 				Spanish,
+				en,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* KisMAC */;
 			projectDirPath = "";
@@ -1908,7 +1909,6 @@
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
-					"$(SRCROOT)/UnitTest",
 					"$(SRCROOT)/Resources",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1965,7 +1965,6 @@
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
-					"$(SRCROOT)/UnitTest",
 					"$(SRCROOT)/Resources",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;

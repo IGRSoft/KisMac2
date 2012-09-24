@@ -7,8 +7,6 @@
  *
  */
 
-#include <Carbon/Carbon.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif

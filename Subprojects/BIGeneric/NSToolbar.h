@@ -7,7 +7,6 @@
  *
  */
 
-#include <Carbon/Carbon.h>
 #include <AppKit/AppKit.h>
 
 @interface NSToolbar(PrivateExtension) 

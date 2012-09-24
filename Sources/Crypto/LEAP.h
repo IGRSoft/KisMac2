@@ -22,8 +22,6 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include <Carbon/Carbon.h>
-
 void DesEncrypt(const unsigned char *clear, unsigned char *key, unsigned char *cipher);
 int gethashlast2(const unsigned char *challenge, const unsigned char *response, unsigned char* endofhash);
 void NtPasswordHash(char *secret, int secret_len, unsigned char *hash);
