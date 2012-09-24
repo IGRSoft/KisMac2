@@ -59,12 +59,14 @@ struct termios ttyset;
 @implementation GPSController
 
 - (id)init {
+	self = [super init];
+	
     _gpsLock = [[NSLock alloc] init];
     _gpsThreadUp    = NO;
     _gpsShallRun    = NO;
     _debugEnabled   = NO;
 	_gpsdReconnect	= YES;
-    _lastAdd        = [[NSDate date] retain];
+    _lastAdd        = [NSDate date];
     _linesRead      = 0;
     
     clManager = nil;
@@ -98,12 +100,15 @@ struct termios ttyset;
 	
 	_gpsdReconnect = YES;
 	
-    [WaveHelper secureReplace:&_gpsDevice withObject:device];
+	_gpsDevice = device;
+	_lastUpdate = nil;
+	_sectorStart = nil;
+    /*[WaveHelper secureReplace:&_gpsDevice withObject:device];
     [WaveHelper secureRelease:&_lastUpdate];
-    [WaveHelper secureRelease:&_sectorStart];
+    [WaveHelper secureRelease:&_sectorStart];*/
     
     if ([_gpsDevice length]==0) {
-        NSLog(@"GPS integration disabled");
+        DBNSLog(@"GPS integration disabled");
         [self setStatus:NSLocalizedString(@"GPS subsystem disabled.", @"GPS status")];
         return NO;
     }
@@ -148,7 +153,7 @@ struct termios ttyset;
 
 - (NSString*) ElevCoord {
     if (_elev.coordinates==-10000) return [NSString stringWithFormat:@"No Elevation Data"];
-    //NSLog([NSString stringWithFormat:@"%f",_elev.coordinates]);
+    //DBNSLog([NSString stringWithFormat:@"%f",_elev.coordinates]);
     return [NSString stringWithFormat:@"%.1f %c/%.1f ft",_elev.coordinates, _elev.dir, (_elev.coordinates * 3.2808399)]; //don't know if formatting stuff is correct
 }
 
@@ -225,7 +230,7 @@ struct termios ttyset;
 						[self lastUpdate],
                         _reliable ? [self QualData] : NSLocalizedString(@" -- NO FIX", "GPS status string. Needs leading space")];
         else
-            return [NSString stringWithFormat:@"%@: %@ %@\n%@", 
+            return [NSString stringWithFormat:@"%@: %@ %@\n%@ %@", 
                 NSLocalizedString(@"Position", "GPS status string."), 
                 [self NSCoord],[self EWCoord],
                 [self lastUpdate],
@@ -240,7 +245,8 @@ struct termios ttyset;
 }
 
 - (void)setStatus:(NSString*)status {
-    [WaveHelper secureReplace:&_status withObject:status];
+	_status = status;
+    //[WaveHelper secureReplace:&_status withObject:status];
     [[NSNotificationCenter defaultCenter] postNotificationName:KisMACGPSStatusChanged object:_status];
 }
 
@@ -273,8 +279,10 @@ struct termios ttyset;
     _ns.coordinates = fabs(ns);
     _ew.coordinates = fabs(ew); 
     
-    [WaveHelper secureReplace:&_lastUpdate withObject:[NSDate date]];
-    [WaveHelper secureReplace:&_lastAdd withObject:[NSDate date]];
+	_lastUpdate = [NSDate date];
+	_lastAdd = [NSDate date];
+    //[WaveHelper secureReplace:&_lastUpdate withObject:[NSDate date]];
+    //[WaveHelper secureReplace:&_lastAdd withObject:[NSDate date]];
     
     if (abs(ns)>=0 && abs(ns)<=90 && abs(ew)>=0 && abs(ew)<=180) {
         w._long = ew;
@@ -357,40 +365,40 @@ int ss(char* inp, char* outp) {
     struct _position ns, ew, elev;
     bool updated;
     NSDate *date;
-    NSAutoreleasePool* subpool = [[NSAutoreleasePool alloc] init];
-	GPSInfoController *asdf = [WaveHelper GPSInfoController];
+    @autoreleasepool {
+		GPSInfoController *asdf = [WaveHelper GPSInfoController];
 
-    if (_debugEnabled) NSLog(@"GPS read data");
+    if (_debugEnabled) DBNSLog(@"GPS read data");
     if (q>=1024) q = 0; //just in case something went wrong
     
     if((len = read(fd, &gpsin[q], MAX_GPSBUF_LEN-q-1)) < 0) return NO;
     if (len == 0) return YES;
     
-    if (_debugEnabled) NSLog(@"GPS read data returned.");
+    if (_debugEnabled) DBNSLog(@"GPS read data returned.");
     [self setStatus:nil];
     _linesRead++;
     
     gpsin[q+len]=0;
     updated = NO;
     elev.coordinates = -10000.0;
-	velkt = -1.0;
-	numsat = -1;
-	hdop = 100;
+		velkt = -1.0;
+		numsat = -1;
+		hdop = 100;
     
     while (ss(&gpsin[x],gpsbuf)>0) {
-        if (_debugEnabled) NSLog(@"GPS record: %s", gpsbuf);//uncommented
+        if (_debugEnabled) DBNSLog(@"GPS record: %s", gpsbuf);//uncommented
         if(_tripmateMode && (!strncmp(gpsbuf, "ASTRAL", 6))) {
             write(fd, "ASTRAL\r", 7);
         } else if(strncmp(gpsbuf, "$GPGGA", 6) == 0) {  //gpsbuf contains GPS fixed data (almost everything poss)
             if (sscanf(gpsbuf, "%*[^,],%*f,%2d%f,%c,%3d%f,%c,%d,%d,%f,%f",
-		&nsh, &ns.coordinates, &ns.dir,
+			&nsh, &ns.coordinates, &ns.dir,
                 &ewh, &ew.coordinates, &ew.dir,
-	        &valid, &numsat, &hdop, &elev.coordinates)>=7) { // this probably should be == 10 not >= 7  more testing
+		        &valid, &numsat, &hdop, &elev.coordinates)>=7) { // this probably should be == 10 not >= 7  more testing
                 		
                 if (valid) _reliable = YES;
                 else _reliable = NO;
                 
-                if (_debugEnabled) NSLog(@"GPS data updated.");
+                if (_debugEnabled) DBNSLog(@"GPS data updated.");
                 updated = YES;
             }
         } else if(strncmp(gpsbuf, "$GPRMC", 6) == 0) {  //gpsbuf contains Recommended minimum specific GPS/TRANSIT data !!does not include elevation
@@ -401,7 +409,7 @@ int ss(char* inp, char* outp) {
                 if (cvalid == 'A') _reliable = YES;
                 else _reliable = NO;
                 
-                if (_debugEnabled) NSLog(@"GPS data updated.");  
+                if (_debugEnabled) DBNSLog(@"GPS data updated.");  
                 updated = YES;
             }
         } else if(strncmp(gpsbuf, "$GPGLL", 6) == 0) {  //gbsbuf contains Geographical postiion, latitude and longitude only  !!does not include elevation
@@ -412,65 +420,65 @@ int ss(char* inp, char* outp) {
                 if (cvalid == 'A') _reliable = YES;
                 else _reliable = NO;
                 
-                if (_debugEnabled) NSLog(@"GPS data updated.");  
+                if (_debugEnabled) DBNSLog(@"GPS data updated.");  
                 updated = YES;
             }
-		} else if(strncmp(gpsbuf, "$GPGSV", 6) == 0) {  //satellites and signals
-			int nmsgs,tmsg,satsinview,prn1,elev1,azi1,snr1,prn2,elev2,azi2,snr2,prn3,elev3,azi3,snr3,prn4,elev4,azi4,snr4; 
+			} else if(strncmp(gpsbuf, "$GPGSV", 6) == 0) {  //satellites and signals
+				int nmsgs,tmsg,satsinview,prn1,elev1,azi1,snr1,prn2,elev2,azi2,snr2,prn3,elev3,azi3,snr3,prn4,elev4,azi4,snr4; 
             sscanf(gpsbuf, "%*[^,],%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
                 &nmsgs, &tmsg, &satsinview, 
-				&prn1, &elev1, &azi1, &snr1, 
-				&prn2, &elev2, &azi2, &snr2,
-				&prn3, &elev3, &azi3, &snr3,
-				&prn4, &elev4, &azi4, &snr4);
-			NSLog(@"nmesgs %i, tmsg %i, satsinview %i, sat1 prn %i signal %i, sat2 prn %i signal %i, sat3 prn %i signal %i, sat4 prn %i signal %i",
-			nmsgs,tmsg,satsinview,prn1,snr1,prn2,snr2,prn3,snr3,prn4,snr4);
-			if (asdf != NULL)
-			{
-			
-			if (prn1 < 200) {// it's obviousy dodgy if it's 200 or higher
-			[asdf updateSatSignalStrength:((tmsg - 1) * 4) signal:snr1];
-			[asdf updateSatPRNForSat:((tmsg - 1) * 4) prn:prn1];
-			[asdf updateSatUsed:((tmsg - 1) * 4) used:1];
-			} else {
-			[asdf updateSatSignalStrength:((tmsg - 1) * 4) signal:0];
-			[asdf updateSatPRNForSat:((tmsg - 1) * 4) prn:0];
-			[asdf updateSatUsed:((tmsg - 1) * 4) used:0];
+					&prn1, &elev1, &azi1, &snr1, 
+					&prn2, &elev2, &azi2, &snr2,
+					&prn3, &elev3, &azi3, &snr3,
+					&prn4, &elev4, &azi4, &snr4);
+				DBNSLog(@"nmesgs %i, tmsg %i, satsinview %i, sat1 prn %i signal %i, sat2 prn %i signal %i, sat3 prn %i signal %i, sat4 prn %i signal %i",
+				nmsgs,tmsg,satsinview,prn1,snr1,prn2,snr2,prn3,snr3,prn4,snr4);
+				if (asdf != NULL)
+				{
+				
+				if (prn1 < 200) {// it's obviousy dodgy if it's 200 or higher
+				[asdf updateSatSignalStrength:((tmsg - 1) * 4) signal:snr1];
+				[asdf updateSatPRNForSat:((tmsg - 1) * 4) prn:prn1];
+				[asdf updateSatUsed:((tmsg - 1) * 4) used:1];
+				} else {
+				[asdf updateSatSignalStrength:((tmsg - 1) * 4) signal:0];
+				[asdf updateSatPRNForSat:((tmsg - 1) * 4) prn:0];
+				[asdf updateSatUsed:((tmsg - 1) * 4) used:0];
+				}
+				
+				if (prn2 < 200) {
+				[asdf updateSatSignalStrength:(((tmsg - 1) * 4) + 1) signal:snr2];
+				[asdf updateSatPRNForSat:(((tmsg - 1) * 4) + 1) prn:prn2];
+				[asdf updateSatUsed:(((tmsg - 1) * 4) + 1) used:1];
+				} else {
+				[asdf updateSatSignalStrength:(((tmsg - 1) * 4) + 1) signal:0];
+				[asdf updateSatPRNForSat:(((tmsg - 1) * 4) + 1) prn:0];
+				[asdf updateSatUsed:(((tmsg - 1) * 4) + 1) used:0];
+				}
+				
+				if (prn3 < 200) {
+				[asdf updateSatSignalStrength:(((tmsg - 1) * 4) + 2) signal:snr3];
+				[asdf updateSatPRNForSat:(((tmsg - 1) * 4) + 2) prn:prn3];
+				[asdf updateSatUsed:(((tmsg - 1) * 4) + 2) used:1];
+				} else {
+				[asdf updateSatSignalStrength:(((tmsg - 1) * 4) + 2) signal:0];
+				[asdf updateSatPRNForSat:(((tmsg - 1) * 4) + 2) prn:0];
+				[asdf updateSatUsed:(((tmsg - 1) * 4) + 2) used:0];
+				}
+										
+				if (prn4 < 200) {
+				[asdf updateSatSignalStrength:(((tmsg - 1) * 4) + 3) signal:snr4];
+				[asdf updateSatPRNForSat:(((tmsg - 1) * 4) + 3) prn:prn4];
+				[asdf updateSatUsed:(((tmsg - 1) * 4) + 3) used:1];
+				} else {
+				[asdf updateSatSignalStrength:(((tmsg - 1) * 4) + 3) signal:snr4];
+				[asdf updateSatPRNForSat:(((tmsg - 1) * 4) + 3) prn:prn4];
+				[asdf updateSatUsed:(((tmsg - 1) * 4) + 3) used:1];
+				}
+				
+				}
 			}
 			
-			if (prn2 < 200) {
-			[asdf updateSatSignalStrength:(((tmsg - 1) * 4) + 1) signal:snr2];
-			[asdf updateSatPRNForSat:(((tmsg - 1) * 4) + 1) prn:prn2];
-			[asdf updateSatUsed:(((tmsg - 1) * 4) + 1) used:1];
-			} else {
-			[asdf updateSatSignalStrength:(((tmsg - 1) * 4) + 1) signal:0];
-			[asdf updateSatPRNForSat:(((tmsg - 1) * 4) + 1) prn:0];
-			[asdf updateSatUsed:(((tmsg - 1) * 4) + 1) used:0];
-			}
-			
-			if (prn3 < 200) {
-			[asdf updateSatSignalStrength:(((tmsg - 1) * 4) + 2) signal:snr3];
-			[asdf updateSatPRNForSat:(((tmsg - 1) * 4) + 2) prn:prn3];
-			[asdf updateSatUsed:(((tmsg - 1) * 4) + 2) used:1];
-			} else {
-			[asdf updateSatSignalStrength:(((tmsg - 1) * 4) + 2) signal:0];
-			[asdf updateSatPRNForSat:(((tmsg - 1) * 4) + 2) prn:0];
-			[asdf updateSatUsed:(((tmsg - 1) * 4) + 2) used:0];
-			}
-									
-			if (prn4 < 200) {
-			[asdf updateSatSignalStrength:(((tmsg - 1) * 4) + 3) signal:snr4];
-			[asdf updateSatPRNForSat:(((tmsg - 1) * 4) + 3) prn:prn4];
-			[asdf updateSatUsed:(((tmsg - 1) * 4) + 3) used:1];
-			} else {
-			[asdf updateSatSignalStrength:(((tmsg - 1) * 4) + 3) signal:snr4];
-			[asdf updateSatPRNForSat:(((tmsg - 1) * 4) + 3) prn:prn4];
-			[asdf updateSatUsed:(((tmsg - 1) * 4) + 3) used:1];
-			}
-			
-			}
-		}
-		
         
         x+=strlen(gpsbuf)+1;
     }
@@ -480,10 +488,10 @@ int ss(char* inp, char* outp) {
     memcpy(gpsin,gpsbuf,q);
     if (q>80) q=0;
     
-	date = [[NSDate alloc] init];
+		date = [[NSDate alloc] init];
     
-	if (updated) {
-		timeinterval = [date timeIntervalSinceDate:_lastUpdate];
+		if (updated) {
+			timeinterval = [date timeIntervalSinceDate:_lastUpdate];
 
         if ((_reliable)||(_onNoFix==0)) {
             if (ns.dir != 'S') _ns.dir = 'N';
@@ -495,25 +503,26 @@ int ss(char* inp, char* outp) {
             _ns.coordinates   = nsh + ns.coordinates / 60.0;
             _ew.coordinates   = ewh + ew.coordinates / 60.0;
             if (elev.coordinates > -10000.00) _elev.coordinates = elev.coordinates;
-			
+				
             if (velkt > -1.0) {
-				if ((velkt > 0) && (_velkt==0)) {
-					_peakvel = 0;
-					_sectordist = 0;
-					_sectortime = 0;
-					[WaveHelper secureReplace:&_sectorStart withObject:date];
-				} else if ((velkt > 0) || (_velkt > 0)) {
-					// update distances only if we're moving (or just stopped)
-					displacement = (velkt + _velkt)*timeinterval/7200;
-					_sectordist += displacement;
-					_sectortime += timeinterval;
-					_totaldist += displacement;
-				}
+					if ((velkt > 0) && (_velkt==0)) {
+						_peakvel = 0;
+						_sectordist = 0;
+						_sectortime = 0;
+						_sectorStart = date;
+						//[WaveHelper secureReplace:&_sectorStart withObject:date];
+					} else if ((velkt > 0) || (_velkt > 0)) {
+						// update distances only if we're moving (or just stopped)
+						displacement = (velkt + _velkt)*timeinterval/7200;
+						_sectordist += displacement;
+						_sectortime += timeinterval;
+						_totaldist += displacement;
+					}
                 _velkt = velkt;
                 _veldir = veldir;
-				if (velkt > _peakvel) _peakvel = velkt;
-				if (velkt > _maxvel) _maxvel = velkt;
-			}
+					if (velkt > _peakvel) _peakvel = velkt;
+					if (velkt > _maxvel) _maxvel = velkt;
+				}
             
             if (numsat > -1) {
                 _numsat = numsat;
@@ -529,28 +538,28 @@ int ss(char* inp, char* outp) {
             _velkt = 0;
         }
 
-        [WaveHelper secureReplace:&_lastUpdate withObject:date];
+			_lastUpdate = date;
+        //[WaveHelper secureReplace:&_lastUpdate withObject:date];
 
         if (_reliable) {
             if (([_lastUpdate timeIntervalSinceDate:_lastAdd]>_traceInterval) && (_traceInterval != 100)) {
                 waypoint w;
                 w._lat  = _ns.coordinates * ((_ns.dir=='N') ? 1.0 : -1.0);
                 w._long = _ew.coordinates * ((_ew.dir=='E') ? 1.0 : -1.0);
-                if ([[WaveHelper trace] addPoint:w]) [WaveHelper secureReplace:&_lastAdd withObject:date];
+                if ([[WaveHelper trace] addPoint:w]) _lastAdd = date; //[WaveHelper secureReplace:&_lastAdd withObject:date];
             }
         } else {
             [[WaveHelper trace] cut];
         }
     }
 
-	
-	if (asdf != NULL)
-	{
-		[asdf updateDataNS:_ns.coordinates EW:_ew.coordinates ELV:_elev.coordinates numSats:_numsat HDOP:_hdop VEL:_velkt];
-	}
+		
+		if (asdf != NULL)
+		{
+			[asdf updateDataNS:_ns.coordinates EW:_ew.coordinates ELV:_elev.coordinates numSats:_numsat HDOP:_hdop VEL:_velkt];
+		}
     
-    [date release];
-    [subpool drain];
+    }
 
     return YES;
 }
@@ -564,26 +573,26 @@ int ss(char* inp, char* outp) {
 	float timeinterval=-1;
 	float displacement;
     NSDate *date;
-    NSAutoreleasePool* subpool = [[NSAutoreleasePool alloc] init];
+    @autoreleasepool {
 
-    if (_debugEnabled) NSLog(@"GPSd write command");
-    
-    if (write(fd, "PMVTAQ\r\n", 8) < 8) {
-        NSLog(@"GPSd write failed");
-        return NO;
-    }
-    
-    if((len = read(fd, &gpsbuf[0], MAX_GPSBUF_LEN)) < 0) {
-        NSLog(@"GPSd read failed");
-        return NO;
-    }
-    if (len == 0) return YES;
-    
-    if (_debugEnabled) NSLog(@"GPSd read data returned.");
-    [self setStatus:nil];
-    _linesRead++;
-    
-    gpsbuf[0+len]=0;
+        if (_debugEnabled) DBNSLog(@"GPSd write command");
+        
+        if (write(fd, "PMVTAQ\r\n", 8) < 8) {
+            DBNSLog(@"GPSd write failed");
+            return NO;
+        }
+        
+        if((len = read(fd, &gpsbuf[0], MAX_GPSBUF_LEN)) < 0) {
+            DBNSLog(@"GPSd read failed");
+            return NO;
+        }
+        if (len == 0) return YES;
+        
+        if (_debugEnabled) DBNSLog(@"GPSd read data returned.");
+        [self setStatus:nil];
+        _linesRead++;
+        
+        gpsbuf[0+len]=0;
 	gpsbufII[0+len]=0;
  	numsat = -1;
 	hdop = 100;
@@ -592,18 +601,19 @@ int ss(char* inp, char* outp) {
 	date = [[NSDate alloc] init];
 
 	if (sscanf(gpsbuf, "GPSD,P=%lg %lg,M=%d,V=%f,T=%f,A=%lg,Q=%d %*f %f",
-        &ns, &ew, &valid, &velkt, &fveldir, &elev, &numsat, &hdop) >=4) {
-                    
-        if (valid >= 2) _reliable = YES;
-        else _reliable = NO;
-        
-        if (_debugEnabled) NSLog(@"GPSd data updated.");
+            &ns, &ew, &valid, &velkt, &fveldir, &elev, &numsat, &hdop) >=4) {
+                        
+            if (valid >= 2) _reliable = YES;
+            else _reliable = NO;
+            
+            if (_debugEnabled) DBNSLog(@"GPSd data updated.");
 		
 		timeinterval = [date timeIntervalSinceDate:_lastUpdate];
-        [WaveHelper secureReplace:&_lastUpdate withObject:date];
-    } else {
+		_lastUpdate = date;
+            //[WaveHelper secureReplace:&_lastUpdate withObject:date];
+        } else {
 		_reliable = NO;
-    }
+        }
 
 	if ((_reliable)||(_onNoFix==0)) {
 		if (ns >= 0) _ns.dir = 'N';
@@ -619,7 +629,8 @@ int ss(char* inp, char* outp) {
 			_peakvel = 0;
 			_sectordist = 0;
 			_sectortime = 0;
-			[WaveHelper secureReplace:&_sectorStart withObject:date];
+			_sectorStart = date;
+			//[WaveHelper secureReplace:&_sectorStart withObject:date];
 		} else if ((velkt > 0) || (_velkt > 0)) {
 			// update distances only if we're moving (or just stopped)
 			displacement = (velkt + _velkt)*timeinterval/7200;
@@ -652,13 +663,13 @@ int ss(char* inp, char* outp) {
 			waypoint w;
 			w._lat  = _ns.coordinates * ((_ns.dir=='N') ? 1.0 : -1.0);
 			w._long = _ew.coordinates * ((_ew.dir=='E') ? 1.0 : -1.0);
-			if ([[WaveHelper trace] addPoint:w]) [WaveHelper secureReplace:&_lastAdd withObject:date];
+			if ([[WaveHelper trace] addPoint:w]) _lastAdd = date; //[WaveHelper secureReplace:&_lastAdd withObject:date];
 		}
 	} else {
 		[[WaveHelper trace] cut];
 	}
 
-    GPSInfoController *asdf = [WaveHelper GPSInfoController];
+        GPSInfoController *asdf = [WaveHelper GPSInfoController];
 	
 	if (asdf != NULL)
 	{
@@ -676,21 +687,21 @@ int ss(char* inp, char* outp) {
 		NSArray *prns,*attrs;
 	
 		if (write(fd, "Y\r\n", 3) < 3) {
-			NSLog(@"GPSd write failed");
+			DBNSLog(@"GPSd write failed");
 			return NO;
 		}
-    
+        
 		if((len = read(fd, gpsbufII, MAX_GPSBUF_LEN)) < 0) 
-        {
-			NSLog(@"GPSd read failed");
+            {
+			DBNSLog(@"GPSd read failed");
 			return NO;
 		}
 
 		@try 
-        {
-            //NULL terminate
-            gpsbufII[MAX_GPSBUF_LEN-1] = 0;
-			gpsbuf2	= [NSString stringWithUTF8String:gpsbufII];
+            {
+                //NULL terminate
+                gpsbufII[MAX_GPSBUF_LEN-1] = 0;
+			gpsbuf2	= @(gpsbufII);
 			
 			range = [gpsbuf2 rangeOfString:@":"];
 			range2 = NSMakeRange(range.location - 2,2);
@@ -702,11 +713,11 @@ int ss(char* inp, char* outp) {
 			for (item = 1; item <= 12; item++)
 			{
 				if (item < length - 1) {
-					thisprn = [prns objectAtIndex:item];
+					thisprn = prns[item];
 					attrs = [thisprn componentsSeparatedByString:@" "];
-					prn = [[attrs objectAtIndex:0] intValue];
-					signal = [[attrs objectAtIndex:3] intValue];
-					used = [[attrs objectAtIndex:4] intValue];
+					prn = [attrs[0] intValue];
+					signal = [attrs[3] intValue];
+					used = [attrs[4] intValue];
 					[asdf updateSatSignalStrength:item signal:signal];
 					[asdf updateSatPRNForSat:item prn:prn];
 					[asdf updateSatUsed:item used:used];
@@ -725,8 +736,7 @@ int ss(char* inp, char* outp) {
 		}
 	}
 	}
-	[date release];
-	[subpool release];
+	}
 	return YES;
 }
 
@@ -735,123 +745,116 @@ int ss(char* inp, char* outp) {
 - (void) continousParse:(int) fd {
     NSDate *date;
     unsigned int i = 0;
-    NSAutoreleasePool* subpool;
 	
     while (_gpsShallRun && [self gps_parse:fd]) {
-		subpool = [[NSAutoreleasePool alloc] init];
-        //actually once a sec should be enough, but sometimes we dont get any information. so do it more often.
-        if ((i++ % 10 == 0) && (_status == Nil))
-            [[NSNotificationCenter defaultCenter] postNotificationName:KisMACGPSStatusChanged object:[self status]];
-        date = [[NSDate alloc] initWithTimeIntervalSinceNow:0.1];
-        [NSThread sleepUntilDate:date];
-        [date release];
-		[subpool drain];
+		@autoreleasepool {     //actually once a sec should be enough, but sometimes we dont get any information. so do it more often.
+            if ((i++ % 10 == 0) && (_status == Nil))
+                [[NSNotificationCenter defaultCenter] postNotificationName:KisMACGPSStatusChanged object:[self status]];
+            date = [[NSDate alloc] initWithTimeIntervalSinceNow:0.1];
+            [NSThread sleepUntilDate:date];
+		}
     }
 }
 
 - (void) continousParseGPSd:(int) fd {
     NSDate *date;
     unsigned int i = 0;
-	NSAutoreleasePool* subpool;
 
     while (_gpsShallRun && [self gpsd_parse:fd]) {
-		subpool = [[NSAutoreleasePool alloc] init];
-        if ((i++ % 2 == 0) && (_status == Nil))
-            [[NSNotificationCenter defaultCenter] postNotificationName:KisMACGPSStatusChanged object:[self status]];
-        date = [[NSDate alloc] initWithTimeIntervalSinceNow:0.5];
-        [NSThread sleepUntilDate:date];
-        [date release];
-		[subpool drain];
+		@autoreleasepool {
+			if ((i++ % 2 == 0) && (_status == Nil))
+                [[NSNotificationCenter defaultCenter] postNotificationName:KisMACGPSStatusChanged object:[self status]];
+            date = [[NSDate alloc] initWithTimeIntervalSinceNow:0.5];
+            [NSThread sleepUntilDate:date];
+		}
     }
 }
 
 - (void)gpsThreadSerial:(id)object {
-    NSAutoreleasePool* subpool = [[NSAutoreleasePool alloc] init];
-    int     handshake;
-    struct  termios backup;
+    @autoreleasepool {
+        int     handshake;
+        struct  termios backup;
 
-    _gpsShallRun = NO;
-    
-    if ([_gpsLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:10]]) {
-        _gpsThreadUp = YES;
-        _gpsShallRun = YES;
-        [_lastUpdate release];
-        _lastUpdate = nil;
-        [_sectorStart release];
-        _sectorStart = nil;
+        _gpsShallRun = NO;
         
-        [self setStatus:NSLocalizedString(@"GPS subsystem starting up.", @"GPS status")];
-
-        //NSLog(@"Starting GPS device");
-        if((_serialFD = open([_gpsDevice UTF8String], O_RDWR | O_NOCTTY | O_NONBLOCK )) < 0) {
-            NSLog(@"error: unable to open gps device: %s", strerror(errno));
-            [self setStatus:NSLocalizedString(@"Could not open GPS.", @"GPS status")];
-        } else if(!isatty(_serialFD)) {
-            NSLog(@"error: specified gps device is not a tty: %s", strerror(errno));
-        } else if (ioctl(_serialFD, TIOCEXCL) == -1) {
-            NSLog(@"error: could not set exclusive flag: %s", strerror(errno));
-        } else if (fcntl(_serialFD, F_SETFL, 0) == -1) {
-            NSLog(@"error: clearing O_NONBLOCK: %s(%d).\n", strerror(errno), errno);
-        } else if(tcgetattr(_serialFD, &backup) != 0) {
-            NSLog(@"error: unable to set attributes for gps device: %s", strerror(errno));
-        } else if(ioctl(_serialFD, TIOCGETA, &ttyset) < 0) {
-            NSLog(@"error: unable to ioctl gps device: %s", strerror(errno));
-        } else {
-            //NSLog(@"GPS device is open");
-            ttyset.c_ispeed = B4800;
-            ttyset.c_ospeed = B4800;
+        if ([_gpsLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:10]]) {
+            _gpsThreadUp = YES;
+            _gpsShallRun = YES;
+            _lastUpdate = nil;
+            _sectorStart = nil;
             
-            ttyset.c_cflag |=       CRTSCTS;    // hadware flow on
-            ttyset.c_cflag &=       ~PARENB;    // no parity
-            ttyset.c_cflag &=       ~CSTOPB;    // one stopbit
-            ttyset.c_cflag &=       CSIZE;
-            ttyset.c_cflag |=       CS8;        // 8N1
-            ttyset.c_cflag |=       (CLOCAL | CREAD); //enable Localmode, receiver
-            ttyset.c_cc[VMIN] =     20;         // set min read chars if 0  VTIME takes over
-            ttyset.c_cc[VTIME] =    10;         // wait x ms for charakter
+            [self setStatus:NSLocalizedString(@"GPS subsystem starting up.", @"GPS status")];
 
-            //options.c_cflag &= ~ ICANON; // canonical input 
-            ttyset.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
-
-            
-            if(ioctl(_serialFD, TIOCSETAF, &ttyset) < 0) {
-                NSLog(@"error: unable to ioctl gps device: %s", strerror(errno));
+            //DBNSLog(@"Starting GPS device");
+            if((_serialFD = open([_gpsDevice UTF8String], O_RDWR | O_NOCTTY | O_NONBLOCK )) < 0) {
+                DBNSLog(@"error: unable to open gps device: %s", strerror(errno));
+                [self setStatus:NSLocalizedString(@"Could not open GPS.", @"GPS status")];
+            } else if(!isatty(_serialFD)) {
+                DBNSLog(@"error: specified gps device is not a tty: %s", strerror(errno));
+            } else if (ioctl(_serialFD, TIOCEXCL) == -1) {
+                DBNSLog(@"error: could not set exclusive flag: %s", strerror(errno));
+            } else if (fcntl(_serialFD, F_SETFL, 0) == -1) {
+                DBNSLog(@"error: clearing O_NONBLOCK: %s(%d).\n", strerror(errno), errno);
+            } else if(tcgetattr(_serialFD, &backup) != 0) {
+                DBNSLog(@"error: unable to set attributes for gps device: %s", strerror(errno));
+            } else if(ioctl(_serialFD, TIOCGETA, &ttyset) < 0) {
+                DBNSLog(@"error: unable to ioctl gps device: %s", strerror(errno));
             } else {
-                if (ioctl(_serialFD, TIOCSDTR) == -1) { // Assert Data Terminal Ready (DTR)
-                    NSLog(@"Error asserting DTR - %s(%d).\n", strerror(errno), errno);
+                //DBNSLog(@"GPS device is open");
+                ttyset.c_ispeed = B4800;
+                ttyset.c_ospeed = B4800;
+                
+                ttyset.c_cflag |=       CRTSCTS;    // hadware flow on
+                ttyset.c_cflag &=       ~PARENB;    // no parity
+                ttyset.c_cflag &=       ~CSTOPB;    // one stopbit
+                ttyset.c_cflag &=       CSIZE;
+                ttyset.c_cflag |=       CS8;        // 8N1
+                ttyset.c_cflag |=       (CLOCAL | CREAD); //enable Localmode, receiver
+                ttyset.c_cc[VMIN] =     20;         // set min read chars if 0  VTIME takes over
+                ttyset.c_cc[VTIME] =    10;         // wait x ms for charakter
+
+                //options.c_cflag &= ~ ICANON; // canonical input 
+                ttyset.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+
+                
+                if(ioctl(_serialFD, TIOCSETAF, &ttyset) < 0) {
+                    DBNSLog(@"error: unable to ioctl gps device: %s", strerror(errno));
+                } else {
+                    if (ioctl(_serialFD, TIOCSDTR) == -1) { // Assert Data Terminal Ready (DTR)
+                        DBNSLog(@"Error asserting DTR - %s(%d).\n", strerror(errno), errno);
+                    }
+                    
+                    if (ioctl(_serialFD, TIOCCDTR) == -1) { // Clear Data Terminal Ready (DTR) 
+                        DBNSLog(@"Error clearing DTR - %s(%d).\n", strerror(errno), errno);
+                    }
+                    
+                    handshake = TIOCM_DTR | TIOCM_RTS | TIOCM_CTS | TIOCM_DSR;
+                    if (ioctl(_serialFD, TIOCMSET, &handshake) == -1) { // Set the modem lines depending on the bits set in handshake
+                        DBNSLog(@"Error setting handshake lines - %s(%d).\n", strerror(errno), errno);
+                    }
+                    
+                    if (ioctl(_serialFD, TIOCMGET, &handshake) == -1) { // Store the state of the modem lines in handshake
+                        DBNSLog(@"Error getting handshake lines - %s(%d).\n", strerror(errno), errno);
+                    }
+
+                    DBNSLog(@"GPS started successfully in serial mode\n");
+                    [self setStatus:NSLocalizedString(@"GPS started in serial mode.", @"GPS status")];
+
+                    [self continousParse:_serialFD];
                 }
                 
-                if (ioctl(_serialFD, TIOCCDTR) == -1) { // Clear Data Terminal Ready (DTR) 
-                    NSLog(@"Error clearing DTR - %s(%d).\n", strerror(errno), errno);
-                }
-                
-                handshake = TIOCM_DTR | TIOCM_RTS | TIOCM_CTS | TIOCM_DSR;
-                if (ioctl(_serialFD, TIOCMSET, &handshake) == -1) { // Set the modem lines depending on the bits set in handshake
-                    NSLog(@"Error setting handshake lines - %s(%d).\n", strerror(errno), errno);
-                }
-                
-                if (ioctl(_serialFD, TIOCMGET, &handshake) == -1) { // Store the state of the modem lines in handshake
-                    NSLog(@"Error getting handshake lines - %s(%d).\n", strerror(errno), errno);
-                }
+                if (_serialFD) close(_serialFD);
+                [self setStatus:NSLocalizedString(@"GPS device closed.", @"GPS status")];
+            }    
 
-                NSLog(@"GPS started successfully in serial mode\n");
-                [self setStatus:NSLocalizedString(@"GPS started in serial mode.", @"GPS status")];
-
-                [self continousParse:_serialFD];
-            }
-            
-            if (_serialFD) close(_serialFD);
-            [self setStatus:NSLocalizedString(@"GPS device closed.", @"GPS status")];
-        }    
-
-        [_gpsLock unlock];
-        _gpsThreadUp = NO;
-    } else {
-        NSLog(@"GPS LOCKING FAILURE!");
+            [_gpsLock unlock];
+            _gpsThreadUp = NO;
+        } else {
+            DBNSLog(@"GPS LOCKING FAILURE!");
+        }
+        
+        return;
     }
-    
-    [subpool drain];
-    return;
 }
 
 - (void)gpsThreadGPSd:(id)object {
@@ -862,26 +865,24 @@ int ss(char* inp, char* outp) {
     UInt32 ip;
     NSUserDefaults *sets;
     const char *hostname;
-    NSAutoreleasePool* subpool = [[NSAutoreleasePool alloc] init];
+    @autoreleasepool {
     
-    _gpsShallRun = NO;
-    
-    if ([_gpsLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:10]]) {
-        _gpsThreadUp = YES;
-        _gpsShallRun = YES;
-        [_lastUpdate release];
-        _lastUpdate = nil;
-        [_sectorStart release];
-        _sectorStart = nil;
+        _gpsShallRun = NO;
         
-        [self setStatus:NSLocalizedString(@"Starting GPS in GPSd mode.", @"GPS status")];
+        if ([_gpsLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:10]]) {
+            _gpsThreadUp = YES;
+            _gpsShallRun = YES;
+            _lastUpdate = nil;
+            _sectorStart = nil;
+            
+            [self setStatus:NSLocalizedString(@"Starting GPS in GPSd mode.", @"GPS status")];
 
-        sets = [NSUserDefaults standardUserDefaults];
-        
+            sets = [NSUserDefaults standardUserDefaults];
+            
 		while(_gpsdReconnect) {
 			sockd  = socket(AF_INET, SOCK_STREAM, 0);
 			if (sockd == -1) {
-				NSLog(@"Socket creation failed!");
+				DBNSLog(@"Socket creation failed!");
 				[self setStatus:NSLocalizedString(@"Could not create GPSd socket.", @"GPS status")];
 				goto err;
 			}
@@ -893,7 +894,7 @@ int ss(char* inp, char* outp) {
 			} else {
 				hp = gethostbyname(hostname);
 				if (hp == NULL) {
-					NSLog(@"Could not resolve %s", hostname);
+					DBNSLog(@"Could not resolve %s", hostname);
 					[self setStatus:NSLocalizedString(@"Could not resolve GPSd server.", @"GPS status")];
 					goto err;
 				}
@@ -905,18 +906,18 @@ int ss(char* inp, char* outp) {
 			serv_name.sin_family = AF_INET;
 			serv_name.sin_port = htons([sets integerForKey:@"GPSDaemonPort"]);
 
-			NSLog(@"Connecting to gpsd (%s)",inet_ntoa(serv_name.sin_addr));
+			DBNSLog(@"Connecting to gpsd (%s)",inet_ntoa(serv_name.sin_addr));
 
 			/* connect to the server */
 			status = connect(sockd, (struct sockaddr*)&serv_name, sizeof(serv_name));
 			
 			if (status == -1) {
-				NSLog(@"Could not connect to %s port %ld", hostname, [sets integerForKey:@"GPSDaemonPort"]);
+				DBNSLog(@"Could not connect to %s port %d", hostname, (int)[sets integerForKey:@"GPSDaemonPort"]);
 				[self setStatus:NSLocalizedString(@"Could not connect to GPSd.", @"GPS status")];
 				goto err;
 			}
 
-			NSLog(@"GPS started successfully in GPSd mode.\n");
+			DBNSLog(@"GPS started successfully in GPSd mode.\n");
 			[self setStatus:NSLocalizedString(@"GPS started in GPSd mode.", @"GPS status")];
 
 			[self continousParseGPSd: sockd];
@@ -924,15 +925,15 @@ int ss(char* inp, char* outp) {
 
 			[self setStatus:NSLocalizedString(@"GPSd connection terminated - reconnecting...", @"GPS status")];
 		}
-    err:
-        [_gpsLock unlock];
-        _gpsThreadUp = NO;
-    } else {
-        NSLog(@"GPS LOCKING FAILURE!");
-    }
+        err:
+            [_gpsLock unlock];
+            _gpsThreadUp = NO;
+        } else {
+            DBNSLog(@"GPS LOCKING FAILURE!");
+        }
 
-    [subpool drain];
-    return;
+        return;
+    }
 }
 
 #pragma mark -
@@ -980,7 +981,7 @@ int ss(char* inp, char* outp) {
 	didUpdateToLocation:(CLLocation *)newLocation
 	fromLocation:(CLLocation *)oldLocation
 {
-    NSLog(@"Got location update!");
+    DBNSLog(@"Got location update!");
     //CFShow(newLocation);
     if([GPSController isValidLocation: newLocation])
     {
@@ -1004,7 +1005,7 @@ int ss(char* inp, char* outp) {
 - (void)locationManager:(CLLocationManager *)manager
 	didFailWithError:(NSError *)error
 {
-    CFShow(error);
+    CFShow((__bridge CFTypeRef)(error));
     _reliable = NO;
     [[NSNotificationCenter defaultCenter] postNotificationName:KisMACGPSStatusChanged 
                                                         object:[self status]];
@@ -1014,12 +1015,9 @@ int ss(char* inp, char* outp) {
 ///////////////////////////////////////////////////////////////////////////////
 
 - (void) dealloc {
-    [WaveHelper secureRelease:&_status];
+	_status = nil;
+    //[WaveHelper secureRelease:&_status];
     _gpsShallRun=NO;
-    [_gpsLock release];
-    [_gpsDevice release];
-    [_lastAdd release];
-    [super dealloc];
 }
 
 @end

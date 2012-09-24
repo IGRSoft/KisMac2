@@ -10,7 +10,7 @@
 
 
 static void RawDeviceAdded(void* refcon, io_iterator_t iterator) {
-    [(WaveSpectrumDriver*)refcon rawDeviceAdded:iterator];
+    [(__bridge WaveSpectrumDriver*)refcon rawDeviceAdded:iterator];
 }
 
 @implementation WaveSpectrumDriver
@@ -29,25 +29,25 @@ static void RawDeviceAdded(void* refcon, io_iterator_t iterator) {
     kern_return_t           kr;
 
 
-    NSNumber* usbVendor = [NSNumber numberWithInt:0x1781];
-    NSNumber* usbProduct = [NSNumber numberWithInt:0x083e];
+    NSNumber* usbVendor = @0x1781;
+    NSNumber* usbProduct = @0x083e;
     
-    NSMutableDictionary* matchingDict = (NSMutableDictionary *)IOServiceMatching(kIOUSBDeviceClassName);
+    NSMutableDictionary* matchingDict = (__bridge NSMutableDictionary *)IOServiceMatching(kIOUSBDeviceClassName);
     [matchingDict setValue:usbVendor forKey:@"idVendor"];
     [matchingDict setValue:usbProduct forKey:@"idProduct"];
-    NSLog(@"%@", matchingDict);
+    DBNSLog(@"%@", matchingDict);
     //Create a master port for communication with the I/O Kit
     kr = IOMasterPort(MACH_PORT_NULL, &masterPort);
     if (kr || !masterPort)
     {
-        CFRelease(matchingDict);
-        NSLog(@"ERR: Couldn’t create a master I/O Kit port(%08x)\n", kr);
+        CFRelease((__bridge CFTypeRef)(matchingDict));
+        DBNSLog(@"ERR: Couldn’t create a master I/O Kit port(%08x)\n", kr);
         return;
     }
     _notifyPort = IONotificationPortCreate(masterPort);
     runLoopSource = IONotificationPortGetRunLoopSource (_notifyPort);
     CFRunLoopAddSource([[NSRunLoop currentRunLoop] getCFRunLoop], runLoopSource, kCFRunLoopDefaultMode);
-    kr = IOServiceAddMatchingNotification(_notifyPort, kIOFirstMatchNotification, (CFDictionaryRef)matchingDict, RawDeviceAdded, (void *)self, &_gRawAddedIter);
+    kr = IOServiceAddMatchingNotification(_notifyPort, kIOFirstMatchNotification, (__bridge CFDictionaryRef)matchingDict, RawDeviceAdded, (__bridge void *)self, &_gRawAddedIter);
     if (kr) {
         return;
     }
@@ -63,10 +63,10 @@ static void RawDeviceAdded(void* refcon, io_iterator_t iterator) {
     UInt16                      vendor;
     UInt16                      product;
     UInt16                      release;
-    NSLog(@"DEVICE ADDED");
+    DBNSLog(@"DEVICE ADDED");
     while ((usbDevice = IOIteratorNext(iterator)))
     {
-        NSLog(@"OOO");
+        DBNSLog(@"OOO");
         //Create an intermediate plug-in
         kr = IOCreatePlugInInterfaceForService(usbDevice,
                                                kIOUSBDeviceUserClientTypeID, kIOCFPlugInInterfaceID,

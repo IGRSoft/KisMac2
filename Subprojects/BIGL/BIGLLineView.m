@@ -47,8 +47,7 @@
     NSParameterAssert(lines);
     NSParameterAssert([lines count] % 4 == 0);
     
-    [_lines autorelease];
-    _lines = [lines retain];
+    _lines = lines;
     return YES;
 }
 
@@ -78,8 +77,8 @@
     glColor4fv(_color);
     for(i = 0; i < [_lines count]; i+=4) {
         glBegin(GL_LINES);
-        glVertex2f([[_lines objectAtIndex:i]   floatValue] + p.x, [[_lines objectAtIndex:i+1] floatValue] +  p.y);
-        glVertex2f([[_lines objectAtIndex:i+2] floatValue] + p.x, [[_lines objectAtIndex:i+3] floatValue] +  p.y);
+        glVertex2f([_lines[i]   floatValue] + p.x, [_lines[i+1] floatValue] +  p.y);
+        glVertex2f([_lines[i+2] floatValue] + p.x, [_lines[i+3] floatValue] +  p.y);
         glEnd();
     }
 }
@@ -93,16 +92,12 @@
 
     [bp setLineWidth:_width];
     for(i = 0; i < [_lines count]; i+=4) {
-        [bp moveToPoint:NSMakePoint([[_lines objectAtIndex:i  ] floatValue] + p.x, [[_lines objectAtIndex:i+1] floatValue] + p.y)];
-        [bp lineToPoint:NSMakePoint([[_lines objectAtIndex:i+2] floatValue] + p.x, [[_lines objectAtIndex:i+3] floatValue] + p.y)];
+        [bp moveToPoint:NSMakePoint([_lines[i] floatValue] + p.x, [_lines[i+1] floatValue] + p.y)];
+        [bp lineToPoint:NSMakePoint([_lines[i+2] floatValue] + p.x, [_lines[i+3] floatValue] + p.y)];
     }
     [bp stroke];
 }
 
 #pragma mark -
 
-- (void)dealloc {
-    [_lines release];
-    [super dealloc];
-}
 @end

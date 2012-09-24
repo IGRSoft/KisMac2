@@ -262,7 +262,8 @@ UInt32 hashForMAC(const UInt8* val) {
         _viewChannel = [val intValue];
         break;
     case 2:
-        [WaveHelper secureReplace:&_viewSSID withObject:val];
+		_viewSSID = val;
+        //[WaveHelper secureReplace:&_viewSSID withObject:val];
         break;
     case 3:
         _viewCrypto = [val intValue];
@@ -274,14 +275,15 @@ UInt32 hashForMAC(const UInt8* val) {
 }
 
 - (void) setFilterString:(NSString*)filter {
-    if ([filter length] == 0) [WaveHelper secureRelease:&_filterString];
-    else [WaveHelper secureReplace:&_filterString withObject:filter];
+    if ([filter length] == 0) _filterString = nil; //[WaveHelper secureRelease:&_filterString];
+    else _filterString = filter;//[WaveHelper secureReplace:&_filterString withObject:filter];
     
     [self refreshView];    
 }
 
 - (void) setFilterType:(NSString*)filter {
-    [WaveHelper secureReplace:&_filterType withObject:filter];
+	_filterString = filter;
+    //[WaveHelper secureReplace:&_filterType withObject:filter];
     [self refreshView];    
 }
 
@@ -297,7 +299,7 @@ UInt32 hashForMAC(const UInt8* val) {
     _netCount++;
     entry = _netCount - 1;
     memcpy(&_idList[entry].ID, [net rawID], 6);
-    _idList[entry].net=[net retain];
+    _idList[entry].net = net;
     
     //add to hash table
     l = hashForMAC(_idList[entry].ID);
@@ -358,7 +360,7 @@ UInt32 hashForMAC(const UInt8* val) {
             return YES;
         }
         
-        CFRetain(n);
+        CFRetain((__bridge CFTypeRef)(n));
         net = n;
         
         [self addNetwork:net];
@@ -425,7 +427,7 @@ UInt32 hashForMAC(const UInt8* val) {
         }
         
         net = [self netForKey:[n rawID]];
-        CFRetain(n);
+        CFRetain((__bridge CFTypeRef)(n));
         
         if (!net) 
         {
@@ -678,8 +680,9 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
         _netCount++;
         entry = _netCount - 1;
         memcpy(&_idList[entry].ID, ID, 6);
-        _idList[entry].net=[[WaveNet alloc] initWithID:entry];
-        CFRetain(_idList[entry].net);
+		WaveNet *net = [[WaveNet alloc] initWithID:entry];
+        _idList[entry].net = net;
+        CFRetain((__bridge CFTypeRef)(_idList[entry].net));
         _lookup[l] = entry;
 
         [self addNetToView:entry];     
@@ -717,12 +720,28 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 
 - (bool) addAppleAPIData:(CWNetwork*)net 
 {
-    unsigned int entry;
+    unsigned int entry = 0;
 	NSParameterAssert(net);
 
     if (_dropAll) return YES;
     
-    entry = [self findNetwork: [[net bssidData] bytes]];
+	unsigned char macData[6] = {0};
+	
+	// [CWInterface bssid] returns a string formatted "00:00:00:00:00:00".
+	NSString* macString = [net bssid];
+	if (macString && ([macString length] == 17)) {
+		for (NSUInteger i = 0; i < 6; ++i) {
+			NSString* part = [macString substringWithRange:NSMakeRange(i * 3, 2)];
+			NSScanner* scanner = [NSScanner scannerWithString:part];
+			unsigned int data = 0;
+			if (![scanner scanHexInt:&data]) {
+				data = 0;
+			}
+			macData[i] = (unsigned char) data;
+		}
+	}
+	
+    entry = [self findNetwork: macData];
     if (entry == 0xFFFFFFFF) return NO;                          //the object is filtered...
     
 	@synchronized(_idList[entry].net)
@@ -821,7 +840,7 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
     for (i=0; i<oldcount; i++) {
         e = _idList[i].net;
         _idList[i].net = Nil;
-        CFRelease(e);
+        CFRelease((__bridge CFTypeRef)(e));
     }
     
     _dropAll = NO;
@@ -838,7 +857,7 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
     [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
     
 	n = net;
-    CFRelease(n);
+    CFRelease((__bridge CFTypeRef)(n));
 	
     for(i = 0; i < LOOKUPSIZE; i++)
     {
@@ -894,8 +913,6 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [self clearAllEntries];
-    [_sortLock release];
-	[super dealloc];
 }
 
 -(NSArray *)netFields {

@@ -40,15 +40,15 @@
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>KisMAC</string>
+	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleGetInfoString</key>
-	<string>KisMAC 0.3, © 2002-2009 Geoffrey Kruse &amp; KisMAC Community</string>
+	<string>KisMAC 0.3, © 2002-2012 Geoffrey Kruse &amp; KisMAC Community</string>
 	<key>CFBundleHelpBookFolder</key>
 	<string>KisMACHelp</string>
 	<key>CFBundleHelpBookName</key>
 	<string>KisMAC Help</string>
 	<key>CFBundleIconFile</key>
-	<string>devil.icns</string>
+	<string>devil</string>
 	<key>CFBundleIdentifier</key>
 	<string>org.kismac-ng.kismac</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -58,15 +58,15 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>KisMAC svn</string>
+	<string>0.3.4</string>
 	<key>CFBundleSignature</key>
 	<string>BIKM</string>
 	<key>CFBundleVersion</key>
-	<string>svn</string>
+	<string>Alpha 1</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>LSMinimumSystemVersion</key>
-	<string>10.6.0</string>
+	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>NSAppleScriptEnabled</key>
 	<string>YES</string>
 	<key>NSMainNibFile</key>

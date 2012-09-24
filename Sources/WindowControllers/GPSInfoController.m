@@ -165,10 +165,8 @@
     } else {
         // Otherwise, if window is completely transparent, destroy the timer and close the window.
         [timer invalidate];
-        [timer release];
         
 		[[self window] close];
-		[self release];
 		[WaveHelper setGPSInfoController:NULL];
     }
 }

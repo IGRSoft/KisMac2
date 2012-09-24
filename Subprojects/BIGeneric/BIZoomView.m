@@ -23,20 +23,20 @@
 
 - (void)doZoom:(NSObject*)o {
     float i;
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    @autoreleasepool {
 
-    for (i = 0; i < _frame.size.width; i+=10) {
-        [_v2 setLocation:NSMakePoint(_frame.size.width-i, 0)];
-        [_v1 setLocation:NSMakePoint(-i, 0)];
-        [self setNeedsDisplay:YES];
-        [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]]; 
-    }
+        for (i = 0; i < _frame.size.width; i+=10) {
+            [_v2 setLocation:NSMakePoint(_frame.size.width-i, 0)];
+            [_v1 setLocation:NSMakePoint(-i, 0)];
+            [self setNeedsDisplay:YES];
+            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]]; 
+        }
     /*
     [self addSubview:_view];
     [_view setFrameSize:_frame.size];
     [_view display];
     */
-    [pool drain];
+    }
 }
 
 - (void)zoomFrom:(NSView*)oldV to:(NSView*)newV {
@@ -61,8 +61,6 @@
 
     _v1 = [[BIGLImageView alloc] initWithImage:v1];
     _v2 = [[BIGLImageView alloc] initWithImage:v2];
-    [v1 release];
-    [v2 release];
     
     [self addSubView:_v1];
     [self addSubView:_v2];
@@ -87,8 +85,6 @@
     [self removeSubView:_v1];
     [self removeSubView:_v2];
     
-    [_v1 release];
-    [_v2 release];
 }
 
 

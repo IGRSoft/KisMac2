@@ -95,17 +95,17 @@ NSInteger lengthSort(id string1, id string2, void *context)
 	graphData = &zeroGraphData;
 	
     // Packet buffers
-    _packetsLog=[[NSMutableArray arrayWithCapacity:20] retain];
-    _ARPLog=[[NSMutableArray arrayWithCapacity:20] retain];
-    _ACKLog=[[NSMutableArray arrayWithCapacity:20] retain];
+    _packetsLog=[NSMutableArray arrayWithCapacity:20];
+    _ARPLog=[NSMutableArray arrayWithCapacity:20];
+    _ACKLog=[NSMutableArray arrayWithCapacity:20];
     
-    aClients=[[NSMutableDictionary dictionary] retain];
-    aClientKeys=[[NSMutableArray array] retain];
-    aComment=[[NSString stringWithString:@""] retain];
-    aLat = [[NSString stringWithString:@""] retain];
-    aLong = [[NSString stringWithString:@""] retain];
-    aElev = [[NSString stringWithString:@""] retain];
-    _coordinates = [[NSMutableDictionary dictionary] retain];
+    aClients=[NSMutableDictionary dictionary];
+    aClientKeys=[NSMutableArray array];
+    aComment=@"";
+    aLat = @"";
+    aLong = @"";
+    aElev = @"";
+    _coordinates = [NSMutableDictionary dictionary];
     _netID=netID;
 
     _gotData = NO;
@@ -122,7 +122,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     _SSID = Nil;
     _firstPacket = YES;
     _liveCaptured = NO;
-    aFirstDate = [[NSDate date] retain];
+    aFirstDate = [NSDate date];
     
     _challengeResponseStatus = chreNone;
 
@@ -138,12 +138,12 @@ NSInteger lengthSort(id string1, id string2, void *context)
     NSData *data;
         
     if (![coder allowsKeyedCoding]) {
-        NSLog(@"Cannot decode this way");
+        DBNSLog(@"Cannot decode this way");
         return nil;
     }
 
     if ([coder decodeObjectForKey:@"aFirstDate"] == Nil) {
-        NSLog(@"Invalid net, dropping!");
+        DBNSLog(@"Invalid net, dropping!");
         return Nil;
     }
     
@@ -175,31 +175,31 @@ NSInteger lengthSort(id string1, id string2, void *context)
     wp._long = [coder decodeDoubleForKey:@"a_Long"];
     wp._elevation = [coder decodeDoubleForKey:@"a_Elev"];
     
-    aLat = [[coder decodeObjectForKey:@"aLat"] retain];
-    aLong = [[coder decodeObjectForKey:@"aLong"] retain];
-    aElev = [[coder decodeObjectForKey:@"aElev"] retain];
+    aLat = [coder decodeObjectForKey:@"aLat"];
+    aLong = [coder decodeObjectForKey:@"aLong"];
+    aElev = [coder decodeObjectForKey:@"aElev"];
     
-    _ID=[[coder decodeObjectForKey:@"aID"] retain];
+    _ID=[coder decodeObjectForKey:@"aID"];
     if (_ID!=Nil && sscanf([_ID UTF8String], "%2X%2X%2X%2X%2X%2X", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) {
-        NSLog(@"Error could not decode ID %@!", _ID);
+        DBNSLog(@"Error could not decode ID %@!", _ID);
     }
     
     for (int x=0; x<6; x++)
         _rawID[x] = bssid[x];
     
-    _SSID=[[coder decodeObjectForKey:@"aSSID"] retain];
-    _BSSID=[[coder decodeObjectForKey:@"aBSSID"] retain];
+    _SSID=[coder decodeObjectForKey:@"aSSID"];
+    _BSSID=[coder decodeObjectForKey:@"aBSSID"];
     if (![_BSSID isEqualToString:@"<no bssid>"]) {
         if (_BSSID!=Nil && sscanf([_BSSID UTF8String], "%2X:%2X:%2X:%2X:%2X:%2X", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) 
-            NSLog(@"Error could not decode BSSID %@!", _BSSID);
+            DBNSLog(@"Error could not decode BSSID %@!", _BSSID);
         for (int x=0; x<6; x++)
             _rawBSSID[x] = bssid[x];
     } else {
          for (int x=0; x<6; x++)
             _rawBSSID[x] = bssid[0];
     }
-    _date=[[coder decodeObjectForKey:@"aDate"] retain];
-    aFirstDate=[[coder decodeObjectForKey:@"aFirstDate"] retain];
+    _date=[coder decodeObjectForKey:@"aDate"];
+    aFirstDate=[coder decodeObjectForKey:@"aFirstDate"];
     
     data = [coder decodeObjectForKey:@"ivData0"];
     if (data) _ivData[0] = [[WaveWeakContainer alloc] initWithData:data];
@@ -213,23 +213,23 @@ NSInteger lengthSort(id string1, id string2, void *context)
     //_packetsLog=[[coder decodeObjectForKey:@"aPacketsLog"] retain];
     //_ARPLog=[[coder decodeObjectForKey:@"aARPLog"] retain]; cannot be used because it is now data
     //_ACKLog=[[coder decodeObjectForKey:@"aACKLog"] retain];
-    _password=[[coder decodeObjectForKey:@"aPassword"] retain];
-    aComment=[[coder decodeObjectForKey:@"aComment"] retain];
-    _coordinates=[[coder decodeObjectForKey:@"_coordinates"] retain];
+    _password=[coder decodeObjectForKey:@"aPassword"];
+    aComment=[coder decodeObjectForKey:@"aComment"];
+    _coordinates=[coder decodeObjectForKey:@"_coordinates"];
     
-    aClients=[[coder decodeObjectForKey:@"aClients"] retain];
-    aClientKeys=[[coder decodeObjectForKey:@"aClientKeys"] retain];
+    aClients=[coder decodeObjectForKey:@"aClients"];
+    aClientKeys=[coder decodeObjectForKey:@"aClientKeys"];
     
-    if (!_packetsLog) _packetsLog=[[NSMutableArray arrayWithCapacity:20] retain];
-    if (!_ARPLog) _ARPLog=[[NSMutableArray arrayWithCapacity:20] retain];
-    if (!_ACKLog) _ACKLog=[[NSMutableArray arrayWithCapacity:20] retain];
-    if (!aClients) aClients=[[NSMutableDictionary dictionary] retain];
-    if (!aClientKeys) aClientKeys=[[NSMutableArray array] retain];
-    if (!aComment) aComment=[[NSString stringWithString:@""] retain];
-    if (!aLat) aLat = [[NSString stringWithString:@""] retain];
-    if (!aLong) aLong = [[NSString stringWithString:@""] retain];
-    if (!aElev) aElev = [[NSString stringWithString:@""] retain];
-    if (!_coordinates) _coordinates = [[NSMutableDictionary dictionary] retain];
+    if (!_packetsLog) _packetsLog=[NSMutableArray arrayWithCapacity:20];
+    if (!_ARPLog) _ARPLog=[NSMutableArray arrayWithCapacity:20];
+    if (!_ACKLog) _ACKLog=[NSMutableArray arrayWithCapacity:20];
+    if (!aClients) aClients=[NSMutableDictionary dictionary];
+    if (!aClientKeys) aClientKeys=[NSMutableArray array];
+    if (!aComment) aComment=@"";
+    if (!aLat) aLat = @"";
+    if (!aLong) aLong = @"";
+    if (!aElev) aElev = @"";
+    if (!_coordinates) _coordinates = [NSMutableDictionary dictionary];
     
     if (_primaryChannel == 0) _primaryChannel = _channel;
     _gotData = NO;
@@ -274,8 +274,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     &hour, &min, &sec,
     &_maxSignal,
     &flags, &channelbits, &interval) < 9) {
-        NSLog(@"line in backup file is corrupt or not compatible");
-        [self release];
+        DBNSLog(@"line in backup file is corrupt or not compatible");
         return Nil;
     }
 
@@ -296,15 +295,15 @@ NSInteger lengthSort(id string1, id string2, void *context)
 
     _isWep = (flags & 0x0010) ? encryptionTypeWEP : encryptionTypeNone;
 
-    _date = [[NSDate dateWithString:[NSString stringWithFormat:@"%@ %.2d:%.2d:%.2d +0000", date, hour, min, sec]] retain];
-    aFirstDate = [_date retain];
+    _date = [NSDate dateWithString:[NSString stringWithFormat:@"%@ %.2d:%.2d:%.2d +0000", date, hour, min, sec]];
+    aFirstDate = _date;
     
-    aLat  = [[NSString stringWithFormat:@"%f%c", ns_coord, ns_dir] retain];
-    aLong = [[NSString stringWithFormat:@"%f%c", ew_coord, ew_dir] retain];
-    _SSID = [[NSString stringWithUTF8String: ssid] retain];
+    aLat  = [NSString stringWithFormat:@"%f%c", ns_coord, ns_dir];
+    aLong = [NSString stringWithFormat:@"%f%c", ew_coord, ew_dir];
+    _SSID = @(ssid);
 
-    _ID = [[NSString stringWithFormat:@"%2X%2X%2X%2X%2X%2X", bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5]] retain];
-    _BSSID = [[NSString stringWithFormat:@"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X", bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5]] retain];
+    _ID = [NSString stringWithFormat:@"%2X%2X%2X%2X%2X%2X", bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5]];
+    _BSSID = [NSString stringWithFormat:@"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X", bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5]];
     for (int x=0; x<6; x++)
         _rawID[x] = bssid[x];
     
@@ -324,14 +323,14 @@ NSInteger lengthSort(id string1, id string2, void *context)
         _netView = nil;
     }
 	
-    _packetsLog = [[NSMutableArray arrayWithCapacity:20] retain];
-    _ARPLog  = [[NSMutableArray arrayWithCapacity:20] retain];
-    _ACKLog  = [[NSMutableArray arrayWithCapacity:20] retain];
-    aClients = [[NSMutableDictionary dictionary] retain];
-    aClientKeys = [[NSMutableArray array] retain];
-    aComment = [[NSString stringWithString:@""] retain];
-    aElev = [[NSString stringWithString:@""] retain];
-    _coordinates = [[NSMutableDictionary dictionary] retain];
+    _packetsLog = [NSMutableArray arrayWithCapacity:20];
+    _ARPLog  = [NSMutableArray arrayWithCapacity:20];
+    _ACKLog  = [NSMutableArray arrayWithCapacity:20];
+    aClients = [NSMutableDictionary dictionary];
+    aClientKeys = [NSMutableArray array];
+    aComment = @"";
+    aElev = @"";
+    _coordinates = [NSMutableDictionary dictionary];
     _netID = 0;
 	
     _gotData = NO;
@@ -358,8 +357,8 @@ NSInteger lengthSort(id string1, id string2, void *context)
 	
 	NSParameterAssert(dict);
 	
-	if ([dict objectForKey:@"ID"] == Nil) {
-        NSLog(@"Invalid net, dropping!");
+	if (dict[@"ID"] == Nil) {
+        DBNSLog(@"Invalid net, dropping!");
         return Nil;
     }
     
@@ -371,105 +370,105 @@ NSInteger lengthSort(id string1, id string2, void *context)
 	
 	graphData = &zeroGraphData;
 	
-    _channel = [[dict objectForKey:@"channel"] intValue];
-    _primaryChannel = [[dict objectForKey:@"originalChannel"] intValue];
-    _netID = [[dict objectForKey:@"netID"] intValue];
-    _packets = [[dict objectForKey:@"packets"] intValue];
-    _maxSignal = [[dict objectForKey:@"maxSignal"] intValue];
-    _curSignal = [[dict objectForKey:@"curSignal"] intValue];
-    _type = (networkType)[[dict objectForKey:@"type"] intValue];
-    _isWep = (encryptionType)[[dict objectForKey:@"encryption"] intValue];
-    _dataPackets = [[dict objectForKey:@"dataPackets"] intValue];
-    _mgmtPackets = [[dict objectForKey:@"mgmtPackets"] intValue];
-    _ctrlPackets = [[dict objectForKey:@"ctrlPackets"] intValue];
-    _liveCaptured = [[dict objectForKey:@"liveCaptured"] boolValue];
+    _channel = [dict[@"channel"] intValue];
+    _primaryChannel = [dict[@"originalChannel"] intValue];
+    _netID = [dict[@"netID"] intValue];
+    _packets = [dict[@"packets"] intValue];
+    _maxSignal = [dict[@"maxSignal"] intValue];
+    _curSignal = [dict[@"curSignal"] intValue];
+    _type = (networkType)[dict[@"type"] intValue];
+    _isWep = (encryptionType)[dict[@"encryption"] intValue];
+    _dataPackets = [dict[@"dataPackets"] intValue];
+    _mgmtPackets = [dict[@"mgmtPackets"] intValue];
+    _ctrlPackets = [dict[@"ctrlPackets"] intValue];
+    _liveCaptured = [dict[@"liveCaptured"] boolValue];
     
 	for(int x=0; x<14; x++)
-        _packetsPerChannel[x] = [[[dict objectForKey:@"packetsPerChannel"] objectForKey:[NSString stringWithFormat:@"%.2i",x]] intValue];
+        _packetsPerChannel[x] = [dict[@"packetsPerChannel"][[NSString stringWithFormat:@"%.2i",x]] intValue];
     
-    _bytes = [[dict objectForKey:@"bytes"] doubleValue];
-    wp._lat = [[dict objectForKey:@"lat"] doubleValue];
-    wp._long = [[dict objectForKey:@"long"] doubleValue];
-    wp._elevation = [[dict objectForKey:@"elev"] doubleValue];
+    _bytes = [dict[@"bytes"] doubleValue];
+    wp._lat = [dict[@"lat"] doubleValue];
+    wp._long = [dict[@"long"] doubleValue];
+    wp._elevation = [dict[@"elev"] doubleValue];
     
     (wp._lat < 0) ? ns_dir = 'S' :  ns_dir = 'N';
     (wp._lat < 0) ? ew_dir = 'W' :  ew_dir = 'E';
     
-    _ID=[[dict objectForKey:@"ID"] retain];
+    _ID=dict[@"ID"];
     if (_ID!=Nil && sscanf([_ID UTF8String], "%2X%2X%2X%2X%2X%2X", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) {
-        NSLog(@"Error could not decode ID %@!", _ID);
+        DBNSLog(@"Error could not decode ID %@!", _ID);
     }
     
     for (int x=0; x<6; x++)
         _rawID[x] = bssid[x];
     
-    _SSID  = [[dict objectForKey:@"SSID"] retain];
-    _SSIDs = [[dict objectForKey:@"SSIDs"] retain];
-    _BSSID=[[dict objectForKey:@"BSSID"] retain];
+    _SSID  = dict[@"SSID"];
+    _SSIDs = dict[@"SSIDs"];
+    _BSSID=dict[@"BSSID"];
     if (![_BSSID isEqualToString:@"<no bssid>"]) {
         if (_BSSID!=Nil && sscanf([_BSSID UTF8String], "%2X:%2X:%2X:%2X:%2X:%2X", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) 
-            NSLog(@"Error could not decode BSSID %@!", _BSSID);
+            DBNSLog(@"Error could not decode BSSID %@!", _BSSID);
         for (int x=0; x<6; x++)
             _rawBSSID[x] = bssid[x];
     } else {
          for (int x=0; x<6; x++)
             _rawBSSID[x] = bssid[0];
     }
-    _date=[[dict objectForKey:@"date"] retain];
-    aFirstDate = [[dict objectForKey:@"firstDate"] retain];
+    _date=dict[@"date"];
+    aFirstDate = dict[@"firstDate"];
     
-	data = [dict objectForKey:@"rates"];
+	data = dict[@"rates"];
 	_rateCount = min([data length], MAX_RATE_COUNT);
 	[data getBytes:_rates length:_rateCount];
 	
-    data = [dict objectForKey:@"ivData0"];
+    data = dict[@"ivData0"];
     if (data) _ivData[0] = [[WaveWeakContainer alloc] initWithData:data];
-    data = [dict objectForKey:@"ivData1"];
+    data = dict[@"ivData1"];
     if (data) _ivData[1] = [[WaveWeakContainer alloc] initWithData:data];
-    data = [dict objectForKey:@"ivData2"];
+    data = dict[@"ivData2"];
     if (data) _ivData[2] = [[WaveWeakContainer alloc] initWithData:data];
-    data = [dict objectForKey:@"ivData3"];
+    data = dict[@"ivData3"];
     if (data) _ivData[3] = [[WaveWeakContainer alloc] initWithData:data];
     
-    _packetsLog = [[dict objectForKey:@"packetsLog"] mutableCopy];
-    if (!_packetsLog) _packetsLog = [[NSMutableArray arrayWithCapacity:20] retain];
-    _ARPLog = [[dict objectForKey:@"ARPLog"] mutableCopy];
-    if (!_ARPLog) _ARPLog = [[NSMutableArray arrayWithCapacity:100] retain];
-    _ACKLog = [[dict objectForKey:@"ACKLog"] mutableCopy];
-    if (!_ACKLog) _ACKLog = [[NSMutableArray arrayWithCapacity:20] retain];
-    aClientKeys = [[dict objectForKey:@"clientKeys"] mutableCopy];
-    clients = [dict objectForKey:@"clients"];
-	if (!clients) aClients = [[NSMutableDictionary dictionary] retain];
+    _packetsLog = [dict[@"packetsLog"] mutableCopy];
+    if (!_packetsLog) _packetsLog = [NSMutableArray arrayWithCapacity:20];
+    _ARPLog = [dict[@"ARPLog"] mutableCopy];
+    if (!_ARPLog) _ARPLog = [NSMutableArray arrayWithCapacity:100];
+    _ACKLog = [dict[@"ACKLog"] mutableCopy];
+    if (!_ACKLog) _ACKLog = [NSMutableArray arrayWithCapacity:20];
+    aClientKeys = [dict[@"clientKeys"] mutableCopy];
+    clients = dict[@"clients"];
+	if (!clients) aClients = [NSMutableDictionary dictionary];
     else {
 		NSString *c;
-		aClients = [[NSMutableDictionary dictionaryWithCapacity:[clients count]] retain];
+		aClients = [NSMutableDictionary dictionaryWithCapacity:[clients count]];
 		NSEnumerator *e = [clients keyEnumerator];
 		
 		while ((c = [e nextObject])) {
-			[aClients setObject:[[[WaveClient alloc] initWithDataDictionary:[clients objectForKey:c]] autorelease] forKey:c];
+			aClients[c] = [[WaveClient alloc] initWithDataDictionary:clients[c]];
 		}
 		aClientKeys = [[aClients allKeys] mutableCopy];
 	}
     
-	_password = [[dict objectForKey:@"password"] retain];
+	_password = dict[@"password"];
     
-	aComment = [[dict objectForKey:@"comment"] retain];
-    if (!aComment) aComment = [[NSString stringWithString:@""] retain];
-    aLat = [[dict objectForKey:@"latString"] retain];
-    if (!aLat) aLat = [[NSString stringWithFormat:@"%f%c", wp._lat, ns_dir] retain];
-    aLong = [[dict objectForKey:@"longString"] retain];
-    if (!aLong) aLong = [[NSString stringWithFormat:@"%f%c", wp._long, ew_dir] retain];
-    aElev = [[dict objectForKey:@"elevString"] retain];
-    if (!aElev) aElev = [[NSString stringWithFormat:@"%.1f", (wp._elevation * 3.2808399)] retain];
+	aComment = dict[@"comment"];
+    if (!aComment) aComment = @"";
+    aLat = dict[@"latString"];
+    if (!aLat) aLat = [NSString stringWithFormat:@"%f%c", wp._lat, ns_dir];
+    aLong = dict[@"longString"];
+    if (!aLong) aLong = [NSString stringWithFormat:@"%f%c", wp._long, ew_dir];
+    aElev = dict[@"elevString"];
+    if (!aElev) aElev = [NSString stringWithFormat:@"%.1f", (wp._elevation * 3.2808399)];
     
-	_coordinates = [[dict objectForKey:@"coordinates"] retain];
-    if (!_coordinates) _coordinates = [[NSMutableDictionary dictionary] retain];
+	_coordinates = dict[@"coordinates"];
+    if (!_coordinates) _coordinates = [NSMutableDictionary dictionary];
     else {
 		NSData *d;
 		BIValuePair *vp;
 		
 		d = (NSData*)_coordinates;
-		_coordinates = [[NSMutableDictionary dictionary] retain];
+		_coordinates = [NSMutableDictionary dictionary];
 		const struct signalCoords *pL;
 		
 		if ([d length] % sizeof(struct signalCoords) == 0) {
@@ -478,7 +477,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 			for (unsigned int i = 0; i < ([d length] / sizeof(struct signalCoords)); i++) {
 				vp = [BIValuePair new];
 				[vp setPairX:pL->x Y:pL->y];
-				[_coordinates setObject:[NSNumber numberWithInt:pL->strength] forKey:[vp autorelease]];
+				_coordinates[vp] = @(pL->strength);
 				pL++;
 			}
 		}
@@ -526,7 +525,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 		NSEnumerator *e = [_coordinates keyEnumerator];
 		
 		while ((vp = [e nextObject])) {
-			pL->strength = [[_coordinates objectForKey:vp] intValue];
+			pL->strength = [_coordinates[vp] intValue];
 			pL->x = [vp getX];
 			pL->y = [vp getY];
 			pL++;
@@ -539,7 +538,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 		NSEnumerator *e = [aClients keyEnumerator];
 		
 		while ((c = [e nextObject]) != nil) {
-			[clients setObject:[[aClients objectForKey:c] dataDictionary] forKey:c];
+			clients[c] = [aClients[c] dataDictionary];
 		}
 	}
 
@@ -547,61 +546,61 @@ NSInteger lengthSort(id string1, id string2, void *context)
 		packetsPerChannel = [NSMutableDictionary dictionary];
 		for (int i = 0; i <14; i++) {
 			if (_packetsPerChannel[i]) {
-				[packetsPerChannel setObject:[NSNumber numberWithInt:_packetsPerChannel[i]] forKey:[NSString stringWithFormat:@"%.2u", i]];
+				packetsPerChannel[[NSString stringWithFormat:@"%.2u", i]] = @(_packetsPerChannel[i]);
 			}
 		}
 	}
 
 	dict = [NSMutableDictionary dictionary];
 	
-	[dict setObject:[NSNumber numberWithInt:_maxSignal] forKey:@"maxSignal"];
-	if (_curSignal > 0)  [dict setObject:[NSNumber numberWithInt:_curSignal] forKey:@"curSignal"];
-	[dict setObject:[NSNumber numberWithInt:_type] forKey:@"type"];
-	[dict setObject:[NSNumber numberWithInt:_isWep] forKey:@"encryption"];
-	if (_packets > 0)  [dict setObject:[NSNumber numberWithInt:_packets] forKey:@"packets"];
-	if (_dataPackets > 0)  [dict setObject:[NSNumber numberWithInt:_dataPackets] forKey:@"dataPackets"];
-	if (_mgmtPackets > 0)  [dict setObject:[NSNumber numberWithInt:_mgmtPackets] forKey:@"mgmtPackets"];
-	if (_ctrlPackets > 0)  [dict setObject:[NSNumber numberWithInt:_ctrlPackets] forKey:@"ctrlPackets"];
-	[dict setObject:[NSNumber numberWithInt:_channel] forKey:@"channel"];
-	[dict setObject:[NSNumber numberWithInt:_primaryChannel] forKey:@"originalChannel"];
-	[dict setObject:[NSNumber numberWithInt:_netID] forKey:@"netID"];
+	dict[@"maxSignal"] = @(_maxSignal);
+	if (_curSignal > 0)  dict[@"curSignal"] = @(_curSignal);
+	dict[@"type"] = [NSNumber numberWithInt:_type];
+	dict[@"encryption"] = [NSNumber numberWithInt:_isWep];
+	if (_packets > 0)  dict[@"packets"] = @(_packets);
+	if (_dataPackets > 0)  dict[@"dataPackets"] = @(_dataPackets);
+	if (_mgmtPackets > 0)  dict[@"mgmtPackets"] = @(_mgmtPackets);
+	if (_ctrlPackets > 0)  dict[@"ctrlPackets"] = @(_ctrlPackets);
+	dict[@"channel"] = @(_channel);
+	dict[@"originalChannel"] = @(_primaryChannel);
+	dict[@"netID"] = @(_netID);
 	
-	[dict setObject:[NSNumber numberWithBool:_liveCaptured] forKey:@"liveCaptured"];
-	if (_bytes > 0) [dict setObject:[NSNumber numberWithDouble:_bytes] forKey:@"bytes"];
+	dict[@"liveCaptured"] = @(_liveCaptured);
+	if (_bytes > 0) dict[@"bytes"] = @(_bytes);
 	
-	if (_rateCount) [dict setObject:[NSData dataWithBytes:_rates length:_rateCount] forKey:@"rates"];
+	if (_rateCount) dict[@"rates"] = [NSData dataWithBytes:_rates length:_rateCount];
 	
     if(nil != _netView)
     {
         wp = [_netView coord];
-        if (wp._lat != 0) [dict setObject:[NSNumber numberWithFloat:wp._lat] forKey:@"lat"];
-        if (wp._long != 0) [dict setObject:[NSNumber numberWithFloat:wp._long] forKey:@"long"];
-        if (wp._elevation != 0) [dict setObject:[NSNumber numberWithFloat:wp._elevation] forKey:@"elev"];
+        if (wp._lat != 0) dict[@"lat"] = [NSNumber numberWithFloat:wp._lat];
+        if (wp._long != 0) dict[@"long"] = [NSNumber numberWithFloat:wp._long];
+        if (wp._elevation != 0) dict[@"elev"] = [NSNumber numberWithFloat:wp._elevation];
     }
 	
-	if (aLat  && [aLat  length]>0) [dict setObject:aLat forKey:@"latString"];
-	if (aLong && [aLong length]>0) [dict setObject:aLong forKey:@"longString"];
-	if (aElev && [aElev length]>0) [dict setObject:aElev forKey:@"elevString"];
+	if (aLat  && [aLat  length]>0) dict[@"latString"] = aLat;
+	if (aLong && [aLong length]>0) dict[@"longString"] = aLong;
+	if (aElev && [aElev length]>0) dict[@"elevString"] = aElev;
 	
-	if (_ID) [dict setObject:_ID forKey:@"ID"];
-	if (aFirstDate) [dict setObject:aFirstDate forKey:@"firstDate"];
-	if (_SSID)  [dict setObject:_SSID forKey:@"SSID"];
-	if (_SSIDs) [dict setObject:_SSIDs forKey:@"SSIDs"];
-	if (_BSSID) [dict setObject:_BSSID forKey:@"BSSID"];
-	if (_date)  [dict setObject:_date forKey:@"date"];
-	if (_ivData[0])  [dict setObject:[_ivData[0] data] forKey:@"ivData0"];
-	if (_ivData[1])  [dict setObject:[_ivData[1] data] forKey:@"ivData1"];
-	if (_ivData[2])  [dict setObject:[_ivData[2] data] forKey:@"ivData2"];
-	if (_ivData[3])  [dict setObject:[_ivData[3] data] forKey:@"ivData3"];
-	if (_packetsLog && [_packetsLog count] > 0) [dict setObject:_packetsLog forKey:@"packetsLog"];
-	if (_ARPLog && [_ARPLog count] > 0) [dict setObject:_ARPLog forKey:@"ARPLog"];
-	if (_ACKLog && [_ACKLog count] > 0) [dict setObject:_ACKLog forKey:@"ACKLog"];
-	if (_password)   [dict setObject:_password forKey:@"password"];
-	if (aComment && [aComment length] > 0) [dict setObject:aComment forKey:@"comment"];
+	if (_ID) dict[@"ID"] = _ID;
+	if (aFirstDate) dict[@"firstDate"] = aFirstDate;
+	if (_SSID)  dict[@"SSID"] = _SSID;
+	if (_SSIDs) dict[@"SSIDs"] = _SSIDs;
+	if (_BSSID) dict[@"BSSID"] = _BSSID;
+	if (_date)  dict[@"date"] = _date;
+	if (_ivData[0])  dict[@"ivData0"] = [_ivData[0] data];
+	if (_ivData[1])  dict[@"ivData1"] = [_ivData[1] data];
+	if (_ivData[2])  dict[@"ivData2"] = [_ivData[2] data];
+	if (_ivData[3])  dict[@"ivData3"] = [_ivData[3] data];
+	if (_packetsLog && [_packetsLog count] > 0) dict[@"packetsLog"] = _packetsLog;
+	if (_ARPLog && [_ARPLog count] > 0) dict[@"ARPLog"] = _ARPLog;
+	if (_ACKLog && [_ACKLog count] > 0) dict[@"ACKLog"] = _ACKLog;
+	if (_password)   dict[@"password"] = _password;
+	if (aComment && [aComment length] > 0) dict[@"comment"] = aComment;
 	
-	if (clients) [dict setObject:clients forKey:@"clients"];
-	if (coord) [dict setObject:coord forKey:@"coordinates"];
-	if (packetsPerChannel) [dict setObject:packetsPerChannel forKey:@"packetsPerChannel"];
+	if (clients) dict[@"clients"] = clients;
+	if (coord) dict[@"coordinates"] = coord;
+	if (packetsPerChannel) dict[@"packetsPerChannel"] = packetsPerChannel;
 	
 	[_dataLock unlock];
 
@@ -641,9 +640,11 @@ NSInteger lengthSort(id string1, id string2, void *context)
 	
 	if (isHidden) {
 		if (_SSID!=Nil) return; //we might have the real ssid already
-		[WaveHelper secureReplace:&_SSID withObject:@""];
+		_SSID = @"";
+		//[WaveHelper secureReplace:&_SSID withObject:@""];
 	} else {
-		[WaveHelper secureReplace:&_SSID withObject:newSSID];
+		_SSID = newSSID;
+		//[WaveHelper secureReplace:&_SSID withObject:newSSID];
 		if (updatedSSID) {
 			[GrowlController notifyGrowlSSIDRevealed:@"" BSSID:_BSSID SSID:newSSID];
 		}
@@ -732,21 +733,21 @@ NSInteger lengthSort(id string1, id string2, void *context)
                 }
             }
             
-            [WaveHelper secureReplace:&_date withObject:[[NSDate date] retain]];
+			_date = [NSDate date];
+            //[WaveHelper secureReplace:&_date withObject:[[NSDate date] retain]];
 
             if (cp._lat!=100) {
                 pV = [BIValuePair new];
                 [pV setPairFromWaypoint:cp];
-                v = [_coordinates objectForKey:pV];
+                v = _coordinates[pV];
                 if ((v==Nil) || ([v intValue]<_curSignal))
-                    [_coordinates setObject:[NSNumber numberWithInt:_curSignal] forKey:pV];
-                [pV release];
+                    _coordinates[pV] = @(_curSignal);
                 if(_curSignal>=_maxSignal || ([aLat floatValue] == 0)) 
                 {
                     if(nil == _netView) 
                     {
                         // we didn't have a GPS position when this was first found, so initialise _netView now
-                        NSLog(@"First GPS fix for net %@ - initialising",_BSSID);
+                        DBNSLog(@"First GPS fix for net %@ - initialising",_BSSID);
                         _netView = [[NetView alloc] initWithNetwork:self];
                         [_netView setWep:_isWep];
                         if (_SSID==Nil) [_netView setName:_BSSID]; // use BSSID for map label
@@ -754,11 +755,11 @@ NSInteger lengthSort(id string1, id string2, void *context)
                     }
                     gpsc = [WaveHelper gpsController];
                     s = [gpsc NSCoord];
-                    if (s) [WaveHelper secureReplace:&aLat withObject:s];
+                    if (s) aLat = s; //[WaveHelper secureReplace:&aLat withObject:s];
                     s = [gpsc EWCoord];
-                    if (s) [WaveHelper secureReplace:&aLong withObject:s];
+                    if (s) aLong = s; //[WaveHelper secureReplace:&aLong withObject:s];
                     s = [gpsc ElevCoord];
-                    if (s) [WaveHelper secureReplace:&aElev withObject:s];
+                    if (s) aElev = s; //[WaveHelper secureReplace:&aElev withObject:s];
                     [_netView setCoord:cp];
                 }
             }
@@ -780,9 +781,12 @@ NSInteger lengthSort(id string1, id string2, void *context)
     temp = [net maxSignal];
     if (_maxSignal < temp) {
         _maxSignal = temp;
-        [WaveHelper secureReplace:&aLat  withObject:[net latitude]];
-        [WaveHelper secureReplace:&aLong withObject:[net longitude]];
-		[WaveHelper secureReplace:&aElev withObject:[net elevation]];
+		aLat = [net latitude];
+		aLong = [net longitude];
+		aElev = [net elevation];
+        //[WaveHelper secureReplace:&aLat  withObject:[net latitude]];
+        //[WaveHelper secureReplace:&aLong withObject:[net longitude]];
+		//[WaveHelper secureReplace:&aElev withObject:[net elevation]];
     }
     
     if ([_date compare:[net lastSeenDate]] == NSOrderedDescending) {
@@ -801,13 +805,14 @@ NSInteger lengthSort(id string1, id string2, void *context)
         if (temp) _channel = temp;
         
         if ([net rawSSID]) [self updateSSID:[net rawSSID] withSound:NO];
-        if ([net SSIDs]) [WaveHelper secureReplace:&_SSIDs withObject:[net SSIDs]];
+        if ([net SSIDs]) _SSIDs = [net SSIDs]; //[WaveHelper secureReplace:&_SSIDs withObject:[net SSIDs]];
 		
-        [WaveHelper secureReplace:&_date withObject:[net lastSeenDate]];
-        if (![[net comment] isEqualToString:@""]) [WaveHelper secureReplace:&aComment withObject:[net comment]];
+		_date = [net lastSeenDate];
+        //[WaveHelper secureReplace:&_date withObject:[net lastSeenDate]];
+        if (![[net comment] isEqualToString:@""]) aComment = [net comment]; //[WaveHelper secureReplace:&aComment withObject:[net comment]];
     }
     
-    if ([aFirstDate compare:[net firstSeenDate]] == NSOrderedAscending)  [WaveHelper secureReplace:&aFirstDate withObject:[net firstSeenDate]];
+    if ([aFirstDate compare:[net firstSeenDate]] == NSOrderedAscending) aFirstDate = [net firstSeenDate];// [WaveHelper secureReplace:&aFirstDate withObject:[net firstSeenDate]];
         
     _packets +=     [net packets];
     _dataPackets += [net dataPackets];
@@ -830,7 +835,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     [WaveHelper addDictionary:[net coordinates] toDictionary:_coordinates];
     
     //add all those unique ivs to the log file
-    WaveWeakContainer **ivData = [net ivData];
+    WaveWeakContainer * __strong *ivData = [net ivData];
     if (_ivData[0]) [_ivData[0] addData:[ivData[0] data]];
     else _ivData[0] = [[WaveWeakContainer alloc] initWithData:[ivData[0] data]];
     if (_ivData[1]) [_ivData[1] addData:[ivData[1] data]];
@@ -864,7 +869,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 	
     // If we doesn't have an ID already, try to update
     if (!_ID) {
-        _ID = [[w IDString] retain];
+        _ID = [w IDString];
         [w ID:_rawID];
     }
     
@@ -893,7 +898,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     }
 
     if (_BSSID == Nil) {
-        _BSSID = [[NSString stringWithString:[w BSSIDString]] retain];
+        _BSSID = [NSString stringWithString:[w BSSIDString]];
         [w BSSID:_rawBSSID];
     }
     
@@ -932,7 +937,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
                 { //needs to have a fcs, an iv and two bytes of data at least
                     
                     //this packet might be interesting for password checking, use the packet if we do not have enough, or f it is smaller than our smallest
-                    if ([_packetsLog count]<20 || [(NSString*)[_packetsLog objectAtIndex:0] length] > bodyLength) {
+                    if ([_packetsLog count]<20 || [(NSString*)_packetsLog[0] length] > bodyLength) {
                         [_packetsLog addObject:[NSData dataWithBytes:body length:bodyLength]];
                         //sort them so that the smallest packet is in front of the array => faster cracking
                         [_packetsLog sortUsingFunction:lengthSort context:Nil];
@@ -940,7 +945,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 
                     //log those packets for reinjection attack
                     if (bodyLength == ARP_SIZE || bodyLength == ARP_SIZE_PADDING) {
-//						NSLog(@"ARP PACKET");
+//						DBNSLog(@"ARP PACKET");
                         if ([[w stringReceiverID] isEqualToString:@"FF:FF:FF:FF:FF:FF"]) {
                             [_ARPLog addObject:[NSData dataWithBytes:[w frame] length:[w length]]];
 							if ([_ARPLog count] > 100) {
@@ -949,7 +954,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 						}
                     }
 //                    if (([_ACKLog count]<20)&&((bodyLength>=TCPACK_MIN_SIZE)||(bodyLength<=TCPACK_MAX_SIZE))) {
-//						NSLog(@"ACK PACKET");
+//						DBNSLog(@"ACK PACKET");
 //                        [_ACKLog addObject:[NSData dataWithBytes:[w frame] length:[w length]]];
 //                    }
                     
@@ -968,7 +973,10 @@ NSInteger lengthSort(id string1, id string2, void *context)
         case IEEE80211_TYPE_MGT:        //this is a management packet
             _mgmtPackets++;
 			if ([w SSIDs])
-				[WaveHelper secureReplace:&_SSIDs withObject:[w SSIDs]];
+			{
+				_SSIDs = [w SSIDs];
+				//[WaveHelper secureReplace:&_SSIDs withObject:[w SSIDs]];
+			}
 			[self updateSSID:[w SSID] withSound:sound]; //might contain SSID infos
             
 			if ([w primaryChannel])
@@ -978,16 +986,16 @@ NSInteger lengthSort(id string1, id string2, void *context)
 					_rateCount = [w getRates:_rates];
 					break;
 				case IEEE80211_SUBTYPE_AUTH:
-					NSLog(@"Authentication Frame");
+					DBNSLog(@"Authentication Frame");
 					_authState = 0;
 					switch (_authState) {
 						case 0:
 							switch (((Ieee80211_Auth_Frame *)[w frame])->wi_algo) {
 								case 0x00:
-									NSLog(@"Auth Type Open for net %@", [w BSSIDString]);
+									DBNSLog(@"Auth Type Open for net %@", [w BSSIDString]);
                                     break;
 								case 0x01:
-									NSLog(@"Auth Type Shared-Key %@", [w BSSIDString]);
+									DBNSLog(@"Auth Type Shared-Key %@", [w BSSIDString]);
                                     break;
 								default:
 									break;
@@ -1013,23 +1021,21 @@ NSInteger lengthSort(id string1, id string2, void *context)
     
     clientid = [w stringReceiverID];
     if (clientid != Nil) {
-        lWCl = [aClients objectForKey:clientid];
+        lWCl = aClients[clientid];
         if (lWCl == nil) {
             lWCl = [[WaveClient alloc] init];
-            [aClients setObject:lWCl forKey:clientid];
+            aClients[clientid] = lWCl;
             [aClientKeys addObject:clientid];  
-            [lWCl release];        
         }
         [lWCl parseFrameAsIncoming:w];
     }
     clientid = [w stringSenderID];
     if (clientid != Nil) {
-        lWCl=[aClients objectForKey:clientid];
+        lWCl=aClients[clientid];
         if (lWCl == nil) {
             lWCl = [[WaveClient alloc] init];
-            [aClients setObject:lWCl forKey:clientid];
+            aClients[clientid] = lWCl;
             [aClientKeys addObject:clientid];
-            [lWCl release];              
         }
         [lWCl parseFrameAsOutgoing:w];
     }
@@ -1059,21 +1065,39 @@ NSInteger lengthSort(id string1, id string2, void *context)
 	_cacheValid = NO;
 	
     if (!_ID) {
-        mac = (const char*)[[info bssidData] bytes];
+		unsigned char macData[6] = {0};
+		
+		// [CWInterface bssid] returns a string formatted "00:00:00:00:00:00".
+		NSString* macString = [info bssid];
+		if (macString && ([macString length] == 17)) {
+			for (NSUInteger i = 0; i < 6; ++i) {
+				NSString* part = [macString substringWithRange:NSMakeRange(i * 3, 2)];
+				NSScanner* scanner = [NSScanner scannerWithString:part];
+				unsigned int data = 0;
+				if (![scanner scanHexInt:&data]) {
+					data = 0;
+				}
+				macData[i] = (unsigned char) data;
+			}
+		}
+        mac = (const char*)macData;
 		//NSAssert([[info objectForKey:@"BSSID"] length] == 6, @"BSSID length is not 6");
         memcpy(_rawID, mac, 6);
 		memcpy(_rawBSSID, mac, 6);
 
-        _ID = [[NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", _rawID[0], _rawID[1], _rawID[2],
-                _rawID[3], _rawID[4], _rawID[5]] retain];
-        _BSSID = [[NSString stringWithFormat:@"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X", _rawBSSID[0], _rawBSSID[1], _rawBSSID[2],
-                _rawBSSID[3], _rawBSSID[4], _rawBSSID[5]] retain];
+        _ID = [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", _rawID[0], _rawID[1], _rawID[2],
+                _rawID[3], _rawID[4], _rawID[5]];
+        _BSSID = [NSString stringWithFormat:@"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X", _rawBSSID[0], _rawBSSID[1], _rawBSSID[2],
+                _rawBSSID[3], _rawBSSID[4], _rawBSSID[5]];
     }
     
-	_curSignal = [info.rssi intValue] - [info.noise intValue];
+	int rssi = (int) ((NSInteger) [info rssiValue]);
+	int noise = [info noiseMeasurement];
+	
+	_curSignal = rssi - noise;
     if (_curSignal<0) _curSignal = 0;
     
-    _primaryChannel = _channel = [info.channel intValue];
+    _primaryChannel = _channel = [[info wlanChannel] channelNumber];
     if (_packetsPerChannel[_channel]==0) {
         if (!_firstPacket) [[NSNotificationCenter defaultCenter] postNotificationName:KisMACViewItemChanged object:self];
         _packetsPerChannel[_channel] = 1;
@@ -1122,8 +1146,8 @@ NSInteger lengthSort(id string1, id string2, void *context)
             [_netView setWep:_isWep];
         }
     }
-
-    if (info.isIBSS)
+	
+    if ([info ibss])
     {
         _type = networkTypeAdHoc;
     } 
@@ -1165,8 +1189,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
             [_dataLock lock];
             pV = [[BIValuePair alloc] init];
             [pV setPairFromWaypoint:cp];
-            [_coordinates setObject:[NSNumber numberWithInt:0] forKey:pV];
-            [pV release];
+            _coordinates[pV] = @0;
             [_dataLock unlock];
         }
 
@@ -1330,14 +1353,14 @@ NSInteger lengthSort(id string1, id string2, void *context)
 }
 - (NSString *)getVendor {
     if (_vendor) return _vendor;
-    _vendor=[[WaveHelper vendorForMAC:_BSSID] retain];
+    _vendor=[WaveHelper vendorForMAC:_BSSID];
     return _vendor;
 }
 - (NSString*)rates {
 	int i;
 	NSMutableArray *a = [NSMutableArray array];
 	for (i = 0; i < _rateCount; i++) {
-		[a addObject:[NSNumber numberWithFloat:((float)(_rates[i] & 0x7F)) / 2]];
+		[a addObject:@(((float)(_rates[i] & 0x7F)) / 2)];
 	}
 	return [a componentsJoinedByString:@", "];
 }
@@ -1345,8 +1368,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     return aComment;
 }
 - (void)setComment:(NSString*)comment {
-    [aComment release];
-    aComment=[comment retain];
+    aComment=comment;
 }
 - (int)avgSignal {
     int sum = 0;
@@ -1514,7 +1536,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 - (NSDictionary*)coordinates {
     return _coordinates;
 }
-- (WaveWeakContainer **)ivData {
+- (WaveWeakContainer *__strong*)ivData {
     return _ivData;
 }
 - (BOOL)passwordAvailable {
@@ -1636,25 +1658,23 @@ NSInteger lengthSort(id string1, id string2, void *context)
         image = [NSImage imageNamed:@"redgem.png"];
     }
 	
-	cache = [NSDictionary dictionaryWithObjectsAndKeys:
-		[NSString stringWithFormat:@"%i", _netID],              @"id",
-		[self SSID],                                            @"ssid",
-		[self BSSID],                                           @"bssid", 
-		[NSString stringWithFormat:@"%i", _curSignal],          @"signal",
-		[NSString stringWithFormat:@"%i", [self avgSignal]],    @"avgsignal",
-		[NSString stringWithFormat:@"%i", _maxSignal],          @"maxsignal",
-		[NSString stringWithFormat:@"%i", _channel],            @"channel",
-        [NSString stringWithFormat:@"%i", _primaryChannel],     @"primaryChannel",
-		[NSString stringWithFormat:@"%i", _packets],            @"packets",
-		[self data],                                            @"data",
-		enc,                                                    @"wep",
-		type,                                                   @"type",
-		[NSString stringWithFormat:@"%@", _date],               @"lastseen",
-        image,                                                  @"challengeResponse",
-		nil                                                     // SENTINEL
-	];
+	cache = @{@"id": [NSString stringWithFormat:@"%i", _netID],
+		@"ssid": [self SSID],
+		@"bssid": [self BSSID], 
+		@"signal": [NSString stringWithFormat:@"%i", _curSignal],
+		@"avgsignal": [NSString stringWithFormat:@"%i", [self avgSignal]],
+		@"maxsignal": [NSString stringWithFormat:@"%i", _maxSignal],
+		@"channel": [NSString stringWithFormat:@"%i", _channel],
+        @"primaryChannel": [NSString stringWithFormat:@"%i", _primaryChannel],
+		@"packets": [NSString stringWithFormat:@"%i", _packets],
+		@"data": [self data],
+		@"wep": enc,
+		@"type": type,
+		@"lastseen": [NSString stringWithFormat:@"%@", _date],
+        @"challengeResponse": image};
 	
-	[WaveHelper secureReplace:&_cache withObject:cache];
+	_cache = cache;
+	//[WaveHelper secureReplace:&_cache withObject:cache];
 	_cacheValid = YES;
 	return _cache; 
 }
@@ -1693,8 +1713,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     return _graphColor;
 }
 - (void)setGraphColor:(NSColor*)newColor {
-    [_graphColor autorelease];
-    _graphColor = [newColor retain];
+    _graphColor = newColor;
 }
 
 // for easy sorting by TrafficView
@@ -1795,7 +1814,7 @@ int ipSort(WaveClient* w1, WaveClient* w2, int ascend) {
         return ascend * NSOrderedAscending;
     }
     while(ndx < 4){
-        i = compValues([[ip1 objectAtIndex:ndx] intValue], [[ip2 objectAtIndex:ndx]intValue]);
+        i = compValues([ip1[ndx] intValue], [ip2[ndx]intValue]);
         if (i == NSOrderedSame) {
             ndx++;
         }
@@ -1821,7 +1840,7 @@ typedef int (*SORTFUNC)(id, id, void *);
     else if ([ident isEqualToString:@"lastseen"]) sf=(SORTFUNC)dateSort;
     else if ([ident isEqualToString:@"ipa"])      sf=(SORTFUNC)ipSort;
     else {
-        NSLog(@"Unknown sorting column. This is a bug and should never happen.");
+        DBNSLog(@"Unknown sorting column. This is a bug and should never happen.");
         return;
     }
 
@@ -1834,14 +1853,14 @@ typedef int (*SORTFUNC)(id, id, void *);
     for (y = 1; y <= _sortedCount; y++) {
         for (x = y - 1; x < (_sortedCount - y); x++) {
             w = x + 1;
-            ret = (*sf)([aClients objectForKey:[aClientKeys objectAtIndex:x]], [aClients objectForKey:[aClientKeys objectAtIndex:w]], (void*)a);
+            ret = (*sf)(aClients[aClientKeys[x]], aClients[aClientKeys[w]], (void*)a);
             if (ret == NSOrderedDescending) {
                 sorted = NO;
                 
                 //switch places
                 [aClientKeys exchangeObjectAtIndex:x withObjectAtIndex:w];
-                [[aClients objectForKey:[aClientKeys objectAtIndex:x]] wasChanged];
-                [[aClients objectForKey:[aClientKeys objectAtIndex:w]] wasChanged];
+                [aClients[aClientKeys[x]] wasChanged];
+                [aClients[aClientKeys[w]] wasChanged];
             }
         }
         
@@ -1850,14 +1869,14 @@ typedef int (*SORTFUNC)(id, id, void *);
         
         for (x = (_sortedCount - y); x >= y; x--) {
             w = x - 1;
-            ret = (*sf)([aClients objectForKey:[aClientKeys objectAtIndex:w]], [aClients objectForKey:[aClientKeys objectAtIndex:x]], (void*)a);
+            ret = (*sf)(aClients[aClientKeys[w]], aClients[aClientKeys[x]], (void*)a);
             if (ret == NSOrderedDescending) {
                 sorted = NO;
                 
                 //switch places
                 [aClientKeys exchangeObjectAtIndex:x withObjectAtIndex:w];
-                [[aClients objectForKey:[aClientKeys objectAtIndex:x]] wasChanged];
-                [[aClients objectForKey:[aClientKeys objectAtIndex:w]] wasChanged];
+                [aClients[aClientKeys[x]] wasChanged];
+                [aClients[aClientKeys[w]] wasChanged];
             }
         }
         
@@ -1877,7 +1896,7 @@ typedef int (*SORTFUNC)(id, id, void *);
 	unsigned int i;
 	
     for (i = 0; i < [aClientKeys count]; i++) {
-        if ([[aClients objectForKey:[aClientKeys objectAtIndex:i]] eapolDataAvailable]) keys++;
+        if ([aClients[aClientKeys[i]] eapolDataAvailable]) keys++;
     }
 	return keys;
 }
@@ -1887,7 +1906,7 @@ typedef int (*SORTFUNC)(id, id, void *);
     unsigned int i;
 	
 	for (i = 0; i < [aClientKeys count]; i++) {
-        if ([[aClients objectForKey:[aClientKeys objectAtIndex:i]] leapDataAvailable]) keys++;
+        if ([aClients[aClientKeys[i]] leapDataAvailable]) keys++;
     }
 	return keys;
 }
@@ -1898,39 +1917,12 @@ typedef int (*SORTFUNC)(id, id, void *);
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [_dataLock lock];
-    [_ID release];
-    [_SSID release];
-	[_SSIDs release];
-    [_BSSID release];
-    [_date release];
-    [aFirstDate release];
-    [_vendor release];
-    [_password release];
-    [_packetsLog release];
-    [_ARPLog release];
-    [_ACKLog release];
-    [_ivData[0] release];
-    [_ivData[1] release];
-    [_ivData[2] release];
-    [_ivData[3] release];
-    [aClients release];
-    [aClientKeys release];
-    [aComment release];
-    [aLat release];
-    [aLong release];
-    [aElev release];
-	[_cache release];
 	
 	[_netView removeFromSuperView];
-    [_netView release];
-    [_coordinates release];
     [_dataLock unlock];
-    [_dataLock release];
-    [_crackErrorString release];
     
 	if (_graphInit) delete graphData;
 	
-    [super dealloc];
 }
 
 @end

@@ -30,10 +30,6 @@
 	return [super init];
 }
 
-- (void)dealloc
-{
-	[super dealloc];
-}
 
 - (void)registerGrowl
 {
@@ -44,7 +40,7 @@
 	if (growlBundle && [growlBundle load]) {
 		[GrowlApplicationBridge setGrowlDelegate:self];
 	} else {
-		NSLog(@"Could not load Growl.framework");
+		DBNSLog(@"Could not load Growl.framework");
 	}
 }
 
@@ -52,73 +48,73 @@
 
 + (void)notifyGrowlOpenNetwork:(NSString *)notname SSID:(NSString *)SSID BSSID:(NSString *)BSSID signal:(int)signal channel:(int)channel
 {
-	[GrowlApplicationBridge
+	/*[GrowlApplicationBridge
 	notifyWithTitle:@"KisMAC"
 		description:[NSString stringWithFormat:@"Open network found:\nSSID: %@\nBSSID: %@\nSignal: %i\nChannel: %i",SSID,BSSID,signal,channel]
    notificationName:@"Open Network Found"
 		   iconData:[NSData dataWithData:[[NSImage imageNamed:@"growl-noenc"] TIFFRepresentation]]
 		   priority:0
 		   isSticky:NO
-	   clickContext:nil];
+	   clickContext:nil];*/
 }
 
 + (void)notifyGrowlWEPNetwork:(NSString *)notname SSID:(NSString *)SSID BSSID:(NSString *)BSSID signal:(int)signal channel:(int)channel
 {
-	[GrowlApplicationBridge
+	/*[GrowlApplicationBridge
 	notifyWithTitle:@"KisMAC"
 		description:[NSString stringWithFormat:@"WEP network found:\nSSID: %@\nBSSID: %@\nSignal: %i\nChannel: %i",SSID,BSSID,signal,channel]
    notificationName:@"Closed Network Found"
 		   iconData:[NSData dataWithData:[[NSImage imageNamed:@"growl-wep"] TIFFRepresentation]]
 		   priority:0
 		   isSticky:NO
-	   clickContext:nil];
+	   clickContext:nil];*/
 }
 
 + (void)notifyGrowlWPANetwork:(NSString *)notname SSID:(NSString *)SSID BSSID:(NSString *)BSSID signal:(int)signal channel:(int)channel
 {
-	[GrowlApplicationBridge
+	/*[GrowlApplicationBridge
 	notifyWithTitle:@"KisMAC"
 		description:[NSString stringWithFormat:@"WPA network found:\nSSID: %@\nBSSID: %@\nSignal: %i\nChannel: %i",SSID,BSSID,signal,channel]
    notificationName:@"Closed Network Found"
 		   iconData:[NSData dataWithData:[[NSImage imageNamed:@"growl-wpa"] TIFFRepresentation]]
 		   priority:0
 		   isSticky:NO
-	   clickContext:nil];
+	   clickContext:nil];*/
 }
 
 + (void)notifyGrowlUnknownNetwork:(NSString *)notname SSID:(NSString *)SSID BSSID:(NSString *)BSSID signal:(int)signal channel:(int)channel
 {
-	[GrowlApplicationBridge
+	/*[GrowlApplicationBridge
 	notifyWithTitle:@"KisMAC"
 		description:[NSString stringWithFormat:@"Unknown network found:\nSSID: %@\nBSSID: %@\nSignal: %i\nChannel: %i",SSID,BSSID,signal,channel]
    notificationName:@"Closed Network Found"
 		   iconData:[NSData dataWithData:[[NSImage imageNamed:@"NetworkStrange"] TIFFRepresentation]]
 		   priority:0
 		   isSticky:NO
-	   clickContext:nil];
+	   clickContext:nil];*/
 }
 + (void)notifyGrowlLEAPNetwork:(NSString *)notname SSID:(NSString *)SSID BSSID:(NSString *)BSSID signal:(int)signal channel:(int)channel
 {
-	[GrowlApplicationBridge
+	/*[GrowlApplicationBridge
 	notifyWithTitle:@"KisMAC"
 		description:[NSString stringWithFormat:@"LEAP network found:\nSSID:%@\nBSSID:%@\nSignal:%i\nChannel:%i",SSID,BSSID,signal,channel]
    notificationName:@"Closed Network Found"
 		   iconData:[NSData dataWithData:[[NSImage imageNamed:@"growl-leap"] TIFFRepresentation]]
 		   priority:0
 		   isSticky:NO
-	   clickContext:nil];
+	   clickContext:nil];*/
 }
 
 + (void)notifyGrowlProbeRequest:(NSString *)notname BSSID:(NSString *)BSSID signal:(int)signal
 {
-	[GrowlApplicationBridge
+	/*[GrowlApplicationBridge
 	notifyWithTitle:@"KisMAC"
 		description:[NSString stringWithFormat:@"Probe Request Received:\nMAC: %@\nSignal: %i",BSSID,signal]
    notificationName:@"Probe Request Received"
 		   iconData:[NSData dataWithData:[[NSImage imageNamed:@"growl-probe"] TIFFRepresentation]]
 		   priority:0
 		   isSticky:NO
-	   clickContext:nil];
+	   clickContext:nil];*/
 }
 
 + (void)notifyGrowlStartScan
@@ -155,38 +151,38 @@
 
 + (void)notifyGrowlWPAChallenge:(NSString *)notname mac:(NSString *)mac bssid:(NSString *)bssid
 {
-	[GrowlApplicationBridge
+	/*[GrowlApplicationBridge
 	notifyWithTitle:@"KisMAC"
 		description:[NSString stringWithFormat:@"WPA Challenge received:\nMAC: %@\nBSSID: %@",mac,bssid]
    notificationName:@"WPA Challenge/Response"
 		   iconData:[NSData dataWithData:[[NSImage imageNamed:@"growl-wpa-challenge"] TIFFRepresentation]]
 		   priority:0
 		   isSticky:NO
-	   clickContext:nil];
+	   clickContext:nil];*/
 }
 
 + (void)notifyGrowlWPAResponse:(NSString *)notname mac:(NSString *)mac bssid:(NSString *)bssid
 {
-	[GrowlApplicationBridge
+	/*[GrowlApplicationBridge
 	notifyWithTitle:@"KisMAC"
 		description:[NSString stringWithFormat:@"WPA Response received:\nMAC: %@\nBSSID: %@",mac,bssid]
    notificationName:@"WPA Challenge/Response"
 		   iconData:[NSData dataWithData:[[NSImage imageNamed:@"growl-wpa-response"] TIFFRepresentation]]
 		   priority:0
 		   isSticky:NO
-	   clickContext:nil];
+	   clickContext:nil];*/
 }
 
 + (void)notifyGrowlSSIDRevealed:(NSString *)notname BSSID:(NSString *)BSSID SSID:(NSString *)SSID
 {
-	[GrowlApplicationBridge
+	/*[GrowlApplicationBridge
 	notifyWithTitle:@"KisMAC"
 		description:[NSString stringWithFormat:@"Hidden SSID Revealed:\nSSID: %@\nBSSID: %@",SSID,BSSID]
    notificationName:@"Hidden SSID Revealed"
 		   iconData:[NSData dataWithData:[[NSImage imageNamed:@"growl-ap-revealed"] TIFFRepresentation]]
 		   priority:0
 		   isSticky:NO
-	   clickContext:nil];
+	   clickContext:nil];*/
 }
 
 #pragma mark Growl Methods
@@ -196,9 +192,9 @@
 }
 
 - (NSDictionary *)registrationDictionaryForGrowl {
-	NSArray *allNotifications = [NSArray arrayWithObjects:@"Scan Started/Stopped",@"Open Network Found",@"Closed Network Found",@"Probe Request Received",@"WPA Challenge/Response",@"Hidden SSID Revealed",nil];
-	NSArray *defaultNotifications = [NSArray arrayWithObjects:@"Scan Started/Stopped",@"Open Network Found",@"Closed Network Found",@"WPA Challenge/Response",@"Hidden SSID Revealed",nil];
-	NSDictionary *registrationDict = [NSDictionary dictionaryWithObjectsAndKeys:allNotifications, GROWL_NOTIFICATIONS_ALL, defaultNotifications, GROWL_NOTIFICATIONS_DEFAULT, nil];
+	NSArray *allNotifications = @[@"Scan Started/Stopped",@"Open Network Found",@"Closed Network Found",@"Probe Request Received",@"WPA Challenge/Response",@"Hidden SSID Revealed"];
+	NSArray *defaultNotifications = @[@"Scan Started/Stopped",@"Open Network Found",@"Closed Network Found",@"WPA Challenge/Response",@"Hidden SSID Revealed"];
+	NSDictionary *registrationDict = @{GROWL_NOTIFICATIONS_ALL: allNotifications, GROWL_NOTIFICATIONS_DEFAULT: defaultNotifications};
 	return registrationDict;
 }
 	

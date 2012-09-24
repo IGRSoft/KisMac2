@@ -27,8 +27,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include <openssl/md5.h>
-#include <openssl/sha.h>
+#define COMMON_DIGEST_FOR_OPENSSL
+#include <CommonCrypto/CommonDigest.h>
+#define SHA1 CC_SHA1
+
+#include <CommonCrypto/CommonHMAC.h>
+#define HMAC CCHmac
 #include "80211b.h"
 
 /*

@@ -70,14 +70,14 @@ NSString *const BIGLMainViewResized = @"BIGLMainViewResized";
         NSOpenGLPFANoRecovery,
         (NSOpenGLPixelFormatAttribute)nil
     };
-    return [[[NSOpenGLPixelFormat alloc] 
-                        initWithAttributes:attributes] autorelease];
+    return [[NSOpenGLPixelFormat alloc] 
+                        initWithAttributes:attributes];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        _subViews = [[NSMutableArray array] retain];
+        _subViews = [NSMutableArray array];
         _lock = [[NSLock alloc] init];
         [self setBackgroundColor:[NSColor blackColor]];
     }
@@ -89,7 +89,7 @@ NSString *const BIGLMainViewResized = @"BIGLMainViewResized";
 
     self = [super initWithFrame: frameRect pixelFormat: pixelFormat];
     if (self) {
-        _subViews = [[NSMutableArray array] retain];
+        _subViews = [NSMutableArray array];
         _lock = [[NSLock alloc] init];
         [self setBackgroundColor:[NSColor blackColor]];
     }
@@ -150,7 +150,7 @@ NSString *const BIGLMainViewResized = @"BIGLMainViewResized";
     glPushMatrix();
    
     for (i = 0; i < [_subViews count]; i++)
-        [(BIGLSubView*)[_subViews objectAtIndex:i] drawAtPoint:NSZeroPoint];
+        [(BIGLSubView*)_subViews[i] drawAtPoint:NSZeroPoint];
 
     glPopMatrix();
  
@@ -165,7 +165,7 @@ NSString *const BIGLMainViewResized = @"BIGLMainViewResized";
     [view setBackgroundColor:[NSColor colorWithDeviceRed:_color[0] green:_color[1] blue:_color[2] alpha:_color[3]]];
     [view setSubViews:_subViews];
     
-    return [[view autorelease] dataWithPDFInsideRect:rect];
+    return [view dataWithPDFInsideRect:rect];
 }
 
 - (NSData *)dataWithTIFFInsideRect:(NSRect)rect {
@@ -213,7 +213,6 @@ NSString *const BIGLMainViewResized = @"BIGLMainViewResized";
     }
 
     NSData *d2 = [b TIFFRepresentation];
-    [b autorelease];
     return d2;
 }
 
@@ -254,9 +253,4 @@ NSString *const BIGLMainViewResized = @"BIGLMainViewResized";
 
 #pragma mark -
 
-- (void)dealloc {
-    [_subViews release];
-    [_lock release];
-    [super dealloc];
-}
 @end

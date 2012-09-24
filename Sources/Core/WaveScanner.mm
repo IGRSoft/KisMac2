@@ -60,7 +60,7 @@
     
     a = [WaveHelper getWaveDrivers];
     for (i = 0; i < [a count]; i++) {
-        w = [a objectAtIndex:i];
+        w = a[i];
         if ([w allowsInjection]) break;
     }
     
@@ -104,7 +104,7 @@
 			
 			if (nets) {
 				for(i=0; i<[nets count]; i++) {
-					network = [nets objectAtIndex:i];                
+					network = nets[i];                
 					[_container addAppleAPIData:network];
 				}
 			}
@@ -121,7 +121,6 @@
     int dumpFilter;
 
     NSSound* geiger;
-    NSAutoreleasePool *pool;
     
     BOOL error = FALSE;
 
@@ -132,34 +131,28 @@
     WavePluginPacketResponse response;
     
     d = [wd configuration];
-    dumpFilter = [[d objectForKey:@"dumpFilter"] intValue];
+    dumpFilter = [d[@"dumpFilter"] intValue];
     
     // Initialize WavePlugins
     _wavePlugins = [[NSMutableDictionary alloc] init];
     
     _wavePlugin = [[WavePluginInjectionProbe alloc] initWithDriver:wd];
     [_wavePlugins setValue:_wavePlugin forKey:@"InjectionProbe"];
-    [_wavePlugin release];
 
     _wavePlugin = [[WavePluginDeauthentication alloc] initWithDriver:wd andContainer:_container];
     [_wavePlugins setValue:_wavePlugin forKey:@"Deauthentication"];
-    [_wavePlugin release];
  
     _wavePlugin = [[WavePluginInjecting alloc] initWithDriver:wd];
     [_wavePlugins setValue:_wavePlugin forKey:@"Injecting"];
-    [_wavePlugin release];
     
     _wavePlugin = [[WavePluginAuthenticationFlood alloc] initWithDriver:wd];
     [_wavePlugins setValue:_wavePlugin forKey:@"AuthenticationFlood"];
-    [_wavePlugin release];
     
     _wavePlugin = [[WavePluginBeaconFlood alloc] initWithDriver:wd];
     [_wavePlugins setValue:_wavePlugin  forKey:@"BeaconFlood"];
-    [_wavePlugin release];
     
     _wavePlugin = [[WavePluginMidi alloc] initWithDriver: wd];
     [_wavePlugins setValue:_wavePlugin  forKey:@"MidiTrack"];
-    [_wavePlugin release];
     
     //tries to open the dump file
     if (dumpFilter) {
@@ -169,13 +162,11 @@
         } else {
             [_wavePlugins setValue:_wavePcapDumper  forKey:@"PacketDump"];
         }
-        [_wavePcapDumper release];
     }
     
     if(!error)
     {
         w = [[WavePacket alloc] init];
-        pool = [NSAutoreleasePool new];
         
         if (_geigerSound!=Nil)
         {
@@ -229,19 +220,13 @@
                     
                     _packets++;
                     
-                    if (_packets % 10000 == 0) 
-                    {
-                        [pool release];
-                        pool = [NSAutoreleasePool new];
-                    }
-                    
                     _bytes+=[w length];
                 }//end parse frame
                 else {
 					if (_wavePcapDumper) {
 						[_wavePcapDumper gotPacket:w fromDriver:wd];
 					}
-                    NSLog(@"WaveScanner: Unknown packet type in parseFrame");   
+                    DBNSLog(@"WaveScanner: Unknown packet type in parseFrame");   
                 }
             }
             @finally 
@@ -249,46 +234,42 @@
             }
         }
 
-        //these are only allocated if there is no error
-        
-        [w release];
-        [pool release];
     }   // no error
     
-    [_wavePlugins release];
     _wavePlugins = nil;
     _wavePcapDumper = nil;
     
 }
 
 - (void)doScan:(WaveDriver*)w {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [NSThread setThreadPriority:1.0];	//we are important
-    
-    if ([w type] == passiveDriver) { //for PseudoJack this is done by the timer
-        [self doPassiveScan:w];
-    } else if ([w type] == activeDriver) {
-        [self doActiveScan:w];
-    }
+    @autoreleasepool {
+        [NSThread setThreadPriority:1.0];	//we are important
+        
+        if ([w type] == passiveDriver) { //for PseudoJack this is done by the timer
+            [self doPassiveScan:w];
+        } else if ([w type] == activeDriver) {
+            [self doActiveScan:w];
+        }
 
-    [w stopCapture];
-    [self stopScanning];					//just to make sure the user can start the thread if it crashed
-    [pool release];
+        [w stopCapture];
+        [self stopScanning];					//just to make sure the user can start the thread if it crashed
+    }
 }
 
 - (bool)startScanning {
     WaveDriver *w;
-    NSArray *a;
+    //NSArray *a;
     unsigned int i;
     
     if (!_scanning) {			//we are already scanning
         _scanning=YES;
-        a = [WaveHelper getWaveDrivers];
-        [WaveHelper secureReplace:&_drivers withObject:a];
+        //a = [WaveHelper getWaveDrivers];
+		_drivers = [WaveHelper getWaveDrivers];
+        //[WaveHelper secureReplace:&_drivers withObject:a];
 
         for (i = 0; i < [_drivers count]; i++)
         {
-            w = [_drivers objectAtIndex:i];
+            w = _drivers[i];
             if ([w type] == passiveDriver) 
             { //for PseudoJack this is done by the timer
                 [w startCapture:0];
@@ -324,24 +305,25 @@
 
 - (bool)sleepDrivers: (bool)isSleepy{
     WaveDriver *w;
-    NSArray *a;
+    //NSArray *a;
     unsigned int i;
     
-    a = [WaveHelper getWaveDrivers];
-    [WaveHelper secureReplace:&_drivers withObject:a];
+    //a = [WaveHelper getWaveDrivers];
+	_drivers = [WaveHelper getWaveDrivers];
+    //[WaveHelper secureReplace:&_drivers withObject:a];
         
    if (isSleepy) {
-		NSLog(@"Going to sleep...");
+		DBNSLog(@"Going to sleep...");
         _shouldResumeScan = _scanning;
         [aController stopScan];
 		for (i = 0; i < [_drivers count]; i++) {
-			w = [_drivers objectAtIndex:i];
+			w = _drivers[i];
             [w sleepDriver];
         }
     } else {
-		NSLog(@"Waking up...");
+		DBNSLog(@"Waking up...");
 		for (i = 0; i < [_drivers count]; i++) {
-			w = [_drivers objectAtIndex:i];
+			w = _drivers[i];
             [w wakeDriver];
 		}
         if (_shouldResumeScan) {
@@ -356,7 +338,7 @@
     unsigned int i;
     
     for (i = 0; i < [_drivers count]; i++) {
-        [[_drivers objectAtIndex:i] hopToNextChannel];
+        [_drivers[i] hopToNextChannel];
     }
 }
 
@@ -370,11 +352,12 @@
 }
 -(void)setGeigerInterval:(int)newGeigerInt sound:(NSString*) newSound {
     
-    [WaveHelper secureRelease:&_geigerSound];
+	_geigerSound = nil;
+    //[WaveHelper secureRelease:&_geigerSound];
     
     if ((newSound==Nil)||(newGeigerInt==0)) return;
     
-    _geigerSound=[newSound retain];
+    _geigerSound=newSound;
     _geigerInt=newGeigerInt;
 }
 
@@ -419,7 +402,7 @@
     _pcapP=pcap_open_offline([dumpFile UTF8String],err);
     if (_pcapP == NULL) 
     {
-        NSLog(@"Could not open dump file: %@. Reason: %s", dumpFile, err);
+        DBNSLog(@"Could not open dump file: %@. Reason: %s", dumpFile, err);
         return;
     }
 
@@ -456,7 +439,6 @@
         if (p) pcap_close(p);
     #endif
 
-    [w release];
     pcap_close(_pcapP);
 }
 
@@ -496,7 +478,7 @@
         break;
             
         default:
-            NSLog(@"Unsupported Datalink Type: %u.", pcap_datalink(_pcapP));
+            DBNSLog(@"Unsupported Datalink Type: %u.", pcap_datalink(_pcapP));
             pcap_close(_pcapP);
             return NULL;
         break;
@@ -582,7 +564,7 @@
     // Stop all drivers
     a = [WaveHelper getWaveDrivers];
     for (i = 0; i < [a count]; i++) {
-        w = [a objectAtIndex:i];
+        w = a[i];
         if ([w allowsInjection]) [w stopSendingFrames];
     }
     
@@ -600,7 +582,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     _scanning=NO;
-    [super dealloc];
 }
 
 @end

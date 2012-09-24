@@ -32,8 +32,7 @@
 @implementation MapView(AreaView)
 
 - (void)clearAreaNet {
-	[_mapImage autorelease];
-	_mapImage = [_orgImage retain];
+	_mapImage = _orgImage;
 	[self setNeedsDisplay:YES];
 }
 
@@ -66,101 +65,100 @@
     int qual;
     int **cache;
     int height, width;
-    NSAutoreleasePool* subpool = [[NSAutoreleasePool alloc] init];
-    NSRect rec;
+    @autoreleasepool {
+        NSRect rec;
 	NSSize orgSize;
-    
-    NSParameterAssert(networks);
-    NSParameterAssert(_mapImage);
-    NSParameterAssert([_mapImage size].width > 1 && [_mapImage size].height > 1);
-    
-    im = [WaveHelper importController];
-
-    [networks retain];
-    networkCount = [networks count];
-    if (networkCount==0) goto exitNoCleanUp;
- 
-    good = [WaveHelper intToColor:[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaColorGood"]];
-    bad  = [WaveHelper intToColor:[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaColorBad"]];
-    sens = [[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaSensitivity"] intValue];
-    qual = (int)(101.0 - sqrt(([[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaQuality"] floatValue])*1000.0));
-    zoom = [self getPixelPerDegreeNoZoom];
-    imgSize = [_mapImage size];
-    
-    width = (unsigned int)(imgSize.width );
-    width = (width - (width % qual)) / qual +1;
-    height= (unsigned int)(imgSize.height);
-    height= (height- (height% qual)) / qual +1;
-    [im setMax:width];
-    
-    cache = new int* [width];
-    for (x=0; x<width; x++) {
-        cache[x] = new int[height];
-        for (t=0; t<height; t++) cache[x][t]=0;
-    }
-    
-    f = new double* [networkCount];
-    c = new int [networkCount];
-    
-    for (t=0;t<networkCount;t++) {
-        network = [networks objectAtIndex:t];
-        coord = [network coordinates];
-        c[t] = [coord count];
-        f[t] = new double[c[t]*3];
-        q = 0;
         
-        e = [coord keyEnumerator];
-        while ((v = [e nextObject]) != nil) {
-            p = [self pixelForCoordinateNoZoom:[v wayPoint]];
-            f[t][q++] = p.x;
-            f[t][q++] = p.y;
-            f[t][q++] = [[coord objectForKey:v] intValue];
+        NSParameterAssert(networks);
+        NSParameterAssert(_mapImage);
+        NSParameterAssert([_mapImage size].width > 1 && [_mapImage size].height > 1);
+        
+        im = [WaveHelper importController];
+
+        networkCount = [networks count];
+        if (networkCount==0) goto exitNoCleanUp;
+ 
+        good = [WaveHelper intToColor:[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaColorGood"]];
+        bad  = [WaveHelper intToColor:[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaColorBad"]];
+        sens = [[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaSensitivity"] intValue];
+        qual = (int)(101.0 - sqrt(([[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaQuality"] floatValue])*1000.0));
+        zoom = [self getPixelPerDegreeNoZoom];
+        imgSize = [_mapImage size];
+        
+        width = (unsigned int)(imgSize.width );
+        width = (width - (width % qual)) / qual +1;
+        height= (unsigned int)(imgSize.height);
+        height= (height- (height% qual)) / qual +1;
+        [im setMax:width];
+        
+        cache = new int* [width];
+        for (x=0; x<width; x++) {
+            cache[x] = new int[height];
+            for (t=0; t<height; t++) cache[x][t]=0;
         }
-    }
-    
-    for (x = 0; x < width; x++) {
-        for (y = 0; y < height; y++) {
-            maxd = 0;
-            xx = x * qual;
-            yy = y * qual;
+        
+        f = new double* [networkCount];
+        c = new int [networkCount];
+        
+        for (t=0;t<networkCount;t++) {
+            network = networks[t];
+            coord = [network coordinates];
+            c[t] = [coord count];
+            f[t] = new double[c[t]*3];
+            q = 0;
             
-            //IDW algorithm with a decline function
-            for (t=0; t < networkCount; t++) {
-                s = 0;
-                av = 0;
-                for (q=0; q<c[t]; q++) {
-                    NS_DURING
-                        d = sqrt((xx-f[t][3*q])*(xx-f[t][3*q])+(yy-f[t][3*q+1])*(yy-f[t][3*q+1]));
-                        a = 1 / (d * d);
-                        av += a;
-                        s += a * f[t][3 * q + 2] * (1/d) * (1/30000.0) * (zoom) * sqrt(377.0/(4.0 * 3.1415));
-                    NS_HANDLER
-                    NS_ENDHANDLER
+            e = [coord keyEnumerator];
+            while ((v = [e nextObject]) != nil) {
+                p = [self pixelForCoordinateNoZoom:[v wayPoint]];
+                f[t][q++] = p.x;
+                f[t][q++] = p.y;
+                f[t][q++] = [coord[v] intValue];
+            }
+        }
+        
+        for (x = 0; x < width; x++) {
+            for (y = 0; y < height; y++) {
+                maxd = 0;
+                xx = x * qual;
+                yy = y * qual;
+                
+                //IDW algorithm with a decline function
+                for (t=0; t < networkCount; t++) {
+                    s = 0;
+                    av = 0;
+                    for (q=0; q<c[t]; q++) {
+                        NS_DURING
+                            d = sqrt((xx-f[t][3*q])*(xx-f[t][3*q])+(yy-f[t][3*q+1])*(yy-f[t][3*q+1]));
+                            a = 1 / (d * d);
+                            av += a;
+                            s += a * f[t][3 * q + 2] * (1/d) * (1/30000.0) * (zoom) * sqrt(377.0/(4.0 * 3.1415));
+                        NS_HANDLER
+                        NS_ENDHANDLER
+                    }
+                    if (av>0) { 
+                        s /= av;
+                        if (s > maxd) maxd = s;
+                    }
                 }
-                if (av>0) { 
-                    s /= av;
-                    if (s > maxd) maxd = s;
-                }
+                
+                if (maxd>0.1) {
+                    col = [bad blendedColorWithFraction:(maxd / sens) ofColor:good];
+                    i  = (unsigned int)floor([col alphaComponent] * 255.0 * (maxd < 1.1 ? (maxd-0.1) : 1.0)) << 24;
+                    i |= (unsigned int)floor([col redComponent]   * 255) << 16;
+                    i |= (unsigned int)floor([col greenComponent] * 255) << 8;
+                    i |= (unsigned int)floor([col blueComponent]  * 255);
+                    cache[x][y] = i;
+                }  else cache[x][y] = 0;
             }
             
-            if (maxd>0.1) {
-                col = [bad blendedColorWithFraction:(maxd / sens) ofColor:good];
-                i  = (unsigned int)floor([col alphaComponent] * 255.0 * (maxd < 1.1 ? (maxd-0.1) : 1.0)) << 24;
-                i |= (unsigned int)floor([col redComponent]   * 255) << 16;
-                i |= (unsigned int)floor([col greenComponent] * 255) << 8;
-                i |= (unsigned int)floor([col blueComponent]  * 255);
-                cache[x][y] = i;
-            }  else cache[x][y] = 0;
+            [im increment];
+            if ([im canceled]) goto exit;
         }
         
-        [im increment];
-        if ([im canceled]) goto exit;
-    }
-    
 	orgSize = [_mapImage size];
-    rec.size = NSMakeSize(orgSize.width / width, orgSize.height / height);
-    
-    [_mapImage lockFocus];
+        rec.size = NSMakeSize(orgSize.width / width, orgSize.height / height);
+        
+        [_mapImage lockFocus];
 	NS_DURING
 		for (x = 0; x< width; x++)
 			for (y = 0; y< height; y++) {
@@ -182,32 +180,29 @@
 	NS_ENDHANDLER
 	[_mapImage unlockFocus];
 	[self setNeedsDisplay:YES];
-    
+        
 exit:
-	[networks autorelease];
-    for(t=0; t<networkCount; t++) delete [] f[t];
-    delete [] f;
-    delete [] c;
+        for(t=0; t<networkCount; t++) delete [] f[t];
+        delete [] f;
+        delete [] c;
 
-    for (x = 0; x< width; x++)
-        delete [] cache[x];
-    delete [] cache;
+        for (x = 0; x< width; x++)
+            delete [] cache[x];
+        delete [] cache;
 
 exitNoCleanUp:
-    [im terminateWithCode:[im canceled] ? -1 : 0];
-    [subpool release];
+        [im terminateWithCode:[im canceled] ? -1 : 0];
+    }
 }
 
 - (void)showAreaNet:(WaveNet*)net {
 	NSParameterAssert(net);
-	[_mapImage release];
 	_mapImage = [_orgImage copy];
-    [NSThread detachNewThreadSelector:@selector(makeCache:) toTarget:self withObject:[NSArray arrayWithObject:net]];
+    [NSThread detachNewThreadSelector:@selector(makeCache:) toTarget:self withObject:@[net]];
 }
 
 - (void)showAreaNets:(NSArray*)nets {
 	NSParameterAssert(nets);
-	[_mapImage release];
 	_mapImage = [_orgImage copy];
     [NSThread detachNewThreadSelector:@selector(makeCache:) toTarget:self withObject:nets];
 }

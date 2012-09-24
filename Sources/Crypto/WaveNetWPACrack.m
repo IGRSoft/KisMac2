@@ -34,7 +34,7 @@ struct clientData {
     const UInt8 *mic;
     const UInt8 *data;
     UInt32 dataLen;
-    NSString *clientID;
+    __unsafe_unretained NSString *clientID;
     int wpaKeyCipher;
 };
 
@@ -251,7 +251,7 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
     
     keys = 0;
     for (i = 0; i < [aClientKeys count]; i++) {
-        if ([[aClients objectForKey:[aClientKeys objectAtIndex:i]] eapolDataAvailable])
+        if ([aClients[aClientKeys[i]] eapolDataAvailable])
             keys++;
     }
 
@@ -261,7 +261,7 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
     c = malloc(keys * sizeof(struct clientData));
     
     for (i = 0; i < [aClientKeys count]; i++) {
-        wc = [aClients objectForKey:[aClientKeys objectAtIndex:i]];
+        wc = aClients[aClientKeys[i]];
         if ([wc eapolDataAvailable]) {
             if ([[wc ID] isEqualToString: _BSSID]) {
                 keys--;
@@ -348,10 +348,10 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
                 fast_hmac_sha1((unsigned char*)c[curKey].data, c[curKey].dataLen, ptk, 16, digest);
             
             if (memcmp(digest, c[curKey].mic, 16) == 0) {
-                _password = [[NSString stringWithFormat:@"%s for Client %@", wrd, c[curKey].clientID] retain];
+                _password = [NSString stringWithFormat:@"%s for Client %@", wrd, c[curKey].clientID];
                 fclose(fptr);
                 free(c);
-                NSLog(@"Cracking was successful. Password is <%s> for Client %@", wrd, c[curKey].clientID);
+                DBNSLog(@"Cracking was successful. Password is <%s> for Client %@", wrd, c[curKey].clientID);
                 return YES;
             }
         }
@@ -360,28 +360,26 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
     free(c);
     fclose(fptr);
     
-    _crackErrorString = [NSLocalizedString(@"The key was none of the tested passwords.", @"Error description for WPA crack.") retain];
+    _crackErrorString = NSLocalizedString(@"The key was none of the tested passwords.", @"Error description for WPA crack.");
     return NO;
 }
 
 - (void)performWordlistWPA:(NSString*)wordlist {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    BOOL successful = NO;
+    @autoreleasepool {
+        BOOL successful = NO;
 	
 	NSParameterAssert((_isWep == encryptionTypeWPA) || (_isWep == encryptionTypeWPA2));
-    NSParameterAssert(_SSID);
+        NSParameterAssert(_SSID);
 	NSParameterAssert([_SSID length] <= 32);
 	NSParameterAssert([self capturedEAPOLKeys] > 0);
 	NSParameterAssert(_password == nil);
 	NSParameterAssert(wordlist);
 	
-	[wordlist retain];
 
-    if ([self crackWPAWithWordlist:[wordlist stringByExpandingTildeInPath] 
-               andImportController:[WaveHelper importController]]) successful = YES;
-    
-    [[WaveHelper importController] terminateWithCode: (successful) ? 1 : -1];
-    [wordlist release];
-	[pool release];
+        if ([self crackWPAWithWordlist:[wordlist stringByExpandingTildeInPath] 
+                   andImportController:[WaveHelper importController]]) successful = YES;
+        
+        [[WaveHelper importController] terminateWithCode: (successful) ? 1 : -1];
+	}
 }
 @end

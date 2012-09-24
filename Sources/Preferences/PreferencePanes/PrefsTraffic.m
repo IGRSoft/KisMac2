@@ -20,7 +20,7 @@
 -(BOOL)updateDictionary {    
     [_avgSignalTime validateEditing];
 
-    [controller setObject:[NSNumber numberWithInt:[_avgSignalTime intValue]] forKey:@"WaveNetAvgTime"];
+    [controller setObject:@([_avgSignalTime intValue]) forKey:@"WaveNetAvgTime"];
     return YES;
 }
 
@@ -30,9 +30,9 @@
     } else if(sender == _showBSSID) {
         [controller setObject:[NSNumber numberWithInt:[_showBSSID state]] forKey:@"TrafficViewShowBSSID"];
     } else if(sender == _avgSignalTime) {
-        [controller setObject:[NSNumber numberWithInt:[_avgSignalTime intValue]] forKey:@"WaveNetAvgTime"];
+        [controller setObject:@([_avgSignalTime intValue]) forKey:@"WaveNetAvgTime"];
     } else {
-        NSLog(@"Error: Invalid sender(%@) in setValueForSender:",sender);
+        DBNSLog(@"Error: Invalid sender(%@) in setValueForSender:",sender);
     }
 }
 

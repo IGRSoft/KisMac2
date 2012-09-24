@@ -54,19 +54,19 @@ struct pointCoords {
     
 	NSData *rawData = [NSData dataWithContentsOfFile:filename];
 	if (!rawData) {
-        NSLog(@"Could not load data!");
+        DBNSLog(@"Could not load data!");
 		return NO;
 	}
 	
 	data = [NSKeyedUnarchiver unarchiveObjectWithData:rawData];
     if (![data isKindOfClass:[NSDictionary class]]) {
-        NSLog(@"Could not load data, because root object is not a NSDictionary!");
+        DBNSLog(@"Could not load data, because root object is not a NSDictionary!");
         return NO;
     }
     
-    if ([data objectForKey:@"Creator"] && [[data objectForKey:@"Creator"] isEqualToString:@"KisMAC"]) { //could be a new file
-        ret &= [[WaveHelper trace] setTrace:[data objectForKey:@"Trace"]];
-        ret &= [container loadData:[data objectForKey:@"Networks"]];
+    if (data[@"Creator"] && [data[@"Creator"] isEqualToString:@"KisMAC"]) { //could be a new file
+        ret &= [[WaveHelper trace] setTrace:data[@"Trace"]];
+        ret &= [container loadData:data[@"Networks"]];
     } else {
         ret &= [container loadLegacyData:data]; //try to read legacy data
     }
@@ -94,20 +94,20 @@ struct pointCoords {
 	creator = [deco nextString];
 	if (![creator isEqualToString:@"KisMAC"])
     {
-		NSLog(@"Invaild creator code %@", creator);
+		DBNSLog(@"Invaild creator code %@", creator);
 		[deco close];
 		return NO;
 	}
 	
 	version = [deco nextString];
-	NSLog(@"Loading KisMAC file created by: %@ %@", creator, version);
+	DBNSLog(@"Loading KisMAC file created by: %@ %@", creator, version);
 	
 	data = [NSPropertyListSerialization propertyListFromData:[deco nextData]
                                             mutabilityOption:NSPropertyListImmutable 
                                                       format:nil errorDescription:&error];
 	if (!data) 
     {
-		NSLog(@"Could not decode trace: %@", error);
+		DBNSLog(@"Could not decode trace: %@", error);
 		[deco close];
 		return NO;
 	}
@@ -116,7 +116,7 @@ struct pointCoords {
 	data = [deco nextData];
 	if (!data || [(NSData*)data length] != sizeof(i))
     {
-		NSLog(@"Could not decode net count");
+		DBNSLog(@"Could not decode net count");
 		[deco close];
 		return NO;
 	}
@@ -130,17 +130,17 @@ struct pointCoords {
                                                           format:nil errorDescription:&error];
 		if (!data) 
         {
-			NSLog(@"Could not decode wavenet: %@", error);
+			DBNSLog(@"Could not decode wavenet: %@", error);
 			[deco close];
 			return NO;
 		}
 		
-		net = [[[WaveNet alloc] initWithDataDictionary:data] autorelease];
+		net = [[WaveNet alloc] initWithDataDictionary:data];
 		if (net) 
         { //silently discard errors here
 			if (![container addNetwork: net])
             {
-				NSLog(@"Adding a network failed! Make sure you are not hitting MAXNETs");
+				DBNSLog(@"Adding a network failed! Make sure you are not hitting MAXNETs");
 				[deco close];
 				return NO;
 			}
@@ -164,15 +164,15 @@ struct pointCoords {
 
 	data = [NSKeyedUnarchiver unarchiveObjectWithFile:filename];
     if (![data isKindOfClass:[NSDictionary class]]) {
-        NSLog(@"Could not load data, because root object is not a NSDictionary!");
+        DBNSLog(@"Could not load data, because root object is not a NSDictionary!");
         return NO;
     }
     
     d = data;
     
-    if ([d objectForKey:@"Creator"]) { //could be a new file
-        ret &= [[WaveHelper trace] addTrace:[d objectForKey:@"Trace"]];
-        ret &= [container importData:[d objectForKey:@"Networks"]];
+    if (d[@"Creator"]) { //could be a new file
+        ret &= [[WaveHelper trace] addTrace:d[@"Trace"]];
+        ret &= [container importData:d[@"Networks"]];
     } else {
         ret &= [container importLegacyData:d]; //try to read legacy data
     }
@@ -196,26 +196,23 @@ struct pointCoords {
 	
 	creator = [deco nextString];
 	if (![creator isEqualToString:@"KisMAC"]) {
-		NSLog(@"Invaild creator code %@", creator);
-		[deco release];
+		DBNSLog(@"Invaild creator code %@", creator);
 		return NO;
 	}
 	
 	version = [deco nextString];
-	NSLog(@"Loading KisMAC file created by: %@ %@", creator, version);
+	DBNSLog(@"Loading KisMAC file created by: %@ %@", creator, version);
 	
 	data = [NSPropertyListSerialization propertyListFromData:[deco nextData] mutabilityOption:NSPropertyListImmutable format:nil errorDescription:&error];
 	if (!data) {
-		NSLog(@"Could not decode trace: %@", error);
-		[deco release];
+		DBNSLog(@"Could not decode trace: %@", error);
 		return NO;
 	}
 	
 	[[WaveHelper trace] setTrace:data];
 	data = [deco nextData];
 	if (!data || [(NSData*)data length] != sizeof(i)) {
-		NSLog(@"Could not decode net count");
-		[deco release];
+		DBNSLog(@"Could not decode net count");
 		return NO;
 	}
 	memcpy(&i, [(NSData*)data bytes], sizeof(i));
@@ -228,18 +225,16 @@ struct pointCoords {
 	while ((data = [deco nextData]) != NULL) {
 		data = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListImmutable format:nil errorDescription:&error];
 		if (!data) {
-			NSLog(@"Could not decode wavenet: %@", error);
-			[deco release];
+			DBNSLog(@"Could not decode wavenet: %@", error);
 			return NO;
 		}
 		
-		net = [[[WaveNet alloc] initWithDataDictionary:data] autorelease];
+		net = [[WaveNet alloc] initWithDataDictionary:data];
 		if (net) { //silently discard errors here
 			snet = [container netForKey:[net rawID]];
 			if (!snet) {
 				if (![container addNetwork:net]) {
-					NSLog(@"Adding a network failed! Make sure you are not hitting MAXNETs");
-					[deco release];
+					DBNSLog(@"Adding a network failed! Make sure you are not hitting MAXNETs");
 					return NO;
 				}
 				[net setNetID:++maxID];
@@ -250,7 +245,6 @@ struct pointCoords {
 		[im increment];
 	}
 	
-	[deco release];
 	return YES;
 }
 
@@ -273,7 +267,7 @@ struct pointCoords {
     date = @"0000-00-00";
     
     if ((fd = fopen([filename UTF8String], "r")) == NULL) {
-        NSLog(@"Unable to open specified file: %s", strerror(errno));
+        DBNSLog(@"Unable to open specified file: %s", strerror(errno));
         return NO;
     }
 
@@ -282,7 +276,7 @@ struct pointCoords {
         //databuf[strlen(databuf) - 1] = '\0';
         
         if (strncmp(databuf,"NetS",4)) {
-            NSLog(@"Binary Netstumbler files are not yet supported.");
+            DBNSLog(@"Binary Netstumbler files are not yet supported.");
             return NO;
         }
         
@@ -296,7 +290,6 @@ struct pointCoords {
         net = [[WaveNet alloc] initWithNetstumbler: databuf andDate:date];
         if (net) {
             [a addObject:net];
-            [net release];
         }
     }
     
@@ -407,7 +400,7 @@ struct pointCoords {
 	if (!c) return NO;
 	
 	[c addString:@"KisMAC"];
-	[c addString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+	[c addString:[[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"]];
     
 	m = [[WaveHelper trace] trace];
 	if (!m) m = [NSMutableArray array];
@@ -465,7 +458,7 @@ struct pointCoords {
     FILE* fd = fopen([filename UTF8String],"w");
 
     if (!fd) {
-        NSLog(@"Could not open %@ for writing.", filename);
+        DBNSLog(@"Could not open %@ for writing.", filename);
         return NO;
     }
     
@@ -540,7 +533,7 @@ struct pointCoords {
     FILE* fd = fopen([filename UTF8String],"w");
 
     if (!fd) {
-        NSLog(@"Could not open %@ for writing.", filename);
+        DBNSLog(@"Could not open %@ for writing.", filename);
         return NO;
     }
     
@@ -691,7 +684,7 @@ struct pointCoords {
 					break;
 				default:
                     if (netname[j] < 32) {
-                        NSLog(@"KML Export: Invalid character found, skipping.");
+                        DBNSLog(@"KML Export: Invalid character found, skipping.");
                     }
                     else {
                          strncat(netesc,netname+j,1);
@@ -751,20 +744,20 @@ struct pointCoords {
 	NSMutableArray* xtrace = [[WaveHelper trace] trace];
 	int traceCount = [xtrace count];
 	
-	NSLog(@"Completed network export - beginning trace export...");
+	DBNSLog(@"Completed network export - beginning trace export...");
 
 	if (traceCount>0) {
-		NSLog(@"Traces to export: %d", traceCount);
+		DBNSLog(@"Traces to export: %d", traceCount);
 		fprintf(fd,"    <Style id=\"track\">\n");
 		fprintf(fd,"            <LineStyle>\n");
 		fprintf(fd,"                    <color>ff00ff33</color>\n");
 		fprintf(fd,"                    <width>3</width>\n");
 		fprintf(fd,"            </LineStyle>\n");
 		fprintf(fd,"    </Style>\n");
-		BIValuePair* tempBIValuePair = [[[BIValuePair alloc] init] autorelease];
+		BIValuePair* tempBIValuePair = [[BIValuePair alloc] init];
 		int i;
 		for (i = 0; i < traceCount; ++i) {
-			NSLog(@"Trace number: %d", i);
+			DBNSLog(@"Trace number: %d", i);
 			fprintf(fd,"<Placemark>\n");
 			fprintf(fd,"    <name>Trace %d</name>\n",i+1);
 			fprintf(fd,"    <styleUrl>#track</styleUrl>\n");
@@ -772,17 +765,17 @@ struct pointCoords {
 			fprintf(fd,"    <LineString>\n");
 			fprintf(fd,"            <coordinates>\n");
 			
-			NSMutableData* subtrace = [xtrace objectAtIndex: i];
+			NSMutableData* subtrace = xtrace[i];
 			const struct pointCoords *pL = (const struct pointCoords *)[subtrace bytes];
 			
 			int subtraceCount = [subtrace length] / sizeof(struct pointCoords);
 			int j;
 			for (j = 0; j < subtraceCount; ++j) {
-//				NSLog(@"Subtrace: %d", j);
-//				NSLog(@"pLx, pLy: %f, %f", pL->x, pL->y);
+//				DBNSLog(@"Subtrace: %d", j);
+//				DBNSLog(@"pLx, pLy: %f, %f", pL->x, pL->y);
 				[tempBIValuePair setPairX: pL->x Y: pL->y];
 				waypoint wp = [tempBIValuePair wayPoint];
-//				NSLog(@"lat, long: %f, %f", wp._lat, wp._long);
+//				DBNSLog(@"lat, long: %f, %f", wp._lat, wp._long);
 				fprintf(fd, "                %f,%f,0\n", wp._long, wp._lat);
 				++pL;
 			}
@@ -790,9 +783,9 @@ struct pointCoords {
 			fprintf(fd,"    </LineString>\n");
 			fprintf(fd,"</Placemark>\n");
 		}
-		NSLog(@"Completed trace export.");
+		DBNSLog(@"Completed trace export.");
 	} else {
-		NSLog(@"no trace found - skipping trace export");
+		DBNSLog(@"no trace found - skipping trace export");
 	}
 
 	fprintf(fd,"</Document>\n");

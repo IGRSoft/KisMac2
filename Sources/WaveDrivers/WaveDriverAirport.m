@@ -30,25 +30,25 @@ static WaveDriverAirport * staticInstance = nil;
 
 - (id)init 
 {
-    [super init];
-    NSArray * availableInterfaces;
+    if (!(self = [super init])) return nil;
+    NSSet * availableInterfaces;
     BOOL success = NO;
     NSError * error;
     
     if(nil == staticInstance)
     {        
         //first we must find an interface
-        availableInterfaces = [CWInterface supportedInterfaces];
+        availableInterfaces = [CWInterface interfaceNames];
         
         //CFShow(availableInterfaces);
         
         //for now just grab the first one
         if([availableInterfaces count] > 0)
         {
-            airportInterface = [[CWInterface interfaceWithName: 
-                                             [availableInterfaces objectAtIndex: 0]] retain];
+            airportInterface = [CWInterface interfaceWithName: 
+                                             [availableInterfaces allObjects][0]];
             //CFShow(airportInterface);
-            if(YES == airportInterface.power)
+            if(YES == airportInterface.powerOn)
             {
                 success = YES;
             }
@@ -57,7 +57,7 @@ static WaveDriverAirport * staticInstance = nil;
                 success = [airportInterface setPower: YES error: &error];
                 if(!success)
                 {
-                    CFShow(error);
+                    CFShow((__bridge CFTypeRef)(error));
                 }
             }
         }
@@ -113,9 +113,9 @@ static WaveDriverAirport * staticInstance = nil;
 //apple knows best, ask api if wireless is available
 + (bool) loadBackend 
 {
-    NSArray * availableInterfaces;
+    NSSet * availableInterfaces;
     
-    availableInterfaces = [CWInterface supportedInterfaces];
+    availableInterfaces = [CWInterface interfaceNames];
     
     return ([availableInterfaces count] > 0);
 }
@@ -135,11 +135,10 @@ static WaveDriverAirport * staticInstance = nil;
     NSError * error = nil;
         
     //don't merge duplicate ssids
-    params = [NSDictionary dictionaryWithObjectsAndKeys:
-                               [NSNumber numberWithBool:NO], kCWScanKeyMerge,
-                               [NSNumber numberWithInt:kCWScanTypePassive], kCWScanKeyScanType,
-                               [NSNumber numberWithInteger:0], kCWScanKeyRestTime,
-                               [NSNumber numberWithInteger:10], kCWScanKeyDwellTime, nil];
+    params = @{kCWScanKeyMerge: @NO,
+                               kCWScanKeyScanType: @(kCWScanTypePassive),
+                               kCWScanKeyRestTime: @0,
+                               kCWScanKeyDwellTime: @10};
     networks = [airportInterface scanForNetworksWithParameters:params error: &error]; 
   
     return networks;
@@ -171,7 +170,21 @@ static WaveDriverAirport * staticInstance = nil;
     
     while((netToJoin = [enumerator nextObject]) != nil)
     {
-        if(!memcmp([netToJoin.bssidData bytes], bssid, 6))
+		unsigned char macData[6] = {0};
+		NSString* macString = [netToJoin bssid];
+		if (macString && ([macString length] == 17)) {
+			for (NSUInteger i = 0; i < 6; ++i) {
+				NSString* part = [macString substringWithRange:NSMakeRange(i * 3, 2)];
+				NSScanner* scanner = [NSScanner scannerWithString:part];
+				unsigned int data = 0;
+				if (![scanner scanHexInt:&data]) {
+					data = 0;
+				}
+				macData[i] = (unsigned char) data;
+			}
+		}
+		
+        if(!memcmp(macData, bssid, 6))
         {
             foundNet = YES;
             break;
@@ -180,14 +193,13 @@ static WaveDriverAirport * staticInstance = nil;
     
     if(YES == foundNet)
     {
-        assocDict = [NSDictionary dictionaryWithObjectsAndKeys: passwd, kCWAssocKeyPassphrase,
-                     nil];
+        assocDict = @{kCWAssocKeyPassphrase: passwd};
         success = [airportInterface associateToNetwork: netToJoin parameters: assocDict error:&error];
     }
     
     if(error)
     {
-        CFShow(error);
+        CFShow((__bridge CFTypeRef)(error));
     }
     return success;
 }
@@ -196,9 +208,7 @@ static WaveDriverAirport * staticInstance = nil;
 
 -(void) dealloc 
 {
-    [airportInterface release];
     airportInterface = nil;
-    [super dealloc];
 }
 
 

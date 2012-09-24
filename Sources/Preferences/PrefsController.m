@@ -23,11 +23,13 @@
 #import "PrefsController.h"
 #import "KisMACNotifications.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *label,NSString *paletteLabel,NSString *toolTip,id target,SEL settingSelector, id itemContent,SEL action, NSMenu * menu)
 {
     NSMenuItem *mItem;
     // here we create the NSToolbarItem and setup its attributes in line with the parameters
-    NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
     [item setLabel:label];
     [item setPaletteLabel:paletteLabel];
     [item setToolTip:toolTip];
@@ -43,7 +45,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
     if (menu!=nil)
     {
         // we actually need an NSMenuItem here, so we construct one
-        mItem=[[[NSMenuItem alloc] init] autorelease];
+        mItem=[[NSMenuItem alloc] init];
         [mItem setSubmenu: menu];
         [mItem setTitle: [menu title]];
         [item setMenuFormRepresentation:mItem];
@@ -51,12 +53,15 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
     // Now that we've setup all the settings for this new toolbar item, we add it to the dictionary.
     // The dictionary retains the toolbar item for us, which is why we could autorelease it when we created
     // it (above).
-    [theDict setObject:item forKey:identifier];
+    theDict[identifier] = item;
 }
+#pragma clang diagnostic pop
 
 @implementation PrefsController
 
 - (id)init {
+	self = [super init];
+	
     prefsToolbar=[[NSToolbar alloc] initWithIdentifier:@"prefsToolbar"];
     [prefsToolbar setDelegate:self];
     [prefsToolbar setAllowsUserCustomization:NO];
@@ -65,8 +70,8 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
     nibNamesDict = [[NSMutableDictionary alloc] init];
     classNamesDict = [[NSMutableDictionary alloc] init];
     
-    [nibNamesDict setObject:@"PrefsScanning" forKey:@"Scanning"];
-    [classNamesDict setObject:@"PrefsScanning" forKey:@"Scanning"];
+    nibNamesDict[@"Scanning"] = @"PrefsScanning";
+    classNamesDict[@"Scanning"] = @"PrefsScanning";
     addToolbarItem(toolbarItems,
                    @"Scanning",
                    @"Scanning",
@@ -77,10 +82,10 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    [NSImage imageNamed:@"NSApplicationIcon"],
                    @selector(changeView:),
                    nil);
-    defaultToolbarItem = [toolbarItems objectForKey:@"Scanning"];
+    defaultToolbarItem = toolbarItems[@"Scanning"];
 
-    [nibNamesDict setObject:@"PrefsTraffic" forKey:@"Traffic"];
-    [classNamesDict setObject:@"PrefsTraffic" forKey:@"Traffic"];
+    nibNamesDict[@"Traffic"] = @"PrefsTraffic";
+    classNamesDict[@"Traffic"] = @"PrefsTraffic";
     addToolbarItem(toolbarItems,
                    @"Traffic",
                    @"Traffic",
@@ -92,8 +97,8 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @selector(changeView:),
                    nil);
 
-    [nibNamesDict setObject:@"PrefsFilter" forKey:@"Filter"];
-    [classNamesDict setObject:@"PrefsFilter" forKey:@"Filter"];
+    nibNamesDict[@"Filter"] = @"PrefsFilter";
+    classNamesDict[@"Filter"] = @"PrefsFilter";
     addToolbarItem(toolbarItems,
                    @"Filter",
                    @"Filter",
@@ -106,8 +111,8 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    nil);
 
 
-    [nibNamesDict setObject:@"PrefsSounds" forKey:@"Sounds"];
-    [classNamesDict setObject:@"PrefsSounds" forKey:@"Sounds"];
+    nibNamesDict[@"Sounds"] = @"PrefsSounds";
+    classNamesDict[@"Sounds"] = @"PrefsSounds";
     addToolbarItem(toolbarItems,
                    @"Sounds",
                    @"Sounds",
@@ -119,8 +124,8 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @selector(changeView:),
                    nil);
 
-    [nibNamesDict setObject:@"PrefsDriver" forKey:@"Driver"];
-    [classNamesDict setObject:@"PrefsDriver" forKey:@"Driver"];
+    nibNamesDict[@"Driver"] = @"PrefsDriver";
+    classNamesDict[@"Driver"] = @"PrefsDriver";
     addToolbarItem(toolbarItems,
                    @"Driver",
                    @"Driver",
@@ -132,8 +137,8 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @selector(changeView:),
                    nil);
 
-    [nibNamesDict setObject:@"PrefsGPS" forKey:@"GPS"];
-    [classNamesDict setObject:@"PrefsGPS" forKey:@"GPS"];
+    nibNamesDict[@"GPS"] = @"PrefsGPS";
+    classNamesDict[@"GPS"] = @"PrefsGPS";
     addToolbarItem(toolbarItems,
                    @"GPS",
                    @"GPS",
@@ -144,8 +149,8 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    [NSImage imageNamed:@"gps"],
                    @selector(changeView:),
                    nil);
-    [nibNamesDict setObject:@"PrefsMap" forKey:@"Map"];
-    [classNamesDict setObject:@"PrefsMap" forKey:@"Map"];
+    nibNamesDict[@"Map"] = @"PrefsMap";
+    classNamesDict[@"Map"] = @"PrefsMap";
     addToolbarItem(toolbarItems,
                    @"Map",
                    @"Map",
@@ -157,8 +162,8 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @selector(changeView:),
                    nil);
 	
-	[nibNamesDict setObject:@"PrefsAdvanced" forKey:@"Advanced"];
-    [classNamesDict setObject:@"PrefsAdvanced" forKey:@"Advanced"];
+	nibNamesDict[@"Advanced"] = @"PrefsAdvanced";
+    classNamesDict[@"Advanced"] = @"PrefsAdvanced";
     addToolbarItem(toolbarItems,
                    @"Advanced",
                    @"Advanced",
@@ -208,9 +213,9 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
     if (currentClient&&(![currentClient updateDictionary])) return;
     
     for(i = 0 ; i < count ; i++) {
-        if([[[itemsArray objectAtIndex:i] itemIdentifier] isEqualToString:[sender itemIdentifier]]) {
-            nibName = [nibNamesDict objectForKey:[[itemsArray objectAtIndex:i] itemIdentifier]];
-            className = [classNamesDict objectForKey:[[itemsArray objectAtIndex:i] itemIdentifier]];
+        if([[itemsArray[i] itemIdentifier] isEqualToString:[sender itemIdentifier]]) {
+            nibName = nibNamesDict[[itemsArray[i] itemIdentifier]];
+            className = classNamesDict[[itemsArray[i] itemIdentifier]];
             currentToolbarItem = sender;
             break;
         }
@@ -220,7 +225,6 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
     oldView = [[contentView subviews] lastObject];
     [oldView removeFromSuperview];
 
-    [currentClient release];
     currentClient = [[[[NSBundle mainBundle] classNamed:className] alloc] init];
     [currentClient setController:defaults];
     
@@ -248,7 +252,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
 
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar {
-    return [NSArray arrayWithObjects:@"Scanning", @"Filter", @"Sounds", @"Driver", @"GPS", @"Map", @"Traffic", @"Advanced", nil];
+    return @[@"Scanning", @"Filter", @"Sounds", @"Driver", @"GPS", @"Map", @"Traffic", @"Advanced"];
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar {
@@ -259,10 +263,10 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
 {
     // We create and autorelease a new NSToolbarItem, and then go through the process of setting up its
     // attributes from the master toolbar item matching that identifier in our dictionary of items.
-    NSToolbarItem *newItem = [[[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier] autorelease];
+    NSToolbarItem *newItem = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
     NSToolbarItem *item = nil;
 
-    item=[toolbarItems objectForKey:itemIdentifier];
+    item=toolbarItems[itemIdentifier];
 
     [newItem setLabel:[item label]];
     [newItem setPaletteLabel:[item paletteLabel]];
@@ -291,16 +295,16 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
 #pragma mark -
 
 - (id)objectForKey:(NSString*)key {
-    id object = [changesDict objectForKey:key];
+    id object = changesDict[key];
     if(object) return object;
     
     object = [defaults objectForKey:key];
-    if(!object) NSLog(@"Error: -[PrefsController objectForKey:%@] returning NULL!", key);
+    if(!object) DBNSLog(@"Error: -[PrefsController objectForKey:%@] returning NULL!", key);
     return object;
 }
 
 - (void)setObject:(id)object forKey:(NSString*)key {
-    [changesDict setObject:object forKey:key];
+    changesDict[key] = object;
 }
 
 - (NSWindow*)window {
@@ -340,13 +344,5 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
 
 #pragma mark -
 
-- (void)dealloc {
-    [toolbarItems release];
-    [nibNamesDict release];
-    [classNamesDict release];
-    [changesDict release];
-    
-    [super dealloc];
-}
 
 @end

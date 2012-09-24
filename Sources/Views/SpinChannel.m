@@ -44,14 +44,14 @@
 
         for (i = 0; i < 12; i++)
         {
-        _stateImg[i] = [[NSImage imageNamed:[NSString stringWithFormat:@"ChanState%d.png", i]] retain];
+        _stateImg[i] = [NSImage imageNamed:[NSString stringWithFormat:@"ChanState%d.png", i]];
         }
         
         //setup the channel text
         attrs = [[NSMutableDictionary alloc] init];
         textFont =  [NSFont fontWithName:@"Monaco" size:(size.height>size.width ? size.width*0.8 : size.height*0.8)];
-        [attrs setObject:textFont forKey:NSFontAttributeName];
-        [attrs setObject:[NSColor whiteColor] forKey:NSForegroundColorAttributeName];
+        attrs[NSFontAttributeName] = textFont;
+        attrs[NSForegroundColorAttributeName] = [NSColor whiteColor];
     }
     
     return self;
@@ -138,8 +138,6 @@
     int i;
     
     for(i = 0; i < 12; i++) {
-        [_stateImg[i] release];
     }
-	[super dealloc];
 }
 @end

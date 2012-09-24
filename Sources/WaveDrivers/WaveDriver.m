@@ -138,11 +138,12 @@ char WaveDrivers [][30] = {
     NSUserDefaults *sets;
     NSMutableArray *a;
     
-    [WaveHelper secureReplace:&_config withObject:dict];
+	_config = dict;
+    //[WaveHelper secureReplace:&_config withObject:dict];
     
-    _firstChannel = [[_config objectForKey:@"firstChannel"] intValue];
+    _firstChannel = [_config[@"firstChannel"] intValue];
     if (_firstChannel == 0) _firstChannel = 1;
-    _currentChannel = _firstChannel;
+		_currentChannel = _firstChannel;
 
     j = 0;
     _fcc = NO;
@@ -160,7 +161,7 @@ char WaveDrivers [][30] = {
         }
         else 
         {
-            _useChannel[i - 1] = [[_config objectForKey: key] intValue];
+            _useChannel[i - 1] = [_config[key] intValue];
         }
         
         if (_useChannel[i - 1])
@@ -178,19 +179,18 @@ char WaveDrivers [][30] = {
     if (_fcc && (_useChannel[13] | _useChannel[12] | _useChannel[11])) _fcc = NO;
     if (_etsi && _useChannel[13]) _etsi = NO;
     
-    _autoAdjustTimer = [[_config objectForKey:@"autoAdjustTimer"] boolValue];
+    _autoAdjustTimer = [_config[@"autoAdjustTimer"] boolValue];
     
     sets = [NSUserDefaults standardUserDefaults];
     a = [[sets objectForKey:@"ActiveDrivers"] mutableCopy];
     for (i = 0; i < [a count]; i++) 
     {
-        if ([[[a objectAtIndex:i] objectForKey:@"deviceName"] isEqualToString:[self deviceName]]) 
+        if ([a[i][@"deviceName"] isEqualToString:[self deviceName]]) 
         {
-            [a replaceObjectAtIndex:i withObject: dict];
+            a[i] = dict;
         }
     }
     [sets setObject:a forKey:@"ActiveDrivers"];
-    [a release];
 
     return YES;
 }
@@ -303,7 +303,7 @@ char WaveDrivers [][30] = {
         _hopFailure++;
         if (_hopFailure >= 5) {
             _hopFailure = 0;
-            NSLog(@"Looks like your card does not support channel %d. KisMAC will disable this channel.", channel);
+            DBNSLog(@"Looks like your card does not support channel %d. KisMAC will disable this channel.", channel);
             _useChannel[channel - 1] = NO;
             _etsi = NO;
             _fcc = NO;
@@ -358,7 +358,7 @@ char WaveDrivers [][30] = {
 
 - (NSArray *) permittedRates {
     if (!_permittedRates) {
-        _permittedRates = [NSArray array];
+        _permittedRates = @[];
     }
     return _permittedRates;
 }

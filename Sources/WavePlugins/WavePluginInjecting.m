@@ -43,7 +43,7 @@
     // Load nib file, probeSheet will be assigned by File's Owner (see xib file) method
     if (!probeSheet) {
         if(![NSBundle loadNibNamed:@"wepInjection" owner:self]) {
-            NSLog(@"wepInjection.nib failed to load!");
+            DBNSLog(@"wepInjection.nib failed to load!");
             return NO;
         }
     }
@@ -59,7 +59,7 @@
     [NSApp beginSheet:probeSheet modalForWindow:[WaveHelper mainWindow] modalDelegate:[WaveHelper mainWindow] didEndSelector:nil contextInfo:nil];
     
     // Store network reference
-    _networkInTest = [net retain];
+    _networkInTest = net;
     _status = WavePluginRunning;
     _stopFlag = NO;
     
@@ -85,13 +85,12 @@
     if (_stopFlag == YES) {
         _stopFlag = NO;
         _status = WavePluginIdle;
-        [_networkInTest release];
         return;
     }
     
     // Ok we could do a step, check if we have packets;
-//    NSLog(@"Packet Reinjection: %u ACK Packets.\n",[[_networkInTest ackPacketsLog] count]);
-//    NSLog(@"Packet Reinjection: %u ARP Packets.\n",[[_networkInTest arpPacketsLog] count]);
+//    DBNSLog(@"Packet Reinjection: %u ACK Packets.\n",[[_networkInTest ackPacketsLog] count]);
+//    DBNSLog(@"Packet Reinjection: %u ARP Packets.\n",[[_networkInTest arpPacketsLog] count]);
     p = [_networkInTest arpPacketsLog];
 
     // if we haven't... Wait a little more
@@ -143,7 +142,7 @@
     _kframe.ctrl.tx_rate = [_driver currentRate];
     _kframe.ctrl.len = q;
         
-    NSLog(@"SEND INJECTION PACKET");
+    DBNSLog(@"SEND INJECTION PACKET");
     _checkInjectedPackets = YES;
     [_driver sendKFrame:&_kframe howMany:100 atInterval:50 notifyTarget:self notifySelectorString:@"stepCheckInjected"];
     return;
@@ -171,7 +170,6 @@
     if (_stopFlag == YES) {
         _stopFlag = NO;
         _status = WavePluginIdle;
-        [_networkInTest release];
         [_driver stopSendingFrames];
         return;
     } else {
@@ -194,7 +192,7 @@
     if ([packet type] != IEEE80211_TYPE_DATA)
         return WavePluginPacketResponseContinue;
     
-//    NSLog(@"payloadLength %d", payloadLength);
+//    DBNSLog(@"payloadLength %d", payloadLength);
     if (aPacketType == 0) {        //do rst handling here
         if ((payloadLength == TCPRST_SIZE) && 
             IS_EQUAL_MACADDR([packet addr1], _addr1) && 
@@ -203,9 +201,9 @@
             goto got;
         }
     } else if (payloadLength == ARP_SIZE || payloadLength == ARP_SIZE_PADDING || payloadLength == ARP_SIZE + 4) {
-//        NSLog(@"INJ ARP DETECTED From %d To %d", [packet fromDS], [packet toDS]);
-//        NSLog(@"%@ %@ %@", mToS([packet addr1]), mToS([packet addr2]), mToS([packet addr3]));
-//        NSLog(@"%@ %@ %@", mToS(_addr1), mToS(_addr2), mToS(_addr3));
+//        DBNSLog(@"INJ ARP DETECTED From %d To %d", [packet fromDS], [packet toDS]);
+//        DBNSLog(@"%@ %@ %@", mToS([packet addr1]), mToS([packet addr2]), mToS([packet addr3]));
+//        DBNSLog(@"%@ %@ %@", mToS(_addr1), mToS(_addr2), mToS(_addr3));
 		if ([packet toDS]) {
 			if (!IS_EQUAL_MACADDR([packet addr1], _addr1))
                 return WavePluginPacketResponseContinue; //check BSSID

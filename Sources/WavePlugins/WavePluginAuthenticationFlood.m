@@ -45,24 +45,24 @@
 }
 
 - (void)doAuthFloodNetwork: (id)o {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    UInt16 x[3];
-    
-    KFrame *kframe = &_authFrame;
-    struct ieee80211_auth *frame = (struct ieee80211_auth *)(kframe->data);
-    
-    while (_stopFlag == NO) {
-        x[0] = random() & 0x0FFF;
-        x[1] = random();
-        x[2] = random();
+    @autoreleasepool {
+        UInt16 x[3];
         
-        memcpy(frame->header.addr2, x, 6); //needs to be random
+        KFrame *kframe = &_authFrame;
+        struct ieee80211_auth *frame = (struct ieee80211_auth *)(kframe->data);
         
-        [_driver sendKFrame:kframe howMany:1 atInterval:0];
-        [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+        while (_stopFlag == NO) {
+            x[0] = random() & 0x0FFF;
+            x[1] = random();
+            x[2] = random();
+            
+            memcpy(frame->header.addr2, x, 6); //needs to be random
+            
+            [_driver sendKFrame:kframe howMany:1 atInterval:0];
+            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+        }
+    
     }
-    
-    [pool drain];
     _status = WavePluginIdle;
 
     return;

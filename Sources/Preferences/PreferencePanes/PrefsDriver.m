@@ -26,15 +26,15 @@
     drivers = [controller objectForKey:@"ActiveDrivers"];
     
     while (WaveDrivers[i][0]) {
-        s = [NSString stringWithUTF8String:WaveDrivers[i]];
+        s = @(WaveDrivers[i]);
         for (j = 0; j < [drivers count]; j++) {
             c = NSClassFromString(s);
             
             //check if device exists
-            if ([[[drivers objectAtIndex:j] objectForKey:@"driverID"] isEqualToString:s]) break;
+            if ([drivers[j][@"driverID"] isEqualToString:s]) break;
 
             //check if device is in use by some other driver, which is already loaded
-            if ([[[drivers objectAtIndex:j] objectForKey:@"deviceName"] isEqualToString:[c deviceName]]) break;
+            if ([drivers[j][@"deviceName"] isEqualToString:[c deviceName]]) break;
         }
         c = NSClassFromString(s);
         
@@ -52,8 +52,8 @@
     
     if (i<0) return Nil;
     
-    d = [[controller objectForKey:@"ActiveDrivers"] objectAtIndex:i];
-    return NSClassFromString([d objectForKey:@"driverID"]);
+    d = [controller objectForKey:@"ActiveDrivers"][i];
+    return NSClassFromString(d[@"driverID"]);
 }
 
 -(NSDictionary*) getCurrentSettings {
@@ -61,7 +61,7 @@
     
     if (i<0) return Nil;
     
-    return [[controller objectForKey:@"ActiveDrivers"] objectAtIndex:i];
+    return [controller objectForKey:@"ActiveDrivers"][i];
 }
 
 - (void) updateSettings {
@@ -89,8 +89,8 @@
 		if (enableIPAndPort) {
 			[_chanhop setHidden:true];
 			[_kdrone_settings setHidden:false];
-			[_kismet_host setStringValue:[d objectForKey:@"kismetserverhost"]];
-			[_kismet_port setIntValue:[[d objectForKey:@"kismetserverport"] intValue]];
+			[_kismet_host setStringValue:d[@"kismetserverhost"]];
+			[_kismet_port setIntValue:[d[@"kismetserverport"] intValue]];
 		} else {
 			[_chanhop setHidden:false];
 			[_kdrone_settings setHidden:true];
@@ -115,11 +115,11 @@
         [_injectionDevice setTitle:@"use as primary device"];
     
     if (enableChannel) {
-        [_firstChannel  setIntValue:    [[d objectForKey:@"firstChannel"] intValue]];
+        [_firstChannel  setIntValue:    [d[@"firstChannel"] intValue]];
 
         for (x = 0; x<2; x++) 
             for (y = 0; y < 7; y++) {
-                val = [[d objectForKey:[NSString stringWithFormat:@"useChannel%.2i",(x*7+y+1)]] boolValue] ? NSOnState : NSOffState;
+                val = [d[[NSString stringWithFormat:@"useChannel%.2i",(x*7+y+1)]] boolValue] ? NSOnState : NSOffState;
                 [[_channelSel cellAtRow:y column:x] setState:val];
                 if (x*7+y+1 == [_firstChannel intValue]) startCorrect = val;
             }
@@ -127,7 +127,7 @@
         if (startCorrect==0) {
             for (x = 0; x<2; x++) {
                 for (y = 0; y < 7; y++) {
-                    val = [[d objectForKey:[NSString stringWithFormat:@"useChannel%.2i",(x*7+y+1)]] boolValue] ? NSOnState : NSOffState;
+                    val = [d[[NSString stringWithFormat:@"useChannel%.2i",(x*7+y+1)]] boolValue] ? NSOnState : NSOffState;
                     if (val) {  
                         [_firstChannel setIntValue:x*7+y+1];
                         break;
@@ -146,15 +146,15 @@
     }
     
     if (enableInjection) {
-        [_injectionDevice setState: [[d objectForKey:@"injectionDevice"] intValue]];
+        [_injectionDevice setState: [d[@"injectionDevice"] intValue]];
     } else {
         [_injectionDevice setState: NSOffState];
     }
     
     if (enableDumping) {
-       [_dumpDestination setStringValue:[d objectForKey:@"dumpDestination"]];
-       [_dumpFilter selectCellAtRow:[[d objectForKey:@"dumpFilter"] intValue] column:0];
-       [_dumpDestination setEnabled:[[d objectForKey:@"dumpFilter"] intValue] ? YES : NO];
+       [_dumpDestination setStringValue:d[@"dumpDestination"]];
+       [_dumpFilter selectCellAtRow:[d[@"dumpFilter"] intValue] column:0];
+       [_dumpDestination setEnabled:[d[@"dumpFilter"] intValue] ? YES : NO];
     } else {
        [_dumpDestination setStringValue:@"~/DumpLog %y-%m-%d %H:%M"];
        [_dumpFilter selectCellAtRow:0 column:0];
@@ -170,7 +170,7 @@
     int val = 0, startCorrect = 0;
     unsigned int x, y;
 	
-    [controller setObject:[NSNumber numberWithFloat: [_frequence     floatValue]]    forKey:@"frequence"];
+    [controller setObject:@([_frequence     floatValue])    forKey:@"frequence"];
     if (i < 0) return YES;
     d = [[self getCurrentSettings] mutableCopy];
     if (!d) return YES;
@@ -188,7 +188,6 @@
                             //@"You have to select at least one channel, otherwise scanning makes no sense. Also please make sure that you have selected "
                             //"a valid start channel.",
                             OK,nil,nil);
-            [d release];
             return NO;
         }
     }
@@ -196,28 +195,26 @@
     for (x = 0; x<2; x++) 
         for (y = 0; y < 7; y++) {
             val = [[_channelSel cellAtRow:y column:x] state];
-            [d setObject:[NSNumber numberWithBool: val ? YES : NO] forKey:[NSString stringWithFormat:@"useChannel%.2i",(x*7+y+1)]];
+            d[[NSString stringWithFormat:@"useChannel%.2i",(x*7+y+1)]] = [NSNumber numberWithBool: val ? YES : NO];
         }
     
-    [d setObject:[NSNumber numberWithInt:   [_firstChannel  intValue]]      forKey:@"firstChannel"];
+    d[@"firstChannel"] = @([_firstChannel  intValue]);
     
-    [d setObject:[NSNumber numberWithBool:  [_injectionDevice state] ? YES : NO] forKey:@"injectionDevice"];
+    d[@"injectionDevice"] = [NSNumber numberWithBool:  [_injectionDevice state] ? YES : NO];
     
-    [d setObject:[_dumpDestination stringValue] forKey:@"dumpDestination"];
-    [d setObject:[NSNumber numberWithInt:[_dumpFilter selectedRow]] forKey:@"dumpFilter"];
+    d[@"dumpDestination"] = [_dumpDestination stringValue];
+    d[@"dumpFilter"] = [NSNumber numberWithInt:[_dumpFilter selectedRow]];
     
-	[d setObject:[_kismet_host stringValue] forKey:@"kismetserverhost"];
-	[d setObject:[NSNumber numberWithInt:[_kismet_port intValue]] forKey:@"kismetserverport"];
+	d[@"kismetserverhost"] = [_kismet_host stringValue];
+	d[@"kismetserverport"] = @([_kismet_port intValue]);
 	
     a = [[controller objectForKey:@"ActiveDrivers"] mutableCopy];
-    [a replaceObjectAtIndex:i withObject:d];
+    a[i] = d;
     [controller setObject:a forKey:@"ActiveDrivers"];
     
-    wd = [WaveHelper driverWithName:[d objectForKey:@"deviceName"]];
+    wd = [WaveHelper driverWithName:d[@"deviceName"]];
     [wd setConfiguration:d];
     
-    [d release];
-    [a release];
     
     return YES;
 }
@@ -229,7 +226,7 @@
 }
 
 - (id) tableView:(NSTableView *) aTableView objectValueForTableColumn:(NSTableColumn *) aTableColumn row:(int) rowIndex {     
-    return [NSClassFromString([[[controller objectForKey:@"ActiveDrivers"] objectAtIndex: rowIndex] objectForKey:@"driverID"]) description]; 
+    return [NSClassFromString([controller objectForKey:@"ActiveDrivers"][rowIndex][@"driverID"]) description]; 
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
@@ -263,48 +260,45 @@
     NSString *driverClassName;
 	NSNumber *kserverport;
     
-    driverClassName = [NSString stringWithUTF8String:WaveDrivers[[[_driver selectedItem] tag]]];
+    driverClassName = @(WaveDrivers[[[_driver selectedItem] tag]]);
     
 	if ([driverClassName isEqualToString:@"WaveDriverKismet"]) {
-		kserverport = [NSNumber numberWithInt:2501];
+		kserverport = @2501;
 	} else if ([driverClassName isEqualToString:@"WaveDriverKismetDrone"]) {
-		kserverport = [NSNumber numberWithInt:3501];
+		kserverport = @3501;
 	} else {
-		kserverport = [NSNumber numberWithInt:0];
+		kserverport = @0;
 	}
 	
     drivers = [[controller objectForKey:@"ActiveDrivers"] mutableCopy];
-    [drivers addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-        driverClassName, @"driverID",
-        [NSNumber numberWithInt: 1]     , @"firstChannel",
-        [NSNumber numberWithBool: YES]  , @"useChannel01",
-        [NSNumber numberWithBool: YES]  , @"useChannel02",
-        [NSNumber numberWithBool: YES]  , @"useChannel03",
-        [NSNumber numberWithBool: YES]  , @"useChannel04",
-        [NSNumber numberWithBool: YES]  , @"useChannel05",
-        [NSNumber numberWithBool: YES]  , @"useChannel06",
-        [NSNumber numberWithBool: YES]  , @"useChannel07",
-        [NSNumber numberWithBool: YES]  , @"useChannel08",
-        [NSNumber numberWithBool: YES]  , @"useChannel09",
-        [NSNumber numberWithBool: YES]  , @"useChannel10",
-        [NSNumber numberWithBool: YES]  , @"useChannel11",
-        [NSNumber numberWithBool: NO]   , @"useChannel12",
-        [NSNumber numberWithBool: NO]   , @"useChannel13",
-        [NSNumber numberWithBool: NO]   , @"useChannel14",
-        [NSNumber numberWithInt: 0]     , @"injectionDevice",
-        [NSNumber numberWithInt: 0]     , @"dumpFilter",
-        @"~/DumpLog %y-%m-%d %H:%M"    , @"dumpDestination",
-        [NSClassFromString(driverClassName) deviceName], @"deviceName", //todo make this unique for ever instance
-		@"127.0.0.1", @"kismetserverhost",
-		kserverport, @"kismetserverport",
-        nil]];
+    [drivers addObject:@{@"driverID": driverClassName,
+        @"firstChannel": @1,
+        @"useChannel01": @YES,
+        @"useChannel02": @YES,
+        @"useChannel03": @YES,
+        @"useChannel04": @YES,
+        @"useChannel05": @YES,
+        @"useChannel06": @YES,
+        @"useChannel07": @YES,
+        @"useChannel08": @YES,
+        @"useChannel09": @YES,
+        @"useChannel10": @YES,
+        @"useChannel11": @YES,
+        @"useChannel12": @NO,
+        @"useChannel13": @NO,
+        @"useChannel14": @NO,
+        @"injectionDevice": @0,
+        @"dumpFilter": @0,
+        @"dumpDestination": @"~/DumpLog %y-%m-%d %H:%M",
+        @"deviceName": [NSClassFromString(driverClassName) deviceName], //todo make this unique for ever instance
+		@"kismetserverhost": @"127.0.0.1",
+		@"kismetserverport": kserverport}];
     [controller setObject:drivers forKey:@"ActiveDrivers"];
     
     [_driverTable reloadData];
     [_driverTable selectRowIndexes:[NSIndexSet indexSetWithIndex:[drivers count]-1]
               byExtendingSelection:NO];
 	[self updateUI];
-    [drivers release];
 }
 
 - (IBAction)selRemoveDriver:(id)sender {
@@ -320,7 +314,6 @@
     
     [_driverTable reloadData];
     [self updateUI];
-    [drivers release];
 }
 
 - (IBAction)selAll:(id)sender {

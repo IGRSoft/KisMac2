@@ -27,13 +27,13 @@
         return NO;
     
     // Store network reference
-    _networkInTest = [net retain];
-	_clientInTest = [client retain];
+    _networkInTest = net;
+	_clientInTest = client;
 
     // Load nib file
     if (!probeSheet) {
         if(![NSBundle loadNibNamed:@"injectionProbe" owner:self]) {
-            NSLog(@"injectionProbe.nib failed to load!");
+            DBNSLog(@"injectionProbe.nib failed to load!");
             return NO;
         }
     }
@@ -71,9 +71,8 @@
     statusOK = [NSImage imageNamed:@"greengem.png"];
     statusNOK = [NSImage imageNamed:@"redgem.png"];
     statusSPIN = [NSImage imageNamed:@"spin.gif"];
-    NSLog(@"%@", statusSPIN);
+    DBNSLog(@"%@", statusSPIN);
     _currentRateEnumerator = [[_driver permittedRates] objectEnumerator];
-    [_currentRateEnumerator retain];
 //    [self stepTestProbeRequest];
     [self stepTestRTS];
     return YES;
@@ -133,7 +132,7 @@
     NSImageView *imageCell = [self imageCellForRate:_currentRate];
     [imageCell setImage:statusSPIN];
     
-    NSLog(@"Try to inject at %@", _currentRate);
+    DBNSLog(@"Try to inject at %@", _currentRate);
     
     // sends some broadcast probes to see if card is ok
     int frameSize = sizeof(struct ieee80211_probe_request) + 18;
@@ -178,7 +177,7 @@
     NSImageView *imageCell = [self imageCellForRate:_currentRate];
     [imageCell setImage:statusSPIN];
 
-    NSLog(@"Try to inject at %@", _currentRate);
+    DBNSLog(@"Try to inject at %@", _currentRate);
     
     // sends some RTS frame to see if card is ok
     int frameSize = sizeof(struct ieee80211_rts);
@@ -228,7 +227,7 @@
         return WavePluginPacketResponseContinue;
     
     if (!memcmp(rawReceiverID, _randomSourceMAC, 6)) {
-        NSLog(@"Catch Injected packet response from %@ with a signal of %d", [packet stringSenderID], [packet signal]);
+        DBNSLog(@"Catch Injected packet response from %@ with a signal of %d", [packet stringSenderID], [packet signal]);
         _catchedPacket = YES;
         return WavePluginPacketResponseCatched;
     } else {
@@ -249,16 +248,13 @@
         [_timer invalidate];
     }
     if (_networkInTest) {
-        [_networkInTest release];
         _networkInTest = nil;
     }
 	if (_clientInTest) {
-        [_clientInTest release];
         _clientInTest = nil;
 
 	}
     if (_currentRateEnumerator) {
-        [_currentRateEnumerator release];
         _currentRateEnumerator = nil;
     }
     _status = WavePluginIdle;

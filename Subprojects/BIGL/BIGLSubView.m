@@ -29,7 +29,7 @@
 - (id)init {
     self = [super init];
     if (self) {
-        _subViews = [[NSMutableArray array] retain];
+        _subViews = [NSMutableArray array];
         _visible = YES;
         _loc = NSZeroPoint;
     }
@@ -82,7 +82,7 @@
     p.y += _loc.y;
 
     for (i = 0; i < [_subViews count]; i++)
-        [(BIGLSubView*)[_subViews objectAtIndex:i] drawAtPoint:p];
+        [(BIGLSubView*)_subViews[i] drawAtPoint:p];
 
     glPushMatrix();
     
@@ -105,7 +105,7 @@
     p.y += _loc.y;
 
     for (i = 0; i < [_subViews count]; i++)
-        [(BIGLSubView*)[_subViews objectAtIndex:i] drawCocoaAtPoint:p];
+        [(BIGLSubView*)_subViews[i] drawCocoaAtPoint:p];
 
     [self drawCocoaSubAtPoint:p];
     
@@ -114,9 +114,5 @@
 
 #pragma mark -
 
-- (void)dealloc {
-    [_subViews release];
-    [super dealloc];
-}
 
 @end

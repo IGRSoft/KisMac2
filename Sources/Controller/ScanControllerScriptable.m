@@ -98,8 +98,9 @@
         _scanning=YES;
         [_window setDocumentEdited:YES];
         [_channelProg startAnimation:self];
-        [_scanButton setTitle:@" Stop Scan "];
-        [_scanButton setState: NSOnState];
+		[_scanButton setImage:[NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate]];
+		
+        [_scanButton setLabel:@"Stop"];
         result=[scanner startScanning];
 		[GrowlController notifyGrowlStartScan];
 	}
@@ -115,8 +116,8 @@
 	[self stopActiveAttacks];
     result=[scanner stopScanning];
     [_channelProg stopAnimation:self];
-    [_scanButton setTitle: NSLocalizedString(@" Start Scan ", "title of the scan button")];
-    [_scanButton setState: NSOffState];
+    [_scanButton setImage:[NSImage imageNamed:NSImageNameSlideshowTemplate]];
+    [_scanButton setLabel:@"Start"];
     _scanning=NO;
     
     [self updateChannelMenu];
@@ -141,7 +142,8 @@
     
     [_window setDocumentEdited:NO];
     _curNet = Nil;
-    [WaveHelper secureRelease:&_fileName];
+	_fileName = nil;
+    //[WaveHelper secureRelease:&_fileName];
     
     [self refreshScanHierarch];    
     [self updateNetworkTable:self complete:YES];
@@ -161,7 +163,8 @@
         [self showBusyWithText:[NSString stringWithFormat:NSLocalizedString(@"Opening %@...", "Status for busy dialog"), [filename stringByAbbreviatingWithTildeInPath]]];
         
         [self new];
-        [WaveHelper secureReplace:&_fileName withObject:filename];
+		_fileName = filename;
+        //[WaveHelper secureReplace:&_fileName withObject:filename];
         
         NS_DURING
             ret = [WaveStorageController loadFromFile:filename withContainer:_container andImportController:_importController];
@@ -190,7 +193,7 @@
         return ret;
     } 
     
-    NSLog(@"Warning unknown file format!");
+    DBNSLog(@"Warning unknown file format!");
     NSBeep();
     return NO;
 }
@@ -221,7 +224,7 @@
  		return ret;
 	}
 
-    NSLog(@"Warning unknown file format!");
+    DBNSLog(@"Warning unknown file format!");
     NSBeep();
     return NO;
 }
@@ -240,14 +243,13 @@
 
 	img = [[NSImage alloc] initWithContentsOfFile:filename];
 	if (!img) {
-		NSLog(@"Warning unknown file format!");
+		DBNSLog(@"Warning unknown file format!");
 		NSBeep();
 		[self busyDone];
 		return NO;
 	}
 	
     ret = [_mappingView setMap: img];
-    [img release];
     [self showMap];
 	[self busyDone];
         
@@ -272,7 +274,7 @@
         NS_VALUERETURN(YES, BOOL);
     NS_HANDLER
         NSBeep();
-        NSLog(@"Import of %@ failed!", filename);
+        DBNSLog(@"Import of %@ failed!", filename);
     NS_ENDHANDLER
     
     [self busyDone];
@@ -334,7 +336,7 @@
         [_container setFilterString:@""];
     }
     filename = [filename standardPath];
-    NSLog(@"FileName is %@", filename);
+    DBNSLog(@"FileName is %@", filename);
     if ([[[filename pathExtension] lowercaseString] isEqualToString:@"kismac"]) {
         [self showBusyWithText:[NSString stringWithFormat:NSLocalizedString(@"Saving to %@...", "Status for busy dialog"), [filename stringByAbbreviatingWithTildeInPath]]];  
 
@@ -342,7 +344,8 @@
             [self stopActiveAttacks];
             [self stopScan];
             ret = [WaveStorageController saveToFile:filename withContainer:_container andImportController:_importController];
-            [WaveHelper secureReplace:&_fileName withObject:filename];
+			_fileName = filename;
+			//[WaveHelper secureReplace:&_fileName withObject:filename];
             if (!ret) [self showSavingFailureDialog];
             else [_window setDocumentEdited: _scanning];
     
@@ -353,7 +356,7 @@
             }
             NS_VALUERETURN(ret, BOOL);
         NS_HANDLER
-            NSLog(@"Saving failed, because of an internal error!");
+            DBNSLog(@"Saving failed, because of an internal error!");
         NS_ENDHANDLER
 		[self busyDone];
     } else if ([[[filename pathExtension] lowercaseString] isEqualToString:@"kismap"]) {
@@ -365,14 +368,14 @@
             [self busyDone];
             NS_VALUERETURN(YES, BOOL);
         NS_HANDLER
-            NSLog(@"Map saving failed, because of an internal error!");
+            DBNSLog(@"Map saving failed, because of an internal error!");
             [self showSavingFailureDialog];
         NS_ENDHANDLER
 
         [self busyDone];
     } 
     
-    NSLog(@"Warning unknown file format or internal error!");
+    DBNSLog(@"Warning unknown file format or internal error!");
     NSBeep();
     return NO;
 }
@@ -560,7 +563,7 @@
 	_crackType = 1;
     [self startCrackDialogWithTitle:NSLocalizedString(@"Weak scheduling attack...", "busy dialog") stopScan:NO];
     
-    [NSThread detachNewThreadSelector:@selector(performCrackWEPWeakforKeyIDAndLen:) toTarget:_curNet withObject:[NSNumber numberWithInt:arg]];
+    [NSThread detachNewThreadSelector:@selector(performCrackWEPWeakforKeyIDAndLen:) toTarget:_curNet withObject:@(arg)];
     
     return YES;
 }

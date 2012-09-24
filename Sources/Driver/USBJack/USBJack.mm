@@ -29,7 +29,7 @@
 
 #define align64(a)      (((a)+63)&~63)  
 
-#define dbgOutPutBuf(a) NSLog( @"0x%.4x 0x%.4x 0x%.4x 0x%.4x%.4x", NSSwapLittleShortToHost(*((UInt16*)&(a) )), NSSwapLittleShortToHost(*((UInt16*)&(a)+1)), NSSwapLittleShortToHost(*((UInt16*)&(a)+2)), NSSwapLittleShortToHost(*((UInt16*)&(a)+3)), NSSwapLittleShortToHost(*((UInt16*)&(a)+4)) );              
+#define dbgOutPutBuf(a) DBNSLog( @"0x%.4x 0x%.4x 0x%.4x 0x%.4x%.4x", NSSwapLittleShortToHost(*((UInt16*)&(a) )), NSSwapLittleShortToHost(*((UInt16*)&(a)+1)), NSSwapLittleShortToHost(*((UInt16*)&(a)+2)), NSSwapLittleShortToHost(*((UInt16*)&(a)+3)), NSSwapLittleShortToHost(*((UInt16*)&(a)+4)) );              
 
 #import <mach/mach_types.h>
 #import <mach/mach_error.h>
@@ -83,14 +83,16 @@ bool USBJack::loadPropertyList() {
     CFStringRef ref;
     CFStringRef plistFile = CFStringCreateWithCString(kCFAllocatorDefault, getPlistFile(), kCFStringEncodingASCII);
     CFURLRef url = CFBundleCopyResourceURL(CFBundleGetMainBundle(), plistFile, CFSTR("plist"), NULL);
+	CFRelease(plistFile);
     if (url == NULL)
         return false;
     CFURLCreateDataAndPropertiesFromResource(kCFAllocatorDefault, url, &data, nil, nil, nil);
+	CFRelease(url);
     _vendorsPlist = CFPropertyListCreateFromXMLData(kCFAllocatorDefault, data, kCFPropertyListImmutable, &ref);
     if (CFDictionaryGetTypeID() != CFGetTypeID(_vendorsPlist))
         return false;
     CFRelease(data);
-    return true;
+	return true;
 }
 IOReturn USBJack::_init() {
     return kIOReturnError;  //this method MUST be overridden
@@ -131,14 +133,14 @@ void USBJack::startMatching()
     // first create a master_port for my task
     kr = IOMasterPort(MACH_PORT_NULL, &masterPort);
     if (kr || !masterPort) {
-        NSLog(@"ERR: Couldn't create a master IOKit Port(%08x)\n", kr);
+        DBNSLog(@"ERR: Couldn't create a master IOKit Port(%08x)\n", kr);
         return;
     }
     
     // Set up the matching criteria for the devices we're interested in
     matchingDict = IOServiceMatching(kIOUSBDeviceClassName);	// Interested in instances of class IOUSBDevice and its subclasses
     if (!matchingDict) {
-        NSLog(@"Can't create a USB matching dictionary\n");
+        DBNSLog(@"Can't create a USB matching dictionary\n");
         //mach_port_deallocate(mach_task_self(), masterPort);
         return;
     }
@@ -163,6 +165,10 @@ void USBJack::startMatching()
                                           this,
                                           &_deviceAddedIter);
     
+	if (kIOReturnSuccess != kr) {
+		DBNSLog(@"unable to Add Matching Notification (%08x)\n", kr);
+	}
+
     _addDevice(this, _deviceAddedIter);	// Iterate once to get already-present devices and
     // arm the notification
     
@@ -175,6 +181,9 @@ void USBJack::startMatching()
     
     _handleDeviceRemoval(this, _deviceRemovedIter); 	// Iterate once to arm the notification
     
+	if (kIOReturnSuccess != kr) {
+		DBNSLog(@"unable to handle Device Removal (%08x)\n", kr);
+	}
     
     // Now done with the master_port
     masterPort = 0;
@@ -242,7 +251,7 @@ IOReturn USBJack::_sendFrame(UInt8* data, IOByteCount size) {
     if (!_devicePresent) return kIOReturnError;
     
     if (_interface == NULL) {
-        NSLog(@"USBJack::_sendFrame called with NULL interface this is prohibited!\n");
+        DBNSLog(@"USBJack::_sendFrame called with NULL interface this is prohibited!\n");
         return kIOReturnError;
     }
     
@@ -276,7 +285,7 @@ void USBJack::_interruptReceived(void *refCon, IOReturn result, unsigned int len
     IOReturn                    kr;
     UInt32                      type;
 
-//    NSLog(@"Interrupt Received %d", len);
+//    DBNSLog(@"Interrupt Received %d", len);
     KFrame *frame;
     if (kIOReturnSuccess != result) {
         if (result == (IOReturn)0xe00002ed) {
@@ -286,7 +295,7 @@ void USBJack::_interruptReceived(void *refCon, IOReturn result, unsigned int len
             me->insertFrameIntoQueue(NULL, 0, 0);
             return;
         } else {
-            NSLog(@"error from async interruptReceived (%08x)\n", result);
+            DBNSLog(@"error from async interruptReceived (%08x)\n", result);
             if (me->_devicePresent) goto readon;
         }
     }
@@ -326,10 +335,10 @@ void USBJack::_interruptReceived(void *refCon, IOReturn result, unsigned int len
                 pthread_mutex_unlock(&me->_wait_mutex);
                 break;
         case _USB_BUFAVAIL:
-                NSLog(@"Received BUFAVAIL packet, frmlen=%d\n", me->_receiveBuffer.bufavail.frmlen);
+                DBNSLog(@"Received BUFAVAIL packet, frmlen=%d\n", me->_receiveBuffer.bufavail.frmlen);
                 break;
         case _USB_ERROR:
-                NSLog(@"Received USB_ERROR packet, errortype=%d\n", me->_receiveBuffer.usberror.errortype);
+                DBNSLog(@"Received USB_ERROR packet, errortype=%d\n", me->_receiveBuffer.usberror.errortype);
                 break;
     
         default:
@@ -341,11 +350,11 @@ readon:
     bzero(&me->_receiveBuffer, sizeof(me->_receiveBuffer));
     kr = (*me->_interface)->ReadPipeAsync((me->_interface), (me->kInPipe), &me->_receiveBuffer, sizeof(me->_receiveBuffer), (IOAsyncCallback1)_interruptReceived, refCon);
     if (kIOReturnSuccess != kr) {
-        NSLog(@"unable to do async interrupt read (%08x). this means the card is stopped!\n", kr);
+        DBNSLog(@"unable to do async interrupt read (%08x). this means the card is stopped!\n", kr);
 		// I haven't been able to reproduce the error that caused it to hit this point in the code again since adding the following lines
 		// however, when it hit this point previously, the only solution was to kill and relaunch KisMAC, so at least this won't make anything worse
-		NSLog(@"Attempting to re-initialise adapter...");
-		if (me->_init() != kIOReturnSuccess) NSLog(@"USBJack::_interruptReceived: _init() failed\n");
+		DBNSLog(@"Attempting to re-initialise adapter...");
+		if (me->_init() != kIOReturnSuccess) DBNSLog(@"USBJack::_interruptReceived: _init() failed\n");
     }
         
 }
@@ -376,14 +385,14 @@ int USBJack::insertFrameIntoQueue(KFrame *f, UInt16 len, UInt16 channel)  {
         _frameRing->received++;
         #if 0
             if (_frameRing->received % 1000 == 0)
-                NSLog(@"Received %d", _frameRing->received);
+                DBNSLog(@"Received %d", _frameRing->received);
         #endif
         if (slot->state == FRAME_SLOT_USED) 
         {
-            //        NSLog(@"Dropped packet, ring full");
+            //        DBNSLog(@"Dropped packet, ring full");
             _frameRing->dropped++;
             if (_frameRing->dropped % 100 == 0)
-                NSLog(@"Dropped %d", _frameRing->dropped);
+                DBNSLog(@"Dropped %d", _frameRing->dropped);
             return 0;
         }
         //make sure f exists, otherwise we crash and burn
@@ -406,7 +415,7 @@ KFrame *USBJack::getFrameFromQueue(UInt16 *len, UInt16 *channel) {
     {
         slot = &(_frameRing->slots[_frameRing->readIdx]);
 
-        //    NSLog(@"Slot %p readIdx %d", slot, _frameRing->readIdx);
+        //    DBNSLog(@"Slot %p readIdx %d", slot, _frameRing->readIdx);
         if(!slot) return nil;
 
         while (slot->state == FRAME_SLOT_FREE)
@@ -437,19 +446,23 @@ IOReturn USBJack::_configureAnchorDevice(IOUSBDeviceInterface197 **dev) {
     IOReturn				kr;
     IOUSBConfigurationDescriptorPtr	confDesc;
     kr = (*dev)->GetNumberOfConfigurations(dev, &numConf);
-    NSLog(@"Number of configs found: %d\n", numConf);
+	if (kIOReturnSuccess != kr) {
+		DBNSLog(@"unable to Get Number Of Configurations (%08x)\n", kr);
+	}
+	
+    DBNSLog(@"Number of configs found: %d\n", numConf);
     if (!numConf)
         return kIOReturnError;
     
     // get the configuration descriptor for index 0
     kr = (*dev)->GetConfigurationDescriptorPtr(dev, 0, &confDesc);
     if (kr) {
-        NSLog(@"\tunable to get config descriptor for index %d (err = %08x)\n", 0, kr);
+        DBNSLog(@"\tunable to get config descriptor for index %d (err = %08x)\n", 0, kr);
         return kIOReturnError;
     }
     kr = (*dev)->SetConfiguration(dev, confDesc->bConfigurationValue);
     if (kr) {
-        NSLog(@"\tunable to set configuration to value %d (err=%08x)\n", 0, kr);
+        DBNSLog(@"\tunable to set configuration to value %d (err=%08x)\n", 0, kr);
             return kIOReturnError;
     }
     return kIOReturnSuccess;
@@ -479,12 +492,15 @@ IOReturn USBJack::_findInterfaces(IOUSBDeviceInterface197 **dev) {
     kr = (*dev)->CreateInterfaceIterator(dev, &request, &iterator);
     
     while ((usbInterface = IOIteratorNext(iterator))) {
-        NSLog(@"Interface found.\n");
+        DBNSLog(@"Interface found.\n");
        
         kr = IOCreatePlugInInterfaceForService(usbInterface, kIOUSBInterfaceUserClientTypeID, kIOCFPlugInInterfaceID, &plugInInterface, &score);
+		if (kIOReturnSuccess != kr) {
+			DBNSLog(@"unable to Create Plug In Interface For Service (%08x)\n", kr);
+		}
         kr = IOObjectRelease(usbInterface);				// done with the usbInterface object now that I have the plugin
         if ((kIOReturnSuccess != kr) || !plugInInterface) {
-            NSLog(@"unable to create a plugin (%08x)\n", kr);
+            DBNSLog(@"unable to create a plugin (%08x)\n", kr);
             break;
         }
             
@@ -492,34 +508,39 @@ IOReturn USBJack::_findInterfaces(IOUSBDeviceInterface197 **dev) {
         res = (*plugInInterface)->QueryInterface(plugInInterface, CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID220), (void**) &intf);
         (*plugInInterface)->Release(plugInInterface);			// done with this
         if (res || !intf) {
-            NSLog(@"couldn't create an IOUSBInterfaceInterface (%08x)\n", (int) res);
+            DBNSLog(@"couldn't create an IOUSBInterfaceInterface (%08x)\n", (int) res);
             break;
         }
         
         kr = (*intf)->GetInterfaceClass(intf, &intfClass);
+		if (kIOReturnSuccess != kr) {
+			DBNSLog(@"unable to Get Interface Class (%08x)\n", kr);
+		}
         kr = (*intf)->GetInterfaceSubClass(intf, &intfSubClass);
-        
-        //NSLog(@"Interface class %d, subclass %d\n", intfClass, intfSubClass);
+        if (kIOReturnSuccess != kr) {
+			DBNSLog(@"unable to Get Interface Sub Class (%08x)\n", kr);
+		}
+        //DBNSLog(@"Interface class %d, subclass %d\n", intfClass, intfSubClass);
         
         // Now open the interface. This will cause the pipes to be instantiated that are 
         // associated with the endpoints defined in the interface descriptor.
         kr = (*intf)->USBInterfaceOpen(intf);
         if (kIOReturnSuccess != kr) {
-            NSLog(@"unable to open interface (%08x)\n", kr);
+            DBNSLog(@"unable to open interface (%08x)\n", kr);
             (void) (*intf)->Release(intf);
             break;
         }
         
     	kr = (*intf)->GetNumEndpoints(intf, &intfNumEndpoints);
         if (kIOReturnSuccess != kr) {
-            NSLog(@"unable to get number of endpoints (%08x)\n", kr);
+            DBNSLog(@"unable to get number of endpoints (%08x)\n", kr);
             (void) (*intf)->USBInterfaceClose(intf);
             (void) (*intf)->Release(intf);
             break;
         }
         
         if (intfNumEndpoints < 1) {
-            NSLog(@"Error: Interface has %d endpoints. Needs at least one!!\n", intfNumEndpoints);
+            DBNSLog(@"Error: Interface has %d endpoints. Needs at least one!!\n", intfNumEndpoints);
             (void) (*intf)->USBInterfaceClose(intf);
             (void) (*intf)->Release(intf);
             break;
@@ -536,20 +557,20 @@ IOReturn USBJack::_findInterfaces(IOUSBDeviceInterface197 **dev) {
             
             kr2 = (*intf)->GetPipeProperties(intf, pipeRef, &direction, &number, &transferType, &maxPacketSize, &interval);
             if (kIOReturnSuccess != kr) {
-                NSLog(@"unable to get properties of pipe %d (%08x)\n", pipeRef, kr2);
+                DBNSLog(@"unable to get properties of pipe %d (%08x)\n", pipeRef, kr2);
                 (void) (*intf)->USBInterfaceClose(intf);
                 (void) (*intf)->Release(intf);
                 break;
             } else {
-                NSLog(@"%d %d", pipeRef, direction);
+                DBNSLog(@"%d %d", pipeRef, direction);
                 error = false;
                 if (direction == kUSBIn && transferType == kUSBBulk) kInPipe = pipeRef;
                 else if (direction == kUSBOut && transferType == kUSBBulk) kOutPipe = pipeRef;
                 else if (direction == kUSBIn && transferType  == kUSBInterrupt) kInterruptPipe = pipeRef;
-                else NSLog(@"Found unknown interface, ignoring");
+                else DBNSLog(@"Found unknown interface, ignoring");
             
                 if (error) {
-                    NSLog(@"unable to properties of pipe %d are not as expected!\n", pipeRef);
+                    DBNSLog(@"unable to properties of pipe %d are not as expected!\n", pipeRef);
                     (void) (*intf)->USBInterfaceClose(intf);
                     (void) (*intf)->Release(intf);
                     break;
@@ -561,7 +582,7 @@ IOReturn USBJack::_findInterfaces(IOUSBDeviceInterface197 **dev) {
         //  to our run loop in order to receive async completion notifications.
         kr = (*intf)->CreateInterfaceAsyncEventSource(intf, &runLoopSource);
         if (kIOReturnSuccess != kr) {
-            NSLog(@"unable to create async event source (%08x)\n", kr);
+            DBNSLog(@"unable to create async event source (%08x)\n", kr);
             (void) (*intf)->USBInterfaceClose(intf);
             (void) (*intf)->Release(intf);
             break;
@@ -570,7 +591,7 @@ IOReturn USBJack::_findInterfaces(IOUSBDeviceInterface197 **dev) {
         
         _interface = intf;
         
-        NSLog(@"USBJack is now ready to start working.\n");
+        DBNSLog(@"USBJack is now ready to start working.\n");
         
         //startUp Interrupt handling
         UInt32 numBytesRead = sizeof(_receiveBuffer); // leave one byte at the end for NUL termination
@@ -578,7 +599,7 @@ IOReturn USBJack::_findInterfaces(IOUSBDeviceInterface197 **dev) {
         kr = (*intf)->ReadPipeAsync(intf, kInPipe, &_receiveBuffer, numBytesRead, (IOAsyncCallback1)_interruptReceived, this);
         
         if (kIOReturnSuccess != kr) {
-            NSLog(@"unable to do async interrupt read (%08x)\n", kr);
+            DBNSLog(@"unable to do async interrupt read (%08x)\n", kr);
             (void) (*intf)->USBInterfaceClose(intf);
             (void) (*intf)->Release(intf);
             break;
@@ -605,10 +626,10 @@ bool USBJack::_attachDevice() {
         kr = (*dev)->USBDeviceOpen(dev);
         if (kIOReturnSuccess != kr) {
             if (kr == kIOReturnExclusiveAccess) {
-                NSLog(@"Device already in use.");
+                DBNSLog(@"Device already in use.");
             }
             else {
-                NSLog(@"unable to open device: %08x\n", kr);
+                DBNSLog(@"unable to open device: %08x\n", kr);
             }
             (*dev)->Release(dev);
             return false;
@@ -616,7 +637,7 @@ bool USBJack::_attachDevice() {
         
         kr = _configureAnchorDevice(dev);
         if (kIOReturnSuccess != kr) {
-            NSLog(@"unable to configure device: %08x\n", kr);
+            DBNSLog(@"unable to configure device: %08x\n", kr);
             (*dev)->USBDeviceClose(dev);
             (*dev)->Release(dev);
             return false;
@@ -624,14 +645,20 @@ bool USBJack::_attachDevice() {
         
         kr = _findInterfaces(dev);
         if (kIOReturnSuccess != kr) {
-            NSLog(@"unable to find interfaces on device: %08x\n", kr);
+            DBNSLog(@"unable to find interfaces on device: %08x\n", kr);
             (*dev)->USBDeviceClose(dev);
             (*dev)->Release(dev);
             return false;
         }
         
         kr = (*dev)->USBDeviceClose(dev);
+		if (kIOReturnSuccess != kr) {
+			DBNSLog(@"unable to USB Device Close (%08x)\n", kr);
+		}
         kr = (*dev)->Release(dev);
+		if (kIOReturnSuccess != kr) {
+			DBNSLog(@"unable to Release (%08x)\n", kr);
+		}
     
     }
     return true;
@@ -651,27 +678,38 @@ void USBJack::_addDevice(void *refCon, io_iterator_t iterator) {
 
     
     while ((usbDevice = IOIteratorNext(iterator))) {
-        //NSLog(@"USB Device added.\n");
+        //DBNSLog(@"USB Device added.\n");
        
         kr = IOCreatePlugInInterfaceForService(usbDevice, kIOUSBDeviceUserClientTypeID, kIOCFPlugInInterfaceID, &plugInInterface, &score);
         if ((kIOReturnSuccess != kr) || !plugInInterface) {
             kr = IOObjectRelease(usbDevice);				// done with the device object now that I have the plugin
-            NSLog(@"unable to create a plugin (%08x)\n", kr);
+            DBNSLog(@"unable to create a plugin (%08x)\n", kr);
             continue;
         }
         kr = IOObjectRelease(usbDevice);				// done with the device object now that I have the plugin
-            
+		if (kIOReturnSuccess != kr) {
+			DBNSLog(@"unable to IOObjectRelease (%08x)\n", kr);
+		}
         // I have the device plugin, I need the device interface
         res = (*plugInInterface)->QueryInterface(plugInInterface, CFUUIDGetUUIDBytes(kIOUSBDeviceInterfaceID197), (void**)&dev);
         (*plugInInterface)->Release(plugInInterface);			// done with this
         if (res || !dev) {
-            NSLog(@"couldn't create a device interface (%08x)\n", (int) res);
+            DBNSLog(@"couldn't create a device interface (%08x)\n", (int) res);
             continue;
         }
         // technically should check these kr values
         kr = (*dev)->GetDeviceVendor(dev, &vendor);
+		if (kIOReturnSuccess != kr) {
+			DBNSLog(@"unable to GetDeviceVendor (%08x)\n", kr);
+		}
         kr = (*dev)->GetDeviceProduct(dev, &product);
+		if (kIOReturnSuccess != kr) {
+			DBNSLog(@"unable to GetDeviceProduct (%08x)\n", kr);
+		}
         kr = (*dev)->GetDeviceReleaseNumber(dev, &release);
+		if (kIOReturnSuccess != kr) {
+			DBNSLog(@"unable to GetDeviceReleaseNumber (%08x)\n", kr);
+		}
         
         CFTypeRef *keys, *values, n;
         CFIndex count, i;
@@ -684,18 +722,18 @@ void USBJack::_addDevice(void *refCon, io_iterator_t iterator) {
         values = (const void **) malloc(count * sizeof(CFTypeRef));
         
         CFDictionaryGetKeysAndValues( (CFDictionaryRef) (me->_vendorsPlist) , keys, values);
-        NSLog(@"---");
+        DBNSLog(@"---");
         for (i=0;i<count;i++) {
             n = CFDictionaryGetValue((CFDictionaryRef)values[i], CFSTR("idProduct"));
             CFNumberGetValue((CFNumberRef)n, kCFNumberSInt16Type, &productId);
             n = CFDictionaryGetValue((CFDictionaryRef)values[i], CFSTR("idVendor"));
             CFNumberGetValue((CFNumberRef)n, kCFNumberSInt16Type, &vendorId);
-            NSLog(@"vendor %d vendorId %d product %d productId %d", vendor, vendorId, product, productId);
+            DBNSLog(@"vendor %d vendorId %d product %d productId %d", vendor, vendorId, product, productId);
             if ((vendor == vendorId) && (product == productId)) {
                 length = CFStringGetMaximumSizeForEncoding(CFStringGetLength((CFStringRef)keys[i]), kCFStringEncodingASCII) + 1;
                 modelStr = (char *)malloc(length);
                 CFStringGetCString((CFStringRef)keys[i], modelStr, length, kCFStringEncodingASCII);
-                NSLog(@"USB Device found (%s)", modelStr);
+                DBNSLog(@"USB Device found (%s)", modelStr);
                 free(modelStr);
                 me->_foundDevices[++me->_numDevices] = dev;
                 me->_deviceMatched = true;
@@ -722,8 +760,11 @@ void USBJack::_handleDeviceRemoval(void *refCon, io_iterator_t iterator)
     {
         count++;
         //we need to not release devices that don't belong to us!?
-        NSLog(@"USBJack: Device removed.\n");
+        DBNSLog(@"USBJack: Device removed.\n");
         kr = IOObjectRelease(obj);
+		if (kIOReturnSuccess != kr) {
+			DBNSLog(@"unable to IOObjectRelease (%08x)\n", kr);
+		}
     }
     
     if (count) 

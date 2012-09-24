@@ -109,9 +109,9 @@
     
     d = [NSMutableDictionary dictionaryWithObjectsAndKeys:lat, [NSString stringWithFormat:@"%d", 'KMLa'], lon, [NSString stringWithFormat:@"%d", 'KMLo'], serv, [NSString stringWithFormat:@"%d", keyDirectObject], nil];
     
-    if ([[_scale titleOfSelectedItem] intValue] != 3 && !map24) [d setObject:zoom forKey:[NSString stringWithFormat:@"%d", 'KScl']];
-    if ([_width  intValue] != 1000 && !map24) [d setObject:width  forKey:[NSString stringWithFormat:@"%d", 'KWid']];
-    if ([_height intValue] != 1000 && !map24) [d setObject:height forKey:[NSString stringWithFormat:@"%d", 'KHig']];
+    if ([[_scale titleOfSelectedItem] intValue] != 3 && !map24) d[[NSString stringWithFormat:@"%d", 'KScl']] = zoom;
+    if ([_width  intValue] != 1000 && !map24) d[[NSString stringWithFormat:@"%d", 'KWid']] = width;
+    if ([_height intValue] != 1000 && !map24) d[[NSString stringWithFormat:@"%d", 'KHig']] = height;
     
     [[self window] close];
 
@@ -163,7 +163,6 @@
     } else {
         // Otherwise, if window is completely transparent, destroy the timer and close the window.
         [timer invalidate];
-        [timer release];
         
         [[self window] close];
         

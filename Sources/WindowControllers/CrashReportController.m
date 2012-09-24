@@ -37,7 +37,7 @@ static const CFOptionFlags kNetworkEvents = kCFStreamEventOpenCompleted |
 static void
 ReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType type, void *clientCallBackInfo) {
     // Pass off to the object to handle.
-    [((CrashReportController*)clientCallBackInfo) handleNetworkEvent: type];
+    [((__bridge CrashReportController*)clientCallBackInfo) handleNetworkEvent: type];
 }
 
 @implementation CrashReportController
@@ -70,7 +70,7 @@ ReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType type, void *c
 - (IBAction)allowAction:(id)sender 
 {
     CFHTTPMessageRef request;
-    CFStreamClientContext ctxt = {0, self, NULL, NULL, NULL};
+    CFStreamClientContext ctxt = {0, (__bridge void *)(self), NULL, NULL, NULL};
     NSURL* url;
     NSData* data;
     NSString *errstr;
@@ -94,10 +94,10 @@ ReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType type, void *c
     data = [topost dataUsingEncoding: NSUTF8StringEncoding];
     
     // Create a new HTTP request.
-    request = CFHTTPMessageCreateRequest(kCFAllocatorDefault, CFSTR("POST"), (CFURLRef)url, kCFHTTPVersion1_0);
+    request = CFHTTPMessageCreateRequest(kCFAllocatorDefault, CFSTR("POST"), (__bridge CFURLRef)url, kCFHTTPVersion1_0);
     
     // Set the body.
-    CFHTTPMessageSetBody(request, (CFDataRef)data);
+    CFHTTPMessageSetBody(request, (__bridge CFDataRef)data);
     CFHTTPMessageSetHeaderFieldValue(request,CFSTR("Content-Type"),CFSTR("application/x-www-form-urlencoded"));
         
     // Create the stream for the request.
@@ -142,7 +142,7 @@ error:
         OK, NULL, NULL, [self window], self, NULL, NULL, NULL,
         [NSString stringWithFormat:@"%@: %@", 
         NSLocalizedString(@"The transmittion of the report failed because of the following error", "Dialog text for Crashreporter"), 
-        errstr]);
+        errstr], nil);
     [_allow setEnabled:YES];
     [_deny setEnabled:YES];
     [_alwaysDeny setEnabled:YES];
@@ -166,7 +166,7 @@ error:
         if([file hasPrefix:@"KisMAC"])
         {
             crashPath = [NSString stringWithFormat:@"%@/%@", logPath, file];
-            NSLog(@"Removing crash log at: %@", crashPath);
+            DBNSLog(@"Removing crash log at: %@", crashPath);
             [mang removeItemAtPath:crashPath error:Nil];
         }
     }
@@ -231,7 +231,7 @@ error:
     _stream = NULL;
     NSBeginInformationalAlertSheet(
         NSLocalizedString(@"Transmittion complete.", "Title for Crashreporter"),
-        OK, NULL, NULL, [self window], self, NULL, @selector(terminateit:returnCode:contextInfo:), self,
+        OK, NULL, NULL, [self window], self, NULL, @selector(terminateit:returnCode:contextInfo:), (__bridge void *)(self),
         NSLocalizedString(@"The transmittion of the report is complete. Thank you for your help!", "Dialog text for Crashreporter"));
 }
 
@@ -250,9 +250,9 @@ error:
     NSBeginCriticalAlertSheet(
         NSLocalizedString(@"Transmittion failed.", "Title for Crashreporter"),
         OK, NULL, NULL, [self window], self, NULL, NULL, NULL, 
-        [NSString stringWithFormat:@"%@: %d, %d", 
+        [NSString stringWithFormat:@"%@: %ld, %d", 
         NSLocalizedString(@"The transmittion of the report failed because of the following error", "Dialog text for Crashreporter"), 
-        error.domain, error.error]);
+        error.domain, error.error], nil);
     [_allow setEnabled:YES];
     [_deny setEnabled:YES];
     [_alwaysDeny setEnabled:YES];

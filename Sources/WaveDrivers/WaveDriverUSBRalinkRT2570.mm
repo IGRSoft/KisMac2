@@ -31,8 +31,7 @@
     if (!self)
         return nil;
     
-    _permittedRates = [NSArray arrayWithObjects:
-                       [NSNumber numberWithUnsignedInt:KMRate1],
+    _permittedRates = @[[NSNumber numberWithUnsignedInt:KMRate1],
                        [NSNumber numberWithUnsignedInt:KMRate2],
                        [NSNumber numberWithUnsignedInt:KMRate5_5],
                        [NSNumber numberWithUnsignedInt:KMRate11],
@@ -43,10 +42,7 @@
                        [NSNumber numberWithUnsignedInt:KMRate24],
                        [NSNumber numberWithUnsignedInt:KMRate36],
                        [NSNumber numberWithUnsignedInt:KMRate48],
-                       [NSNumber numberWithUnsignedInt:KMRate54],
-                       nil
-                       ];
-    [_permittedRates retain];
+                       [NSNumber numberWithUnsignedInt:KMRate54]];
 	_currentRate = KMRate11;
     return self;
 }
@@ -56,7 +52,7 @@
     
     _driver = new RalinkJack;
     _driver->startMatching();
-    NSLog(@"Matching finished\n");
+    DBNSLog(@"Matching finished\n");
     if (!(_driver->deviceMatched()))
         return NO;
     

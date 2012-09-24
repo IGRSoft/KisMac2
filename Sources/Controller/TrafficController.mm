@@ -21,10 +21,10 @@
     justSwitchedDataType = NO;
     currentMode = trafficData;
 
-    _grid = [[BIGLLineView alloc] initWithLines:[NSArray array]];
+    _grid = [[BIGLLineView alloc] initWithLines:@[]];
     [_grid setLocation: NSMakePoint(30,30)];
     [_grid setLineWidth:0.5];
-    _gridFrame = [[BIGLLineView alloc] initWithLines:[NSArray array]];
+    _gridFrame = [[BIGLLineView alloc] initWithLines:@[]];
     [_gridFrame setLineWidth:2];
 
     _zeroLabel = [[BIGLTextView alloc] init];
@@ -34,7 +34,7 @@
     _legend = [[BIGLImageView alloc] init];
     [_legend setVisible:NO];
     
-    _graphs = [[NSMutableArray array] retain];
+    _graphs = [NSMutableArray array];
     
     [self setBackgroundColor:[NSColor blackColor]];
     [self setGridColor:[NSColor colorWithCalibratedRed:96.0/255.0 green:123.0/255.0 blue:173.0/255.0 alpha:1]];
@@ -55,7 +55,7 @@
         }
         [tempColor addObject:[NSColor colorWithDeviceHue:hue saturation:1 brightness:1 alpha:0.9]];
     }
-    colorArray = [[NSArray arrayWithArray:tempColor] retain];
+    colorArray = [NSArray arrayWithArray:tempColor];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSettings:) name:KisMACUserDefaultsChanged object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resized:) name:BIGLMainViewResized object:nil];
@@ -140,7 +140,8 @@
     int i, current;
     unsigned int j;
     
-    [WaveHelper secureReplace:&allNets withObject:[_container allNets]];
+	allNets = [_container allNets];
+    //[WaveHelper secureReplace:&allNets withObject:[_container allNets]];
     
     // order networks by signal value
     switch(currentMode) {
@@ -180,13 +181,13 @@
         for(j = 0 ; j < [allNets count] ; j++) {
             switch(currentMode) {
                 case trafficData:
-                    current += [(WaveNet*)[allNets objectAtIndex:j] graphData].trafficData[i + offset];
+                    current += [(WaveNet*)allNets[j] graphData].trafficData[i + offset];
                     break;
                 case packetData:
-                    current += [(WaveNet*)[allNets objectAtIndex:j] graphData].packetData[i + offset];
+                    current += [(WaveNet*)allNets[j] graphData].packetData[i + offset];
                     break;
                 case signalData:
-                    current += [(WaveNet*)[allNets objectAtIndex:j] graphData].signalData[i + offset];
+                    current += [(WaveNet*)allNets[j] graphData].signalData[i + offset];
                     break;
             }
         }
@@ -261,10 +262,10 @@
             continue;
         curY = (i * stepy);
         if (curY < rect.size.height) {
-            [a addObject:[NSNumber numberWithFloat:0.5]];
-            [a addObject:[NSNumber numberWithFloat:curY]];
+            [a addObject:@0.5f];
+            [a addObject:@(curY)];
             [a addObject:[NSNumber numberWithFloat:rect.size.width]];
-            [a addObject:[NSNumber numberWithFloat:curY]];
+            [a addObject:@(curY)];
         }
     }
     multiple = 0;
@@ -280,31 +281,31 @@
             continue;
         curX = (i * stepx);
         if (curX < rect.size.width) {
-            [a addObject:[NSNumber numberWithFloat:curX]];
-            [a addObject:[NSNumber numberWithFloat:0.5]];
-            [a addObject:[NSNumber numberWithFloat:curX]];
+            [a addObject:@(curX)];
+            [a addObject:@0.5f];
+            [a addObject:@(curX)];
             [a addObject:[NSNumber numberWithFloat:rect.size.height]];
         }
     }
     [_grid setLines:a];
     
     a = [NSMutableArray array];
-    [a addObject:[NSNumber numberWithFloat:-1]];
-    [a addObject:[NSNumber numberWithFloat:-1]];
-    [a addObject:[NSNumber numberWithFloat:-1]];
+    [a addObject:@-1.0f];
+    [a addObject:@-1.0f];
+    [a addObject:@-1.0f];
     [a addObject:[NSNumber numberWithFloat:rect.size.height+1]];
-    [a addObject:[NSNumber numberWithFloat:-1]];
-    [a addObject:[NSNumber numberWithFloat:rect.size.height+1]];
-    [a addObject:[NSNumber numberWithFloat:rect.size.width+2]];
+    [a addObject:@-1.0f];
     [a addObject:[NSNumber numberWithFloat:rect.size.height+1]];
     [a addObject:[NSNumber numberWithFloat:rect.size.width+2]];
     [a addObject:[NSNumber numberWithFloat:rect.size.height+1]];
     [a addObject:[NSNumber numberWithFloat:rect.size.width+2]];
-    [a addObject:[NSNumber numberWithFloat:-1]];
+    [a addObject:[NSNumber numberWithFloat:rect.size.height+1]];
     [a addObject:[NSNumber numberWithFloat:rect.size.width+2]];
-    [a addObject:[NSNumber numberWithFloat:-1]];
-    [a addObject:[NSNumber numberWithFloat:-1]];
-    [a addObject:[NSNumber numberWithFloat:-1]];
+    [a addObject:@-1.0f];
+    [a addObject:[NSNumber numberWithFloat:rect.size.width+2]];
+    [a addObject:@-1.0f];
+    [a addObject:@-1.0f];
+    [a addObject:@-1.0f];
     [_gridFrame setLines:a];
 }
 
@@ -319,11 +320,11 @@
         [[_graphs lastObject] setLocation:NSMakePoint(31,31)];
         [(BIGLSubView*)[_graphs lastObject] setVisible:YES];
         [_view addSubView:[_graphs lastObject]];
-        [[_graphs lastObject] autorelease];
+        [_graphs lastObject];
     }
     
     for(n = 0 ; n < [allNets count] ; n++) {
-        WaveNet* net = [allNets objectAtIndex:n];
+        WaveNet* net = allNets[n];
         float width = rect.size.width;
         float height;
         
@@ -347,31 +348,31 @@
             continue;
         }
         
-        curView = [_graphs objectAtIndex:n];
+        curView = _graphs[n];
         a = [NSMutableArray arrayWithCapacity:length];
         stepx=(rect.size.width) / maxLength;
         
         for(i = 0 ; i < length ; i++) {
             height = buffer[i] * vScale;
             if (height > rect.size.height) height = rect.size.height;
-            [a addObject:[NSNumber numberWithFloat:width - (((float)(length - i)) * stepx)]];
-            [a addObject:[NSNumber numberWithFloat:height]];
+            [a addObject:@(width - (((float)(length - i)) * stepx))];
+            [a addObject:@(height)];
         }
         i--;
         
-        [a addObject:[NSNumber numberWithFloat:width]];
-        [a addObject:[NSNumber numberWithFloat:buffer[i] * vScale]];
+        [a addObject:@(width)];
+        [a addObject:@(buffer[i] * vScale)];
         [curView setGraph:a];
         
         if (![net graphColor])
         {
             static int colorCount = 0;
-            [net setGraphColor:[colorArray objectAtIndex:colorCount % [colorArray count]]];
+            [net setGraphColor:colorArray[colorCount % [colorArray count]]];
             colorCount++;
         }
         
         NSColor *c = [[net graphColor] copy];
-        [curView setColor:[c autorelease]];
+        [curView setColor:c];
 
         for(i = 0 ; i < length ; i++) {
             buffer[i] -= ptr[i + offset];
@@ -379,7 +380,7 @@
     }
     
     for(;n < [_graphs count]; n++)
-        [(BIGLSubView*)[_graphs objectAtIndex:n] setVisible:NO];
+        [(BIGLSubView*)_graphs[n] setVisible:NO];
         
 }
 
@@ -387,7 +388,7 @@
     // draws the text, giving a numerical value to the graph
     unsigned int j;
     int current = 0, max = 0;
-    NSMutableDictionary* attrs = [[[NSMutableDictionary alloc] init] autorelease];
+    NSMutableDictionary* attrs = [[NSMutableDictionary alloc] init];
     NSFont* textFont = [NSFont fontWithName:@"Monaco" size:12];
     NSString *zeroStr, *currentStr, *maxStr;
 
@@ -395,13 +396,13 @@
         for(j = 0 ; j < [allNets count] ; j++) {
             switch(currentMode) {
                 case trafficData:
-                    current += (int)([(WaveNet*)[allNets objectAtIndex:j] graphData].trafficData[length - 2 + offset]  / scanInterval);
+                    current += (int)([(WaveNet*)allNets[j] graphData].trafficData[length - 2 + offset]  / scanInterval);
                     break;
                 case packetData:
-                    current += (int)([(WaveNet*)[allNets objectAtIndex:j] graphData].packetData[length - 2 + offset]);
+                    current += (int)([(WaveNet*)allNets[j] graphData].packetData[length - 2 + offset]);
                     break;
                 case signalData:
-                    current += (int)([(WaveNet*)[allNets objectAtIndex:j] graphData].signalData[length - 2 + offset]);
+                    current += (int)([(WaveNet*)allNets[j] graphData].signalData[length - 2 + offset]);
                     break;
             }
         }
@@ -412,8 +413,8 @@
     else
         max = (int)(aMaximum * 1.1);
     
-    [attrs setObject:textFont forKey:NSFontAttributeName];
-    [attrs setObject:[NSColor colorWithCalibratedRed:96.0/255.0 green:123.0/255.0 blue:173.0/255.0 alpha:1] forKey:NSForegroundColorAttributeName];
+    attrs[NSFontAttributeName] = textFont;
+    attrs[NSForegroundColorAttributeName] = [NSColor colorWithCalibratedRed:96.0/255.0 green:123.0/255.0 blue:173.0/255.0 alpha:1];
 
     switch(currentMode) {
         case trafficData:
@@ -452,7 +453,7 @@
     unsigned int i;
     float width = 0, height = 0;
     NSBezierPath* legendPath = [[NSBezierPath alloc] init];
-    NSMutableDictionary* attrs = [[[NSMutableDictionary alloc] init] autorelease];
+    NSMutableDictionary* attrs = [[NSMutableDictionary alloc] init];
     NSFont* textFont = [NSFont fontWithName:@"Monaco" size:12];
     
     if(_legendMode == 0 || ![allNets count]) {
@@ -461,10 +462,10 @@
     }
     
     [_legend setVisible:YES];
-    [attrs setObject:textFont forKey:NSFontAttributeName];
+    attrs[NSFontAttributeName] = textFont;
 
     for(i = 0 ; i < [allNets count] ; i++) {
-        NSSize size = [[self stringForNetwork:[allNets objectAtIndex:i]] sizeWithAttributes:attrs];
+        NSSize size = [[self stringForNetwork:allNets[i]] sizeWithAttributes:attrs];
         if(size.width > width) width = size.width;
         if(size.height > height) height = size.height;
     }
@@ -482,27 +483,25 @@
     [[[NSColor whiteColor] colorWithAlphaComponent:0.25] set];
     [NSBezierPath setDefaultLineWidth:2];
     [legendPath stroke];
-    [legendPath release];
 
     for(i = 0 ; i < [allNets count] ; i++) 
     {
-        WaveNet * net = (WaveNet*)[allNets objectAtIndex:i];
+        WaveNet * net = (WaveNet*)allNets[i];
         //make sure there is a color
         if (![net graphColor])
         {
             static int colorCount = 0;
-            [net setGraphColor:[colorArray objectAtIndex:colorCount % [colorArray count]]];
+            [net setGraphColor:colorArray[colorCount % [colorArray count]]];
             colorCount++;
         }
-        [attrs setObject:[net graphColor] forKey: NSForegroundColorAttributeName];
-        [[self stringForNetwork:[allNets objectAtIndex:i]] drawAtPoint:NSMakePoint(9, height - ((i+1) * 20)) withAttributes:attrs];
+        attrs[NSForegroundColorAttributeName] = [net graphColor];
+        [[self stringForNetwork:allNets[i]] drawAtPoint:NSMakePoint(9, height - ((i+1) * 20)) withAttributes:attrs];
     }
     [image unlockFocus];
 
     [_legend setImage: image];
     [_legend setLocation: NSMakePoint(31, rect.size.height - height + 30)];
     
-    [image release];
 }
 
 #pragma mark -
@@ -538,28 +537,28 @@
 
 
 - (void)zoomThread:(id)object {
-    NSAutoreleasePool* subpool = [[NSAutoreleasePool alloc] init];
+    @autoreleasepool {
 
-    int i;
-    int fps = 30;
-    int frames = (int)floor((float)fps * scanInterval);
-    float delta = (dvScale - vScale) / (float)frames;
+        int i;
+        int fps = 30;
+        int frames = (int)floor((float)fps * scanInterval);
+        float delta = (dvScale - vScale) / (float)frames;
 
-    if([zoomLock tryLock]) {
-        //NSLog(@"ZOOMING: frames = %d, delta = %f",frames,delta);    
-        for(i = 0 ; i < frames ; i++) {
-            vScale += delta;
-            [self performSelectorOnMainThread:@selector(resized:) withObject:nil waitUntilDone:YES];
-            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:scanInterval / frames]];
+        if([zoomLock tryLock]) {
+            //DBNSLog(@"ZOOMING: frames = %d, delta = %f",frames,delta);    
+            for(i = 0 ; i < frames ; i++) {
+                vScale += delta;
+                [self performSelectorOnMainThread:@selector(resized:) withObject:nil waitUntilDone:YES];
+                [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:scanInterval / frames]];
+            }
+            vScale = dvScale;
+            [zoomLock unlock];
         }
-        vScale = dvScale;
-        [zoomLock unlock];
-    }
-    else {
-        //NSLog(@"ZOOM LOCK IS LOCKED!");
-    }
+        else {
+            //DBNSLog(@"ZOOM LOCK IS LOCKED!");
+        }
     
-    [subpool release];
+    }
 }
 
 
@@ -568,21 +567,9 @@
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    [colorArray release];
-    [allNets release];
     
-    [_grid release];
     
-    [_graphs release];
-    [_grid release];
-    [_gridFrame release];
-    [_zeroLabel release];
-    [_curLabel release];
-    [_maxLabel release];
-    [_legend release];
     
-    [zoomLock release];
-    [super dealloc];
 }
 
 @end

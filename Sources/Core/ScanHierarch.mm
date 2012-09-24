@@ -30,7 +30,8 @@ static ScanHierarch *rootItem = nil;	//root item channels
 static ScanHierarch *rootItem2 = nil;	//root item ssids
 static ScanHierarch *rootItem3 = nil;	//root item ssids
 
-#define IsALeafNode ((id)-1)
+//#define IsALeafNode ((id)-1)
+#define IsALeafNode nil
 
 //TODO document this
 
@@ -45,7 +46,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
     aNameString = [name copy];
     aIdentKey = [idkey copy];
     parent = obj;
-    _container = [container retain];
+    _container = container;
     aType = newType;
     
     return self;
@@ -78,10 +79,11 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
 {
     unsigned int i;
     
-    [WaveHelper secureReplace:&_container withObject:container];
+	_container = container;
+    //[WaveHelper secureReplace:&_container withObject:container];
     
     for (i=0;i<[children count];i++) 
-        [[children objectAtIndex:i] setContainer:container];
+        [children[i] setContainer:container];
 }
 
 + (void) setContainer:(WaveContainer*)container
@@ -122,7 +124,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
                 //we need this item, check whether it exists
                 found = NO;
                 for (d=0;d<[children count];d++)
-                    if (([(ScanHierarch*)[children objectAtIndex:d] type]-20)==h) 
+                    if (([(ScanHierarch*)children[d] type]-20)==h) 
                     {
                         found = YES;
                         break;
@@ -147,7 +149,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
             found = NO;
             for (d=0;d<[children count];d++) 
             {
-                if ([[[children objectAtIndex:d] nameString] isEqualToString:tmp])
+                if ([[children[d] nameString] isEqualToString:tmp])
                 {
                     found = YES;
                     break;
@@ -166,7 +168,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
         // delete all entries which have no BSSIDs below them 
         for (i=[children count]-1;i>=0;i--) 
         {
-            if ([[children objectAtIndex:i] numberOfChildren]==0) [children removeObjectAtIndex:i];            
+            if ([children[i] numberOfChildren]==0) [children removeObjectAtIndex:i];            
         }
     
     }
@@ -188,7 +190,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
             found = NO;
             
             for (d=0;d<[children count];d++) 
-                if ([[[children objectAtIndex:d] nameString] isEqualToString:tmp]) 
+                if ([[children[d] nameString] isEqualToString:tmp]) 
                 {
                     found = YES;
                     break;
@@ -204,10 +206,9 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
         //remove all items which are not in our list
         for (i=[children count]-1;i>=0;i--) 
         {
-            if ([a indexOfObject:[[children objectAtIndex:i] identKey]] == NSNotFound) 
+            if ([a indexOfObject:[children[i] identKey]] == NSNotFound) 
                     [children removeObjectAtIndex:i];
         }
-        [a release];
     } 
     //these are the channel items
     else if ((aType>20)&&(aType<35))
@@ -224,7 +225,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
             found = NO;
             for (d=0;d<[children count];d++) 
             {
-                if ([[[children objectAtIndex:d] nameString] isEqualToString:tmp])
+                if ([[children[d] nameString] isEqualToString:tmp])
                 {
                     found = YES;
                     break;
@@ -253,8 +254,11 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
         }
     }
     
-    if (children!=IsALeafNode) for(d=0;d<[children count];d++) [[children objectAtIndex:d] updateKey];
-    if (addedItem) [children sortUsingSelector:@selector(compare:)];
+    if (children != IsALeafNode)
+		for(d=0;d<[children count];d++)
+			[children[d] updateKey];
+    if (addedItem)
+		[children sortUsingSelector:@selector(compare:)];
     
 }
 
@@ -319,13 +323,13 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
 
 - (ScanHierarch *)childAtIndex:(int)n
 {
-    return [[self children] objectAtIndex:n];
+    return [self children][n];
 }
 
 - (int)numberOfChildren 
 {
     NSArray * tmp = [self children];
-    if (tmp == IsALeafNode) 
+    if (tmp == IsALeafNode)
         return -1;
     else
         return [tmp count];
@@ -346,10 +350,10 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
 - (void)deleteKey
 {
     int d;
-    if (children!=IsALeafNode)
+    if (children != IsALeafNode)
         for (d=[children count]-1;d>=0;d--) 
         {
-            [[children objectAtIndex:d] deleteKey];
+            [children[d] deleteKey];
             [children removeObjectAtIndex:d];
         }
 }
@@ -359,27 +363,26 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
     if (rootItem!=Nil)
     {
         [rootItem deleteKey];
-        [WaveHelper secureRelease:&rootItem];
+		rootItem = nil;
+        //[WaveHelper secureRelease:&rootItem];
     }
     if (rootItem2!=Nil)
     { 
         [rootItem2 deleteKey];
-        [WaveHelper secureRelease:&rootItem2];
+		rootItem2 = nil;
+        //[WaveHelper secureRelease:&rootItem2];
     }
     if (rootItem3!=Nil) 
     { 
         [rootItem3 deleteKey];
-        [WaveHelper secureRelease:&rootItem3];
+		rootItem3 = nil;
+        //[WaveHelper secureRelease:&rootItem3];
     }
 }
 
 - (void)dealloc
 {
-    if (children != IsALeafNode) [children release];
-    [_container release];
-    [aNameString release];
-    [aIdentKey release];
-    [super dealloc];
+    if (children != IsALeafNode) ;
 }
 
 @end

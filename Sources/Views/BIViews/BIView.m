@@ -31,7 +31,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         _lock = [[NSRecursiveLock alloc] init];
-        _subViews = [[NSMutableArray array] retain];
+        _subViews = [NSMutableArray array];
     }
     return self;
 }
@@ -58,7 +58,7 @@
     
     [_lock lock];
     for (i = 0; i < [_subViews count]; i++) {
-        [(BISubView*)[_subViews objectAtIndex:i] drawAtPoint:NSZeroPoint inRect:rect];
+        [(BISubView*)_subViews[i] drawAtPoint:NSZeroPoint inRect:rect];
     }
     [_lock unlock];
 }
@@ -93,10 +93,5 @@
     return YES;
 }
 
-- (void)dealloc {
-    [_subViews release];
-    [_lock release];
-    [super dealloc];
-}
 
 @end

@@ -92,6 +92,7 @@ io_connect_t  root_port;    // a reference to the Root Power Domain IOService
     bool _asyncFailure;
 	NSString *_lastError;
     NSString *_activeAttackNetID;
+	NSOperationQueue *queue;
     
     IBOutlet WaveContainer      *_container;
     IBOutlet WaveScanner        *scanner;
@@ -109,16 +110,11 @@ io_connect_t  root_port;    // a reference to the Root Power Domain IOService
     IBOutlet NSSearchField      *_searchField;
     IBOutlet NSPopUpButton		*_searchTypeMenu;
     
-    IBOutlet NSButton           *_networksButton;
-    IBOutlet NSButton           *_trafficButton;
-    IBOutlet NSButton           *_mapButton;
-    IBOutlet NSButton           *_detailsButton;
-    
     IBOutlet MapView            *_mappingView;
     IBOutlet NSWindow           *prefsWindow;
     IBOutlet PrefsController    *prefsController;
     IBOutlet NSView             *detailsView;
-    IBOutlet NSButton           *_scanButton;
+    IBOutlet NSToolbarItem      *_scanButton;
     IBOutlet TrafficController  *_trafficController;
     IBOutlet InfoController     *aInfoController;
 	IBOutlet GrowlController	*aGrowlController;

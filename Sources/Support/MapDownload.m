@@ -40,7 +40,7 @@
 @implementation MapDownload
 
 + (MapDownload*)mapDownload {
-    return [[[MapDownload alloc] init] autorelease];
+    return [[MapDownload alloc] init];
 }
 
 #pragma mark -
@@ -73,7 +73,7 @@
         cookiestore = [NSHTTPCookieStorage sharedHTTPCookieStorage];
         if (cookiestore) {
             if ([cookiestore cookieAcceptPolicy]==NSHTTPCookieAcceptPolicyNever) {
-                NSLog(@"Error: Cookies disabled!");
+                DBNSLog(@"Error: Cookies disabled!");
                 NSBeginAlertSheet(@"Cookies disabled.",nil,nil,nil,[self window],nil,nil,nil,nil,
                 @"The Expedia server requires cookies to be enabled! Since KisMAC uses the same sub-system as Safari, you will need to open it and enable cookies. \
 You can also select another server, which does not require cookies. You can also select the \"accept cookies from the site you navigate to\" option \
@@ -83,15 +83,15 @@ in Safari.");
             dic = [NSDictionary dictionaryWithObjectsAndKeys:@"http://www.expedia.com/", NSHTTPCookieOriginURL, @"jscript", NSHTTPCookieName, @"1", NSHTTPCookieValue, nil];
             cookie = [NSHTTPCookie cookieWithProperties:dic];
             if (cookie) [cookiestore setCookie:cookie];
-            else NSLog(@"Critical Error: Could not create cookie!");
+            else DBNSLog(@"Critical Error: Could not create cookie!");
         } else {
-            NSLog(@"Error: Cookie Storage unavailable. Operating System needs to be 10.2.6 with Safari 1.0 intalled!");
+            DBNSLog(@"Error: Cookie Storage unavailable. Operating System needs to be 10.2.6 with Safari 1.0 intalled!");
             NSBeginAlertSheet(@"Invalid Operating System.",nil,nil,nil,[self window],nil,nil,nil,nil,
             @"The Expedia server requires a complete browser system in order to send maps. KisMAC can provide this, however you will need at least a MacOS X 10.2.6 installation, with Safari 1.0 or higher installed!");
             NS_VOIDRETURN;
         }
     NS_HANDLER
-        NSLog(@"Error: Cookie Storage unavailable. Operating System needs to be 10.2.6 with Safari 1.0 intalled!");
+        DBNSLog(@"Error: Cookie Storage unavailable. Operating System needs to be 10.2.6 with Safari 1.0 intalled!");
         NSBeginAlertSheet(@"Invalid Operating System.",nil,nil,nil,[self window],nil,nil,nil,nil,
         @"The Expedia server requires a complete browser system in order to send maps. KisMAC can provide this, however you will need at least a MacOS X 10.2.6 installation, with Safari 1.0 or higher installed!");
         return;
@@ -115,7 +115,7 @@ in Safari.");
     serv_name.sin_addr.s_addr = ip;
     serv_name.sin_port = htons(80);
     
-    NSLog(@"Connecting to expedia (%s, %lu)",inet_ntoa(serv_name.sin_addr), ip);
+    DBNSLog(@"Connecting to expedia (%s, %lu)",inet_ntoa(serv_name.sin_addr), ip);
     
     /* connect to the server */
     status = connect(sockd, (struct sockaddr*)&serv_name, sizeof(serv_name));
@@ -127,11 +127,11 @@ in Safari.");
     s = [NSString stringWithFormat:@"GET /pub/agent.dll?qscr=mrdt&CenP=%f,%f&Lang=%@&Alti=%d&MapS=0&Size=%d,%d&Offs=0.000000,0 HTTP/1.0\nHost: %@\nCookie: jscript=1\nConnection: close\n\n", 
         w._lat, w._long, lang, scale, (int)size.width, (int)size.height, server];
 
-    NSLog(@"Sending request to expedia");
+    DBNSLog(@"Sending request to expedia");
     write(sockd, [s UTF8String], [s length]);
     s = [NSString string];
     
-    NSLog(@"Reading response from expedia");
+    DBNSLog(@"Reading response from expedia");
     
     bytesread = read(sockd, buf, 2024);
     while ((bytesread != -1) && ([s length] < 1100)) {
@@ -147,13 +147,13 @@ in Safari.");
             errcount = 0;
             //NULL Terminate
             buf[bytesread] = 0;
-            s = [s stringByAppendingString:[NSString stringWithUTF8String:buf]];
+            s = [s stringByAppendingString:@(buf)];
         }
         bytesread = read(sockd, buf, 2024);
     }
     close(sockd);
 
-    //NSLog(@"Response from expedia %@",s);
+    //DBNSLog(@"Response from expedia %@",s);
     
     myMessage = CFHTTPMessageCreateEmpty(kCFAllocatorDefault, FALSE);
     if (!CFHTTPMessageAppendBytes(myMessage, (UInt8*)[s UTF8String], [s length]))
@@ -171,8 +171,8 @@ in Safari.");
         goto err;
     }
     
-    req = (NSString*)CFHTTPMessageCopyHeaderFieldValue(myMessage, CFSTR("Location"));
-    NSLog(@"New location is at %@", req);
+    req = (NSString*)CFBridgingRelease(CFHTTPMessageCopyHeaderFieldValue(myMessage, CFSTR("Location")));
+    DBNSLog(@"New location is at %@", req);
         
     switch(scale) {
         case 5:
@@ -198,7 +198,7 @@ in Safari.");
         default:
             expediaFactorH = 1;
             expediaFactorW = 1;
-            NSLog(@"Warning Invalid Zoom Size!");
+            DBNSLog(@"Warning Invalid Zoom Size!");
             NSBeep();
     }
     
@@ -219,11 +219,7 @@ in Safari.");
     return req;
     
 err:
-    NSLog(@"%@",error);
-    if(req != nil) 
-    {
-        [req release];
-    }
+    DBNSLog(@"%@",error);
     close(sockd);
     return nil;
 }
@@ -232,7 +228,7 @@ err:
     NSString *req;
     int scale,zone;
     float scalef;
-       double utme,utmn,K1,K2,K3,K4,K5,p,S,k0,sin1sec,nu,eprimesqd,e,rlat,mperdeglat,mperdeglon,numpx,lon0;
+       double utme,utmn,K1,K2,K3,K4,K5,p,S,k0,sin1sec,nu,eprimesqd,e,rlat = 0.0,mperdeglat,mperdeglon,numpx,lon0;
 
     
     if ((int)size.width == 0) { size.width = 1000; }
@@ -322,7 +318,7 @@ err:
 							   break;
 					   default:
 							   scalef= 1;
-							   NSLog(@"Warning Invalid Zoom Size!");
+							   DBNSLog(@"Warning Invalid Zoom Size!");
 							   NSBeep();
 			   }
 			   req = [NSString stringWithFormat:@"http://www.street-directory.com.au/sd_new/genmap.cgi?x=%f&y=%f&sizex=%d&sizey=%d&level=%d&star=&circle=", w._long, w._lat, (int)size.width, (int)size.height, zoom];    
@@ -352,7 +348,7 @@ err:
 							   break;
 					   default:
 							   scalef= 1;
-							   NSLog(@"Warning Invalid Zoom Size!");
+							   DBNSLog(@"Warning Invalid Zoom Size!");
 							   NSBeep();
 			   }
 
@@ -364,7 +360,7 @@ err:
 			   else zone = floor(w._long/6)+31;
 			   lon0 = zone * 6 - 183;
 
-			   NSLog(@"UTM zone %d, central meridian %d", zone, (int)lon0);
+			   DBNSLog(@"UTM zone %d, central meridian %d", zone, (int)lon0);
 
 			   e = sqrt(1 - pow(b_WGS84,2)/pow(a_WGS84,2));
 			   eprimesqd = pow(e,2)/(1-pow(e,2));
@@ -403,21 +399,20 @@ err:
         _w2._lat  = w._lat  - 1000 * scalef * size.height / 2 / numpx / mperdeglat;
         _w2._long = w._long - 1000 * scalef * size.width / 2 / numpx / mperdeglat; // should use mperdeglon... but mperdeglat appears to work instead
 		
-		NSLog(@"mperdeglon %f, mperdeglat %f, numpx %f",mperdeglon,mperdeglat,numpx);
-		NSLog(@"Waypoint 1: %f %f",_w1._lat,_w1._long);
-		NSLog(@"Waypoint 2: %f %f",_w2._lat,_w2._long);
-		NSLog(@"Center: %f %f",w._lat,w._long);
+		DBNSLog(@"mperdeglon %f, mperdeglat %f, numpx %f",mperdeglon,mperdeglat,numpx);
+		DBNSLog(@"Waypoint 1: %f %f",_w1._lat,_w1._long);
+		DBNSLog(@"Waypoint 2: %f %f",_w2._lat,_w2._long);
+		DBNSLog(@"Center: %f %f",w._lat,w._long);
     } else {
-        NSLog(@"Invalid server!");
+        DBNSLog(@"Invalid server!");
         return NO;
     }
 
-    NSLog(@"Loading map from the following location: %@", req);
+    DBNSLog(@"Loading map from the following location: %@", req);
     
-    [_img autorelease];
     _img = [[NSImage alloc] initWithContentsOfURL:[NSURL URLWithString:req]];
 
-    NSLog(@"Map loaded");
+    DBNSLog(@"Map loaded");
     return _img != nil;
 }
 
@@ -445,9 +440,5 @@ err:
 
 #pragma mark -
 
-- (void)dealloc {
-    [_img release];
-	[super dealloc];
-}
 
 @end

@@ -64,7 +64,7 @@ static NSString *trackString,*trackStringClient;
                 // Open up the note allocator.
                 na = OpenDefaultComponent(kNoteAllocatorComponentType, 0);
                 if (!na)
-                    NSLog(@"Error initializing QuickTime Component");
+                    DBNSLog(@"Error initializing QuickTime Component");
                 
                 BigEndianShort s = (BigEndianShort){EndianS16_NtoB(8)};
                 BigEndianFixed f = (BigEndianFixed){EndianS16_NtoB(0x00010000)};
@@ -96,7 +96,7 @@ static NSString *trackString,*trackStringClient;
     // Open up the note allocator.
     na2 = OpenDefaultComponent(kNoteAllocatorComponentType, 0);
     if (!na2)
-		NSLog(@"Error initializing QuickTime Component");
+		DBNSLog(@"Error initializing QuickTime Component");
 	
 	BigEndianShort s = (BigEndianShort){EndianS16_NtoB(8)};
 	BigEndianFixed f = (BigEndianFixed){EndianS16_NtoB(0x00010000)};
@@ -136,12 +136,14 @@ static NSString *trackString,*trackStringClient;
 
 + (void)setTrackString:(NSString*)cs
 {
-	 [WaveHelper secureReplace:&trackString withObject:cs];
+	trackString = cs;
+	//[WaveHelper secureReplace:&trackString withObject:cs];
 }
 
 + (void)setTrackStringClient:(NSString*)cs
 {
-	[WaveHelper secureReplace:&trackStringClient withObject:cs];
+	trackStringClient = cs;
+	//[WaveHelper secureReplace:&trackStringClient withObject:cs];
 }
 
 + (NSString*)trackString

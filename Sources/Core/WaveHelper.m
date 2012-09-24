@@ -27,7 +27,7 @@
 #import "../WaveDrivers/WaveDriverAirport.h"
 #import "../WaveDrivers/WaveDriver.h"
 
-#include <openssl/md5.h>
+#include <md5.h>
 #include <unistd.h>
 #import <CoreFoundation/CoreFoundation.h>
 #import <IOKit/IOKitLib.h>
@@ -53,9 +53,9 @@ void WirelessCryptMD5(char const *str, unsigned char *key) {
         md5_buf[i] = str[j++];
     }
 
-    MD5_Init(&ctx);
-    MD5_Update(&ctx, md5_buf, 64);
-    MD5_Final(md5_buf, &ctx);
+    MD5Init(&ctx);
+    MD5Update(&ctx, md5_buf, 64);
+    MD5Final(md5_buf, &ctx);
     
     memcpy(key, md5_buf, 13);
 }
@@ -118,7 +118,7 @@ static GPSInfoController *_gc;
 + (NSString*) macToString:(UInt8*)m {
     if (!m)
         return nil;
-    return [NSString stringWithFormat:@"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X", m[0], m[1], m[2], m[3], m[4], m[5], m[6]];
+    return [NSString stringWithFormat:@"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X:%.2X", m[0], m[1], m[2], m[3], m[4], m[5], m[6]];
 }
 
 // Returns the vendor for a specific MAC-Address
@@ -127,9 +127,9 @@ static GPSInfoController *_gc;
     
     // The dictionary is cached for speed, but it needs to be loaded the first time
     if (_vendors == Nil) { 
-        _vendors = [[NSDictionary dictionaryWithContentsOfFile:[[[NSBundle bundleForClass:[WaveHelper class]] resourcePath] stringByAppendingString:@"/vendor.db"]] retain];
+        _vendors = [NSDictionary dictionaryWithContentsOfFile:[[[NSBundle bundleForClass:[WaveHelper class]] resourcePath] stringByAppendingString:@"/vendor.db"]];
 		if (!_vendors) {
-			NSLog(@"No vendors Database found!");
+			DBNSLog(@"No vendors Database found!");
 			return @"error";
 		}
     }
@@ -139,13 +139,13 @@ static GPSInfoController *_gc;
         return @"";
     
     // See if we can find a most matching dictionary entry
-    aVendor = [_vendors objectForKey:MAC];
+    aVendor = _vendors[MAC];
     if (aVendor == nil) {
-        aVendor = [_vendors objectForKey:[MAC substringToIndex:11]];
+        aVendor = _vendors[[MAC substringToIndex:11]];
         if (aVendor == nil) {
-            aVendor = [_vendors objectForKey:[MAC substringToIndex:8]];
+            aVendor = _vendors[[MAC substringToIndex:8]];
             if (aVendor == nil) {
-                aVendor = [_vendors objectForKey:[MAC substringToIndex:5]];
+                aVendor = _vendors[[MAC substringToIndex:5]];
                 if (aVendor == nil) {
                     return @"unknown";                    
                 } 
@@ -244,7 +244,7 @@ static GPSInfoController *_gc;
     
     while ((key = [e nextObject]))
     {
-        w = [_waveDrivers objectForKey:key];
+        w = _waveDrivers[key];
         [_waveDrivers removeObjectForKey:key];
         [w unloadBackend];
         w = Nil;
@@ -268,7 +268,6 @@ static GPSInfoController *_gc;
     //if our dictionary does not exist then create it.
     if (!_waveDrivers) {
         _waveDrivers = [NSMutableDictionary dictionary];
-        [_waveDrivers retain];
     }
     
     d = [NSUserDefaults standardUserDefaults];
@@ -276,14 +275,14 @@ static GPSInfoController *_gc;
     
     //see if all of the drivers mentioned in our prefs are loaded
     for (i = 0; i < [a count]; i++) {
-        driverProps = [a objectAtIndex:i];
-        name = [driverProps objectForKey:@"deviceName"];
+        driverProps = a[i];
+        name = driverProps[@"deviceName"];
         
         //the driver does not exist. go for it
-        if (![_waveDrivers objectForKey:name]) {
+        if (!_waveDrivers[name]) {
         
             //ugly hack but it works, this makes sure that the airport card is used only once
-            interfaceName = [driverProps objectForKey:@"driverID"];
+            interfaceName = driverProps[@"driverID"];
             
             // Get the class for driver
             driver = NSClassFromString(interfaceName);
@@ -291,14 +290,12 @@ static GPSInfoController *_gc;
             // Call driver Class method "loadBackend"
             if (![driver loadBackend]) 
             {
-                [w release];
-                return NO;
+                //return NO;
             }
             
             //create an interface
             for (j = 0; j < 10; j++) 
             {
-                [w release];
                 w = [[driver alloc] init];
                 if (w)
                 {
@@ -309,14 +306,14 @@ static GPSInfoController *_gc;
             
             if (w) {
                 [w setConfiguration: driverProps];
-                [_waveDrivers setObject:w forKey:name];
+                _waveDrivers[name] = w;
             } else {
                 NSRunCriticalAlertPanel(NSLocalizedString(@"Could not instantiate Driver.", "Driver init failed"),
                 [NSString stringWithFormat: NSLocalizedString (@"Instantiation Failure Description", @"LONG description of what might have gone wrong"),
                 name],
                 OK, Nil, Nil);
             
-                NSLog(@"Error could not instantiate driver %@", interfaceName);
+                DBNSLog(@"Error could not instantiate driver %@", interfaceName);
                 return NO;
             }
         }
@@ -324,10 +321,6 @@ static GPSInfoController *_gc;
     
     //now make sure any drivers that have been removed from the list are gone
     NSEnumerator *e = [_waveDrivers objectEnumerator];
-    if(nil != w)
-    {
-        [w release];
-    }
    
     while((w = [e nextObject]))
     {
@@ -344,7 +337,6 @@ static GPSInfoController *_gc;
 + (NSArray*) getWaveDrivers {
     if (!_waveDrivers) {
         _waveDrivers = [NSMutableDictionary dictionary];
-        [_waveDrivers retain];
     }
     
     return [_waveDrivers allValues];
@@ -357,15 +349,15 @@ static GPSInfoController *_gc;
     
     e = [_waveDrivers keyEnumerator];
     while ((k = [e nextObject])) {
-        d = [(WaveDriver*)[_waveDrivers objectForKey:k] configuration];
-        if ([[d objectForKey:@"injectionDevice"] intValue]) return [_waveDrivers objectForKey:k];
+        d = [(WaveDriver*)_waveDrivers[k] configuration];
+        if ([d[@"injectionDevice"] intValue]) return _waveDrivers[k];
     }
     
     return nil;
 }
 
 + (WaveDriver*) driverWithName:(NSString*) s {
-    return [_waveDrivers objectForKey:s];
+    return _waveDrivers[s];
 }
 
 #pragma mark -
@@ -449,14 +441,14 @@ static GPSInfoController *_gc;
 + (NSMutableArray*) getProbeArrayForID:(char*)ident {
     NSMutableArray *ar;
     NSString *idstr;
-    if (!_probes) _probes = [[NSMutableDictionary dictionary] retain];
+    if (!_probes) _probes = [NSMutableDictionary dictionary];
     idstr = [NSString stringWithFormat:@"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X", ident[0], ident[1], ident[2], ident[3], ident[4], ident[5]];
-    ar = [_probes objectForKey:idstr];
+    ar = _probes[idstr];
     if (!ar) {
         ar = [NSMutableArray array];
         [ar addObject:[NSDate date]];
-        [ar addObject:[NSNumber numberWithInt:0]];
-        [_probes setObject:ar forKey:idstr];
+        [ar addObject:@0];
+        _probes[idstr] = ar;
     }
     return ar;
 }
@@ -474,7 +466,7 @@ static GPSInfoController *_gc;
     if (perm & 04000) {
         t = [NSTask launchedTaskWithLaunchPath:s arguments:args ? args : [NSArray array]];
         if (!t) {
-            NSLog(@"WARNING!!! User is not a member of admin group for: %@", s);
+            DBNSLog(@"WARNING!!! User is not a member of admin group for: %@", s);
             NSRunCriticalAlertPanel(NSLocalizedString(@"Execution failure.", "Execution failure title"),
                 NSLocalizedString(@"Execution failure description", "LONG Description of execution failure. No root privileges?!"),
                 //@"KisMAC could not execute an internal shell script. This is most likely since you have no root privileges."
@@ -484,12 +476,12 @@ static GPSInfoController *_gc;
         return YES;
     } else { */
         ret = [[BLAuthentication sharedInstance] executeCommand:s withArgs:args];
-        if (!ret) NSLog(@"WARNING!!! User canceled password dialog for: %@", s);
+        if (!ret) DBNSLog(@"WARNING!!! User canceled password dialog for: %@", s);
         return ret;
     //}
 }
 
-+ (void)secureRelease:(id*)object {
+/*+ (void)secureRelease:(id*)object {
     id rel = *object;
     *object = Nil;
     [rel release];
@@ -498,14 +490,14 @@ static GPSInfoController *_gc;
     id rel = *oldObject;
     *oldObject = [newObject retain];
     [rel release];
-}
+}*/
 
 + (void)addDictionary:(NSDictionary*)s toDictionary:(NSMutableDictionary*)d {
     NSEnumerator* e = [s keyEnumerator];
     id key;
     
     while ((key = [e nextObject]) != nil) {
-        [d setObject:[s objectForKey:key] forKey:key];
+        d[key] = s[key];
     }
 }
 
@@ -639,7 +631,7 @@ static GPSInfoController *_gc;
 + (void)dumpKFrame:(KFrame *)f {
     UInt32 size = f->ctrl.len;
     UInt8 *data = f->data;
-    NSLog(@"--FRAME LENGTH %d--", size);
+    DBNSLog(@"--FRAME LENGTH %d--", (int)size);
     int idx = 0;
     int i,j;
 	for (i=0;i<size;i=i+8) {

@@ -51,7 +51,7 @@
             kCFStringEncodingASCII);
         CFRelease (nameCFstring);
     }
-    return [NSString stringWithUTF8String:resultStr];
+    return @(resultStr);
 }
 
 - (void)updateRestrictions {
@@ -148,8 +148,8 @@ err:
     }
     
     for (i=0;i<[a count];i++) {
-        [aGPSSel addItemWithTitle:[a objectAtIndex:i]];
-        if ([[controller objectForKey:@"GPSDevice"] isEqualToString:[a objectAtIndex:i]]) {
+        [aGPSSel addItemWithTitle:a[i]];
+        if ([[controller objectForKey:@"GPSDevice"] isEqualToString:a[i]]) {
             [aGPSSel selectItemAtIndex:(i+3)];
             found = YES;
         }
@@ -182,7 +182,7 @@ err:
     [controller setObject:[NSNumber numberWithInt:[_noFix indexOfSelectedItem]] forKey:@"GPSNoFix"];
     [controller setObject:[NSNumber numberWithInt:[_traceOp indexOfSelectedItem]] forKey:@"GPSTrace"];
     [controller setObject:[NSNumber numberWithBool:[_tripmateMode state]==NSOnState] forKey:@"GPSTripmate"];
-    [controller setObject:[NSNumber numberWithInt:[_gpsdPort intValue]] forKey:@"GPSDaemonPort"];
+    [controller setObject:@([_gpsdPort intValue]) forKey:@"GPSDaemonPort"];
     [controller setObject:[[_gpsdHost stringValue] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] forKey:@"GPSDaemonHost"];
     
     [self updateRestrictions];
@@ -200,11 +200,11 @@ err:
     } else if (sender == _tripmateMode) {
         [controller setObject:[NSNumber numberWithBool:[_tripmateMode state]==NSOnState] forKey:@"GPSTripmate"];
     } else if (sender == _gpsdPort) {
-        [controller setObject:[NSNumber numberWithInt:[_gpsdPort intValue]] forKey:@"GPSDaemonPort"];
+        [controller setObject:@([_gpsdPort intValue]) forKey:@"GPSDaemonPort"];
     } else if (sender == _gpsdHost) {
         [controller setObject:[[_gpsdHost stringValue] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] forKey:@"GPSDaemonHost"];
     } else {
-        NSLog(@"Error: Invalid sender(%@) in setValueForSender:",sender);
+        DBNSLog(@"Error: Invalid sender(%@) in setValueForSender:",sender);
     }
 	NSUserDefaults *sets = [NSUserDefaults standardUserDefaults];
 	[WaveHelper initGPSControllerWithDevice: [sets objectForKey:@"GPSDevice"]];

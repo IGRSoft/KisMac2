@@ -27,8 +27,8 @@
         NSRectFill(NSMakeRect(rect.origin.x + i,rect.origin.y, 1, rect.size.height));
     }
     
-    if (![NSImage imageNamed:@"BIToolbar.tif"]) NSLog(@"no image");
-    [[NSImage imageNamed:@"BIToolbar.tif"] dissolveToPoint:NSMakePoint(0,0) fraction:1.0];
+    if (![NSImage imageNamed:@"BIToolbar.jpg"]) NSLog(@"no image");
+    [[NSImage imageNamed:@"BIToolbar.jpg"] dissolveToPoint:NSMakePoint(0,0) fraction:1.0];
 }
 
 @end

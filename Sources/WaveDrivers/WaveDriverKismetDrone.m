@@ -124,17 +124,17 @@
 	NSDictionary *drvr;
 	@try { // todo: not multiple instance safe yet. not a problem currently.
 		while ( (drvr = [e nextObject]) ) {
-			if ([[drvr objectForKey:@"driverID"] isEqualToString:@"WaveDriverKismetDrone"]) {
-				hostname = [[drvr objectForKey:@"kismetserverhost"] UTF8String];
+			if ([drvr[@"driverID"] isEqualToString:@"WaveDriverKismetDrone"]) {
+				hostname = [drvr[@"kismetserverhost"] UTF8String];
 				foundhostname = 1;
-				port = [[drvr objectForKey:@"kismetserverport"] intValue];
+				port = [drvr[@"kismetserverport"] intValue];
 				foundport = 1;
 			}
 		}
 	}
 	@catch (NSException * ex) {
-		NSLog(@"Exception getting the hostname and port from plist...");
-		NSLog(@"Error getting host and port!"); 
+		DBNSLog(@"Exception getting the hostname and port from plist...");
+		DBNSLog(@"Error getting host and port!"); 
 			NSRunCriticalAlertPanel(
             NSLocalizedString(@"No host/port set to connect to!", "Error dialog title"),
             NSLocalizedString(@"Check that one is set in the preferences", "LONG desc"),
@@ -143,8 +143,8 @@
 	}
 
 	if (foundhostname + foundport < 2) {
-		NSLog(@"Error getting the hostname and port from plist...");
-		NSLog(@"Error getting host and port!"); 
+		DBNSLog(@"Error getting the hostname and port from plist...");
+		DBNSLog(@"Error getting host and port!"); 
 		NSRunCriticalAlertPanel(
            NSLocalizedString(@"No host/port set to connect to!", "Error dialog title"),
             NSLocalizedString(@"Check that one is set in the preferences", "LONG desc"),
@@ -163,7 +163,7 @@
 	drone_sock.sin_port = htons(port); // option as well
 	
 	if ((drone_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        NSLog(@"socket() failed %d (%s)\n", errno, strerror(errno));
+        DBNSLog(@"socket() failed %d (%s)\n", errno, strerror(errno));
 			NSRunCriticalAlertPanel(
             NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
 			[NSString stringWithFormat:@"%s",strerror(errno)],
@@ -176,7 +176,7 @@
     local_sock.sin_port = htons(0);
 
     if (bind(drone_fd, (struct sockaddr *) &local_sock, sizeof(local_sock)) < 0) {
-         NSLog(@"bind() failed %d (%s)\n", errno, strerror(errno));
+         DBNSLog(@"bind() failed %d (%s)\n", errno, strerror(errno));
 			NSRunCriticalAlertPanel(
             NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
 			[NSString stringWithFormat:@"%s",strerror(errno)],
@@ -186,7 +186,7 @@
 
     // Connect
     if (connect(drone_fd, (struct sockaddr *) &drone_sock, sizeof(drone_sock)) < 0) {
-         NSLog(@"connect() failed %d (%s)\n", errno, strerror(errno));
+         DBNSLog(@"connect() failed %d (%s)\n", errno, strerror(errno));
 			NSRunCriticalAlertPanel(
             NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
 			[NSString stringWithFormat:@"%s",strerror(errno)],
@@ -225,7 +225,7 @@
 			inbound = (uint8_t *) &fhdr;
 			if ((ret = read(drone_fd, &inbound[stream_recv_bytes],
 				 (ssize_t) sizeof(struct stream_frame_header) - stream_recv_bytes)) < 0) {
-				NSLog(@"drone read() error getting frame header %d:%s",
+				DBNSLog(@"drone read() error getting frame header %d:%s",
                       errno, strerror(errno));
                 NSRunCriticalAlertPanel(
                     NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
@@ -245,7 +245,7 @@
 				resyncs++;
 
 				if (resyncs > 20) {
-				   NSLog(@"too many resync attempts, something is wrong.");
+				   DBNSLog(@"too many resync attempts, something is wrong.");
 					NSRunCriticalAlertPanel(
             NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
 			@"Resync attempted too many times.",
@@ -260,7 +260,7 @@
 				
 				if (write(drone_fd, &cmd, 1) < 1)
                 {
-					NSLog(@"write() error attempting to flush "
+					DBNSLog(@"write() error attempting to flush "
 							 "packet stream: %d %s",
 							 errno, strerror(errno));
 							 
@@ -284,7 +284,7 @@
 							(ssize_t) sizeof(struct stream_version_packet) - 
 							(stream_recv_bytes - offset))) < 0) {
 
-				NSLog(@"drone read() error getting version "
+				DBNSLog(@"drone read() error getting version "
 						 "packet %d:%s", errno, strerror(errno));
 				
 						 			NSRunCriticalAlertPanel(
@@ -302,7 +302,7 @@
 
 			// Validate
 			if (ntohs(vpkt.drone_version) != STREAM_DRONE_VERSION) {
-				NSLog(@"version mismatch:  Drone sending version %d, "
+				DBNSLog(@"version mismatch:  Drone sending version %d, "
 						 "expected %d.", ntohs(vpkt.drone_version), STREAM_DRONE_VERSION);
 							NSRunCriticalAlertPanel(
             NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
@@ -313,7 +313,7 @@
 
 			stream_recv_bytes = 0;
 
-			 NSLog(@"debug - version packet valid\n\n");
+			 DBNSLog(@"debug - version packet valid\n\n");
 		} 
 
 	if (fhdr.frame_type == STREAM_FTYPE_PACKET && stream_recv_bytes >= offset &&
@@ -321,7 +321,7 @@
 			
 			// Bail if we have a frame header too small for a packet of any sort
 			if (ntohl(fhdr.frame_len) <= sizeof(struct stream_packet_header)) {
-				NSLog(@"frame too small to hold a packet.");
+				DBNSLog(@"frame too small to hold a packet.");
 				NSRunCriticalAlertPanel(
             NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
 			[NSString stringWithFormat:@"Frame too small to hold a packet", ntohs(vpkt.drone_version), STREAM_DRONE_VERSION],
@@ -333,7 +333,7 @@
 			if ((ret = read(drone_fd, &inbound[stream_recv_bytes - offset],
 							(ssize_t) sizeof(struct stream_packet_header) - 
 							(stream_recv_bytes - offset))) < 0) {
-				NSLog(@"drone read() error getting packet "
+				DBNSLog(@"drone read() error getting packet "
 						 "header %d:%s", errno, strerror(errno));
 				
 				NSRunCriticalAlertPanel(
@@ -350,7 +350,7 @@
 				goto top;
 
 			if (ntohs(phdr.drone_version) != STREAM_DRONE_VERSION) {
-				NSLog(@"version mismatch:  Drone sending version %d, "
+				DBNSLog(@"version mismatch:  Drone sending version %d, "
 						 "expected %d.", ntohs(phdr.drone_version), STREAM_DRONE_VERSION);
 			NSRunCriticalAlertPanel(@"The connection to the Kismet drone failed",
 			[NSString stringWithFormat:@"version mismatch:  Drone sending version %d, expected %d.", ntohs(phdr.drone_version), STREAM_DRONE_VERSION], 
@@ -361,7 +361,7 @@
 			}
 
 			if (ntohl(phdr.caplen) <= 0 || ntohl(phdr.len) <= 0) {
-				NSLog(@"drone sent us a 0-length packet.");
+				DBNSLog(@"drone sent us a 0-length packet.");
 				 NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
 			@"Drone sent us a zero-length packet",
             OK, Nil, Nil);
@@ -369,7 +369,7 @@
 			}
 
 			if (ntohl(phdr.caplen) > MAX_PACKET_LEN || ntohl(phdr.len) > MAX_PACKET_LEN) {
-				NSLog(@"drone sent us an oversized packet.");
+				DBNSLog(@"drone sent us an oversized packet.");
 				NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
 			@"Drone sent us an oversized packet",
             OK, Nil, Nil);
@@ -395,7 +395,7 @@
 			inbound = (uint8_t *) databuf;
 			if ((ret = read(drone_fd, &inbound[stream_recv_bytes - offset],
 							(ssize_t) plen - (stream_recv_bytes - offset))) < 0) {
-				NSLog(@"drone read() error getting packet "
+				DBNSLog(@"drone read() error getting packet "
 						 "header %d:%s", errno, strerror(errno));
 				
 						 NSRunCriticalAlertPanel(
@@ -417,7 +417,7 @@
     
         if (thisFrame->ctrl.len > 2364) { // no buffer overflows please
             thisFrame->ctrl.len = 2364;
-            NSLog(@"Captured frame >2500 octets");
+            DBNSLog(@"Captured frame >2500 octets");
         }
 
         memcpy(thisFrame->data, databuf, thisFrame->ctrl.len);
@@ -426,13 +426,13 @@
 		stream_recv_bytes = 0;
 		
 		} else {
-			 NSLog(@"debug - somehow not a stream packet or too much data...  type %d recv %d\n", fhdr.frame_type, stream_recv_bytes);
+			 DBNSLog(@"debug - somehow not a stream packet or too much data...  type %d recv %d\n", fhdr.frame_type, stream_recv_bytes);
 		}
 
 		if (fhdr.frame_type != STREAM_FTYPE_PACKET && 
 			fhdr.frame_type != STREAM_FTYPE_VERSION) {
 			// Bail if we don't know the packet type
-			NSLog(@"unknown frame type %d", fhdr.frame_type);
+			DBNSLog(@"unknown frame type %d", fhdr.frame_type);
 
 			// debug
 			unsigned int x = 0;
@@ -451,8 +451,7 @@
 #pragma mark -
 
 -(void) dealloc {
-		NSLog(@"dealloc called");
-    [super dealloc];
+		DBNSLog(@"dealloc called");
 }
 
 @end

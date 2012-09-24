@@ -13,7 +13,7 @@
 
 + (NSBezierPath *)bezierPathWithPlateInRect:(NSRect)rect
 {
-	NSBezierPath *result = [[[NSBezierPath alloc] init] autorelease];
+	NSBezierPath *result = [[NSBezierPath alloc] init];
 	[result appendBezierPathWithPlateInRect:rect];
 	return result;
 }

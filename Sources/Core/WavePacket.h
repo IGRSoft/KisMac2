@@ -23,7 +23,7 @@
 */
 
 #import <Foundation/Foundation.h>
-#import <UnitKit/UnitKit.h>
+//#import <UnitKit/UnitKit.h>
 #import "80211b.h"
 #import "KisMAC80211.h"
 #import "WavePacket.h"
@@ -89,7 +89,7 @@ typedef enum _leapAuthCode {
 } leapAuthCode;
 
 //this represents a packet
-@interface WavePacket : NSObject <UKTest> {
+@interface WavePacket : NSObject /*<UKTest>*/ {
     int _signal;            // current signal strength
     int _channel;           // well the channel
     int  _primaryChannel;   // Primary channel

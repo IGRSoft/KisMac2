@@ -75,7 +75,7 @@
 }
 
 - (void) setDeauthingAll:(BOOL)deauthing {
-    NSLog(@"DEAUTH ALL %d", deauthing);
+    DBNSLog(@"DEAUTH ALL %d", deauthing);
     _deauthing = deauthing;
 }
 

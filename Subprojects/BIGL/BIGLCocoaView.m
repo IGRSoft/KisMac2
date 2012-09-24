@@ -14,7 +14,7 @@
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        _color = [[NSColor blackColor] retain];
+        _color = [NSColor blackColor];
     }
     return self;
 }
@@ -22,14 +22,12 @@
 - (void)setSubViews:(NSArray*)subs {
     NSParameterAssert(subs);
     
-    [_subs autorelease];
-    _subs = [subs retain];
+    _subs = subs;
 }
 - (void)setBackgroundColor:(NSColor*)color {
     NSParameterAssert(color);
     
-    [_color autorelease];
-    _color = [color retain];
+    _color = color;
 }
 
 - (void)drawRect:(NSRect)rect {
@@ -38,15 +36,10 @@
     NSRectFill(rect);
 
     for (i = [_subs count]; i > 0; i--) {
-        [(BIGLSubView*)[_subs objectAtIndex:i-1] drawCocoaAtPoint:NSZeroPoint];
+        [(BIGLSubView*)_subs[i-1] drawCocoaAtPoint:NSZeroPoint];
     }
 }
 
 #pragma mark -
 
--(void)dealloc {
-    [_color release];
-    [_subs release];
-	[super dealloc];
-}
 @end

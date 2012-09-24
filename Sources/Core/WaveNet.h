@@ -23,7 +23,7 @@
 */
 
 #import <Cocoa/Cocoa.h>
-#import <UnitKit/UnitKit.h>
+//#import <UnitKit/UnitKit.h>
 #include <QuickTime/QuickTime.h>
 #import <CoreWLAN/CoreWLAN.h>
 #import "WavePacket.h"
@@ -52,7 +52,7 @@ struct graphStruct {
 @class NetView;
 @class WaveWeakContainer;
 
-@interface WaveNet : NSObject <UKTest> {
+@interface WaveNet : NSObject /*<UKTest>*/ {
     int					_netID;					//network ID
     int					_maxSignal;				//biggest signal ever
     int					_curSignal;				//current signal
@@ -173,7 +173,7 @@ struct graphStruct {
 - (NSString*)comment;
 - (void)setComment:(NSString*)comment;
 - (NSDictionary*)coordinates;
-- (WaveWeakContainer **)ivData;
+- (WaveWeakContainer *__strong*)ivData;
 - (BOOL)passwordAvailable;
 - (int)challengeResponseStatus;
 

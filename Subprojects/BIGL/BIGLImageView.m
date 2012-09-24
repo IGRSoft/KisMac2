@@ -56,7 +56,6 @@
     } else
         NSLog (@"ImageTexture -genTexture: Failure to get current OpenGL context\n");
     
-    [bitmap release];
 }
 
 #pragma mark -
@@ -70,7 +69,7 @@
     _cgl_ctx = NULL;
     _texName = 0;
     _texSize = NSMakeSize(0, 0);
-    _img = [img retain];
+    _img = img;
     
     return self;
 }
@@ -79,8 +78,7 @@
     NSParameterAssert(img);
     
     [self deleteTexture];
-    [_img autorelease];
-    _img = [img retain];
+    _img = img;
 }
 
 - (NSImage*)image {
@@ -127,7 +125,5 @@
 
 - (void)dealloc {
     [self deleteTexture];
-    [_img release];
-    [super dealloc];
 }
 @end

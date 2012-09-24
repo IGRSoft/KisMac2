@@ -117,11 +117,11 @@ unsigned long doFCS(unsigned char* buf, int len) {
     
     switch([_cryptMethod indexOfSelectedItem]) {
     case 0:
-        WirelessEncrypt((CFStringRef)[_hexKey stringValue],(WirelessKey*)ckey,0);
+        WirelessEncrypt((__bridge CFStringRef)[_hexKey stringValue],(WirelessKey*)ckey,0);
         keylen = 5;
         break;
     case 1:
-        WirelessEncrypt((CFStringRef)[_hexKey stringValue],(WirelessKey*)ckey,1);
+        WirelessEncrypt((__bridge CFStringRef)[_hexKey stringValue],(WirelessKey*)ckey,1);
         keylen = 13;
         break;
     case 2:
@@ -193,7 +193,7 @@ unsigned long doFCS(unsigned char* buf, int len) {
                 @"%@: %s!", 
                 NSLocalizedString(@"KisMAC was unable to open the input file because of the following error", "Decrypt error"),
                 err
-            ]
+            ], nil
             );
         return;
     }
@@ -247,18 +247,18 @@ unsigned long doFCS(unsigned char* buf, int len) {
     if (decCount>0&& decError>0) {
         NSBeginInformationalAlertSheet(
             NSLocalizedString(@"Decryption done.", "Decrypt error title"),
-            OK, nil, nil, [self window], self, NULL, @selector(closeWindow:returnCode:contextInfo:), self, 
+            OK, nil, nil, [self window], self, NULL, @selector(closeWindow:returnCode:contextInfo:), (__bridge void *)(self), 
             [NSString stringWithFormat: 
                 NSLocalizedString(@"KisMAC decrypted %u data frames. There were %u dropped frames, because of CRC errors.", "Decrypt dialog"), 
-                decCount, decError]
+                decCount, decError], nil
             );
     } else if (decCount) {
         NSBeginInformationalAlertSheet(
             NSLocalizedString(@"Decryption done.", "Decrypt error title"),
-            OK, nil, nil, [self window], self, NULL, @selector(closeWindow:returnCode:contextInfo:), self, 
+            OK, nil, nil, [self window], self, NULL, @selector(closeWindow:returnCode:contextInfo:), (__bridge void *)(self), 
             [NSString stringWithFormat: 
                 NSLocalizedString(@"KisMAC decrypted all %u data frames.", "Decrypt dialog"), 
-                decCount]
+                decCount], nil
             );
     } else {
         NSBeginCriticalAlertSheet(
@@ -266,7 +266,7 @@ unsigned long doFCS(unsigned char* buf, int len) {
             OK, nil, nil, [self window], Nil, Nil, Nil, Nil, 
             [NSString stringWithFormat: 
                 NSLocalizedString(@"KisMAC dropped all %u data frames, because of CRC errors! This is most likely because you entered a wrong password.", "Decrypt dialog"), 
-                decError]
+                decError], nil
             );
     }
 
@@ -291,15 +291,21 @@ error1:
         [OP setAllowsMultipleSelection:NO];
         [OP setCanChooseFiles:YES];
         [OP setCanChooseDirectories:NO];
-        if ([OP runModalForTypes:nil]==NSOKButton) {
-            [_inFile setStringValue:[OP filename]];
-        }
+		[OP beginWithCompletionHandler:^(NSInteger result)
+		 {
+			 if (result == NSFileHandlingPanelOKButton)
+			 {
+				 [_inFile setStringValue:[[OP URL] absoluteString]];
+			 }
+			 
+		 }];
+        
     } else {
         SP = [NSSavePanel savePanel];
         [SP setCanSelectHiddenExtension:YES];
         [SP setTreatsFilePackagesAsDirectories:NO];
         if ([SP runModal]==NSFileHandlingPanelOKButton) {
-            [_outFile setStringValue:[SP filename]];
+            [_outFile setStringValue:[[SP URL] absoluteString]];
         }
     }
 }
@@ -321,7 +327,6 @@ error1:
     } else {
         // Otherwise, if window is completely transparent, destroy the timer and close the window.
         [timer invalidate];
-        [timer release];
         
         [[self window] close];
         

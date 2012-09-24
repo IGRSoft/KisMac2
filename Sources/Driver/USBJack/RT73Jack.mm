@@ -17,7 +17,7 @@ unsigned char   RT73_RateIdToPlcpSignal[12] = {
 9, /* RATE_24 */  13, /* RATE_36 */    8, /* RATE_48 */   12  /* RATE_54 */ }; // see IEEE802.11a-1999 p.14
 
 void RT73Jack::dumpFrame(UInt8 *data, UInt16 size) {
-    NSLog(@"--FRAME LENGTH %d--", size);
+    DBNSLog(@"--FRAME LENGTH %d--", size);
     int idx = 0;
     int i,j;
 	for (i=0;i<size;i=i+8) {
@@ -45,26 +45,26 @@ IOReturn RT73Jack::_init() {
 	NICInitialized = false;
     
     if(!_attachDevice()){
-        NSLog(@"Device could not be opened");
+        DBNSLog(@"Device could not be opened");
         return kIOReturnNoDevice;
     }
 
 	// Wait for hardware stable
 
-	NSLog(@"Waiting for Asic to power up...");
+	DBNSLog(@"Waiting for Asic to power up...");
 	i = 0;
 	//check and see if asic has powered up
 	RTUSBReadMACRegister(MAC_CSR0, &temp);
 	while ((temp == 0) && (i < 50))
 	{
-		NSLog(@".");
+		DBNSLog(@".");
 		sleep(1);
 		RTUSBReadMACRegister(MAC_CSR0, &temp);
 
 		i++;
 	}
-	NSLog(@"\n");
-	NSLog(@"Init: MAC_CSR0=0x%08x\n", temp);
+	DBNSLog(@"\n");
+	DBNSLog(@"Init: MAC_CSR0=0x%08lx\n", (unsigned long)temp);
 
 	// Load firmware
 	
@@ -130,7 +130,7 @@ IOReturn	RT73Jack::RTUSB_VendorRequest(UInt8 direction,
     
 	if (!_devicePresent || (NULL == _interface))
 	{
-		NSLog(@"device not connected");
+		DBNSLog(@"device not connected");
 		return kIOReturnNoDevice;
 	}
 	else
@@ -215,7 +215,7 @@ IOReturn	RT73Jack::RTUSBWriteHWMACAddress()
     StaMacReg1.field.Byte5 = PermanentAddress[5];
     StaMacReg1.field.U2MeMask = 0xff;
 
-    NSLog(@"Local MAC = %02x:%02x:%02x:%02x:%02x:%02x\n",
+    DBNSLog(@"Local MAC = %02x:%02x:%02x:%02x:%02x:%02x\n",
         PermanentAddress[0], PermanentAddress[1], PermanentAddress[2],
         PermanentAddress[3], PermanentAddress[4], PermanentAddress[5]);
 
@@ -238,7 +238,7 @@ IOReturn	RT73Jack::RTUSBSetLED(
 		LedIndicatorStrength,
 		NULL,
 		0);
-//	NSLog(@"Set LED, status=%x & indicatorstrength=%x\n", LedStatus.word, LedIndicatorStrength);
+//	DBNSLog(@"Set LED, status=%x & indicatorstrength=%x\n", LedStatus.word, LedIndicatorStrength);
 
 	return	Status;
 }
@@ -316,7 +316,7 @@ IOReturn	RT73Jack::RTMPSetLED(
 			Status = RTUSBSetLED(LedCntl, LedIndicatorStrength);
 			break;
 		default:
-			NSLog(@"RTMPSetLED::Unknown Status %d\n", LEDStatus);
+			DBNSLog(@"RTMPSetLED::Unknown Status %d\n", LEDStatus);
 			Status = kIOReturnError;
 			break;
 	}
@@ -330,7 +330,7 @@ IOReturn RT73Jack::RTUSBWriteMACRegister(
 {
 	IOReturn Status;
 //	if (Offset == TXRX_CSR2)
-//        NSLog(@" !!!!!set Rx control = %x\n", Value);
+//        DBNSLog(@" !!!!!set Rx control = %x\n", Value);
     UInt32 reg = CFSwapInt32HostToLittle(Value);
 	Status = RTUSB_VendorRequest(kUSBOut,
                                  0x6,
@@ -378,7 +378,7 @@ IOReturn	RT73Jack::RTUSBReadBBPRegister(
 
 	if (i == RETRY_LIMIT)
 	{
-		NSLog(@"Retry count exhausted or device removed!!!\n");
+		DBNSLog(@"Retry count exhausted or device removed!!!\n");
 		return kIOReturnNotResponding;
 	}
 
@@ -390,7 +390,7 @@ IOReturn	RT73Jack::RTUSBReadBBPRegister(
 	ret = RTUSBWriteMACRegister(PHY_CSR3, PhyCsr3.word);
     
     if (ret!= kIOReturnSuccess) {
-        NSLog(@"Error Reading the BBP Register.");
+        DBNSLog(@"Error Reading the BBP Register.");
         return ret;
     }
 
@@ -409,7 +409,7 @@ IOReturn	RT73Jack::RTUSBReadBBPRegister(
     
 	if (i == RETRY_LIMIT)
 	{
-		NSLog(@"Retry count exhausted or device removed!!!\n");
+		DBNSLog(@"Retry count exhausted or device removed!!!\n");
 		return kIOReturnNotResponding;
 	}
 	
@@ -435,7 +435,7 @@ IOReturn	RT73Jack::RTUSBWriteBBPRegister(
     
 	if (i == RETRY_LIMIT)
 	{
-		NSLog(@"Retry count exhausted or device removed!!!\n");
+		DBNSLog(@"Retry count exhausted or device removed!!!\n");
 		return kIOReturnNoDevice;
 	}
     
@@ -468,7 +468,7 @@ IOReturn	RT73Jack::RTUSBWriteRFRegister(
     
 	if (i == RETRY_LIMIT)
 	{
-		NSLog(@"Retry count exhausted or device removed!!!\n");
+		DBNSLog(@"Retry count exhausted or device removed!!!\n");
 		return kIOReturnNoDevice;
 	}
     
@@ -531,7 +531,7 @@ IOReturn RT73Jack::NICInitializeAsic()
 	ULONG	Version;
 	MAC_CSR12_STRUC	MacCsr12;
 
-	NSLog(@"--> NICInitializeAsic\n");
+	DBNSLog(@"--> NICInitializeAsic\n");
 
 	RTUSBReadMACRegister(MAC_CSR0, &Version);
 	
@@ -565,7 +565,7 @@ IOReturn RT73Jack::NICInitializeAsic()
 	do 
 	{
 		RTUSBReadBBPRegister(BBP_R0, &Value);
-		NSLog(@"BBP version = %d\n", Value);
+		DBNSLog(@"BBP version = %d\n", Value);
         
 	} while ((++Index < 100) && ((Value == 0xff) || (Value == 0x00)));
 		  
@@ -583,7 +583,7 @@ IOReturn RT73Jack::NICInitializeAsic()
 	// assert HOST ready bit
 	RTUSBWriteMACRegister(MAC_CSR1, 0x4);
 
-	NSLog(@"<-- NICInitializeAsic\n");
+	DBNSLog(@"<-- NICInitializeAsic\n");
 
 	return Status;
 }
@@ -596,13 +596,13 @@ IOReturn RT73Jack::NICLoadFirmware()
 	IOReturn				Status = kIOReturnSuccess;
 	unsigned int 					i;
 
-	NSLog(@"--> NICLoadFirmware\n");
+	DBNSLog(@"--> NICLoadFirmware\n");
 		
     // select 8051 program bank; write entire firmware image
 	for (i = 0; i < FIRMWAREIMAGE_LENGTH; i = i + 4)
 	{
 		if(RTUSBMultiWrite(FIRMWARE_IMAGE_BASE + i, &FirmwareImage[i], 4) != kIOReturnSuccess){
-            NSLog(@"Firmware load failed!");
+            DBNSLog(@"Firmware load failed!");
             Status = kIOReturnNotResponding;
             break;
         }
@@ -613,12 +613,12 @@ IOReturn RT73Jack::NICLoadFirmware()
 		//
 		// Send LED command to Firmare after RTUSBFirmwareRun;
 		//
-		NSLog(@"Firmware loaded, starting firmware...\n");
+		DBNSLog(@"Firmware loaded, starting firmware...\n");
 		RTUSBFirmwareRun();
 		RTMPSetLED(LED_NONE);
 	}
     
-	NSLog(@"<-- NICLoadFirmware (src=hardcoded, V1.8)\n");  
+	DBNSLog(@"<-- NICLoadFirmware (src=hardcoded, V1.8)\n");  
 
 	return Status;
 }
@@ -631,11 +631,11 @@ void	RT73Jack::NICReadEEPROMParameters()
 	char	ChannelTxPower[MAX_NUM_OF_CHANNELS];
 	EEPROM_LED_STRUC	LedSetting;
 
-	NSLog(@"--> NICReadEEPROMParameters\n");
+	DBNSLog(@"--> NICReadEEPROMParameters\n");
 
 	//Read MAC address.
 	RTUSBReadMacAddress(PermanentAddress);
-	NSLog(@"Local MAC = %02x:%02x:%02x:%02x:%02x:%02x\n",
+	DBNSLog(@"Local MAC = %02x:%02x:%02x:%02x:%02x:%02x\n",
 			PermanentAddress[0], PermanentAddress[1], PermanentAddress[2],
 			PermanentAddress[3], PermanentAddress[4], PermanentAddress[5]);
 
@@ -661,7 +661,7 @@ void	RT73Jack::NICReadEEPROMParameters()
 	// all subsequent E2RPOM retieval and set a system error bit to notify GUI
 	RTUSBReadEEPROM(EEPROM_VERSION_OFFSET, (unsigned char *)&Version.word, 2);
 	EepromVersion = Version.field.Version + Version.field.FaeReleaseNumber * 256;
-	NSLog(@"E2PROM: Version = %d, FAE release #%d\n", Version.field.Version, Version.field.FaeReleaseNumber);
+	DBNSLog(@"E2PROM: Version = %d, FAE release #%d\n", Version.field.Version, Version.field.FaeReleaseNumber);
 
 	// Read BBP default value from EEPROM and store to array(EEPROMDefaultValue) in pAd
 	RTUSBReadEEPROM(EEPROM_BBP_BASE_OFFSET, (unsigned char *)(EEPROMDefaultValue), 2 * NUM_EEPROM_BBP_PARMS);
@@ -715,7 +715,7 @@ void	RT73Jack::NICReadEEPROMParameters()
 		else
 			TxPower[i].Power = ChannelTxPower[i];
 
-		NSLog(@"Tx power for channel %d : %0x\n", TxPower[i].Channel, TxPower[i].Power);
+		DBNSLog(@"Tx power for channel %d : %0x\n", TxPower[i].Channel, TxPower[i].Power);
 	}
 
 	// 1. UNI 36 - 64, HipperLAN 2 100 - 140, UNI 140 - 165
@@ -727,7 +727,7 @@ void	RT73Jack::NICReadEEPROMParameters()
 			TxPower[i + 14].Power = 24;
 		else			
 			TxPower[i + 14].Power = ChannelTxPower[i];
-		NSLog(@"Tx power for channel %d : %0x\n", TxPower[i + 14].Channel, TxPower[i + 14].Power);
+		DBNSLog(@"Tx power for channel %d : %0x\n", TxPower[i + 14].Channel, TxPower[i + 14].Power);
 	}
 
 	//
@@ -745,7 +745,7 @@ void	RT73Jack::NICReadEEPROMParameters()
 		else			
 			TxPower[J52_CHANNEL_START_OFFSET + i].Power = ChannelTxPower[i + 1];
 
-		NSLog(@"Tx power for channel %d : %0x\n", TxPower[J52_CHANNEL_START_OFFSET + i].Channel, TxPower[J52_CHANNEL_START_OFFSET + i].Power);
+		DBNSLog(@"Tx power for channel %d : %0x\n", TxPower[J52_CHANNEL_START_OFFSET + i].Channel, TxPower[J52_CHANNEL_START_OFFSET + i].Power);
 	}
 
 	// Read TSSI reference and TSSI boundary for temperature compensation.
@@ -770,7 +770,7 @@ void	RT73Jack::NICReadEEPROMParameters()
 		if (TssiRefG == 0xff)
 			bAutoTxAgcG = FALSE;
 
-		NSLog(@"E2PROM: G Tssi[-4 .. +4] = %d %d %d %d - %d -%d %d %d %d, step=%d, tuning=%d\n",
+		DBNSLog(@"E2PROM: G Tssi[-4 .. +4] = %d %d %d %d - %d -%d %d %d %d, step=%d, tuning=%d\n",
 			TssiMinusBoundaryG[4], TssiMinusBoundaryG[3], TssiMinusBoundaryG[2], TssiMinusBoundaryG[1],
 			TssiRefG,
 			TssiPlusBoundaryG[1], TssiPlusBoundaryG[2], TssiPlusBoundaryG[3], TssiPlusBoundaryG[4],
@@ -797,7 +797,7 @@ void	RT73Jack::NICReadEEPROMParameters()
 		if (TssiRefA == 0xff)
 			bAutoTxAgcA = FALSE;
 
-		NSLog(@"E2PROM: A Tssi[-4 .. +4] = %d %d %d %d - %d -%d %d %d %d, step=%d, tuning=%d\n",
+		DBNSLog(@"E2PROM: A Tssi[-4 .. +4] = %d %d %d %d - %d -%d %d %d %d, step=%d, tuning=%d\n",
 			TssiMinusBoundaryA[4], TssiMinusBoundaryA[3], TssiMinusBoundaryA[2], TssiMinusBoundaryA[1],
 			TssiRefA,
 			TssiPlusBoundaryA[1], TssiPlusBoundaryA[2], TssiPlusBoundaryA[3], TssiPlusBoundaryA[4],
@@ -820,7 +820,7 @@ void	RT73Jack::NICReadEEPROMParameters()
 		RfFreqOffset = (ULONG) value;
 	else
 		RfFreqOffset = 0;
-	NSLog(@"E2PROM: RF freq offset=%lu\n", RfFreqOffset);
+	DBNSLog(@"E2PROM: RF freq offset=%lu\n", RfFreqOffset);
 
 /*
 	//CountryRegion byte offset = 0x25
@@ -902,7 +902,7 @@ void	RT73Jack::NICReadEEPROMParameters()
 	else
 		TxPowerDeltaConfig.field.TxPowerEnable = FALSE;
 	
-	NSLog(@"<-- NICReadEEPROMParameters\n");
+	DBNSLog(@"<-- NICReadEEPROMParameters\n");
 
 /*v
 	USHORT			i;
@@ -911,11 +911,11 @@ void	RT73Jack::NICReadEEPROMParameters()
 	EEPROM_ANTENNA_STRUC	Antenna;//blue
     //	EEPROM_VERSION_STRUC	Version;
         
-        NSLog(@"--> NICReadEEPROMParameters\n");
+        DBNSLog(@"--> NICReadEEPROMParameters\n");
         
         //Read MAC address.
         RTUSBReadEEPROM(EEPROM_MAC_ADDRESS_BASE_OFFSET, PermanentAddress, ETH_LENGTH_OF_ADDRESS);
-        NSLog(@"Permanent MAC is: %02x:%02x:%02x:%02x:%02x:%02x.", PermanentAddress[0], PermanentAddress[1], PermanentAddress[2], PermanentAddress[3], PermanentAddress[4], PermanentAddress[5]);
+        DBNSLog(@"Permanent MAC is: %02x:%02x:%02x:%02x:%02x:%02x.", PermanentAddress[0], PermanentAddress[1], PermanentAddress[2], PermanentAddress[3], PermanentAddress[4], PermanentAddress[5]);
         // Read BBP default value from EEPROM and store to array(EEPROMDefaultValue) in 
         RTUSBReadEEPROM(EEPROM_BBP_BASE_OFFSET, (unsigned char *)(EEPROMDefaultValue), 2 * NUM_EEPROM_BBP_PARMS);
         
@@ -937,7 +937,7 @@ void	RT73Jack::NICReadEEPROMParameters()
         
 		if (ChannelTxPower[i] > 31)
 			ChannelTxPower[i] = 24;
-		NSLog(@"Tx power for channel %d : %0x\n", i+1, ChannelTxPower[i]);
+		DBNSLog(@"Tx power for channel %d : %0x\n", i+1, ChannelTxPower[i]);
 	}
         
 v*/     /*   
@@ -948,7 +948,7 @@ v*/     /*
 	{
 		if (PortCfg.ChannelTssiRef[i] == 0xff)
 			PortCfg.bAutoTxAgc = FALSE;					
-		NSLog(@"TSSI reference for channel %d : %0x\n", i, PortCfg.ChannelTssiRef[i]);
+		DBNSLog(@"TSSI reference for channel %d : %0x\n", i, PortCfg.ChannelTssiRef[i]);
 	}
 	
 	// Tx Tssi delta offset 0x24
@@ -957,7 +957,7 @@ v*/     /*
 *//*v	
 	//CountryRegion byte offset = 0x35
 	value = EEPROMDefaultValue[2] >> 8;
-	NSLog(@"  CountryRegion= 0x%x \n",value);
+	DBNSLog(@"  CountryRegion= 0x%x \n",value);
 v*//*
 	if ((value >= 0) && (value <= 7))
 	{
@@ -979,48 +979,48 @@ v*//*
 	if ((EEPROMBBPTuningParameters[0] != 0xffff) && (EEPROMBBPTuningParameters[0] != 0))
 	{
 		RT73_BBPTuningParameters.BBPTuningThreshold = (unsigned char)((EEPROMBBPTuningParameters[0]) & 0xff);
-		//NSLog(@"BBPTuningThreshold = %d\n", BBPTuningParameters.BBPTuningThreshold);
+		//DBNSLog(@"BBPTuningThreshold = %d\n", BBPTuningParameters.BBPTuningThreshold);
 	}
 	if ((EEPROMBBPTuningParameters[1] != 0xffff) && (EEPROMBBPTuningParameters[1] != 0))
 	{
 		RT73_BBPTuningParameters.R24LowerValue = (unsigned char)(EEPROMBBPTuningParameters[1] & 0xff);
 		RT73_BBPTuningParameters.R24HigherValue = (unsigned char)((EEPROMBBPTuningParameters[1] & 0xff00) >> 8);
-		NSLog(@"R24LowerValue = 0x%x\n", RT73_BBPTuningParameters.R24LowerValue);
-		NSLog(@"R24HigherValue = 0x%x\n", RT73_BBPTuningParameters.R24HigherValue);
+		DBNSLog(@"R24LowerValue = 0x%x\n", RT73_BBPTuningParameters.R24LowerValue);
+		DBNSLog(@"R24HigherValue = 0x%x\n", RT73_BBPTuningParameters.R24HigherValue);
 	}
 	if ((EEPROMBBPTuningParameters[2] != 0xffff) && (EEPROMBBPTuningParameters[2] != 0))
 	{
 		RT73_BBPTuningParameters.R25LowerValue = (unsigned char)(EEPROMBBPTuningParameters[2] & 0xff);
 		RT73_BBPTuningParameters.R25HigherValue = (unsigned char)((EEPROMBBPTuningParameters[2] & 0xff00) >> 8);
-		NSLog(@"R25LowerValue = 0x%x\n", RT73_BBPTuningParameters.R25LowerValue);
-		NSLog(@"R25HigherValue = 0x%x\n", RT73_BBPTuningParameters.R25HigherValue);
+		DBNSLog(@"R25LowerValue = 0x%x\n", RT73_BBPTuningParameters.R25LowerValue);
+		DBNSLog(@"R25HigherValue = 0x%x\n", RT73_BBPTuningParameters.R25HigherValue);
 	}
 	if ((EEPROMBBPTuningParameters[3] != 0xffff) && (EEPROMBBPTuningParameters[3] != 0))
 	{
 		RT73_BBPTuningParameters.R61LowerValue = (unsigned char)(EEPROMBBPTuningParameters[3] & 0xff);
 		RT73_BBPTuningParameters.R61HigherValue = (unsigned char)((EEPROMBBPTuningParameters[3] & 0xff00) >> 8);
-		NSLog(@"R61LowerValue = 0x%x\n", RT73_BBPTuningParameters.R61LowerValue);
-		NSLog(@"R61HigherValue = 0x%x\n", RT73_BBPTuningParameters.R61HigherValue);
+		DBNSLog(@"R61LowerValue = 0x%x\n", RT73_BBPTuningParameters.R61LowerValue);
+		DBNSLog(@"R61HigherValue = 0x%x\n", RT73_BBPTuningParameters.R61HigherValue);
 	}
 v*//*	if ((EEPROMBBPTuningParameters[4] != 0xffff) && (EEPROMBBPTuningParameters[4] != 0))
 	{
 		PortCfg.BbpTuning.VgcUpperBound = (unsigned char)(EEPROMBBPTuningParameters[4] & 0xff);
-		NSLog(@"VgcUpperBound = 0x%x\n", PortCfg.BbpTuning.VgcUpperBound);
+		DBNSLog(@"VgcUpperBound = 0x%x\n", PortCfg.BbpTuning.VgcUpperBound);
 	}*//*v
 	if ((EEPROMBBPTuningParameters[5] != 0xffff) && (EEPROMBBPTuningParameters[5] != 0))
 	{
 		RT73_BBPTuningParameters.BBPR17LowSensitivity = (unsigned char)(EEPROMBBPTuningParameters[5] & 0xff);
 		RT73_BBPTuningParameters.BBPR17MidSensitivity = (unsigned char)((EEPROMBBPTuningParameters[5] & 0xff00) >> 8);
-		NSLog(@"BBPR17LowSensitivity = 0x%x\n", RT73_BBPTuningParameters.BBPR17LowSensitivity);
-		NSLog(@"BBPR17MidSensitivity = 0x%x\n", RT73_BBPTuningParameters.BBPR17MidSensitivity);
+		DBNSLog(@"BBPR17LowSensitivity = 0x%x\n", RT73_BBPTuningParameters.BBPR17LowSensitivity);
+		DBNSLog(@"BBPR17MidSensitivity = 0x%x\n", RT73_BBPTuningParameters.BBPR17MidSensitivity);
 	}
 	if ((EEPROMBBPTuningParameters[6] != 0xffff) && (EEPROMBBPTuningParameters[6] != 0))
 	{
 		RT73_BBPTuningParameters.RSSIToDbmOffset = (unsigned char)(EEPROMBBPTuningParameters[6] & 0xff);
-		NSLog(@"RSSIToDbmOffset = 0x%x\n", RT73_BBPTuningParameters.RSSIToDbmOffset);
+		DBNSLog(@"RSSIToDbmOffset = 0x%x\n", RT73_BBPTuningParameters.RSSIToDbmOffset);
 	}
     
-	NSLog(@"<-- NICReadEEPROMParameters\n");
+	DBNSLog(@"<-- NICReadEEPROMParameters\n");
 v*/
 }
 
@@ -1032,7 +1032,7 @@ void RT73Jack::NICInitAsicFromEEPROM()
 	EEPROM_ANTENNA_STRUC	Antenna;
 	EEPROM_NIC_CONFIG2_STRUC	NicConfig2;
 
-	NSLog(@"--> NICInitAsicFromEEPROM\n");
+	DBNSLog(@"--> NICInitAsicFromEEPROM\n");
 
 	for(i = 3; i < NUM_EEPROM_BBP_PARMS; i++)
 	{
@@ -1058,11 +1058,11 @@ void RT73Jack::NICInitAsicFromEEPROM()
 		Antenna.field.RxDefaultAntenna = 2; 		// Ant-B
 		Antenna.field.TxDefaultAntenna = 2; 		// Ant-B
 		Antenna.field.NumOfAntenna = 2;
-		NSLog(@"E2PROM error, hard code as 0x%04x\n", Antenna.word);
+		DBNSLog(@"E2PROM error, hard code as 0x%04x\n", Antenna.word);
 	}
 
 	RfIcType = (unsigned char) Antenna.field.RfIcType;
-	NSLog(@"RfIcType = %d\n", RfIcType);
+	DBNSLog(@"RfIcType = %d\n", RfIcType);
 
 	//
 	// For RFIC RFIC_5225 & RFIC_2527
@@ -1125,14 +1125,14 @@ void RT73Jack::NICInitAsicFromEEPROM()
 	// Save the antenna for future use
 	NicConfig2.word = NicConfig2.word;
 
-//	NSLog(@"Use Hw Radio Control Pin=%d; if used Pin=%d;\n",
+//	DBNSLog(@"Use Hw Radio Control Pin=%d; if used Pin=%d;\n",
 //		pAd->PortCfg.bHardwareRadio, pAd->PortCfg.bHardwareRadio);
 	
-	NSLog(@"RFIC=%d, LED mode=%d\n", RfIcType, LedCntl.field.LedMode);
+	DBNSLog(@"RFIC=%d, LED mode=%d\n", RfIcType, LedCntl.field.LedMode);
 
 //	pAd->PortCfg.BandState = UNKNOWN_BAND;
 
-	NSLog(@"<-- NICInitAsicFromEEPROM\n");
+	DBNSLog(@"<-- NICInitAsicFromEEPROM\n");
 
 
 /*v
@@ -1142,7 +1142,7 @@ void RT73Jack::NICInitAsicFromEEPROM()
 	EEPROM_ANTENNA_STRUC	Antenna;
 	EEPROM_NIC_CONFIG2_STRUC	NicConfig2;
     
-	NSLog(@"--> NICInitAsicFromEEPROM\n");
+	DBNSLog(@"--> NICInitAsicFromEEPROM\n");
     
 	//Initialize BBP registers.
 	for(i = 3; i < NUM_EEPROM_BBP_PARMS; i++)
@@ -1172,9 +1172,9 @@ void RT73Jack::NICInitAsicFromEEPROM()
 		}
 	}
     
-	NSLog(@"RT73_BBPTuningParameters.R24LowerValue = %x\n", RT73_BBPTuningParameters.R24LowerValue);
-	NSLog(@ "RT73_BBPTuningParameters.R25LowerValue = %x\n", RT73_BBPTuningParameters.R25LowerValue);
-	NSLog(@ "RT73_BBPTuningParameters.R61LowerValue = %x\n", RT73_BBPTuningParameters.R61LowerValue);
+	DBNSLog(@"RT73_BBPTuningParameters.R24LowerValue = %x\n", RT73_BBPTuningParameters.R24LowerValue);
+	DBNSLog(@ "RT73_BBPTuningParameters.R25LowerValue = %x\n", RT73_BBPTuningParameters.R25LowerValue);
+	DBNSLog(@ "RT73_BBPTuningParameters.R61LowerValue = %x\n", RT73_BBPTuningParameters.R61LowerValue);
 	RTUSBWriteBBPRegister(24, RT73_BBPTuningParameters.R24LowerValue);
 	RTUSBWriteBBPRegister(25, RT73_BBPTuningParameters.R25LowerValue);
 	RTUSBWriteBBPRegister(61, RT73_BBPTuningParameters.R61LowerValue);
@@ -1185,16 +1185,16 @@ void RT73Jack::NICInitAsicFromEEPROM()
     
 	if ((Antenna.word == 0xFFFF) || (Antenna.field.TxDefaultAntenna > 2) || (Antenna.field.RxDefaultAntenna > 2))
 	{
-		NSLog(@"E2PROM error(=0x%04x), hard code as 0x0002\n", Antenna.word);
+		DBNSLog(@"E2PROM error(=0x%04x), hard code as 0x0002\n", Antenna.word);
 		Antenna.word = 0x0002;
 	}
     
-	NSLog(@"Antenna.word = 0x%x \n", Antenna.word);
+	DBNSLog(@"Antenna.word = 0x%x \n", Antenna.word);
 //	PortCfg.NumberOfAntenna = 2;	// (UCHAR)Antenna.field.NumOfAntenna;
 //	PortCfg.CurrentTxAntenna = (UCHAR)Antenna.field.TxDefaultAntenna;
 //	PortCfg.CurrentRxAntenna = (UCHAR)Antenna.field.RxDefaultAntenna;
     RfType = (unsigned char) Antenna.field.RfType;//blue
-//           NSLog(@"PortCfg.RfType = 0x%x \n", PortCfg.RfType);
+//           DBNSLog(@"PortCfg.RfType = 0x%x \n", PortCfg.RfType);
            RTUSBReadBBPRegister(BBP_Tx_Configure, &TxValue);
            RTUSBReadBBPRegister(BBP_Rx_Configure, &RxValue);
            RTUSBReadMACRegister(PHY_CSR5, &Value5);
@@ -1230,7 +1230,7 @@ void RT73Jack::NICInitAsicFromEEPROM()
 		RxValue = (RxValue & 0xFC) | 0x01; // Antenna Diversity
     
     
-	NSLog(@"<-- NICInitAsicFromEEPROM RfType = %d\n", RfType);
+	DBNSLog(@"<-- NICInitAsicFromEEPROM RfType = %d\n", RfType);
 	// RT5222 needs special treatment to swap TX I/Q
 	if (RfType == RFIC_5222)
 	{
@@ -1320,21 +1320,21 @@ v*/	/*
 	//	PortCfg.VgcLowerBound   = r17;
         
 		// 2004-3-4 per David's request, R7 starts at upper bound
-        NSLog(@"It is this %d,", r17);
+        DBNSLog(@"It is this %d,", r17);
 		r17 = 128;
-	    NSLog(@"It is this %d,", r17);
+	    DBNSLog(@"It is this %d,", r17);
 		RTUSBWriteBBPRegister(17, r17);
         
 		// 2004-2-2 per David's request, lower R17 low-bound for very good quality NIC
 	//	PortCfg.VgcLowerBound -= 6;  
-	//	NSLog(@"R17 tuning enable=%d, R17=0x%02x, range=<0x%02x, 0x%02x>\n",
+	//	DBNSLog(@"R17 tuning enable=%d, R17=0x%02x, range=<0x%02x, 0x%02x>\n",
       //           PortCfg.BbpTuningEnable, r17, PortCfg.VgcLowerBound, PortCfg.BbpTuning.VgcUpperBound);
 	}
     
 //    AsicSwitchChannel(PortCfg.Channel);
-//	NSLog(@"RF IC=%d, LED mode=%d\n", PortCfg.RfType, PortCfg.LedMode);
+//	DBNSLog(@"RF IC=%d, LED mode=%d\n", PortCfg.RfType, PortCfg.LedMode);
     _deviceInit = true;
-	NSLog(@"<-- NICInitAsicFromEEPROM\n");
+	DBNSLog(@"<-- NICInitAsicFromEEPROM\n");
 v*/
 }
 
@@ -1500,7 +1500,7 @@ bool    RT73Jack::setChannel(UInt16 channel){
 			break;
 			
 		default:
-			NSLog(@"Gne ?\n");
+			DBNSLog(@"Gne ?\n");
 			return (false);
 			break;
 	}
@@ -1508,7 +1508,7 @@ bool    RT73Jack::setChannel(UInt16 channel){
 	if (Bbp94 != BBPR94_DEFAULT)
 	{
 		RTUSBWriteBBPRegister(BBP_R94, Bbp94);
-		Bbp94 = Bbp94;
+		//Bbp94 = Bbp94;
 	}
 
 /*
@@ -1560,7 +1560,7 @@ bool    RT73Jack::setChannel(UInt16 channel){
 */
 	
 /*
-	NSLog(@"AsicSwitchChannel(RF=%d) to #%d, TXPwr=%d%%, R1=0x%08x, R2=0x%08x, R3=0x%08x, R4=0x%08x\n",
+	DBNSLog(@"AsicSwitchChannel(RF=%d) to #%d, TXPwr=%d%%, R1=0x%08x, R2=0x%08x, R3=0x%08x, R4=0x%08x\n",
 		RfIcType, 
 		LatchRfRegs.Channel, 
 		(R3 & 0x00003e00) >> 9,
@@ -1708,7 +1708,7 @@ bool    RT73Jack::setChannel(UInt16 channel){
 			return false;
 	}
     _channel = channel;
-    NSLog(@"RT73Jack::Switched to channel %d", channel);
+    DBNSLog(@"RT73Jack::Switched to channel %d", channel);
     //lock channel seems to be an empty function
     return true;
 	
@@ -1724,9 +1724,9 @@ bool RT73Jack::getAllowedChannels(UInt16* channels) {
     return true;
 }
 bool    RT73Jack::startCapture(UInt16 channel) {
-//	NSLog(@"Start capture : ");
+//	DBNSLog(@"Start capture : ");
 	if (NICInitialized) {
-//		NSLog(@"Done.\n");
+//		DBNSLog(@"Done.\n");
 		setChannel(channel);
 		RTMPSetLED(LED_LNK_ON);
 		// RTUSBWriteMACRegister(TXRX_CSR2, 0x004e/*0x0046*/); //enable monitor mode?
@@ -1735,7 +1735,7 @@ bool    RT73Jack::startCapture(UInt16 channel) {
 		return true;
 	}
 	else {
-//		NSLog(@"NIC not initialized. Canceled.\n");
+//		DBNSLog(@"NIC not initialized. Canceled.\n");
 		return false;
 	}
 }
@@ -1743,16 +1743,16 @@ bool    RT73Jack::startCapture(UInt16 channel) {
 
 
 bool RT73Jack::stopCapture(){
-//	NSLog(@"Stop capture : ");
+//	DBNSLog(@"Stop capture : ");
 	if (NICInitialized) {
-//		NSLog(@"Done.\n");
+//		DBNSLog(@"Done.\n");
 		RTMPSetLED(LED_LNK_OFF);
 		RTUSBWriteMACRegister(TXRX_CSR0, 0x025FB032);
 		// RTUSBWriteMACRegister(TXRX_CSR2, 0xffffffff); //disable rx
 		return true;
 	}
 	else {
-//		NSLog(@"NIC not initialized. Canceled.\n");
+//		DBNSLog(@"NIC not initialized. Canceled.\n");
 		return false;
 	}
 }
@@ -1770,7 +1770,7 @@ bool RT73Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len) {
     bzero(outBuf, sizeof(KFrame));
     
     if (len < sizeof(RXD_STRUC)) {
-        NSLog(@"WTF, packet len %d shorter than footer %lu!", len, sizeof(RXD_STRUC));
+        DBNSLog(@"WTF, packet len %d shorter than footer %lu!", len, sizeof(RXD_STRUC));
         return false;
     }
     
@@ -1792,10 +1792,10 @@ bool RT73Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len) {
     memcpy(pFrame->data, pData + sizeof(RXD_STRUC), pFrame->ctrl.len);
     
 // if (len > 24) {
-//      NSLog(@"Normal packet %d", len);
+//      DBNSLog(@"Normal packet %d", len);
 //  }
 //  else {
-//      NSLog(@"RT73Jack::Really short packet! %d", len);
+//      DBNSLog(@"RT73Jack::Really short packet! %d", len);
 //      return false;
 //  }
 
@@ -1941,7 +1941,7 @@ bool RT73Jack::sendKFrame(KFrame *frame) {
     int size = frame->ctrl.len;
     UInt8 aData[2364];
     unsigned int descriptorLength;
-//    NSLog(@"sendFrame %d", size);
+//    DBNSLog(@"sendFrame %d", size);
 //    dumpFrame(data, size);
     descriptorLength = WriteTxDescriptor(aData, size, frame->ctrl.tx_rate);
     memcpy(aData+descriptorLength, data, size);
@@ -1958,7 +1958,7 @@ IOReturn RT73Jack::_sendFrame(UInt8* data, IOByteCount size) {
     if (!_devicePresent) return kIOReturnError;
     
     if (_interface == NULL) {
-        NSLog(@"RT73Jack::_sendFrame called with NULL interface this is prohibited!\n");
+        DBNSLog(@"RT73Jack::_sendFrame called with NULL interface this is prohibited!\n");
         return kIOReturnError;
     }
 

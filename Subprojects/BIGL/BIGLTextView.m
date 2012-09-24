@@ -63,8 +63,6 @@
     } else
         NSLog (@"StringTexture -genTexture: Failure to get current OpenGL context\n");
     
-    [bitmap release];
-    [image release];
 }
 
 #pragma mark -
@@ -76,8 +74,8 @@
     _cgl_ctx = NULL;
     _texName = 0;
     _texSize = NSMakeSize(0, 0);
-    _color = [[NSColor clearColor] retain];
-    _borderColor = [[NSColor clearColor] retain];
+    _color = [NSColor clearColor];
+    _borderColor = [NSColor clearColor];
     _marginSize = NSMakeSize(8,4);
     _string = [[NSAttributedString alloc] init];
 
@@ -104,8 +102,7 @@
 - (void)setString:(NSAttributedString *)attributedString { // set string after initial creation 
     NSParameterAssert(attributedString);
     
-    [_string autorelease];
-    _string = [attributedString retain];
+    _string = attributedString;
     [self deleteTexture];
 }
 
@@ -113,7 +110,6 @@
     NSParameterAssert(string);
     NSParameterAssert(attrs);
     
-    [_string autorelease];
     _string = [[NSAttributedString alloc] initWithString:string attributes:attrs];
     [self deleteTexture];
 }
@@ -121,16 +117,14 @@
 - (void)setBackgroundColor:(NSColor *)color {
     NSParameterAssert(color);
     
-    [_color autorelease];
-    _color = [color retain];
+    _color = color;
     [self deleteTexture];
 }
 
 - (void)setBorderColor:(NSColor *)color {
     NSParameterAssert(color);
     
-    [_borderColor autorelease];
-    _borderColor = [color retain];
+    _borderColor = color;
     [self deleteTexture];
 }
 
@@ -185,9 +179,5 @@
 
 - (void)dealloc {
     [self deleteTexture];
-    [_color release];
-    [_borderColor release];
-    [_string release];
-    [super dealloc];
 }
 @end

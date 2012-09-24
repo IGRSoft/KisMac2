@@ -36,7 +36,6 @@
 	
 	_file = gzopen([[file standardPath] UTF8String], "rb");
 	if (!_file) {
-		[self release];
 		return nil;
 	}
 	
@@ -44,7 +43,6 @@
         || CFSwapInt32BigToHost(magic) != 'BIGe')
     {
 		NSLog(@"Invalid magic cookie");
-		[self release];
 		return nil;
 	}
 
@@ -73,7 +71,7 @@
 	}
 	data[size] = 0;
 	
-	str = [NSString stringWithUTF8String:(const char*)data];
+	str = @((const char*)data);
 	delete [] data;
 	return str;
 }

@@ -46,8 +46,7 @@
     NSParameterAssert(graph);
     NSParameterAssert([graph count] % 2 == 0);
     
-    [_graph autorelease];
-    _graph = [graph retain];
+    _graph = graph;
     return YES;
 }
 
@@ -72,23 +71,23 @@
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // ditto
     glColor4fv(_color);
     for(i = 2; i < [_graph count]; i+=2) {
-        y1 = [[_graph objectAtIndex: i+1] floatValue];
-        y2 = [[_graph objectAtIndex: i-1] floatValue];
+        y1 = [_graph[i+1] floatValue];
+        y2 = [_graph[i-1] floatValue];
         
         if (y1 == 0 && y2 == 0) continue;
         
         glBegin(GL_QUADS);
-        glVertex2f([[_graph objectAtIndex: i  ] floatValue] + p.x, p.y);
-        glVertex2f([[_graph objectAtIndex: i  ] floatValue] + p.x, y1 +  p.y);
-        glVertex2f([[_graph objectAtIndex: i-2] floatValue] + p.x, y2 +  p.y);
-        glVertex2f([[_graph objectAtIndex: i-2] floatValue] + p.x, p.y);
+        glVertex2f([_graph[i] floatValue] + p.x, p.y);
+        glVertex2f([_graph[i] floatValue] + p.x, y1 +  p.y);
+        glVertex2f([_graph[i-2] floatValue] + p.x, y2 +  p.y);
+        glVertex2f([_graph[i-2] floatValue] + p.x, p.y);
         glEnd();
         
         //smooth edges
         glLineWidth(2);
         glBegin(GL_LINES);
-        glVertex2f([[_graph objectAtIndex:i-2] floatValue] + p.x, y2 +  p.y);
-        glVertex2f([[_graph objectAtIndex:i  ] floatValue] + p.x, y1 +  p.y);
+        glVertex2f([_graph[i-2] floatValue] + p.x, y2 +  p.y);
+        glVertex2f([_graph[i] floatValue] + p.x, y1 +  p.y);
         glEnd();
     }
 
@@ -101,11 +100,11 @@
     if ([_graph count] < 2) return;
     [[NSColor colorWithDeviceRed:_color[0] green:_color[1] blue:_color[2] alpha:_color[3]] set];
 
-    [bp moveToPoint:NSMakePoint([[_graph objectAtIndex:0] floatValue] + p.x, p.y)];
+    [bp moveToPoint:NSMakePoint([_graph[0] floatValue] + p.x, p.y)];
     for(i = 0; i < [_graph count]; i+=2) {
-        [bp lineToPoint:NSMakePoint([[_graph objectAtIndex:i] floatValue] + p.x, [[_graph objectAtIndex:i+1] floatValue] + p.y)];
+        [bp lineToPoint:NSMakePoint([_graph[i] floatValue] + p.x, [_graph[i+1] floatValue] + p.y)];
     }
-    [bp lineToPoint:NSMakePoint([[_graph objectAtIndex:i-2] floatValue] + p.x, p.y)];
+    [bp lineToPoint:NSMakePoint([_graph[i-2] floatValue] + p.x, p.y)];
     
     [bp closePath];
     [bp fill];
@@ -115,8 +114,4 @@
 
 #pragma mark -
 
-- (void)dealloc {
-    [_graph release];
-    [super dealloc];
-}
 @end

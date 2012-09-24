@@ -49,24 +49,21 @@
 - (id)initWithDataDictionary:(NSDictionary*)dict {
     self = [self init];
 	
-	_x = [[dict objectForKey:@"x"] doubleValue];
-	_y = [[dict objectForKey:@"y"] doubleValue];
+	_x = [dict[@"x"] doubleValue];
+	_y = [dict[@"y"] doubleValue];
     
 	return self;
 }
 
 - (NSDictionary*)dataDictionary {
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-		[NSNumber numberWithDouble:_x], @"x",
-		[NSNumber numberWithDouble:_y], @"y",
-		nil
-	];
+	return @{@"x": @(_x),
+		@"y": @(_y)};
 }
 
 + (id)valuePairFromWaypoint:(waypoint)w {
     BIValuePair *vp = [[BIValuePair alloc] init];
     [vp setPairFromWaypoint:w];
-    return [vp autorelease];
+    return vp;
 }
 
 - (double)getX {

@@ -9,5 +9,10 @@
     #import <AppKit/AppKit.h>
     #import <Security/Security.h>
     #import <CoreServices/CoreServices.h>
-	#import <UnitKit/UnitKit.h>
+#endif
+
+#ifdef DEBUG
+#define DBNSLog NSLog
+#else
+#define DBNSLog( s, ... )
 #endif

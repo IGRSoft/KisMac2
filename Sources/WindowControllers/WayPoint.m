@@ -78,12 +78,12 @@
 
     switch(_mode) {
     case selCurPos:
-        args = [NSDictionary dictionaryWithObjectsAndKeys:lat, [NSString stringWithFormat:@"%d", 'KMLa'],lon, [NSString stringWithFormat:@"%d", 'KMLo'], nil];
+        args = @{[NSString stringWithFormat:@"%d", 'KMLa']: lat,[NSString stringWithFormat:@"%d", 'KMLo']: lon};
         [ScriptingEngine selfSendEvent:'KMSP' withArgs:args];
         break;
     case selWaypoint1:
     case selWaypoint2:
-        args = [NSDictionary dictionaryWithObjectsAndKeys:lat, [NSString stringWithFormat:@"%d", 'KMLa'],lon, [NSString stringWithFormat:@"%d", 'KMLo'], x, [NSString stringWithFormat:@"%d", 'KM_x'], y, [NSString stringWithFormat:@"%d", 'KM_y'], [NSAppleEventDescriptor descriptorWithInt32: (_mode == selWaypoint1) ? 1 : 2], [NSString stringWithFormat:@"%d", keyDirectObject], nil];
+        args = @{[NSString stringWithFormat:@"%d", 'KMLa']: lat,[NSString stringWithFormat:@"%d", 'KMLo']: lon, [NSString stringWithFormat:@"%d", 'KM_x']: x, [NSString stringWithFormat:@"%d", 'KM_y']: y, [NSString stringWithFormat:@"%d", keyDirectObject]: [NSAppleEventDescriptor descriptorWithInt32: (_mode == selWaypoint1) ? 1 : 2]};
         [ScriptingEngine selfSendEvent:'KMSW' withArgs:args];
         break;        
     default:
@@ -113,7 +113,6 @@
     } else {
         // Otherwise, if window is completely transparent, destroy the timer and close the window.
         [timer invalidate];
-        [timer release];
         
         [[self window] close];
         

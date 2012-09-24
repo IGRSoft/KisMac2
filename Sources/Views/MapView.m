@@ -118,23 +118,22 @@
     [data writeToFile:[mapName stringByAppendingPathComponent:@"map.png"] atomically:NO];
 #endif
 
-    [view release];
     
     for (i=1;i<=2;i++) {
         wp[i] = [NSMutableDictionary dictionaryWithCapacity:4];
         
-        [wp[i] setObject:[NSNumber numberWithFloat:((_wp[i]._lat ) >= 0 ? (_wp[i]._lat ) : -(_wp[i]._lat )) ] forKey:@"latitude" ];
-        [wp[i] setObject:((_wp[i]._lat ) >= 0 ? @"N" : @"S") forKey:@"latdir" ];
-        [wp[i] setObject:[NSNumber numberWithFloat:((_wp[i]._long) >= 0 ? (_wp[i]._long) : -(_wp[i]._long)) ] forKey:@"longitude"];
-        [wp[i] setObject:((_wp[i]._long) >= 0 ? @"E" : @"W") forKey:@"longdir"];
-        [wp[i] setObject:[NSNumber numberWithInt:(int)floor(_point[i].x)] forKey:@"xpoint"];
-        [wp[i] setObject:[NSNumber numberWithInt:(int)floor(_point[i].y)] forKey:@"ypoint"];
+        wp[i][@"latitude"] = [NSNumber numberWithFloat:((_wp[i]._lat ) >= 0 ? (_wp[i]._lat ) : -(_wp[i]._lat )) ];
+        wp[i][@"latdir"] = ((_wp[i]._lat ) >= 0 ? @"N" : @"S");
+        wp[i][@"longitude"] = [NSNumber numberWithFloat:((_wp[i]._long) >= 0 ? (_wp[i]._long) : -(_wp[i]._long)) ];
+        wp[i][@"longdir"] = ((_wp[i]._long) >= 0 ? @"E" : @"W");
+        wp[i][@"xpoint"] = @((int)floor(_point[i].x));
+        wp[i][@"ypoint"] = @((int)floor(_point[i].y));
     }
     
-    data = [NSPropertyListSerialization dataFromPropertyList:[NSArray arrayWithObjects:wp[1],wp[2],nil] format:NSPropertyListXMLFormat_v1_0 errorDescription:&error];
+    data = [NSPropertyListSerialization dataFromPropertyList:@[wp[1],wp[2]] format:NSPropertyListXMLFormat_v1_0 errorDescription:&error];
     
     if (error==Nil) [data writeToFile:[mapName stringByAppendingPathComponent:@"waypoints.plist"] atomically:NO];
-    else NSLog(@"Could not write XML File with Coordinates:%@", error);
+    else DBNSLog(@"Could not write XML File with Coordinates:%@", error);
     
     return (error==Nil);
 }
@@ -154,19 +153,19 @@
         data = [NSData dataWithContentsOfFile:[mapName stringByAppendingPathComponent:@"waypoints.plist"]];
         wps = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListImmutable format:NULL errorDescription:&error];
     NS_HANDLER
-        NSLog(@"Could not open XML File with Coordinates: internal exception raised!");
+        DBNSLog(@"Could not open XML File with Coordinates: internal exception raised!");
         return NO;
     NS_ENDHANDLER
     
     if (error!=Nil) {
-        NSLog(@"Could not open XML File with Coordinates: %@", error);
+        DBNSLog(@"Could not open XML File with Coordinates: %@", error);
         return NO; 
     }
     
 	NS_DURING
-		settings = [wps objectAtIndex:2];
-		if ([settings objectForKey:@"fileName"]) {
-			img = [[NSImage alloc] initWithContentsOfFile:[mapName stringByAppendingPathComponent:[[wps objectAtIndex:2] objectForKey:@"fileName"]]];
+		settings = wps[2];
+		if (settings[@"fileName"]) {
+			img = [[NSImage alloc] initWithContentsOfFile:[mapName stringByAppendingPathComponent:wps[2][@"fileName"]]];
         } 
 	NS_HANDLER
     NS_ENDHANDLER
@@ -184,25 +183,24 @@
 			img = [[NSImage alloc] initWithContentsOfFile:[mapName stringByAppendingPathComponent:@"map.png"]];
 		}
 		if (!img) {
-			NSLog(@"Invalid KisMAP file");
+			DBNSLog(@"Invalid KisMAP file");
 			NS_VALUERETURN(NO, BOOL);
 		}
         [self setMap:img];
-        [img release];
     NS_HANDLER
-        NSLog(@"Could not open Image file from KisMAP bundle!");
+        DBNSLog(@"Could not open Image file from KisMAP bundle!");
         return NO;
     NS_ENDHANDLER
 	
     for (i=1;i<=2;i++) {
-        wp = [wps objectAtIndex:i-1];
+        wp = wps[i-1];
         
-        wpoint._lat = [[wp objectForKey:@"latitude" ] floatValue];
-        wpoint._long= [[wp objectForKey:@"longitude"] floatValue];
-        if ([[wp objectForKey:@"latdir" ] isEqualToString:@"S"]) wpoint._lat *=-1;
-        if ([[wp objectForKey:@"longdir"] isEqualToString:@"W"]) wpoint._long*=-1;
+        wpoint._lat = [wp[@"latitude"] floatValue];
+        wpoint._long= [wp[@"longitude"] floatValue];
+        if ([wp[@"latdir"] isEqualToString:@"S"]) wpoint._lat *=-1;
+        if ([wp[@"longdir"] isEqualToString:@"W"]) wpoint._long*=-1;
         
-        [self setWaypoint:i toPoint:NSMakePoint([[wp objectForKey:@"xpoint"] intValue], [[wp objectForKey:@"ypoint"] intValue]) atCoordinate:wpoint];
+        [self setWaypoint:i toPoint:NSMakePoint([wp[@"xpoint"] intValue], [wp[@"ypoint"] intValue]) atCoordinate:wpoint];
     }
     
     return YES;
@@ -237,9 +235,6 @@
 	frame.size = NSMakeSize([_mapImage size].width * _zoomFact, [_mapImage size].height * _zoomFact);
 	data = [view dataWithPDFInsideRect:frame];
     
-    [view release];
-    [imgView release];
-    [map release];
     
     return data;
 }
@@ -247,8 +242,11 @@
 #pragma mark -
 
 - (BOOL)setMap:(NSImage*)map {
-    [WaveHelper secureReplace:&_orgImage withObject:map];
-    [WaveHelper secureReplace:&_mapImage withObject:map];
+	_orgImage = map;
+	_mapImage = map;
+	
+    //[WaveHelper secureReplace:&_orgImage withObject:map];
+    //[WaveHelper secureReplace:&_mapImage withObject:map];
     _wp[0]._lat  = 0; _wp[0]._long = 0;
     _wp[1]._lat  = 0; _wp[1]._long = 0;
     _wp[2]._lat  = 0; _wp[2]._long = 0;
@@ -634,19 +632,7 @@
 - (void)dealloc {
     [self unsubscribeNotifications];
     
-    [_controlPanel release];
-    [_netContainer release];
-    [_moveContainer release];
-    [_status release];
-    [_statusView release];
-    [_gpsStatus release];
-    [_gpsStatusView release];
-    [_mapImage release];
-    [_orgImage release];
-    [_pView release];
-    [_trace release];
     
-    [super dealloc];
 }
 
 @end

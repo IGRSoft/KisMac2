@@ -17,8 +17,7 @@
 }
 
 - (void)setController:(id)newController {
-    [controller autorelease];
-    controller = [newController retain];
+    controller = newController;
 }
 
 #pragma mark -
@@ -44,9 +43,5 @@
 
 #pragma mark -
 
-- (void)dealloc {
-    [controller release];
-    [super dealloc];
-}
 
 @end

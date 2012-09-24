@@ -94,7 +94,7 @@
     x = p.x / CONTROLSIZE;
     y = p.y / CONTROLSIZE;
     if (x > 2 || y > 1) {
-        NSLog(@"MapControlPanel: Mouse out of bounds %f %f", p.x, p.y);
+        DBNSLog(@"MapControlPanel: Mouse out of bounds %f %f", p.x, p.y);
         return 3;
     }
     
@@ -158,10 +158,8 @@
 - (void)dealloc {
     int i;
     for (i = 0; i < 6; i++) {
-		[_items[i] release];
     }
     
-    [super dealloc];
 }
 
 @end

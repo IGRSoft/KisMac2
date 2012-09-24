@@ -56,8 +56,10 @@ bool is8021xPacket(const UInt8* fileData) {
 	
     _primaryChannel = 0;
     
-    [WaveHelper secureRelease:&_SSID];
-	[WaveHelper secureRelease:&_SSIDs];
+	_SSID = nil;
+	_SSIDs = nil;
+    //[WaveHelper secureRelease:&_SSID];
+	//[WaveHelper secureRelease:&_SSIDs];
 
 	_rateCount = 0;
 	
@@ -69,10 +71,10 @@ bool is8021xPacket(const UInt8* fileData) {
 				@try  {
 					memcpy(ssid, packet+2, len);
 					ssid[len]=0;
-					_SSID = [[NSString stringWithUTF8String:ssid] retain];
+					_SSID = @(ssid);
 				}
 				@catch (NSException *exception) { //fallback if not UTF-8 encoded
-					_SSID = [[NSString stringWithCharacters:(unichar*)(packet+2) length:len] retain];
+					_SSID = [NSString stringWithCharacters:(unichar*)(packet+2) length:len];
 				}
 			}
             break;
@@ -111,7 +113,7 @@ bool is8021xPacket(const UInt8* fileData) {
 				UInt8 count = (*(packet+7));
 				UInt8 *ssidl = (packet+8);
 				UInt8 slen;
-				_SSIDs = [[NSMutableArray array] retain];
+				_SSIDs = [NSMutableArray array];
 				
 				while (count) {
 					if ((len -= 6) < 0) break;
@@ -125,7 +127,7 @@ bool is8021xPacket(const UInt8* fileData) {
 					@try  {
 						memcpy((void*)ssid, ssidl, slen);
 						ssid[slen]=0;
-						[_SSIDs addObject:[NSString stringWithUTF8String:ssid]];
+						[_SSIDs addObject:@(ssid)];
 					}
 					@catch (NSException *exception) {
 						[_SSIDs addObject:[NSString stringWithCharacters:(unichar*)(ssidl) length:slen]];
@@ -176,11 +178,11 @@ bool is8021xPacket(const UInt8* fileData) {
 
     // Check IEEE80211 Version
 	if ((hdr1->frame_ctl & IEEE80211_VERSION_MASK) != IEEE80211_VERSION_0) {
-		NSLog(@"Packet with illegal 802.11 version captured.\n");
+		DBNSLog(@"Packet with illegal 802.11 version captured.\n");
 		return NO;
 	}
 	
-    [WaveHelper secureRelease:&_SSID];
+    //[WaveHelper secureRelease:&_SSID];
     _netType = networkTypeUnknown;
     _isWep = encryptionTypeUnknown;
     _isEAP = NO;
@@ -200,7 +202,7 @@ bool is8021xPacket(const UInt8* fileData) {
     _isToDS = ((hdr1->frame_ctl & IEEE80211_DIR_TODS) ? YES : NO);
     _isFrDS = ((hdr1->frame_ctl & IEEE80211_DIR_FROMDS) ? YES : NO);
     
-//    NSLog(@"%@", [WaveHelper frameControlToString:hdr1->frame_ctl]);
+//    DBNSLog(@"%@", [WaveHelper frameControlToString:hdr1->frame_ctl]);
     // Determine frame signal strength
     _signal = f->ctrl.signal - f->ctrl.silence;
     if (_signal < 0)
@@ -210,7 +212,7 @@ bool is8021xPacket(const UInt8* fileData) {
     _channel=(f->ctrl.channel>14 || f->ctrl.channel<1 ? 1 : f->ctrl.channel);
     
     // TODO: Determine frame rx rate
-//    NSLog(@"rx_rate %d", f->ctrl.rate);
+//    DBNSLog(@"rx_rate %d", f->ctrl.rate);
     
     // Depending on the frame type we have to figure
     // the length of the header and payload
@@ -240,7 +242,7 @@ bool is8021xPacket(const UInt8* fileData) {
     // Determine various aspect of frame
     switch(_type) {
         case IEEE80211_TYPE_DATA:               //Data Frames
-            //NSLog(@"rx_rate %d", f->ctrl.rate);
+            //DBNSLog(@"rx_rate %d", f->ctrl.rate);
             if (_isToDS && _isFrDS) {
                 _netType = networkTypeTunnel;   //what can i say? it is a tunnel
             } else {
@@ -291,7 +293,7 @@ bool is8021xPacket(const UInt8* fileData) {
 				case IEEE80211_SUBTYPE_BLOCK_ACK_REQ:
                     break;
                 default:
-                    NSLog(@"%d %d", _type, _subtype);
+                    DBNSLog(@"%d %d", _type, _subtype);
                     return NO;
             }
             break;
@@ -301,20 +303,20 @@ bool is8021xPacket(const UInt8* fileData) {
                     // ProbeFloodDetection
                     if (IS_BCAST_MACADDR(probe_req->header.addr3)) {
                         ar = [WaveHelper getProbeArrayForID:(char*)probe_req->header.addr2];
-                        i = [[ar objectAtIndex:1] intValue];
+                        i = [ar[1] intValue];
                         if (i==-1) {
                             _netType = networkTypeProbe;
                             break;
                         }
-                        if ([[NSDate date] timeIntervalSinceDate:[ar objectAtIndex:0]]>5) {
-                            [ar replaceObjectAtIndex:0 withObject:[NSDate date]];
-                            [ar replaceObjectAtIndex:1 withObject:[NSNumber numberWithInt:1]];
+                        if ([[NSDate date] timeIntervalSinceDate:ar[0]]>5) {
+                            ar[0] = [NSDate date];
+                            ar[1] = @1;
                         } else if (i>=15) { 
-                            NSLog(@"WARNING!!! Received a Probe flood from %@. This usually means that this computer uses a cheap stumbler such as iStumbler, Macstumbler or Netstumbler!", [NSString stringWithFormat:@"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X", hdr3->addr2[0], hdr3->addr2[1], hdr3->addr2[2], hdr3->addr2[3], hdr3->addr2[4], hdr3->addr2[5]]);
-                            [ar replaceObjectAtIndex:1 withObject:[NSNumber numberWithInt:-1]];
+                            DBNSLog(@"WARNING!!! Received a Probe flood from %@. This usually means that this computer uses a cheap stumbler such as iStumbler, Macstumbler or Netstumbler!", [NSString stringWithFormat:@"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X", hdr3->addr2[0], hdr3->addr2[1], hdr3->addr2[2], hdr3->addr2[3], hdr3->addr2[4], hdr3->addr2[5]]);
+                            ar[1] = @-1;
                             _netType = networkTypeProbe;
                         } else {
-                            [ar replaceObjectAtIndex:1 withObject:[NSNumber numberWithInt:i+1]];
+                            ar[1] = @(i+1);
                         }
                     }
                     break;
@@ -337,19 +339,19 @@ bool is8021xPacket(const UInt8* fileData) {
                     [self parseTaggedData:(unsigned char *)reassoc_req->info_element length:_length-10]; //10 byte fixed info
                     break;
                 case IEEE80211_SUBTYPE_DEAUTH:
-                    NSLog(@"ATTENTION! Received deauthentication frame. You might want to check for other WiFi people.");
+                    DBNSLog(@"ATTENTION! Received deauthentication frame. You might want to check for other WiFi people.");
 					break;
             }
             break;
         default:
-            NSLog(@"%d %d", _type, _subtype);
+            DBNSLog(@"%d %d", _type, _subtype);
             return NO;
     }
 	if ((memcmp(_addr2, "\x00\x90\xd0\xf8\x99\x00", 6) == 0) && (_type == IEEE80211_TYPE_DATA)) {
-		NSLog(@"%@ %@ %@ %@ %@", [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", _addr1[0], _addr1[1], _addr1[2], _addr1[3], _addr1[4], _addr1[5], _addr1[6]],
-			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", _addr2[0], _addr2[1], _addr2[2], _addr2[3], _addr2[4], _addr2[5], _addr2[6]], 
-			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", _addr3[0], _addr3[1], _addr3[2], _addr3[3], _addr3[4], _addr3[5], _addr3[6]], 
-			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", _addr4[0], _addr4[1], _addr4[2], _addr4[3], _addr4[4], _addr4[5], _addr4[6]], 
+		DBNSLog(@"%@ %@ %@ %@ %@", [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X%.2X", _addr1[0], _addr1[1], _addr1[2], _addr1[3], _addr1[4], _addr1[5], _addr1[6]],
+			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X%.2X", _addr2[0], _addr2[1], _addr2[2], _addr2[3], _addr2[4], _addr2[5], _addr2[6]], 
+			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X%.2X", _addr3[0], _addr3[1], _addr3[2], _addr3[3], _addr3[4], _addr3[5], _addr3[6]], 
+			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X%.2X", _addr4[0], _addr4[1], _addr4[2], _addr4[3], _addr4[4], _addr4[5], _addr4[6]], 
 			  [WaveHelper frameControlToString:hdr1->frame_ctl]);
         [WaveHelper dumpKFrame:f];
     }
@@ -408,7 +410,7 @@ bool is8021xPacket(const UInt8* fileData) {
     }
     if (m == nil)
         return nil;
-    return [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", m[0], m[1], m[2], m[3], m[4], m[5], m[6]];
+    return [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X%.2X", m[0], m[1], m[2], m[3], m[4], m[5], m[6]];
 }
 
 #pragma mark -
@@ -631,9 +633,6 @@ bool is8021xPacket(const UInt8* fileData) {
     return self;
 }
 
--(void) dealloc {
-    [super dealloc];
-}
 
 #pragma mark -
 
@@ -716,13 +715,13 @@ bool is8021xPacket(const UInt8* fileData) {
          (_payload[0] == B + 3 && _payload[1] == N - 1) ||
          (B != 0 && !(B % 2) ? (_payload[0] == 1 && _payload[1] == (B / 2) + 1) ||
          (_payload[0] == (B / 2) + 2 && _payload[1] == (N - 1) - _payload[0]) : 0)) {
-            //NSLog(@"We got a weak packet reveling byte: %u",B);
+            //DBNSLog(@"We got a weak packet reveling byte: %u",B);
             _revelsKeyByte = B;
             return _revelsKeyByte;
         }
     }
 
-    //NSLog(@"end of weak packet");
+    //DBNSLog(@"end of weak packet");
    
     _revelsKeyByte = -1;
     return _revelsKeyByte;
@@ -800,7 +799,7 @@ int detectIPHeaderLength(UInt8 *fileData, int fileLength) {
 int verifyIPv4Checksum(UInt8 *fileData, int fileLength) {
 	
     long computedChecksum;
-    unsigned char *dataPointer;
+    //unsigned char *dataPointer;
     int i, headerLength, headerLoop;
     
     headerLength = detectIPHeaderLength(fileData, fileLength);
@@ -809,7 +808,7 @@ int verifyIPv4Checksum(UInt8 *fileData, int fileLength) {
     if (headerLength < 5) 
         return FALSE;
     else {	
-        dataPointer = &fileData[8];
+        //dataPointer = &fileData[8];
         computedChecksum = 0;
         
         for (i = 0; i < headerLoop; i=i+2) 
@@ -895,7 +894,10 @@ int isValidPacket(UInt8 *fileData, int fileLength) {
             return targetAddress;
         }
         else
-            return nil;
+		{
+			free(targetAddress);
+			return nil;
+		}
     }
 }
 - (unsigned char *)destinationIPAsData {
@@ -909,7 +911,10 @@ int isValidPacket(UInt8 *fileData, int fileLength) {
             return targetAddress;
         }
         else
-            return nil;
+		{
+			free(targetAddress);
+			return nil;
+		}
     }
 }
 
@@ -945,14 +950,14 @@ int isValidPacket(UInt8 *fileData, int fileLength) {
          return NO; //this is not interesting
     
     _wpaKeyCipher = flags & WPA_FLAG_KEYCIPHER_MASK;
-    NSLog(@"WPA Cipher %x", _wpaKeyCipher);
+    DBNSLog(@"WPA Cipher %x", _wpaKeyCipher);
     switch (flags & (WPA_FLAG_MIC | WPA_FLAG_ACK | WPA_FLAG_INSTALL)) {
         case WPA_FLAG_ACK:  //only ack set
-            NSLog(@"frame1");
+            DBNSLog(@"frame1");
             _nonce = wpaNonceANonce;
             break;
         case WPA_FLAG_MIC:  //only mic set
-            NSLog(@"frame2");
+            DBNSLog(@"frame2");
             memset(zeroNonce, 0, WPA_NONCE_LENGTH);
             if (memcmp(zeroNonce, _payload+25, WPA_NONCE_LENGTH))
                 _nonce = wpaNonceSNonce;
@@ -960,7 +965,7 @@ int isValidPacket(UInt8 *fileData, int fileLength) {
                 _nonce = wpaNonceNone;
             break;
         case WPA_FLAG_MIC | WPA_FLAG_ACK | WPA_FLAG_INSTALL:  //all set
-            NSLog(@"frame3");
+            DBNSLog(@"frame3");
             _nonce = wpaNonceANonce;
             break;
         default:
@@ -1026,12 +1031,15 @@ int isValidPacket(UInt8 *fileData, int fileLength) {
         case leapAuthCodeChallenge: //handle challenge
             userLength = l->length-16;
             if (_payloadLength-24 < userLength) return NO;
-            [WaveHelper secureReplace:&_challenge   withObject:[NSData dataWithBytes:l->challenge length:8]];
-            [WaveHelper secureReplace:&_username    withObject:[NSString stringWithCharacters:(unichar*)&l->name length:userLength]];
+			_challenge = [NSData dataWithBytes:l->challenge length:8];
+			_username = [NSString stringWithCharacters:(unichar*)&l->name length:userLength];
+            //[WaveHelper secureReplace:&_challenge   withObject:[NSData dataWithBytes:l->challenge length:8]];
+            //[WaveHelper secureReplace:&_username    withObject:[NSString stringWithCharacters:(unichar*)&l->name length:userLength]];
             break;
         case leapAuthCodeResponse:  //handle response
             if (_payloadLength-16 < 24) return NO;
-            [WaveHelper secureReplace:&_response   withObject:[NSData dataWithBytes:l->challenge length:24]];
+			_response = [NSData dataWithBytes:l->challenge length:24];
+            //[WaveHelper secureReplace:&_response   withObject:[NSData dataWithBytes:l->challenge length:24]];
             break; 
         default:
             break;

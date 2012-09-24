@@ -48,7 +48,7 @@
 - (IBAction)showPrefs:(id)sender {
     if(!prefsWindow) {
         if(![NSBundle loadNibNamed:@"Preferences" owner:self]) {
-            NSLog(@"Preferences.nib failed to load!");
+            DBNSLog(@"Preferences.nib failed to load!");
             return;
         }
     } else
@@ -66,35 +66,37 @@
 
 - (IBAction)importKismetXML:(id)sender
 {
-    KismetXMLImporter * myImporter;
-    
-    aOP=[NSOpenPanel openPanel];
+    aOP = [NSOpenPanel openPanel];
     [aOP setAllowsMultipleSelection:YES];
     [aOP setCanChooseFiles:YES];
     [aOP setCanChooseDirectories:NO];
-    if ([aOP runModalForTypes:[NSArray arrayWithObjects:@"txt", @"xml", nil]]==NSOKButton)
-    {
-        [self stopActiveAttacks];
-        [self stopScan];
-        _refreshGUI = NO;
-        
-        int i;
-        myImporter =  [[KismetXMLImporter alloc] init];
-        for (i = 0; i < [[aOP filenames] count]; i++) 
-        {
-            NSString *file = [[aOP filenames] objectAtIndex:i];
-            [self showBusyWithText: [NSString stringWithFormat: @"Importing %@ as Kismet XML", [file lastPathComponent]]];    
-            [myImporter performKismetImport: file withContainer:_container];
-            [self busyDone];
-        }
-        [myImporter release];
-        _refreshGUI = YES;
-        
-        [self updateNetworkTable:self complete:YES];
-        [self refreshScanHierarch];
-        [_window setDocumentEdited:YES];
-        [[NSNotificationCenter defaultCenter] postNotificationName:KisMACViewItemChanged object:self];
-    }
+	[aOP setAllowedFileTypes:@[@"txt", @"xml"]];
+	[aOP beginWithCompletionHandler:^(NSInteger result)
+	 {
+		 if (result == NSFileHandlingPanelOKButton)
+		 {
+			 [self stopActiveAttacks];
+			 [self stopScan];
+			 _refreshGUI = NO;
+			 
+			 int i;
+			 KismetXMLImporter *myImporter =  [[KismetXMLImporter alloc] init];
+			 for (i = 0; i < [[aOP URLs] count]; i++)
+			 {
+				 NSString *file = [[aOP URLs][i] absoluteString];
+				 [self showBusyWithText: [NSString stringWithFormat: @"Importing %@ as Kismet XML", [file lastPathComponent]]];
+				 [myImporter performKismetImport: file withContainer:_container];
+				 [self busyDone];
+			 }
+			 _refreshGUI = YES;
+			 
+			 [self updateNetworkTable:self complete:YES];
+			 [self refreshScanHierarch];
+			 [_window setDocumentEdited:YES];
+			 [[NSNotificationCenter defaultCenter] postNotificationName:KisMACViewItemChanged object:self];
+		 }
+		 
+	 }];
 }
 
 - (IBAction)importMapFromServer:(id)sender
@@ -114,14 +116,20 @@
     [aOP setAllowsMultipleSelection:NO];
     [aOP setCanChooseFiles:YES];
     [aOP setCanChooseDirectories:NO];
-    if ([aOP runModalForTypes:[NSArray arrayWithObjects:@"txt", @"ns1", nil]]==NSOKButton) {
-        [self stopActiveAttacks];
-        [self stopScan];
-
-        [self showBusy:@selector(performImportNetstumbler:) withArg:[aOP filename]];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:KisMACViewItemChanged object:self];
-    }
+	[aOP setAllowedFileTypes:@[@"txt", @"ns1"]];
+	[aOP beginWithCompletionHandler:^(NSInteger result)
+	 {
+		 if (result == NSFileHandlingPanelOKButton)
+		 {
+			 [self stopActiveAttacks];
+			 [self stopScan];
+			 
+			 [self showBusy:@selector(performImportNetstumbler:) withArg:[[aOP URL] absoluteString]];
+			 
+			 [[NSNotificationCenter defaultCenter] postNotificationName:KisMACViewItemChanged object:self];
+		 }
+		 
+	 }];
 }
 
 - (void)performImportNetstumbler:(NSString*)filename {
@@ -141,11 +149,11 @@
 - (IBAction)exportNS:(id)sender {
     NSSavePanel *aSP;
     aSP=[NSSavePanel savePanel];
-    [aSP setRequiredFileType:@"ns1"];
+    [aSP setAllowedFileTypes:@[@"ns1"]];
     [aSP setCanSelectHiddenExtension:YES];
     [aSP setTreatsFilePackagesAsDirectories:NO];
     if ([aSP runModal]==NSFileHandlingPanelOKButton) {
-        [self showBusy:@selector(performExportNS:) withArg:[aSP filename]];
+        [self showBusy:@selector(performExportNS:) withArg:[[aSP URL] absoluteString]];
         if (_asyncFailure) [self showExportFailureDialog];
     }
 }
@@ -170,12 +178,12 @@
 {
     NSSavePanel *aSP;
     aSP=[NSSavePanel savePanel];
-    [aSP setRequiredFileType:@"kml"];
+    [aSP setAllowedFileTypes:@[@"kml"]];
     [aSP setCanSelectHiddenExtension:YES];
     [aSP setTreatsFilePackagesAsDirectories:NO];
     if ([aSP runModal]==NSFileHandlingPanelOKButton)
     {
-        [self showBusy:@selector(performExportKML:) withArg:[aSP filename]];
+        [self showBusy:@selector(performExportKML:) withArg:[[aSP URL] absoluteString]];
     }
 }
 
@@ -183,11 +191,11 @@
     NSSavePanel *aSP;
     
     aSP=[NSSavePanel savePanel];
-    [aSP setRequiredFileType:@"txt"];
+    [aSP setAllowedFileTypes:@[@"txt"]];
     [aSP setCanSelectHiddenExtension:YES];
     [aSP setTreatsFilePackagesAsDirectories:NO];
     if ([aSP runModal]==NSFileHandlingPanelOKButton) {
-        [self showBusy:@selector(performExportWarD:) withArg:[aSP filename]];
+        [self showBusy:@selector(performExportWarD:) withArg:[[aSP URL] absoluteString]];
         if (_asyncFailure) [self showExportFailureDialog];
     }
 }
@@ -203,11 +211,11 @@
     NSSavePanel *aSP;
     
     aSP=[NSSavePanel savePanel];
-    [aSP setRequiredFileType:@"txt"];
+    [aSP setAllowedFileTypes:@[@"txt"]];
     [aSP setCanSelectHiddenExtension:YES];
     [aSP setTreatsFilePackagesAsDirectories:NO];
     if ([aSP runModal]==NSFileHandlingPanelOKButton) {
-        [self showBusy:@selector(performExportMacStumbler:) withArg:[aSP filename]];
+        [self showBusy:@selector(performExportMacStumbler:) withArg:[[aSP URL] absoluteString]];
         if (_asyncFailure) [self showExportFailureDialog];
     }
 }
@@ -225,11 +233,11 @@
     NSSavePanel *aSP;
     
     aSP=[NSSavePanel savePanel];
-    [aSP setRequiredFileType:@"pdf"];
+    [aSP setAllowedFileTypes:@[@"pdf"]];
     [aSP setCanSelectHiddenExtension:YES];
     [aSP setTreatsFilePackagesAsDirectories:NO];
     if ([aSP runModal]==NSFileHandlingPanelOKButton) {
-        [self showBusy:@selector(performExportPDF:) withArg:[aSP filename]];
+        [self showBusy:@selector(performExportPDF:) withArg:[[aSP URL] absoluteString]];
         if (_asyncFailure) [self showExportFailureDialog];
     }
 }
@@ -254,11 +262,11 @@
     NSSavePanel *aSP;
     
     aSP=[NSSavePanel savePanel];
-    [aSP setRequiredFileType:@"jpg"];
+    [aSP setAllowedFileTypes:@[@"jpg"]];
     [aSP setCanSelectHiddenExtension:YES];
     [aSP setTreatsFilePackagesAsDirectories:NO];
     if ([aSP runModal]==NSFileHandlingPanelOKButton) {
-        [self showBusy:@selector(performExportJPEG:) withArg:[aSP filename]];
+        [self showBusy:@selector(performExportJPEG:) withArg:[[aSP URL] absoluteString]];
         if (_asyncFailure) [self showExportFailureDialog];
     }
 }
@@ -275,7 +283,6 @@
         data = [[NSBitmapImageRep imageRepWithData:data] representationUsingType:NSJPEGFileType properties:nil];
             
         [data writeToFile:[filename stringByExpandingTildeInPath] atomically:NO];
-        [img release];
         
         _asyncFailure = NO;
     NS_HANDLER
@@ -292,7 +299,6 @@
     
     d = [[DecryptController alloc] initWithWindowNibName:@"DecryptDialog"];
     [d showWindow:sender];
-    [d release];
 }
 
 #pragma mark -
@@ -309,16 +315,15 @@
     
     wd = [WaveHelper driverWithName:_whichDriver];
     if (!wd) {
-        NSLog(@"Error: invalid driver selected (%@)", _whichDriver);
+        DBNSLog(@"Error: invalid driver selected (%@)", _whichDriver);
         return;
     }
     
     md = [[wd configuration] mutableCopy];
     for(y=1; y<15; y++)
-        [md setObject:[NSNumber numberWithInt:(y==newChannel) ? 1 : 0] forKey:[NSString stringWithFormat:@"useChannel%.2i",y]];
+        md[[NSString stringWithFormat:@"useChannel%.2i",y]] = @((y==newChannel) ? 1 : 0);
   
     [wd setConfiguration: md];
-    [md release];
 
     [self updateChannelMenu];
 }
@@ -330,24 +335,23 @@
     
     wd = [WaveHelper driverWithName:_whichDriver];
     if (!wd) {
-        NSLog(@"Error: invalid driver selected");
+        DBNSLog(@"Error: invalid driver selected");
         return;
     }
     
     md = [[wd configuration] mutableCopy];
     if ([[sender title] isEqualToString:NSLocalizedString(@"All FCC/IC Channels (1-11)", "menu item. needs to be the same as in MainMenu.nib")]) {
         for(y=1; y<=11; y++)
-            [md setObject:[NSNumber numberWithInt:1] forKey:[NSString stringWithFormat:@"useChannel%.2i", y]];
+            md[[NSString stringWithFormat:@"useChannel%.2i", y]] = @1;
 
-        [md setObject:[NSNumber numberWithInt:0] forKey:[NSString stringWithFormat:@"useChannel%.2i", 12]];
-        [md setObject:[NSNumber numberWithInt:0] forKey:[NSString stringWithFormat:@"useChannel%.2i", 13]];
+        md[[NSString stringWithFormat:@"useChannel%.2i", 12]] = @0;
+        md[[NSString stringWithFormat:@"useChannel%.2i", 13]] = @0;
      } else {
         for(y=1; y<=13; y++)
-            [md setObject:[NSNumber numberWithInt:1] forKey:[NSString stringWithFormat:@"useChannel%.2i", y]];
+            md[[NSString stringWithFormat:@"useChannel%.2i", y]] = @1;
     }
     
     [wd setConfiguration: md];
-    [md release];
     
     [self updateChannelMenu];
 }
@@ -366,15 +370,14 @@
     
     wd = [WaveHelper driverWithName:_whichDriver];
     if (!wd) {
-        NSLog(@"Error: invalid driver selected");
+        DBNSLog(@"Error: invalid driver selected");
         return;
     }
     
     md = [[wd configuration] mutableCopy];
-    [md setObject:[NSNumber numberWithBool:(([sender state]==NSOffState) ? YES : NO)] forKey:@"autoAdjustTimer"];
+    md[@"autoAdjustTimer"] = [NSNumber numberWithBool:(([sender state]==NSOffState) ? YES : NO)];
  
     [wd setConfiguration: md];
-    [md release];
     
     [self updateChannelMenu];
 
@@ -393,7 +396,7 @@
         if ([aInfoController theRow] == nil) {
             client = nil;
         } else {
-            client = [[_curNet getClients] objectForKey:[aInfoController theRow]];
+            client = [_curNet getClients][[aInfoController theRow]];
         }
 	}
     [scanner injectionTest:_curNet withClient:client];
@@ -413,7 +416,7 @@
             NSLocalizedString(@"Really want to delete?", "Network deletion dialog title"),
             NSLocalizedString(@"Delete", "Network deletion dialog button"),
             NSLocalizedString(@"Delete and Filter", "Network deletion dialog button"),
-            CANCEL, _window, self, NULL, @selector(reallyWantToDelete:returnCode:contextInfo:), self,
+            CANCEL, _window, self, NULL, @selector(reallyWantToDelete:returnCode:contextInfo:), (__bridge void *)(self),
             NSLocalizedString(@"Network deletion dialog text", "LONG description of what this dialog does")
             //@"Are you sure that you whish to delete the network? This action cannot be undone. You may also choose to add the network to the filter list in the preferences and prevent it from re-appearing."
             );
@@ -575,7 +578,8 @@
 	}
 		
 	[self showMap];
-	[WaveHelper secureRelease:&_importController];   
+	_importController = nil;
+	//[WaveHelper secureRelease:&_importController];
 }
 
 - (IBAction)showCurNetArea:(id)sender {
@@ -610,7 +614,8 @@
 		[_showAllNetsInMap setState: NSOffState];
 	} else [_showAllNetsInMap setState: NSOnState];
 	
-    [WaveHelper secureRelease:&_importController]; 
+	_importController = nil;
+    //[WaveHelper secureRelease:&_importController];
 	[self showMap];
 }
 
@@ -630,7 +635,7 @@
      
          if ([_showNetInMap state] == NSOnState) [self showCurNetArea:_showNetInMap];
     
-        a = [[[NSMutableArray alloc] init] autorelease];
+        a = [[NSMutableArray alloc] init];
         for (i=0; i<[_container count]; i++) [a addObject:[_container netAtIndex:i]];
         [_mappingView showAreaNets:[NSArray arrayWithArray:a]];
         
@@ -670,7 +675,6 @@
 	   } else {
 		[_showGPSDetails setState:NSOffState];
 		[_g close];
-		[_g release];
 		[WaveHelper setGPSInfoController:NULL];
 	   }
 	
@@ -762,17 +766,17 @@
 }
 
 - (IBAction)doDebugSaveStressTest:(id)anObject {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    int i;
-    
-    for (i=0; i< 1500; i++) {
-        if (![self save:@"~/stressTest.kismac"]) {
-            NSLog(@"Stress test broken!");
-            break;
+    @autoreleasepool {
+        int i;
+        
+        for (i=0; i< 1500; i++) {
+            if (![self save:@"~/stressTest.kismac"]) {
+                DBNSLog(@"Stress test broken!");
+                break;
+            }
+            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
         }
-        [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
     }
-    [pool release];
 }
 
 - (IBAction)gpsDebugToConsole:(id)sender {
@@ -790,7 +794,7 @@
     if ([sender state]==NSOffState) {
         [self stopActiveAttacks];
         if (![scanner beaconFlood]) {
-            NSLog(@"Could not start injectiong beacons like hell. Did you choose an injection driver?\n");
+            DBNSLog(@"Could not start injectiong beacons like hell. Did you choose an injection driver?\n");
             return;
         }
         [sender setState:NSOnState];
@@ -805,8 +809,8 @@
     int i, j;
     NSMutableString *ms;
     
-    if (!wpaTestPasswordHash()) NSLog(@"WPA hash test failed");
-    else NSLog(@"WPA hash test succeeded");
+    if (!wpaTestPasswordHash()) DBNSLog(@"WPA hash test failed");
+    else DBNSLog(@"WPA hash test succeeded");
     
     wpaPasswordHash("password", (const UInt8*)"IEEE", 4, output);
     ms = [NSMutableString string];
@@ -814,7 +818,7 @@
         j = output[i];
         [ms appendFormat:@"%.2x", j];
     }
-    NSLog(@"Testvector 1 returned: %@", ms);
+    DBNSLog(@"Testvector 1 returned: %@", ms);
     
     wpaPasswordHash("ThisIsAPassword", (const UInt8*)"ThisIsASSID", 11, output);
     ms = [NSMutableString string];
@@ -822,7 +826,7 @@
         j = output[i];
         [ms appendFormat:@"%.2x", j];
     }
-    NSLog(@"Testvector 2 returned: %@", ms);
+    DBNSLog(@"Testvector 2 returned: %@", ms);
     
 }
 

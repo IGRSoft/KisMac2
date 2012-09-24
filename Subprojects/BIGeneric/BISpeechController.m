@@ -17,7 +17,7 @@
     
     _speakThread = NO;
     _speakLock = [[NSLock alloc] init];
-    _sentenceQueue = [[NSMutableArray array] retain];
+    _sentenceQueue = [NSMutableArray array];
     NewSpeechChannel(NULL, &_curSpeechChannel);
     NSAssert(_curSpeechChannel, @"Could not obtain speech channel!");
 
@@ -49,36 +49,36 @@
 - (void)speakThread:(id)obj {
     NSString* s;
     int i;
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    @autoreleasepool {
     
-    _speakThread = YES;
-    
-    while(YES) {
-        [_speakLock lock];
+        _speakThread = YES;
         
-        if ([_sentenceQueue count] == 0) break;
-        
-        if (SpeechBusySystemWide()==0) {
-            s = [_sentenceQueue objectAtIndex:0];
-            i = [[_sentenceQueue objectAtIndex:1] intValue];
-            [self doSpeakSentence:[s UTF8String] withVoice:i];
-            [_sentenceQueue removeObjectAtIndex:1];
-            [_sentenceQueue removeObjectAtIndex:0];
+        while(YES) {
+            [_speakLock lock];
+            
+            if ([_sentenceQueue count] == 0) break;
+            
+            if (SpeechBusySystemWide()==0) {
+                s = _sentenceQueue[0];
+                i = [_sentenceQueue[1] intValue];
+                [self doSpeakSentence:[s UTF8String] withVoice:i];
+                [_sentenceQueue removeObjectAtIndex:1];
+                [_sentenceQueue removeObjectAtIndex:0];
+            }
+            
+            [_speakLock unlock];
+            [NSThread sleep:0.2];
         }
         
+        _speakThread = NO;
         [_speakLock unlock];
-        [NSThread sleep:0.2];
     }
-    
-    _speakThread = NO;
-    [_speakLock unlock];
-    [pool drain];
 }
 
 //adds a sentence tp the speak queue
 - (void)addSentenceToQueue:(const char*)cSentence withVoice:(int)voice {
-    [_sentenceQueue addObject:[NSString stringWithUTF8String: cSentence]];
-    [_sentenceQueue addObject:[NSNumber numberWithInt: voice]];
+    [_sentenceQueue addObject:@(cSentence)];
+    [_sentenceQueue addObject:@(voice)];
     
     if (!_speakThread) [NSThread detachNewThreadSelector:@selector(speakThread:) toTarget:self withObject:nil];
 }
@@ -99,9 +99,6 @@
     DisposeSpeechChannel(_curSpeechChannel);
     _curSpeechChannel = NULL;
  
-    [_sentenceQueue release];
-    [_speakLock release];
     
-    [super dealloc];
 }
 @end

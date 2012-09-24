@@ -26,7 +26,7 @@
 
     NSDictionary *d = [_driver configuration];
     NSString *dumpDestination;
-    dumpDestination = [d objectForKey:@"dumpDestination"];
+    dumpDestination = d[@"dumpDestination"];
 
     //in the example dump are informations like 802.11 network
     path = [[[NSBundle mainBundle] resourcePath] stringByAppendingString:@"/example.dump"];
@@ -82,7 +82,6 @@
         pcap_dump_close(_f);
     if (_p)
         pcap_close(_p);
-    [super dealloc];
 }
 
 

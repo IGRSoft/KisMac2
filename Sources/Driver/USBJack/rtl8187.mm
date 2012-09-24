@@ -308,7 +308,7 @@ void eeprom_93cx6_multiread(struct eeprom_93cx6 *eeprom, const UInt8 word, UInt1
 	for (i = 0; i < words; i++) {
 		tmp = 0;
 		eeprom_93cx6_read(eeprom, word + i, &tmp);
-//		NSLog(@"%s %.4x %.4x", __func__, word+i, CFSwapInt16HostToLittle(tmp));
+//		DBNSLog(@"%s %.4x %.4x", __func__, word+i, CFSwapInt16HostToLittle(tmp));
         data[i] = CFSwapInt16HostToLittle(tmp);
 	}
 }
@@ -328,9 +328,9 @@ UInt8 rtl818x_ioread8(struct rtl8187_priv *priv, UInt16 addr) {
     theRequest.wLength = sizeof(val);
     ret = (*(priv->_interface))->ControlRequest(priv->_interface, 0, &theRequest);
     if (ret != kIOReturnSuccess) {
-        NSLog(@"%s addr %x %x", __func__, addr, ret);
+        DBNSLog(@"%s addr %x %x", __func__, addr, ret);
     }
-//    NSLog(@"<<< 8 addr %x data %x", addr, val);
+//    DBNSLog(@"<<< 8 addr %x data %x", addr, val);
     return val;
 }
 UInt16 rtl818x_ioread16(struct rtl8187_priv *priv, UInt16 addr) {
@@ -346,9 +346,9 @@ UInt16 rtl818x_ioread16(struct rtl8187_priv *priv, UInt16 addr) {
     theRequest.wLength = sizeof(val);
     ret = (*(priv->_interface))->ControlRequest(priv->_interface, 0, &theRequest);
     if (ret != kIOReturnSuccess) {
-        NSLog(@"%s addr %x %x", __func__, addr, ret);
+        DBNSLog(@"%s addr %x %x", __func__, addr, ret);
     }
-//    NSLog(@"<<< 16 addr %x data %x (%x)", addr, val, CFSwapInt16LittleToHost(val));
+//    DBNSLog(@"<<< 16 addr %x data %x (%x)", addr, val, CFSwapInt16LittleToHost(val));
 	return CFSwapInt16LittleToHost(val);
 }
 UInt32 rtl818x_ioread32(struct rtl8187_priv *priv, UInt16 addr) {
@@ -369,9 +369,9 @@ UInt32 rtl818x_ioread32(struct rtl8187_priv *priv, UInt16 addr) {
     }
     if (ret != kIOReturnSuccess)
     {
-        NSLog(@"%s addr %x %x", __func__, addr, ret);
+        DBNSLog(@"%s addr %x %x", __func__, addr, ret);
     }
-//    NSLog(@"<<< 32 addr %x data %x (%x)", addr, val, CFSwapInt32LittleToHost(val));
+//    DBNSLog(@"<<< 32 addr %x data %x (%x)", addr, val, CFSwapInt32LittleToHost(val));
 	return CFSwapInt32LittleToHost(val);
 }
 
@@ -384,7 +384,7 @@ void rtl818x_iowrite8(struct rtl8187_priv *priv, UInt16 addr, UInt8 val) {
     theRequest.wIndex = 0; 
     theRequest.pData = &val;
     theRequest.wLength = sizeof(val);
-//    NSLog(@">>> 8 addr %x data %x", addr, val);
+//    DBNSLog(@">>> 8 addr %x data %x", addr, val);
     ret = (*(priv->_interface))->ControlRequest(priv->_interface, 0, &theRequest);
     return;
 }
@@ -400,7 +400,7 @@ void rtl818x_iowrite16(struct rtl8187_priv *priv, UInt16 addr, UInt16 val) {
     theRequest.pData = &buf;
     theRequest.wLength = sizeof(val);
     ret = (*(priv->_interface))->ControlRequest(priv->_interface, 0, &theRequest);
-//    NSLog(@">>> 16 addr %x data %x", addr, val);
+//    DBNSLog(@">>> 16 addr %x data %x", addr, val);
     return;
 }
 void rtl818x_iowrite32(struct rtl8187_priv *priv, UInt16 addr, UInt32 val) {
@@ -415,7 +415,7 @@ void rtl818x_iowrite32(struct rtl8187_priv *priv, UInt16 addr, UInt32 val) {
     theRequest.pData = &buf;
     theRequest.wLength = sizeof(val);
     ret = (*(priv->_interface))->ControlRequest(priv->_interface, 0, &theRequest);
-//    NSLog(@">>> 32 addr %x data %x", addr, val);
+//    DBNSLog(@">>> 32 addr %x data %x", addr, val);
     return;
 }
 
@@ -560,7 +560,7 @@ static void rtl8225_write_8051(struct rtl8187_priv *priv, UInt8 addr, UInt16 dat
 	reg82 = rtl818x_ioread16(priv, RTL818X_ADDR_RFPinsEnable);
 	reg84 = rtl818x_ioread16(priv, RTL818X_ADDR_RFPinsSelect);
     
-//    NSLog(@"%s:%d %x %x %x", __func__, __LINE__, reg80, reg82, reg84);
+//    DBNSLog(@"%s:%d %x %x %x", __func__, __LINE__, reg80, reg82, reg84);
 
 	reg80 &= ~(0x3 << 2);
 	reg84 &= ~0xF;
@@ -584,14 +584,14 @@ static void rtl8225_write_8051(struct rtl8187_priv *priv, UInt8 addr, UInt16 dat
     theRequest.pData = &data;
     theRequest.wLength = sizeof(data);
     ret = (*(priv->_interface))->ControlRequest(priv->_interface, 0, &theRequest);
-//    NSLog(@">>>> 16 addr %x data %x", addr, data);
+//    DBNSLog(@">>>> 16 addr %x data %x", addr, data);
 
 	rtl818x_iowrite16(priv, RTL818X_ADDR_RFPinsOutput, reg80 | (1 << 2));
 	usleep(10);
     
 	rtl818x_iowrite16(priv, RTL818X_ADDR_RFPinsOutput, reg80 | (1 << 2));
 	rtl818x_iowrite16(priv, RTL818X_ADDR_RFPinsSelect, reg84);
-//    NSLog(@"%s:%d %x %x %x", __func__, __LINE__, reg80, reg82, reg84);
+//    DBNSLog(@"%s:%d %x %x %x", __func__, __LINE__, reg80, reg82, reg84);
 	usleep(2000);
 }
 static void rtl8225_write_bitbang(struct rtl8187_priv *priv, UInt8 addr, UInt16 data) {
@@ -650,7 +650,7 @@ UInt16 rtl8225_read(struct rtl8187_priv *priv, UInt8 addr) {
 	reg82 = rtl818x_ioread16(priv, RTL818X_ADDR_RFPinsEnable);
 	reg84 = rtl818x_ioread16(priv, RTL818X_ADDR_RFPinsSelect);
     
-//    NSLog(@"%s:%d %x %x %x", __func__, __LINE__, reg80, reg82, reg84);
+//    DBNSLog(@"%s:%d %x %x %x", __func__, __LINE__, reg80, reg82, reg84);
     
 	reg80 &= ~0xF;
     
@@ -712,13 +712,13 @@ UInt16 rtl8225_read(struct rtl8187_priv *priv, UInt8 addr) {
 	rtl818x_iowrite16(priv, RTL818X_ADDR_RFPinsEnable, reg82);
 	rtl818x_iowrite16(priv, RTL818X_ADDR_RFPinsSelect, reg84);
 	rtl818x_iowrite16(priv, RTL818X_ADDR_RFPinsOutput, 0x03A0);
-//    NSLog(@"out %u", out);
+//    DBNSLog(@"out %u", out);
 	return out;
 }
 
 void rtl8225_rf_init(struct rtl8187_priv *priv) {
 	unsigned int i;
-//    NSLog(@"rf_init");
+//    DBNSLog(@"rf_init");
 	rtl8225_write(priv, 0x0, 0x067); usleep(1000);
 	rtl8225_write(priv, 0x1, 0xFE0); usleep(1000);
 	rtl8225_write(priv, 0x2, 0x44D); usleep(1000);
@@ -738,15 +738,15 @@ void rtl8225_rf_init(struct rtl8187_priv *priv) {
     
 	rtl8225_write(priv, 0x2, 0xC4D); usleep(200000);
 	rtl8225_write(priv, 0x2, 0x44D); usleep(200000);
-//    NSLog(@"read1");
+//    DBNSLog(@"read1");
 	if (!(rtl8225_read(priv, 6) & (1 << 7))) {
 		rtl8225_write(priv, 0x02, 0x0c4d);
 		usleep(200000);
 		rtl8225_write(priv, 0x02, 0x044d);
 		usleep(100000);
-//        NSLog(@"read2");
+//        DBNSLog(@"read2");
 		if (!(rtl8225_read(priv, 6) & (1 << 7)))
-			NSLog(@"RF Calibration Failed! %x\n", rtl8225_read(priv, 6));
+			DBNSLog(@"RF Calibration Failed! %x\n", rtl8225_read(priv, 6));
 	}
     
 	rtl8225_write(priv, 0x0, 0x127);
@@ -901,7 +901,7 @@ void rtl8225z2_rf_init(struct rtl8187_priv *priv) {
 		rtl8225_write(priv, 0x02, 0x044D);
 		usleep(100000);
 		if (!(rtl8225_read(priv, 6) & (1 << 7)))
-			NSLog(@"RF Calibration Failed! %x\n", rtl8225_read(priv, 6));
+			DBNSLog(@"RF Calibration Failed! %x\n", rtl8225_read(priv, 6));
 	}
     
 	usleep(200000);
@@ -1039,7 +1039,7 @@ static int rtl8187_init_hw(struct rtl8187_priv *priv) {
 	} while (--i);
     
 	if (!i) {
-		NSLog(@"Reset timeout!\n");
+		DBNSLog(@"Reset timeout!\n");
 		return -ETIMEDOUT;
 	}
     
@@ -1055,7 +1055,7 @@ static int rtl8187_init_hw(struct rtl8187_priv *priv) {
 	} while (--i);
     
 	if (!i) {
-		NSLog(@"eeprom reset timeout!\n");
+		DBNSLog(@"eeprom reset timeout!\n");
 		return -ETIMEDOUT;
 	}
     
@@ -1245,12 +1245,12 @@ char *RTL8187Jack::getPlistFile()
 }
 
 IOReturn RTL8187Jack::_init() {
-    NSLog(@"_init");
+    DBNSLog(@"_init");
 
 	NICInitialized = false;
     
     if(!_attachDevice()){
-        NSLog(@"Device could not be opened");
+        DBNSLog(@"Device could not be opened");
         return kIOReturnNoDevice;
     }
     // Allocate _priv;
@@ -1260,7 +1260,7 @@ IOReturn RTL8187Jack::_init() {
     rtl8187_probe();
     NICInitialized = true;
     _deviceInit = true;
-    NSLog(@"_init exit");
+    DBNSLog(@"_init exit");
     return kIOReturnSuccess;
 }
 
@@ -1331,7 +1331,7 @@ int  RTL8187Jack::rtl8187_probe(void) {
     UInt16 perm_addr[3];
     eeprom_93cx6_multiread(&eeprom, RTL8187_EEPROM_MAC_ADDR, perm_addr, 3);
 
-    NSLog(@"%.4x%.4x%.4x", perm_addr[0], perm_addr[1], perm_addr[2]);
+    DBNSLog(@"%.4x%.4x%.4x", perm_addr[0], perm_addr[1], perm_addr[2]);
 //	if (!is_valid_ether_addr(dev->wiphy->perm_addr)) {
 //		printk(KERN_WARNING "rtl8187: Invalid hwaddr! Using randomly "
 //		       "generated MAC address\n");
@@ -1379,7 +1379,7 @@ int  RTL8187Jack::rtl8187_probe(void) {
 
     rtl8225_write(priv, 0, 0x0B7);
 
-    NSLog(@"hwaddr %.4x%.4x%.4x, rtl8187 V%d + %s\n",
+    DBNSLog(@"hwaddr %.4x%.4x%.4x, rtl8187 V%d + %s\n",
            perm_addr[0],
            perm_addr[1],
            perm_addr[2],
@@ -1403,27 +1403,27 @@ bool RTL8187Jack::getAllowedChannels(UInt16* channels) {
 }
 
 bool RTL8187Jack::startCapture(UInt16 channel) {
-    NSLog(@"Start capture");
+    DBNSLog(@"Start capture");
 	if (NICInitialized) {
-        //		NSLog(@"Done.\n");
+        //		DBNSLog(@"Done.\n");
         rtl8187_start(_priv);
         setChannel(channel);
 		return true;
 	}
 	else {
-        //		NSLog(@"NIC not initialized. Canceled.\n");
+        //		DBNSLog(@"NIC not initialized. Canceled.\n");
 		return false;
 	}
 }
 bool RTL8187Jack::stopCapture() {
-    //	NSLog(@"Stop capture : ");
+    //	DBNSLog(@"Stop capture : ");
 	if (NICInitialized) {
-        //		NSLog(@"Done.\n");
+        //		DBNSLog(@"Done.\n");
         rtl8187_stop(_priv);
 		return true;
 	}
 	else {
-        //		NSLog(@"NIC not initialized. Canceled.\n");
+        //		DBNSLog(@"NIC not initialized. Canceled.\n");
 		return false;
 	}
 }
@@ -1445,7 +1445,7 @@ bool RTL8187Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len) {
     hdr = (struct rtl8187_rx_hdr *)(pData + (len-sizeof(struct rtl8187_rx_hdr)));
     flags = CFSwapInt32LittleToHost(hdr->flags);
 	if (flags & (1 << 13)) {
-//        NSLog(@"Bad CRC\n");
+//        DBNSLog(@"Bad CRC\n");
         return false;
     }
     pFrame->ctrl.len = (flags & 0xFFF) - 4;
@@ -1496,7 +1496,7 @@ int RTL8187Jack::WriteTxDescriptor(void* theFrame, UInt16 length, UInt8 rate) {
 bool RTL8187Jack::sendKFrame(KFrame* frame) {
     UInt8 aData[2364];
     unsigned int descriptorLength;
-    //    NSLog(@"sendKFrame %d", size);
+    //    DBNSLog(@"sendKFrame %d", size);
     //    dumpFrame(data, size);
     descriptorLength = WriteTxDescriptor(aData, frame->ctrl.len, frame->ctrl.tx_rate);
     memcpy(aData+descriptorLength, frame->data, frame->ctrl.len);
@@ -1513,11 +1513,11 @@ IOReturn RTL8187Jack::_sendFrame(UInt8* data, IOByteCount size) {
     if (!_devicePresent) return kIOReturnError;
     
     if (_interface == NULL) {
-        NSLog(@"RTL8187Jack::_sendFrame called with NULL interface this is prohibited!\n");
+        DBNSLog(@"RTL8187Jack::_sendFrame called with NULL interface this is prohibited!\n");
         return kIOReturnError;
     }
     
-//    NSLog(@"RT73Jack::_sendFrame");
+//    DBNSLog(@"RT73Jack::_sendFrame");
 //    dumpFrame(data, size);
     
     _lockDevice();
@@ -1526,10 +1526,10 @@ IOReturn RTL8187Jack::_sendFrame(UInt8* data, IOByteCount size) {
 
 //    numBytes =  (((size)+63)&~63);
     numBytes = size;
-//    NSLog(@"NumBytes %d", numBytes);
+//    DBNSLog(@"NumBytes %d", numBytes);
     kr = (*_interface)->WritePipe(_interface, 3, &_outputBuffer, numBytes);
     if (kr) {
-        NSLog(@"kr %x", kr);
+        DBNSLog(@"kr %x", kr);
     }
     _unlockDevice();
     
@@ -1537,7 +1537,7 @@ IOReturn RTL8187Jack::_sendFrame(UInt8* data, IOByteCount size) {
 }
 
 void RTL8187Jack::dumpFrame(UInt8 *data, UInt16 size) {
-    NSLog(@"--FRAME LENGTH %d--", size);
+    DBNSLog(@"--FRAME LENGTH %d--", size);
     int idx = 0;
     int i,j;
 	for (i=0;i<size;i=i+8) {

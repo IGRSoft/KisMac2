@@ -12,7 +12,7 @@
 @implementation KismetXMLImporter
 
 -(id) init {
-    [super init];
+    if (!(self = [super init])) return nil;
     return self;
 }
 
@@ -27,18 +27,18 @@
     }
     
     if([elementName isEqualToString:@"wireless-network"]){
-        if([[attributeDict objectForKey:@"type"] isEqualToString:@"infrastructure"])
+        if([attributeDict[@"type"] isEqualToString:@"infrastructure"])
             [currentNet setValue: @"2" forKey:@"type"];
-        else if([[attributeDict objectForKey:@"type"] isEqualToString:@"ad-hoc"])
+        else if([attributeDict[@"type"] isEqualToString:@"ad-hoc"])
             [currentNet setValue: @"1" forKey:@"type"];
-        else if([[attributeDict objectForKey:@"type"] isEqualToString:@"probe"])
+        else if([attributeDict[@"type"] isEqualToString:@"probe"])
             [currentNet setValue: @"4" forKey:@"type"];
-        if([attributeDict objectForKey:@"first-time"]){
-            [currentNet setValue: [NSDate dateWithNaturalLanguageString:(NSString*)[attributeDict objectForKey:@"first-time"]]
+        if(attributeDict[@"first-time"]){
+            [currentNet setValue: [NSDate dateWithNaturalLanguageString:(NSString*)attributeDict[@"first-time"]]
                                                           forKey:@"firstDate"];
 }
-        if([attributeDict objectForKey:@"first-time"])
-                [currentNet setValue: [NSDate dateWithNaturalLanguageString:[attributeDict objectForKey:@"last-time"]]
+        if(attributeDict[@"first-time"])
+                [currentNet setValue: [NSDate dateWithNaturalLanguageString:attributeDict[@"last-time"]]
                                                               forKey:@"date"];
     }//first-time
     
@@ -66,7 +66,7 @@
     
     if([elementName isEqualToString:@"SSID"])
     {
-        //NSLog(@"Net Found SSID = %@", currentStringValue);
+        //DBNSLog(@"Net Found SSID = %@", currentStringValue);
         [currentNet setValue: currentStringValue forKey:@"SSID"];
     }
     else if([elementName isEqualToString:@"BSSID"])
@@ -77,7 +77,7 @@
                &ID[0], &ID[1], &ID[2], &ID[3], &ID[4], &ID[5]);
         [currentNet setValue: [NSString stringWithFormat:@"%2X%2X%2X%2X%2X%2X", 
                                ID[0], ID[1],ID[2], ID[3], ID[4], ID[5]] forKey:@"ID"];
-        //NSLog(@"Net Found BSSID = %@", currentStringValue);
+        //DBNSLog(@"Net Found BSSID = %@", currentStringValue);
         [currentNet setValue: currentStringValue forKey:@"BSSID"];
     }
     else if([elementName isEqualToString:@"channel"])
@@ -125,22 +125,19 @@
     }
     else if([elementName isEqualToString:@"wireless-network"])
     {
-        //NSLog(@"End of Net Found");
+        //DBNSLog(@"End of Net Found");
         
         WaveNet* net = [[WaveNet alloc] initWithDataDictionary: currentNet];
-        [currentNet release];
         currentNet = nil;
         if (net)
         {
             [importedNets addObject:net];
         }else 
         {
-            NSLog(@"Invalid Net!");
+            DBNSLog(@"Invalid Net!");
         }
-        [net release];
     }
 
-    [currentStringValue release];
     currentStringValue = nil;
 }
 
@@ -152,20 +149,16 @@
 	NSXMLParser * theParser = [[NSXMLParser alloc] initWithData: theData];
 	[theParser setDelegate: self];
 	if([theParser parse]){
-        NSLog(@"Parsing succeded:\n");
+        DBNSLog(@"Parsing succeded:\n");
         [container importData:importedNets];
     }
     
     else 
     {
-        [theData release];
-        NSLog(@"Parsing Failed!!!\n");
+        DBNSLog(@"Parsing Failed!!!\n");
         return nil;
        // hasValidData = NO;
     }
-    [importedNets release];
-    [theData release];
-    [theParser release];
     
     importedNets = nil;
     theData = nil;

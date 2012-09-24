@@ -84,7 +84,7 @@ static pcap_t *_device;
 + (BOOL)deviceAvailable 
 {   
 	CWInterface * airport = [CWInterface interfaceWithName:
-                             [[CWInterface supportedInterfaces] objectAtIndex: 0]];
+                             [[CWInterface interfaceNames] allObjects][0]];
     return [airport supportsMonitorMode];
 }
 
@@ -95,7 +95,7 @@ static pcap_t *_device;
 
     if (NSAppKitVersionNumber < 949.00) 
     {
-        NSLog(@"MacOS is not 10.5.1! AppKitVersion: %f < 949.00", NSAppKitVersionNumber);
+        DBNSLog(@"MacOS is not 10.5.1! AppKitVersion: %f < 949.00", NSAppKitVersionNumber);
     
         NSRunCriticalAlertPanel(
                             NSLocalizedString(@"Could not enable Monitor Mode for Airport Extreme.", "Error dialog title"),
@@ -126,7 +126,6 @@ static pcap_t *_device;
         [NSApp endSheet: [importController window]];        
         [[importController window] close];
         [importController stopAnimation];
-        [importController release];
         importController=Nil;
             
         if (result == 1) {	//see if we actually have the driver accessed
@@ -159,24 +158,24 @@ pcap_dumper_t * dumper;
 	_apeType = APExtTypeBcm;
     
      //get the api based interface for changing channels
-    airportInterface =  [[CWInterface interfaceWithName:
-                          [[CWInterface supportedInterfaces] objectAtIndex: 0]] retain];
+    airportInterface =  [CWInterface interfaceWithName:
+                          [[CWInterface interfaceNames] allObjects][0]];
     [airportInterface disassociate];
-    CFShow(airportInterface);
+    CFShow((__bridge CFTypeRef)(airportInterface));
     
     shouldPlayback = [[defs objectForKey: @"playback-rawdump"] boolValue];
 	
     if(shouldPlayback) _device = pcap_open_offline([[defs objectForKey: @"rawDumpInFile"] UTF8String], err);
-	else if(!_device)  _device = pcap_open_live([[[CWInterface supportedInterfaces] objectAtIndex: 0] UTF8String], 3000, 1, 2, err);
+	else if(!_device)  _device = pcap_open_live([[[CWInterface interfaceNames] allObjects][0] UTF8String], 3000, 1, 2, err);
     //todo fixme!! if we are playing back, this will be weird
 	if (!_device && !shouldPlayback)
     {
-        args = [NSArray arrayWithObjects:@"0777", @"/dev/bpf0", @"/dev/bpf1", @"/dev/bpf2", @"/dev/bpf3", Nil]; 
+        args = @[@"0777", @"/dev/bpf0", @"/dev/bpf1", @"/dev/bpf2", @"/dev/bpf3"]; 
 		if (![[BLAuthentication sharedInstance] executeCommand:@"/bin/chmod" withArgs: args]) return Nil;
 		[NSThread sleep:0.5];
 	
-        CFShow([CWInterface supportedInterfaces]);
-		_device = pcap_open_live([[[CWInterface supportedInterfaces] objectAtIndex: 0] UTF8String], 3000, 1, 2, err);
+        CFShow((__bridge CFTypeRef)([[CWInterface interfaceNames] allObjects]));
+		_device = pcap_open_live([[[CWInterface interfaceNames] allObjects][0] UTF8String], 3000, 1, 2, err);
         
 		[[BLAuthentication sharedInstance] executeCommand:@"/bin/chmod" withArgs:args];
 
@@ -186,7 +185,7 @@ pcap_dumper_t * dumper;
     if(shouldPlayback)
     {
         DLTType = [[defs objectForKey: @"playback-rawdump-dlt"] intValue];
-        NSLog(@"err returned from pcap open: %s", err);
+        DBNSLog(@"err returned from pcap open: %s", err);
         retErr = 0;
     }
     else
@@ -204,12 +203,12 @@ pcap_dumper_t * dumper;
     if( [[defs objectForKey: @"rawdump"] boolValue] )
     {
         if(_device) dumper = pcap_dump_open(_device, [[defs objectForKey: @"rawDumpOutFile"] UTF8String]);
-        else NSLog(@"couldn't open dumper");
+        else DBNSLog(@"couldn't open dumper");
     }
     
     if(retErr != 0)
     {
-        NSLog(@"Error opening airpot device using pcap_set_datalink()");
+        DBNSLog(@"Error opening airpot device using pcap_set_datalink()");
         return Nil;
     }
     
@@ -255,7 +254,7 @@ pcap_dumper_t * dumper;
     //CFShow([airportInterface supportedChannels]);
     if(!success)
     {
-        CFShow(error);
+        CFShow((__bridge CFTypeRef)(error));
     }
     return success;
 }
@@ -372,7 +371,7 @@ static u_int ieee80211_mhz2ieee(u_int freq, u_int flags) {
     static UInt32 count = 0;
     
 	f = (KFrame *)frame;
-    //NSLog(@"DLT %d", DLTType);
+    //DBNSLog(@"DLT %d", DLTType);
     
 	while(YES)
     {      
@@ -387,15 +386,15 @@ static u_int ieee80211_mhz2ieee(u_int freq, u_int flags) {
       /*  err = pcap_inject(_device, data,  header.caplen);
         if(err) 
         {
-            NSLog(@"Couldn't inject frame :(");
+            DBNSLog(@"Couldn't inject frame :(");
             pcap_perror(_device, "PCAP ERROR:");
         }*/
         
-		//NSLog(@"pcap_next: data:0x%x, len:%u\n", data, header.caplen);
+		//DBNSLog(@"pcap_next: data:0x%x, len:%u\n", data, header.caplen);
 		if (!data) continue;
         
         count++;
-        //NSLog(@"COUnt: %u", count);
+        //DBNSLog(@"COUnt: %u", count);
 
         switch(DLTType)
         {
@@ -412,14 +411,14 @@ static u_int ieee80211_mhz2ieee(u_int freq, u_int flags) {
                 rtFieldsPresent = rtf->it_present;
                 
                 //on my c2d it is 0x180F
-                //NSLog(@"Raido Tap Fields present %.8x", rtFieldsPresent);
+                //DBNSLog(@"Raido Tap Fields present %.8x", rtFieldsPresent);
                 
                 //todo make this better
                 //parse radiotap data
                 //start at the least significant bit, process it, then shift it off
                 //once all bits are processed, rtFieldsPresent should be 0
                 //exiting the loop
-                //NSLog(@"==============================================================================");
+                //DBNSLog(@"==============================================================================");
                 rtBit = 0;
                 //rt data is right after header
                 rtDataPointer = (UInt8*)(data + sizeof(ieee80211_radiotap_header));
@@ -428,7 +427,7 @@ static u_int ieee80211_mhz2ieee(u_int freq, u_int flags) {
                 {
                     if(rtFieldsPresent & 0x01) //this bit is set
                     {
-                        //NSLog(@"RT Field found %u", rtBit);
+                        //DBNSLog(@"RT Field found %u", rtBit);
                         //increment the data pointer if by the bytes for this field
                         switch(rtBit)
                         {
@@ -439,12 +438,12 @@ static u_int ieee80211_mhz2ieee(u_int freq, u_int flags) {
                                 rtDataPointer += IEEE80211_RADIOTAP_FLAGS_BYTES;
                                 break;
                             case IEEE80211_RADIOTAP_RATE_BIT:
-                                //NSLog(@"Rate: %u", *(UInt8*)rtDataPointer * 512); 
+                                //DBNSLog(@"Rate: %u", *(UInt8*)rtDataPointer * 512); 
                                 rtDataPointer += IEEE80211_RADIOTAP_RATE_BYTES;
                                 break;
                             case IEEE80211_RADIOTAP_CHANNEL_BIT:
-                                //NSLog(@"Found radiotap channel field");
-                                //NSLog(@"Frequency: %u", *(UInt16*)rtDataPointer);
+                                //DBNSLog(@"Found radiotap channel field");
+                                //DBNSLog(@"Frequency: %u", *(UInt16*)rtDataPointer);
                                 f->ctrl.channel = ieee80211_mhz2ieee(*(UInt16*)rtDataPointer, *(UInt16*)(rtDataPointer + 2));
                                 rtDataPointer += IEEE80211_RADIOTAP_CHANNEL_BYTES;
                                 break;
@@ -453,16 +452,16 @@ static u_int ieee80211_mhz2ieee(u_int freq, u_int flags) {
                                 rtDataPointer += IEEE80211_RADIOTAP_DBM_TX_POWER_BYTES;
                                 break;
                             case IEEE80211_RADIOTAP_ANT_BIT:
-                                //NSLog(@"Packet received on antenna %u", *(UInt8*)rtDataPointer);
+                                //DBNSLog(@"Packet received on antenna %u", *(UInt8*)rtDataPointer);
                                 rtDataPointer += IEEE80211_RADIOTAP_ANT_BYTES;
                                 break;   
                             case IEEE80211_RADIOTAP_DBANTSIG_BIT:
-                                //NSLog(@"Signal Db: %u", *(UInt8*)rtDataPointer);
+                                //DBNSLog(@"Signal Db: %u", *(UInt8*)rtDataPointer);
                                 f->ctrl.signal =  *(UInt8*)rtDataPointer;
                                 rtDataPointer += IEEE80211_RADIOTAP_DBANTSIG_BYTES;
                                 break;   
                             default:
-                                NSLog(@"Unknown Field %i", rtBit);
+                                DBNSLog(@"Unknown Field %i", rtBit);
                                 //this is a serious error and will break everything
                                 break;
                         }//end switch
@@ -474,11 +473,11 @@ static u_int ieee80211_mhz2ieee(u_int freq, u_int flags) {
                     rtBit++;
                     rtFieldsPresent >>= 1;
                 } //end while
-                //NSLog(@"==============================================================================");
+                //DBNSLog(@"==============================================================================");
                 
                 //this is the start of the data after the device header and after the 80211 header
                 dataLen -= 4; //Skip FCS?
-                //NSLog(@"Data length: %u, caplen: %u", dataLen, header.caplen);
+                //DBNSLog(@"Data length: %u, caplen: %u", dataLen, header.caplen);
                 if (dataLen <= 0 || dataLen > header.caplen) continue;
                 f->ctrl.len = dataLen;
                 if(dataLen <= MAX_FRAME_BYTES)
@@ -519,7 +518,7 @@ static u_int ieee80211_mhz2ieee(u_int freq, u_int flags) {
                 
                 f->ctrl.channel = OSSwapBigToHostInt32(af->channel);
                 f->ctrl.len = dataLen;
-                //NSLog(@"Got packet!!! hLen %u signal: %d  noise: %d channel %u length: %u\n", headerLength, af->ssi_signal, af->ssi_noise, f->channel, f->dataLen );
+                //DBNSLog(@"Got packet!!! hLen %u signal: %d  noise: %d channel %u length: %u\n", headerLength, af->ssi_signal, af->ssi_noise, f->channel, f->dataLen );
                 break;
             case DLT_IEEE802_11:
                 f->ctrl.len = header.caplen - 4;
@@ -529,8 +528,8 @@ static u_int ieee80211_mhz2ieee(u_int freq, u_int flags) {
                 memcpy(f->data, data, header.caplen);
                 break;
             default:
-                NSLog(@"AE: Unknown packet format");
-                NSLog(@"DLT %d", DLTType);
+                DBNSLog(@"AE: Unknown packet format");
+                DBNSLog(@"DLT %d", DLTType);
                 break;
         } //switch
         _packets++;
@@ -542,9 +541,8 @@ static u_int ieee80211_mhz2ieee(u_int freq, u_int flags) {
 
 -(void) dealloc 
 {
-    NSLog(@"about to close pcap device");
+    DBNSLog(@"about to close pcap device");
 	if(_device) pcap_close(_device);
-    [super dealloc];
 }
 
 @end

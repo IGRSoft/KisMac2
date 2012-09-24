@@ -80,7 +80,7 @@ enum _rowIndexes {
 
     if (_clientCount == [aClients count]) {
         for (i = 0; i < [aClients count]; i++) {
-            if ([[aClients objectForKey:[aClientKeys objectAtIndex:i]] changed]) 
+            if ([aClients[aClientKeys[i]] changed]) 
                 [aClientTable displayRect:[aClientTable rectOfRow:i]];
         }
     } else {
@@ -95,14 +95,17 @@ enum _rowIndexes {
     [_n setComment:[_commentField stringValue]];
     
     //release old data
-    [WaveHelper secureRelease:&aClients];
+	aClients = nil;
+	aClientKeys = nil;
+	_n = nil;
+    /*[WaveHelper secureRelease:&aClients];
     [WaveHelper secureRelease:&aClientKeys];
-    [WaveHelper secureRelease:&_n];
+    [WaveHelper secureRelease:&_n];*/
     
     //fetch all new interesting stuff
-    _n=[sender retain];
-    aClients=[[_n getClients] retain];
-    aClientKeys=[[_n getClientKeys] retain];
+    _n=sender;
+    aClients=[_n getClients];
+    aClientKeys=[_n getClientKeys];
     
     //refresh
     [aTable reloadData];
@@ -186,7 +189,7 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
 /*  FOR AP IP Detect -- Later
             case indexIPAddress:
                 if ([_n getIP]) {
-                    NSLog(@"Has IP");
+                    DBNSLog(@"Has IP");
                     return (col) ? NSLocalizedString(@"IP Address", "table description") : [NSString stringWithFormat:@"%@", [_n getIP]];
                 }
 */  
@@ -203,7 +206,7 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
             case indexWeakPackets:
                  return (col) ? NSLocalizedString(@"Unique IVs", "table description") : [NSString stringWithFormat:@"%i", [_n uniqueIVs]];
             case indexInjPackets:
-                 return (col) ? NSLocalizedString(@"Inj. Packets", "table description") : [NSString stringWithFormat:@"%i", [[_n arpPacketsLog] count]];
+                 return (col) ? NSLocalizedString(@"Inj. Packets", "table description") : [NSString stringWithFormat:@"%i", (int)[[_n arpPacketsLog] count]];
             case indexBytes:
                  return (col) ? NSLocalizedString(@"Bytes", "table description") : [_n data];
             case indexKey:
@@ -223,8 +226,8 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
         }
         return @"unknown row";
     } else if([aTableView isEqualTo:aClientTable]) {
-        key = [aClientKeys objectAtIndex:rowIndex];
-        lWCl = [aClients objectForKey:key];
+        key = aClientKeys[rowIndex];
+        lWCl = aClients[key];
         if ([[aTableColumn identifier] isEqualToString:@"client"]) return key;
         else if ([[aTableColumn identifier] isEqualToString:@"vendor"]) return [lWCl vendor];
         else if ([[aTableColumn identifier] isEqualToString:@"lastseen"]) return [lWCl date];
@@ -291,7 +294,8 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
     if ((_lastSorted) && ([_lastSorted isEqualToString:ident])) {
         if (_ascending) _ascending=NO;
         else {
-            [WaveHelper secureRelease:&_lastSorted];
+			_lastSorted = nil;
+            //[WaveHelper secureRelease:&_lastSorted];
             
             [tableView setIndicatorImage:Nil inTableColumn:tableColumn];
             [tableView setHighlightedTableColumn:Nil];
@@ -301,7 +305,8 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
     } else {
         _ascending=YES;
         if (_lastSorted) [tableView setIndicatorImage:nil inTableColumn:[tableView tableColumnWithIdentifier:_lastSorted]];
-        [WaveHelper secureReplace:&_lastSorted withObject:ident];
+		_lastSorted = ident;
+        //[WaveHelper secureReplace:&_lastSorted withObject:ident];
     }
     
     [_n sortByColumn:ident order:_ascending];
@@ -329,10 +334,9 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
 #pragma mark -
 
 -(void) dealloc {
-    if (aClients!=Nil) [aClients release];
-    if (aClientKeys!=Nil) [aClientKeys release];
-    if (_n!=nil) [_n release];
-    [super dealloc];
+    if (aClients!=Nil) ;
+    if (aClientKeys!=Nil) ;
+    if (_n!=nil) ;
 }
 
 - (NSString *) theRow 
@@ -342,7 +346,7 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
     {
         return nil;
     }
-	return [aClientKeys objectAtIndex:[aClientTable selectedRow]];
+	return aClientKeys[[aClientTable selectedRow]];
 }
 
 @end

@@ -33,7 +33,6 @@
         [style setLineBreakMode:NSLineBreakByWordWrapping];
         [style setAlignment:NSCenterTextAlignment];
         attr = [[NSDictionary alloc] initWithObjectsAndKeys:style, NSParagraphStyleAttributeName, [NSColor greenColor], NSForegroundColorAttributeName, nil];
-        [style release];
     }
     return self;
 

@@ -68,12 +68,12 @@
 
         whichDriver = [sets objectForKey:@"whichDriver"];
         if (!whichDriver) {
-			whichDriver = [[a objectAtIndex:0] deviceName];
+			whichDriver = [a[0] deviceName];
 			[sets setObject:whichDriver forKey:@"whichDriver"];
 		}
 		
         for (x = 0; x < [a count]; x++) {
-            wd = [a objectAtIndex:x];
+            wd = a[x];
             mi = (NSMenuItem*)[aChannelMenu insertItemWithTitle:[wd deviceName] action:@selector(selDriver:) keyEquivalent:@"" atIndex:0];
             _activeDriversCount++;
             if ([[wd deviceName] isEqualToString: whichDriver]) {
@@ -83,13 +83,14 @@
         }
         
         if (!actWD) { //driver is not loaded anymore?
-            whichDriver = [[a objectAtIndex:0] deviceName];
+            whichDriver = [a[0] deviceName];
             [sets setObject:whichDriver forKey:@"whichDriver"];
             
             [self updateChannelMenu];
             return;
         }
-        [WaveHelper secureReplace:&_whichDriver withObject:whichDriver];
+		_whichDriver = whichDriver;
+        //[WaveHelper secureReplace:&_whichDriver withObject:whichDriver];
 
         
         for (x = _activeDriversCount; x < [aChannelMenu numberOfItems]; x++) {
@@ -106,7 +107,7 @@
         lc = 0;
         
         for (x = 1; x <= 14; x++) {
-            if ([[config objectForKey:[NSString stringWithFormat:@"useChannel%.2i",x]] intValue]) {
+            if ([config[[NSString stringWithFormat:@"useChannel%.2i",x]] intValue]) {
                 c++;
                 lc = x;
             }
@@ -211,10 +212,7 @@
     [_trafficTimePopUp  setHidden: tab != tabTraffic];
     [_trafficModePopUp  setHidden: tab != tabTraffic];
     [_mappingView       setVisible: tab == tabMap];
-    [_networksButton    setImage: [NSImage imageNamed:tab == tabNetworks ? @"networks-highlight.tif" : @"networks-button.tif"]];
-    [_trafficButton     setImage: [NSImage imageNamed:tab == tabTraffic  ? @"traffic-highlight.tif"  : @"traffic-button.tif"]];
-    [_mapButton         setImage: [NSImage imageNamed:tab == tabMap      ? @"map-highlight.tif"      : @"map-button.tif"]];
-    [_detailsButton     setImage: [NSImage imageNamed:tab == tabDetails  ? @"details-highlight.tif"  : @"details-button.tif"]];
+    
     [_window            setAcceptsMouseMovedEvents: tab == tabMap]; //need to track the mouse in this view
 
     if (tab != tabNetworks) [self hideDetails];
@@ -285,7 +283,7 @@
             OK, NULL, NULL, _window, self, NULL, NULL, NULL, 
             [NSString stringWithFormat:
                 NSLocalizedString(@"The WPA key could not be recovered, because for the following reason: %@.", "description why WPA crack failed"),
-                [_curNet crackError]]
+                [_curNet crackError]], nil
             );
             break;
         case 4:
@@ -293,7 +291,7 @@
             OK, NULL, NULL, _window, self, NULL, NULL, NULL, 
             [NSString stringWithFormat:
                 NSLocalizedString(@"The LEAP key could not be recovered, because for the following reason: %@.", "description why LEAP crack failed"),
-                [_curNet crackError]]
+                [_curNet crackError]], nil
             );
         case 5:
             NSBeginAlertSheet(NSLocalizedString(@"Reinjection unsuccessful", "Error dialog title"),
@@ -332,7 +330,6 @@
 		}
     }
 
-    [_importController release];
     _importController=Nil;
 }
 
@@ -394,13 +391,12 @@
     
     if (_activeAttackNetID) [self stopActiveAttacks];
     
-    _activeAttackNetID = [[_curNet ID] retain];
+    _activeAttackNetID = [_curNet ID];
     
     return YES;
 }
 
 - (void)stopActiveAttacks {
-    [_activeAttackNetID release];
     _activeAttackNetID = Nil;
     
     [scanner stopSendingFrames];
@@ -461,7 +457,7 @@
     
     _importController = [[ImportController alloc] initWithWindowNibName:dialog];
     if (!_importController) {
-        NSLog(@"Error could not open Import.nib!");
+        DBNSLog(@"Error could not open Import.nib!");
         return;
     }
 
@@ -478,16 +474,18 @@
 	
     if (_importController) [NSApp endSheet:[_importController window]];
     [[_importController window] orderOut:self];
-    [WaveHelper secureRelease:&_importController];   
+	_importController = nil;
+    //[WaveHelper secureRelease:&_importController];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 - (void)showBusy:(SEL)function withArg:(id)obj {
-    [obj retain];
     _busyFunction = function;
     
     _importController = [[ImportController alloc] initWithWindowNibName:@"Import"];
     if (!_importController) {
-        NSLog(@"Error could not open Import.nib!");
+        DBNSLog(@"Error could not open Import.nib!");
         return;
     }
     _doModal = YES;
@@ -497,29 +495,30 @@
       
     [self performSelector:_busyFunction withObject:obj];
         
-    [obj release];
 
     [self menuSetEnabled:YES menu:[NSApp mainMenu]];
     [NSApp endSheet: [_importController window]];        
     [[_importController window] close];
     [_importController stopAnimation];
-    [WaveHelper secureRelease:&_importController];
+	_importController = nil;
+    //[WaveHelper secureRelease:&_importController];
 }
 
 - (void)busyThread:(id)anObject {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    @autoreleasepool {
     
-    [self performSelector:_busyFunction withObject:anObject];
-    
-    _doModal = NO;
+        [self performSelector:_busyFunction withObject:anObject];
+        
+        _doModal = NO;
 	
 	[self menuSetEnabled:YES menu:[NSApp mainMenu]];
-    [NSApp endSheet: [_importController window]];        
-    [[_importController window] orderOut:self];
-    [[_importController window] close];
-    [_importController stopAnimation];
-    [pool release];
+        [NSApp endSheet: [_importController window]];        
+        [[_importController window] orderOut:self];
+        [[_importController window] close];
+        [_importController stopAnimation];
+    }
 }
+#pragma clang diagnostic pop
 
 #pragma mark -
 
@@ -529,7 +528,7 @@
         NSLocalizedString(@"Save Changes?", "Save changes dialog title"),
         NSLocalizedString(@"Save", "Save changes dialog button"),
         NSLocalizedString(@"Don't Save", "Save changes dialog button"),
-        CANCEL, _window, self, NULL, overrideFunction, self, 
+        CANCEL, _window, self, NULL, overrideFunction, (__bridge void *)(self), 
         NSLocalizedString(@"Save changes dialog text", "LONG dialog text")
         //@"You have been scanning since your last save. Do you want to save your results?"
         );

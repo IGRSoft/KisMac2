@@ -92,7 +92,7 @@ static int KismetInstances = 0;
 	
 	sockd  = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockd == -1) { 
-		NSLog(@"Socket creation failed!"); 
+		DBNSLog(@"Socket creation failed!"); 
 			NSRunCriticalAlertPanel(
             NSLocalizedString(@"Could not connect to the Kismet server", "Error dialog title"),
             NSLocalizedString(@"Socket creation failed! This really shouldn't happen!", "LONG desc"),
@@ -109,20 +109,20 @@ static int KismetInstances = 0;
 	NSDictionary *drvr;
 	@try {
 		while ( (drvr = [e nextObject]) ) {
-			if ([[drvr objectForKey:@"driverID"] isEqualToString:@"WaveDriverKismet"]) {
-				hostname = [[drvr objectForKey:@"kismetserverhost"] UTF8String];
+			if ([drvr[@"driverID"] isEqualToString:@"WaveDriverKismet"]) {
+				hostname = [drvr[@"kismetserverhost"] UTF8String];
 				foundhostname = 1;
-				port = [[drvr objectForKey:@"kismetserverport"] intValue];
+				port = [drvr[@"kismetserverport"] intValue];
 				foundport = 1;
 			}
 		}
 	}
 	@catch (NSException * ex) {
-		NSLog(@"Exception getting the hostname and port from plist...");
+		DBNSLog(@"Exception getting the hostname and port from plist...");
 	}
 
 	if (foundhostname + foundport < 2) {
-		NSLog(@"Error getting the hostname and port from plist...");
+		DBNSLog(@"Error getting the hostname and port from plist...");
 	}	
 	
 	ip = inet_addr(hostname);
@@ -134,7 +134,7 @@ static int KismetInstances = 0;
 	status = connect(sockd, (struct sockaddr*)&serv_name, sizeof(serv_name));
 		
 	if (status == -1) {
-		NSLog(@"Could not connect to %s port %d", hostname, port);
+		DBNSLog(@"Could not connect to %s port %d", hostname, port);
 		NSRunCriticalAlertPanel(
             NSLocalizedString(@"Could not connect to the Kismet server", "Error dialog title"),
             [NSString stringWithFormat:@"KisMac could not connect to the Kismet server at %s port %d. Check the IP address and port.",hostname,port],
@@ -167,49 +167,49 @@ static int KismetInstances = 0;
 	NSNumber *signal,*noise,*channel,*capability,*isWPA;
 		
 	if((len = read(sockd, &netbuf[0], 2048)) < 0) { // read it in
-		NSLog(@"Kismet Server read failed"); // we can't read in!
+		DBNSLog(@"Kismet Server read failed"); // we can't read in!
 		return NO;
 	}
 	
-	netarray = [NSArray array];
+	netarray = @[];
     //NULL terminate
     netbuf[len] = 0;
-	netrcvd = [NSString stringWithUTF8String:netbuf];
+	netrcvd = @(netbuf);
 	rcvd2 = [netrcvd componentsSeparatedByString:@"\n"]; // split packet into lines
 	int arrayCount = [rcvd2 count];
 	for (i = 0; i < arrayCount; i++) { // iterate through each line - 1 line = 1 network
 		@try {
-				netrcvd = [rcvd2 objectAtIndex:i]; // put the current object into netrcvd
+				netrcvd = rcvd2[i]; // put the current object into netrcvd
 				rcvd = [netrcvd componentsSeparatedByString:@"\x01"]; // strip the SSID out
-				rcvd3 = [[rcvd objectAtIndex:0] componentsSeparatedByString:@" "]; // strip the rest down
-				if ([[rcvd3 objectAtIndex:0] isEqualToString:@"*NETWORK:"]) { // if this is a line specifying a new network
-					bssidar = [[rcvd3 objectAtIndex:1] componentsSeparatedByString:@":"]; // get the BSSID
+				rcvd3 = [rcvd[0] componentsSeparatedByString:@" "]; // strip the rest down
+				if ([rcvd3[0] isEqualToString:@"*NETWORK:"]) { // if this is a line specifying a new network
+					bssidar = [rcvd3[1] componentsSeparatedByString:@":"]; // get the BSSID
 					
 					for (j=0; j<6; j++) {
-						sscanf([[bssidar objectAtIndex:j] UTF8String], "%x", &bssidbyte); // convert it from ascii 12:34:56 into raw binary
+						sscanf([bssidar[j] UTF8String], "%x", &bssidbyte); // convert it from ascii 12:34:56 into raw binary
 						bssidstring[j] = bssidbyte;
 					}
 					
 					bssid = [NSData dataWithBytes:bssidstring length:6];					// bssid, simple enough
-					signalint = [[rcvd3 objectAtIndex:4] intValue];							// signal level, as an int
+					signalint = [rcvd3[4] intValue];							// signal level, as an int
 					if (signalint > 1000 || signalint < 0) { signalint = 0; }				// sometimes it comes through as an invalid number
-					signal = [NSNumber numberWithInt:signalint];							// signal level as NSNumber, you can't put int into array
-					noise = [NSNumber numberWithInt:0];										// this is only subtracted from signal, not needed
-					channel = [NSNumber numberWithInt:[[rcvd3 objectAtIndex:6] intValue]];	// channel...
+					signal = @(signalint);							// signal level as NSNumber, you can't put int into array
+					noise = @0;										// this is only subtracted from signal, not needed
+					channel = @([rcvd3[6] intValue]);	// channel...
 					
 					flags = 0;
 					
-					if ([[rcvd3 objectAtIndex:3] intValue] == 2) {
+					if ([rcvd3[3] intValue] == 2) {
 						flags = flags | IEEE80211_CAPINFO_PRIVACY_LE; // if it's 2, it's WEP
 					}
 					
-					if ([[rcvd3 objectAtIndex:3] intValue] > 2) { // it's either not WEP, or it's some other encryption scheme
-						isWPA = [NSNumber numberWithInt:1]; // it's WPA
+					if ([rcvd3[3] intValue] > 2) { // it's either not WEP, or it's some other encryption scheme
+						isWPA = @1; // it's WPA
 					} else {
-						isWPA = [NSNumber numberWithInt:0]; // it's open, or we don't know what it is
+						isWPA = @0; // it's open, or we don't know what it is
 					}
 					
-					t = [[rcvd3 objectAtIndex:2] intValue]; // network type
+					t = [rcvd3[2] intValue]; // network type
 					
 					if (t == 0) {
 					flags = flags | IEEE80211_CAPINFO_ESS_LE;		// it's managed
@@ -218,15 +218,15 @@ static int KismetInstances = 0;
 					} else if (t == 2) {
 					flags = flags | IEEE80211_CAPINFO_PROBE_REQ_LE; // it's a probe request
 					}
-					capability = [NSNumber numberWithInt:flags];
-					name = [rcvd objectAtIndex:1];
-					nets = [NSDictionary dictionaryWithObjectsAndKeys:bssid,@"BSSID",signal,@"signal",noise,@"noise",channel,@"channel",isWPA,@"isWPA",name,@"name",capability,@"capability",nil];
+					capability = @(flags);
+					name = rcvd[1];
+					nets = @{@"BSSID": bssid,@"signal": signal,@"noise": noise,@"channel": channel,@"isWPA": isWPA,@"name": name,@"capability": capability};
 					netarray = [netarray arrayByAddingObject:nets];
 					usenetarray = 1; // we do want to send the result
 				}
 		}
 		@catch (NSException *exception) {
-			NSLog(@"Invalid message, ignored"); // if an invalid message came in, ignore it instead of crashing
+			DBNSLog(@"Invalid message, ignored"); // if an invalid message came in, ignore it instead of crashing
 		}
 	}
 	if (usenetarray == 1) { return netarray; } else { return nil; } // return the result
@@ -244,7 +244,6 @@ static int KismetInstances = 0;
     KismetInstances--;
     close(sockd);
 	
-    [super dealloc];
 }
 
 

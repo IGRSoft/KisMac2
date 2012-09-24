@@ -59,15 +59,14 @@
     if (!self) return nil;
 
     _cgImg = NULL;
-    _img = [img retain];
+    _img = img;
     
     return self;
 }
 
 - (void)setImage:(NSImage*)img {
     NSParameterAssert(img);
-    [_img autorelease];
-    _img = [img retain];
+    _img = img;
     _frame.size = [img size];
     [self _deleteCache];
 }
@@ -98,8 +97,6 @@
 
 - (void)dealloc {
     [self _deleteCache];
-    [_img release];
-    [super dealloc];
 }
 
 @end

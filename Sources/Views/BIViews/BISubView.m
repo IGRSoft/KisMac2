@@ -29,7 +29,7 @@
 - (id)init {
     self = [super init];
     if (self) {
-        _subViews = [[NSMutableArray array] retain];
+        _subViews = [NSMutableArray array];
         _lock = [[NSRecursiveLock alloc] init];
         _visible = YES;
         _frame = NSZeroRect;
@@ -38,13 +38,15 @@
 }
 
 - (id)initWithFrame:(NSRect)frame {
-    if (![self init]) return nil;
+	self=[self init];
+    if (!self) return nil;
     _frame = frame;
     return self;
 }
 
 - (id)initWithSize:(NSSize)size {
-    if (![self init]) return nil;
+    self=[self init];
+    if (!self) return nil;
     _frame.size = size;
     return self;
 }
@@ -130,7 +132,7 @@
     
     [_lock lock];
     for (i = 0; i < [_subViews count]; i++)
-        [(BISubView*)[_subViews objectAtIndex:i] drawAtPoint:p inRect:rect];
+        [(BISubView*)_subViews[i] drawAtPoint:p inRect:rect];
     [_lock unlock];
     
     [self drawSubAtPoint:p inRect:rect];
@@ -140,10 +142,5 @@
 
 #pragma mark -
 
-- (void)dealloc {
-    [_lock release];
-    [_subViews release];
-    [super dealloc];
-}
 
 @end

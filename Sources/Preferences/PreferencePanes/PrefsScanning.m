@@ -40,7 +40,7 @@
     } else if(sender == _terminateIfClosed) {
         [controller setObject:[NSNumber numberWithBool:[_terminateIfClosed state]] forKey:@"terminateIfClosed"];    
     } else {
-        NSLog(@"Error: Invalid sender(%@) in setValueForSender:",sender);
+        DBNSLog(@"Error: Invalid sender(%@) in setValueForSender:",sender);
     }
 }
 

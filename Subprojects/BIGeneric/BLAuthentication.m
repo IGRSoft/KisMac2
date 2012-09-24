@@ -32,7 +32,6 @@
 - (void)dealloc {
     [self deauthenticate];
     
-    [super dealloc];
 }
 
 //============================================================================
@@ -70,15 +69,16 @@
     {
             
         if( numItems < 1 ) {
+			free(items);
             return authorized;
         }
 
         while( i < numItems && i < 20 ) {
-             [[forCommands objectAtIndex:i] getCString:paths[i]];
+             [forCommands[i] getCString:paths[i]];
             
             items[i].name = kAuthorizationRightExecute;
             items[i].value = paths[i];
-            items[i].valueLength = [[forCommands objectAtIndex:i] cStringLength];
+            items[i].valueLength = [forCommands[i] cStringLength];
             items[i].flags = 0;
             
             i++;
@@ -136,16 +136,19 @@
 	int i = 0;
 	
 	if( numItems < 1 )
+	{
+		free(items);
 		return authorized;
+	}
 	
 	while( i < numItems && i < 20 )
     {
-        NSLog(@"%@", [forCommands objectAtIndex:i]);
-		[[forCommands objectAtIndex:i] getCString:paths[i]];
+        NSLog(@"%@", forCommands[i]);
+		[forCommands[i] getCString:paths[i]];
 		
 		items[i].name = kAuthorizationRightExecute;
 		items[i].value = paths[i];
-		items[i].valueLength = [[forCommands objectAtIndex:i] cStringLength];
+		items[i].valueLength = [forCommands[i] cStringLength];
 		items[i].flags = 0;
 		
 		i++;
@@ -207,11 +210,9 @@
     
     outpipe = popen([popenArgs UTF8String],"r");
 
-	[popenArgs release];
 
 	if(!outpipe) 
     {
-        [tempData release];
         NSLog(@"Error opening pipe: %@",forProcess);
         NSBeep();
         return 0;
@@ -226,7 +227,6 @@
 		}
 	} while(len==512);
     
-	[tempData release];
 
 	pclose(outpipe);
 	
@@ -235,7 +235,6 @@
 	if( [commandOutput length] > 0 ) {
 		outputScanner = [NSScanner scannerWithString:commandOutput];
 		
-		[commandOutput release];
 		
 		[outputScanner setCharactersToBeSkipped:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 		
@@ -257,7 +256,6 @@
 		}
 	}
 	else {
-		[commandOutput release];
 
 		return 0;
 	}
@@ -274,34 +272,28 @@
 // a single argument.
 //
 -(BOOL)executeCommand:(NSString *)pathToCommand withArgs:(NSArray *)arguments {
-	char* args[30]; // can only handle 30 arguments to a given command
-	OSStatus err = 0;
 	unsigned int i = 0;
+	NSDictionary *error = nil;
 	
-	if(![self authenticate:[NSArray arrayWithObject:pathToCommand]])
+	if(![self authenticate:@[pathToCommand]])
 		return NO;
 	
-	if( arguments == nil || [arguments count] < 1  ) {
-		err = AuthorizationExecuteWithPrivileges(authorizationRef, [pathToCommand fileSystemRepresentation], 0, NULL, NULL);
+	NSString *script = [NSString stringWithFormat:@"do shell script \"%@", pathToCommand];
+	
+	while( i < [arguments count] && i < 19) {
+		script = [script stringByAppendingFormat:@" %@", arguments[i]];
+		++i;
 	}
-	else {
-		while( i < [arguments count] && i < 19) {
-			args[i] = (char*)[[arguments objectAtIndex:i] cString];
-			i++;
-		}
-		args[i] = NULL;
-
-		err = AuthorizationExecuteWithPrivileges(authorizationRef, [pathToCommand fileSystemRepresentation],
-												0, args, NULL);
-	}
-
-    if(err!=0) {
-		NSBeep();
-		NSLog(@"Error %d in AuthorizationExecuteWithPrivileges",err);
-		return NO;
-	}
-	else {
+	
+	script = [script stringByAppendingFormat:@"\" with administrator privileges"];
+	
+	NSAppleScript *appleScript = [[NSAppleScript new] initWithSource:script];
+	if ([appleScript executeAndReturnError:&error]) {
+		NSLog(@"success!");
 		return YES;
+	} else {
+		NSLog(@"failure: %@", error);
+		return NO;
 	}
 }
 
@@ -318,14 +310,14 @@
 - (BOOL)killProcess:(NSString *)commandFromPS {
 	NSString *pid;
 
-	if( ![self isAuthenticated:[NSArray arrayWithObject:commandFromPS]] ) {
-		[self authenticate:[NSArray arrayWithObject:commandFromPS]];
+	if( ![self isAuthenticated:@[commandFromPS]] ) {
+		[self authenticate:@[commandFromPS]];
 	}
 	
 	pid = [NSString stringWithFormat:@"%d",[self getPID:commandFromPS]];
 	
 	if( [pid intValue] > 0 ) {
-		[self executeCommand:@"/bin/kill" withArgs:[NSArray arrayWithObject:pid]];
+		[self executeCommand:@"/bin/kill" withArgs:@[pid]];
 		return YES;
 	}
 	else {

@@ -41,25 +41,25 @@
         _receivedBytes=[coder decodeDoubleForKey:@"aReceivedBytes"];
         _sentBytes=[coder decodeDoubleForKey:@"aSentBytes"];
         
-        _ID     = [[coder decodeObjectForKey:@"aID"] retain];
-        _date   = [[coder decodeObjectForKey:@"aDate"] retain];
-        _IPAddress = [[coder decodeObjectForKey:@"aIPA"] retain];
+        _ID     = [coder decodeObjectForKey:@"aID"];
+        _date   = [coder decodeObjectForKey:@"aDate"];
+        _IPAddress = [coder decodeObjectForKey:@"aIPA"];
         
         //WPA stuff
-        _sNonce = [[coder decodeObjectForKey:@"sNonce"] retain];
-        _aNonce = [[coder decodeObjectForKey:@"aNonce"] retain];
-        _packet = [[coder decodeObjectForKey:@"packet"] retain];
-        _MIC    = [[coder decodeObjectForKey:@"MIC"] retain];
+        _sNonce = [coder decodeObjectForKey:@"sNonce"];
+        _aNonce = [coder decodeObjectForKey:@"aNonce"];
+        _packet = [coder decodeObjectForKey:@"packet"];
+        _MIC    = [coder decodeObjectForKey:@"MIC"];
         _wpaKeyCipher = [coder decodeIntForKey:@"wpaKeyCipher"];
         
         //LEAP stuff
-        _leapUsername   = [[coder decodeObjectForKey:@"leapUsername"] retain];
-        _leapChallenge  = [[coder decodeObjectForKey:@"leapChallenge"] retain];
-        _leapResponse   = [[coder decodeObjectForKey:@"leapResponse"] retain];
+        _leapUsername   = [coder decodeObjectForKey:@"leapUsername"];
+        _leapChallenge  = [coder decodeObjectForKey:@"leapChallenge"];
+        _leapResponse   = [coder decodeObjectForKey:@"leapResponse"];
         
         _changed = YES;
      } else {
-        NSLog(@"Cannot decode this way");
+        DBNSLog(@"Cannot decode this way");
     }
     return self;
 }
@@ -68,26 +68,26 @@
     self = [self init];
 	if (!self) return nil;
 	
-	_curSignal = [[dict objectForKey:@"curSignal"] intValue];
+	_curSignal = [dict[@"curSignal"] intValue];
 
-	_receivedBytes = [[dict objectForKey:@"receivedBytes"] doubleValue];
-	_sentBytes = [[dict objectForKey:@"sentBytes"] doubleValue];
+	_receivedBytes = [dict[@"receivedBytes"] doubleValue];
+	_sentBytes = [dict[@"sentBytes"] doubleValue];
 	
-	_ID     = [[dict objectForKey:@"ID"] retain];
-	_date   = [[dict objectForKey:@"date"] retain];
-    _IPAddress = [[dict objectForKey:@"IPAddress"] retain];
+	_ID     = dict[@"ID"];
+	_date   = dict[@"date"];
+    _IPAddress = dict[@"IPAddress"];
 	
 	//WPA stuff
-	_sNonce = [[dict objectForKey:@"wpaSNonce"] retain];
-	_aNonce = [[dict objectForKey:@"wpaANonce"] retain];
-	_packet = [[dict objectForKey:@"wpaPacket"] retain];
-	_MIC    = [[dict objectForKey:@"wpaMIC"] retain];
-    _wpaKeyCipher = [[dict objectForKey:@"wpaKeyCipher"] intValue];
+	_sNonce = dict[@"wpaSNonce"];
+	_aNonce = dict[@"wpaANonce"];
+	_packet = dict[@"wpaPacket"];
+	_MIC    = dict[@"wpaMIC"];
+    _wpaKeyCipher = [dict[@"wpaKeyCipher"] intValue];
 
 	//LEAP stuff
-	_leapUsername   = [[dict objectForKey:@"leapUsername"] retain];
-	_leapChallenge  = [[dict objectForKey:@"leapChallenge"] retain];
-	_leapResponse   = [[dict objectForKey:@"leapResponse"] retain];
+	_leapUsername   = dict[@"leapUsername"];
+	_leapChallenge  = dict[@"leapChallenge"];
+	_leapResponse   = dict[@"leapResponse"];
 	
 	_changed = YES;
 
@@ -97,23 +97,23 @@
 - (NSDictionary*)dataDictionary {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
 	
-	[dict setObject:[NSNumber numberWithInt:_curSignal] forKey:@"curSignal"];
-	[dict setObject:[NSNumber numberWithDouble:_receivedBytes] forKey:@"receivedBytes"];
-	[dict setObject:[NSNumber numberWithDouble:_sentBytes] forKey:@"sentBytes"];
+	dict[@"curSignal"] = @(_curSignal);
+	dict[@"receivedBytes"] = [NSNumber numberWithDouble:_receivedBytes];
+	dict[@"sentBytes"] = [NSNumber numberWithDouble:_sentBytes];
 	
-	[dict setObject:_ID forKey:@"ID"];
-	if (_date) [dict setObject:_date forKey:@"date"];
-    if (_IPAddress) [dict setObject:_IPAddress forKey:@"IPAddress"];
+	dict[@"ID"] = _ID;
+	if (_date) dict[@"date"] = _date;
+    if (_IPAddress) dict[@"IPAddress"] = _IPAddress;
 	
-	if (_sNonce) [dict setObject:_sNonce forKey:@"wpaSNonce"];
-	if (_aNonce) [dict setObject:_aNonce forKey:@"wpaANonce"];
-	if (_packet) [dict setObject:_packet forKey:@"wpaPacket"];
-	if (_MIC)    [dict setObject:_MIC forKey:@"wpaMIC"];
-    if (_wpaKeyCipher) [dict setObject:[NSNumber numberWithInt:_wpaKeyCipher] forKey:@"wpaKeyCipher"];
+	if (_sNonce) dict[@"wpaSNonce"] = _sNonce;
+	if (_aNonce) dict[@"wpaANonce"] = _aNonce;
+	if (_packet) dict[@"wpaPacket"] = _packet;
+	if (_MIC)    dict[@"wpaMIC"] = _MIC;
+    if (_wpaKeyCipher) dict[@"wpaKeyCipher"] = @(_wpaKeyCipher);
         
-	if (_leapUsername)  [dict setObject:_leapUsername forKey:@"leapUsername"];
-	if (_leapChallenge) [dict setObject:_leapChallenge forKey:@"leapChallenge"];
-	if (_leapResponse)  [dict setObject:_leapResponse forKey:@"leapResponse"];
+	if (_leapUsername)  dict[@"leapUsername"] = _leapUsername;
+	if (_leapChallenge) dict[@"leapChallenge"] = _leapChallenge;
+	if (_leapResponse)  dict[@"leapResponse"] = _leapResponse;
 
 	return dict;
 }
@@ -129,40 +129,45 @@
     if ([w isWPAKeyPacket]) {
         switch ([w wpaCopyNonce:nonce]) {
             case wpaNonceANonce:
-                NSLog(@"Detected WPA challenge for %@!", _ID);
+                DBNSLog(@"Detected WPA challenge for %@!", _ID);
 				[GrowlController notifyGrowlWPAChallenge:@"" mac:_ID bssid:[w BSSIDString]];
-                NSLog(@"Nonce %.2X %.2X", nonce[0], nonce[WPA_NONCE_LENGTH-1]);
-                [WaveHelper secureReplace:&_aNonce withObject:[NSData dataWithBytes:nonce length:WPA_NONCE_LENGTH]];
+                DBNSLog(@"Nonce %.2X %.2X", nonce[0], nonce[WPA_NONCE_LENGTH-1]);
+				_aNonce = [NSData dataWithBytes:nonce length:WPA_NONCE_LENGTH];
+                //[WaveHelper secureReplace:&_aNonce withObject:[NSData dataWithBytes:nonce length:WPA_NONCE_LENGTH]];
                 _wpaKeyCipher = [w wpaKeyCipher];
                 break;
             case wpaNonceSNonce:
-                NSLog(@"Detected WPA response for %@!", _ID);
+                DBNSLog(@"Detected WPA response for %@!", _ID);
 				[GrowlController notifyGrowlWPAResponse:@"" mac:_ID bssid:[w BSSIDString]];
-                NSLog(@"Nonce %.2X %.2X", nonce[0], nonce[WPA_NONCE_LENGTH-1]);
-                [WaveHelper secureReplace:&_sNonce withObject:[NSData dataWithBytes:nonce length:WPA_NONCE_LENGTH]];
+                DBNSLog(@"Nonce %.2X %.2X", nonce[0], nonce[WPA_NONCE_LENGTH-1]);
+				_sNonce = [NSData dataWithBytes:nonce length:WPA_NONCE_LENGTH];
+                //[WaveHelper secureReplace:&_sNonce withObject:[NSData dataWithBytes:nonce length:WPA_NONCE_LENGTH]];
                 break;
             case wpaNonceNone:
-                NSLog(@"Nonce None");
+                DBNSLog(@"Nonce None");
                 break;
         }
         packet = [w eapolData];
         mic = [w eapolMIC];
-        if (packet) [WaveHelper secureReplace:&_packet withObject:packet];
-        if (mic)    [WaveHelper secureReplace:&_MIC    withObject:mic];
+        if (packet) _packet = packet; //[WaveHelper secureReplace:&_packet withObject:packet];
+        if (mic)    _MIC = mic; //[WaveHelper secureReplace:&_MIC    withObject:mic];
     } else if ([w isLEAPKeyPacket]) {
         switch ([w leapCode]) {
         case leapAuthCodeChallenge:
-            if (!_leapUsername) [WaveHelper secureReplace:&_leapUsername  withObject:[w username]];
-            if (!_leapChallenge) [WaveHelper secureReplace:&_leapChallenge withObject:[w challenge]];
+			if (!_leapUsername) _leapUsername = [w username]; //[WaveHelper secureReplace:&_leapUsername  withObject:];
+			if (!_leapChallenge) _leapChallenge = [w challenge]; //[WaveHelper secureReplace:&_leapChallenge withObject:[w challenge]];
             break;
         case leapAuthCodeResponse:
-            if (!_leapResponse) [WaveHelper secureReplace:&_leapResponse  withObject:[w response]];
+			if (!_leapResponse) _leapResponse = [w response]; //[WaveHelper secureReplace:&_leapResponse  withObject:[w response]];
             break;
         case leapAuthCodeFailure:
-            NSLog(@"Detected LEAP authentication failure for client %@! Username: %@. Deleting all collected auth data!", _ID, _leapUsername);
-            [WaveHelper secureRelease:&_leapUsername];
-            [WaveHelper secureRelease:&_leapChallenge];
-            [WaveHelper secureRelease:&_leapResponse];
+            DBNSLog(@"Detected LEAP authentication failure for client %@! Username: %@. Deleting all collected auth data!", _ID, _leapUsername);
+			_leapUsername = nil;
+			_leapChallenge = nil;
+			_leapResponse = nil;
+            //[WaveHelper secureRelease:&_leapUsername];
+            //[WaveHelper secureRelease:&_leapChallenge];
+            //[WaveHelper secureRelease:&_leapResponse];
             break;
         default:
             break;
@@ -172,11 +177,11 @@
 
 -(void) parseFrameAsIncoming:(WavePacket*)w {
     if (!_ID) {
-        _ID=[[w stringReceiverID] retain];
+        _ID=[w stringReceiverID];
 		if ([_ID isEqualToString:@"00:0F:F7:C8:7A:60"] || [_ID isEqualToString:@"00:11:20:EE:CE:48"] || 
 			[_ID isEqualToString:@"00:12:D9:B3:16:C0"] || [_ID isEqualToString:@"00:12:D9:B3:18:90"] ||
 			[_ID isEqualToString:@"00:12:D9:B3:1D:40"]) {
-			NSLog(@"Found desired Access Point: %@", _ID);
+			DBNSLog(@"Found desired Access Point: %@", _ID);
 			[WaveHelper speakSentence:[[NSString stringWithFormat:@"Found desired Access Point: %@", _ID] UTF8String] withVoice:[[NSUserDefaults standardUserDefaults] integerForKey:@"Voice"]];
 			NSBeep(); NSBeep(); NSBeep();
 		}
@@ -186,8 +191,8 @@
     _changed = YES;
     
     if ([w destinationIPAsString] != nil && ![[w destinationIPAsString] isEqualToString:@"0.0.0.0"] ) {
-        _IPAddress = [[w destinationIPAsString] retain];
-     //   NSLog(@"Incoming Packet Client dest IP Found: %@", [w destinationIPAsString]);
+        _IPAddress = [w destinationIPAsString];
+     //   DBNSLog(@"Incoming Packet Client dest IP Found: %@", [w destinationIPAsString]);
     }
     
     if (![w toDS])
@@ -196,23 +201,24 @@
 
 -(void) parseFrameAsOutgoing:(WavePacket*)w {
     if (!_ID) {
-        _ID=[[w stringSenderID] retain];
+        _ID=[w stringSenderID];
 		if ([_ID isEqualToString:@"00:0F:F7:C8:7A:60"] || [_ID isEqualToString:@"00:11:20:EE:CE:48"] || 
 			[_ID isEqualToString:@"00:12:D9:B3:16:C0"] || [_ID isEqualToString:@"00:12:D9:B3:18:90"] ||
 			[_ID isEqualToString:@"00:12:D9:B3:1D:40"]) {
-			NSLog(@"Found desired Access Point: %@", _ID);
+			DBNSLog(@"Found desired Access Point: %@", _ID);
 			[WaveHelper speakSentence:[[NSString stringWithFormat:@"Found desired Access Point: %@", _ID] UTF8String] withVoice:[[NSUserDefaults standardUserDefaults] integerForKey:@"Voice"]];
 			NSBeep(); NSBeep(); NSBeep();
 		}
     }
-    [WaveHelper secureReplace:&_date withObject:[NSDate date]];
+	_date = [NSDate date];
+    //[WaveHelper secureReplace:&_date withObject:[NSDate date]];
     
     _curSignal=[w signal];
     _sentBytes+=[w length];    
     _changed = YES;
     if ([w sourceIPAsString] != nil  && ![[w sourceIPAsString] isEqualToString:@"0.0.0.0"] ) {
-        _IPAddress = [[w sourceIPAsString] retain];
-        //NSLog(@"Outgoing Packet Client source IP Found: %@", [w sourceIPAsString]);
+        _IPAddress = [w sourceIPAsString];
+        //DBNSLog(@"Outgoing Packet Client source IP Found: %@", [w sourceIPAsString]);
     }
     
     if (![w fromDS])
@@ -236,7 +242,7 @@
 
 - (NSString *)vendor {
     if (_vendor) return _vendor;
-    _vendor=[[WaveHelper vendorForMAC:_ID] retain];
+    _vendor=[WaveHelper vendorForMAC:_ID];
     return _vendor;
 }
 
@@ -344,22 +350,4 @@
 
 #pragma mark -
 
--(void) dealloc {
-    [_date release];
-    [_ID release];
-    [_vendor release];
-
-    //WPA
-    [_sNonce release];
-    [_aNonce release];
-    [_packet release];
-    [_MIC release];
-    
-    //LEAP
-    [_leapUsername  release];
-    [_leapChallenge release];
-    [_leapResponse  release];
-	
-	[super dealloc];
-}
 @end

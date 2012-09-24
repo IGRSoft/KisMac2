@@ -173,7 +173,6 @@ col delta(col c1, col c2, int speed) {
 	[self _drawFrameForIndex:_index];
     [img unlockFocus];
     [self setImage:img];
-    [img release];
 }
 
 - (id)initForID:(int)i {
@@ -225,7 +224,7 @@ col delta(col c1, col c2, int speed) {
 	_slideScale = visible ? 0 : 1;
 	_parentLocation = parentLocation;
 
-    [NSThread detachNewThreadSelector:@selector(slideThread:) toTarget:self withObject:[NSNumber numberWithBool:visible]];
+    [NSThread detachNewThreadSelector:@selector(slideThread:) toTarget:self withObject:@(visible)];
 }
 
 - (void)timeout:(NSTimer*)timer {
@@ -242,57 +241,53 @@ col delta(col c1, col c2, int speed) {
 #define ADJUSTX(X) ADJUSTCOMP(X.red) ADJUSTCOMP(X.green) ADJUSTCOMP(X.blue) ADJUSTCOMP(X.alpha)
 
 - (void)zoomThread:(id)object {
-    NSAutoreleasePool* subpool = [[NSAutoreleasePool alloc] init];
-    BOOL didSomething;
-    NSRect f = _frame;
+    @autoreleasepool {
+        BOOL didSomething;
+        NSRect f = _frame;
 	f.origin.x += _parentLocation.x;
 	f.origin.y += _parentLocation.y;
 	
-    if([_zoomLock tryLock]) {
-        [self retain];
-        while(YES) {
-            didSomething = NO;
+        if([_zoomLock tryLock]) {
+            while(YES) {
+                didSomething = NO;
 			ADJUSTX(fill);
 			ADJUSTX(border);
-            if (!didSomething) break;
-            [self _generateCache];
-            [[WaveHelper mapView] setNeedsDisplayInRect:f];
-            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+                if (!didSomething) break;
+                [self _generateCache];
+                [[WaveHelper mapView] setNeedsDisplayInRect:f];
+                [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+            }
+            [_zoomLock unlock];
         }
-        [self release];
-        [_zoomLock unlock];
-    }
 
-    [subpool drain];
+    }
 }
 
 - (void)slideThread:(id)object {
-    NSAutoreleasePool* subpool = [[NSAutoreleasePool alloc] init];
-	BOOL slideIn = [object boolValue];
+    @autoreleasepool {
+		BOOL slideIn = [object boolValue];
     NSRect f = _frame;
-	f.origin.x += _parentLocation.x;
-	f.origin.y += _parentLocation.y;
-	
+		f.origin.x += _parentLocation.x;
+		f.origin.y += _parentLocation.y;
+		
     if([_slideLock tryLock]) {
-        [self retain];
-		if (slideIn) [self setVisible:YES];
+			if (slideIn) [self setVisible:YES];
         while(slideIn ? _slideScale < 1.1 : _slideScale > 0.1) {
-			if (slideIn) _slideScale += 0.1;
-			else _slideScale -= 0.1;
+				if (slideIn) _slideScale += 0.1;
+				else _slideScale -= 0.1;
             [self _generateCache];
             [[WaveHelper mapView] setNeedsDisplayInRect:f];
             [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
         }
-		if (slideIn) {
-			_slideScale = 1;
-			[self _generateCache];
+			if (slideIn) {
+				_slideScale = 1;
+				[self _generateCache];
             [[WaveHelper mapView] setNeedsDisplayInRect:f];
-		} else [self setVisible:NO];
-        [self release];
+			} else [self setVisible:NO];
         [_slideLock unlock];
     }
 
-    [subpool drain];
+    }
 }
 
 
@@ -303,9 +298,6 @@ col delta(col c1, col c2, int speed) {
 		[_timeout invalidate];
 	}
     
-    [_zoomLock  release];
-    [_slideLock release];
-    [super dealloc];
 }
 
 @end

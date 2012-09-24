@@ -46,8 +46,7 @@
     NSParameterAssert(polygon);
     NSParameterAssert([polygon count] % 2 == 0);
     
-    [_polygon autorelease];
-    _polygon = [polygon retain];
+    _polygon = polygon;
     return YES;
 }
 
@@ -74,7 +73,7 @@
     glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
     glColor4fv(_color);
     for(i = 0; i < [_polygon count]; i+=2) {
-        glVertex2f([[_polygon objectAtIndex:i] floatValue] + p.x, [[_polygon objectAtIndex:i+1] floatValue] +  p.y);
+        glVertex2f([_polygon[i] floatValue] + p.x, [_polygon[i+1] floatValue] +  p.y);
     }
 
     glEnd();
@@ -87,9 +86,9 @@
     if ([_polygon count] < 6) return;
     [[NSColor colorWithDeviceRed:_color[0] green:_color[1] blue:_color[2] alpha:_color[3]] set];
 
-    [bp moveToPoint:NSMakePoint([[_polygon objectAtIndex:0] floatValue] + p.x, [[_polygon objectAtIndex:1] floatValue] + p.y)];
+    [bp moveToPoint:NSMakePoint([_polygon[0] floatValue] + p.x, [_polygon[1] floatValue] + p.y)];
     for(i = 2; i < [_polygon count]; i+=2) {
-        [bp lineToPoint:NSMakePoint([[_polygon objectAtIndex:i] floatValue] + p.x, [[_polygon objectAtIndex:i+1] floatValue] + p.y)];
+        [bp lineToPoint:NSMakePoint([_polygon[i] floatValue] + p.x, [_polygon[i+1] floatValue] + p.y)];
     }
     [bp closePath];
     [bp fill];
@@ -97,8 +96,4 @@
 
 #pragma mark -
 
-- (void)dealloc {
-    [_polygon release];
-    [super dealloc];
-}
 @end

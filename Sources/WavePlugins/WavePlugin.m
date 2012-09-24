@@ -22,7 +22,6 @@
     if (!self)
         return nil;
     
-    [driver retain];
     _driver = driver;
     
     _status = WavePluginIdle;
@@ -32,12 +31,9 @@
 }
 - (void) dealloc {
     
-    if (_driver)
-        [_driver release];
     
     _driver = nil;
     
-    [super dealloc];
     
     return;
 }

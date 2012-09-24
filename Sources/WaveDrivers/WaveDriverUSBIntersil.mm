@@ -66,7 +66,7 @@ bool explicitlyLoadedUSBIntersil = NO;
 + (bool) unloadBackend {
 	if (!explicitlyLoadedUSBIntersil) return YES;
 	
-    NSLog(@"Restarting the USB drivers");
+    DBNSLog(@"Restarting the USB drivers");
     return [WaveHelper runScript:@"usbprism2_unprep.sh"];
 }
 
@@ -77,14 +77,10 @@ bool explicitlyLoadedUSBIntersil = NO;
     if (!self)
         return nil;
     
-    _permittedRates = [NSArray arrayWithObjects:
-        [NSNumber numberWithUnsignedInt:KMRate1],
+    _permittedRates = @[[NSNumber numberWithUnsignedInt:KMRate1],
         [NSNumber numberWithUnsignedInt:KMRate2],
         [NSNumber numberWithUnsignedInt:KMRate5_5],
-        [NSNumber numberWithUnsignedInt:KMRate11],
-        nil
-    ];
-    [_permittedRates retain];
+        [NSNumber numberWithUnsignedInt:KMRate11]];
     return self;
 }
 
@@ -93,7 +89,7 @@ bool explicitlyLoadedUSBIntersil = NO;
     
     _driver = new IntersilJack;
     _driver->startMatching();
-    NSLog(@"Matching finished\n");
+    DBNSLog(@"Matching finished\n");
     if (!(_driver->deviceMatched()))
         return NO;
     

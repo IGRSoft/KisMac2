@@ -19,7 +19,7 @@ static BOOL _alertDone;
 - (int)showAlertMessage:(NSString *)msg title:(NSString *)title button:(NSString *)button {
     NSAlert *alert;
     
-    alert = [NSAlert alertWithMessageText:title defaultButton:button alternateButton:nil otherButton:nil informativeTextWithFormat:msg];
+    alert = [NSAlert alertWithMessageText:title defaultButton:button alternateButton:nil otherButton:nil informativeTextWithFormat:msg, nil];
     [alert setAlertStyle:NSCriticalAlertStyle];
     [alert beginSheetModalForWindow:self modalDelegate:self didEndSelector:@selector(alertSheetDidEnd:returnCode:contextInfo:) contextInfo:nil];
     

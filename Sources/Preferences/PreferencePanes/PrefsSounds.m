@@ -27,7 +27,7 @@
     for (voiceIndex = 1; voiceIndex <= numOfVoices; voiceIndex++) {
         GetIndVoice(voiceIndex, &theVoiceSpec);
         GetVoiceDescription(&theVoiceSpec, &theVoiceDesc, sizeof(theVoiceDesc));
-        voiceName = [NSString stringWithCString:(char*)&(theVoiceDesc.name[1]) encoding:NSUTF8StringEncoding];
+        voiceName = @((char*)&(theVoiceDesc.name[1]));
         [aVoices addItemWithTitle:voiceName];
     }
 
@@ -41,9 +41,9 @@
     sounds = [[[NSFileManager defaultManager]
                contentsOfDirectoryAtPath:@"/System/Library/Sounds" error: &error] objectEnumerator];
 
-    [aGeigerSounds addItemWithTitle:[NSString stringWithString:@"None"]];
-    [aWEPSounds addItemWithTitle:[NSString stringWithString:@"None"]];
-    [aNOWEPSounds addItemWithTitle:[NSString stringWithString:@"None"]];
+    [aGeigerSounds addItemWithTitle:@"None"];
+    [aWEPSounds addItemWithTitle:@"None"];
+    [aNOWEPSounds addItemWithTitle:@"None"];
 
     [[aGeigerSounds menu] addItem:[NSMenuItem separatorItem]];
     [[aWEPSounds menu] addItem:[NSMenuItem separatorItem]];
@@ -73,7 +73,7 @@
 -(BOOL)updateDictionary {
     
     [aGeigerSensity validateEditing];
-    [controller setObject:[NSNumber numberWithInt:[aGeigerSensity intValue]] forKey:@"GeigerSensity"];
+    [controller setObject:@([aGeigerSensity intValue]) forKey:@"GeigerSensity"];
 
     return YES;
 }
@@ -96,13 +96,13 @@
         [controller setObject:[sender titleOfSelectedItem] forKey:@"GeigerSound"];
     }
     else if (sender == aGeigerSensity) {
-        [controller setObject:[NSNumber numberWithInt:[sender intValue]] forKey:@"GeigerSensity"];
+        [controller setObject:@([sender intValue]) forKey:@"GeigerSensity"];
     }
     else if (sender == useSounds) {
         [controller setObject:[NSNumber numberWithBool:[sender state]] forKey:@"playCrackSounds"];
     }
     else {
-        NSLog(@"Error: Invalid sender(%@) in setValueForSender:",sender);
+        DBNSLog(@"Error: Invalid sender(%@) in setValueForSender:",sender);
     }
 }
 

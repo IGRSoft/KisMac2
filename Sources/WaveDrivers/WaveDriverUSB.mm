@@ -188,40 +188,42 @@
 #pragma mark -
 
 - (void)doInjection:(NSDictionary *)d {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    NSData *data = [d objectForKey:@"data"];
-    KFrame *f = (KFrame *)[data bytes];
-    NSNumber *howM = [d objectForKey:@"howMany"];
-    NSString *sel = [d objectForKey:@"selector"]; 
-    SEL selector = NSSelectorFromString(sel);
-    id target = [d objectForKey:@"target"];
-    NSThread *thr = [d objectForKey:@"thread"];
-    int howMany = [howM intValue];
-    NSLog(@"doInj HowMany %d", howMany);
-    if (howMany == -1) {
-        while(_transmitting) {
-            _driver->sendKFrame(f);
-            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:_interval]];
-        }
-    } else {
-        while(_transmitting && howMany) {
-            _driver->sendKFrame(f);
-            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:_interval]];
-            howMany--;
-        }
-    }
-    [pool release];
-    if (target && selector) {
-        [target performSelector:selector onThread:thr withObject:nil waitUntilDone:NO];
-    }
-    [d release];
-    return;
+
+	@autoreleasepool {
+		NSData *data = d[@"data"];
+		KFrame *f = (KFrame *)[data bytes];
+		NSNumber *howM = d[@"howMany"];
+		NSString *sel = d[@"selector"];
+		SEL selector = NSSelectorFromString(sel);
+		id target = d[@"target"];
+		NSThread *thr = d[@"thread"];
+		int howMany = [howM intValue];
+		DBNSLog(@"doInj HowMany %d", howMany);
+		if (howMany == -1) {
+			while(_transmitting) {
+				_driver->sendKFrame(f);
+				[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:_interval]];
+			}
+		} else {
+			while(_transmitting && howMany) {
+				_driver->sendKFrame(f);
+				[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:_interval]];
+				howMany--;
+			}
+		}
+		if (target && selector) {
+			[target performSelector:selector onThread:thr withObject:nil waitUntilDone:NO];
+		}
+	}
 }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 -(bool) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval notifyTarget:(id)target notifySelectorString:(NSString *)selector {
     NSThread *thr = [NSThread currentThread];
     if (howMany != 0) {
         NSData *data = [NSData dataWithBytes:f length:sizeof(KFrame)];
-        NSNumber *howM = [NSNumber numberWithInt:howMany];
+        NSNumber *howM = @(howMany);
         NSDictionary *d = [[NSDictionary alloc] initWithObjectsAndKeys: data, @"data", howM, @"howMany", thr, @"thread", target, @"target", selector, @"selector", nil];
         [self stopSendingFrames];
         _transmitting = YES;
@@ -236,6 +238,8 @@
     }
     return YES;
 }
+#pragma clang diagnostic pop
+
 -(bool) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval {
     return [self sendKFrame:f howMany:howMany atInterval:interval notifyTarget:nil notifySelectorString:nil];
 }
@@ -269,7 +273,6 @@
     if (_driver)
         delete (_driver);
     
-    [super dealloc];
 }
 
 @end

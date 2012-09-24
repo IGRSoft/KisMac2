@@ -40,7 +40,7 @@
 typedef struct WaveNetEntry {
     unsigned char ID[6];
     bool changed;
-    WaveNet* net;
+    __unsafe_unretained WaveNet* net;
 
 } WaveNetEntry;
 

@@ -22,7 +22,7 @@
 
 - (void)_setToolbarView:(id)view {
     BIToolbarView *b = [[BIToolbarView alloc] initWithFrame:NSMakeRect(0,0,1000,1000)];
-    [view addSubview:[b autorelease] positioned:NSWindowBelow relativeTo:nil];
+    [view addSubview:b positioned:NSWindowBelow relativeTo:nil];
     [super _setToolbarView:view];
 }
 

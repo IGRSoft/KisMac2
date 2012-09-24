@@ -40,12 +40,12 @@
     
     enu = [args keyEnumerator];
     while ((ae = [enu nextObject])) {
-        [e setDescriptor:[args objectForKey:ae] forKeyword:[ae intValue]];
+        [e setDescriptor:args[ae] forKeyword:[ae intValue]];
     }
     
     if(noErr != AESend([e aeDesc], &reply, kAEWaitReply, 0, kAEDefaultTimeout, NULL, NULL)) return NO;
     
-    NSAppleEventDescriptor *replyDesc = [[[NSAppleEventDescriptor alloc] initWithAEDescNoCopy:&reply] autorelease];
+    NSAppleEventDescriptor *replyDesc = [[NSAppleEventDescriptor alloc] initWithAEDescNoCopy:&reply];
     NSAppleEventDescriptor *resultDesc = [replyDesc paramDescriptorForKeyword: keyDirectObject];
     
     if (resultDesc) return [resultDesc booleanValue];
@@ -58,8 +58,8 @@
 
 + (BOOL)selfSendEvent:(AEEventID)event withClass:(AEEventClass)class andDefaultArg:(NSAppleEventDescriptor*)arg {
     NSDictionary *args;
-    if (arg) args = [NSDictionary dictionaryWithObject:arg forKey:[NSString stringWithFormat:@"%d", keyDirectObject]];
-    else args = [NSDictionary dictionary];
+    if (arg) args = @{[NSString stringWithFormat:@"%d", keyDirectObject]: arg};
+    else args = @{};
     
     return [ScriptingEngine selfSendEvent:event withClass:class andArgs:args];
 }

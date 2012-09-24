@@ -47,7 +47,7 @@
     if(sender == _newItem) {
 
     } else {
-        NSLog(@"Error: Invalid sender(%@) in setValueForSender:",sender);
+        DBNSLog(@"Error: Invalid sender(%@) in setValueForSender:",sender);
     }
 }
 
@@ -96,7 +96,7 @@
 - (id) tableView:(NSTableView *) aTableView
 objectValueForTableColumn:(NSTableColumn *) aTableColumn
              row:(int) rowIndex {     
-    return [self makeMAC:[[controller objectForKey:@"FilterBSSIDList"] objectAtIndex:rowIndex]]; 
+    return [self makeMAC:[controller objectForKey:@"FilterBSSIDList"][rowIndex]]; 
 }
 
 - (int)numberOfRowsInTableView:(NSTableView *)aTableView {
@@ -114,7 +114,7 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
     s = [self makeValidMACAddress:anObject];
     
     if (s) {
-        [temp replaceObjectAtIndex:rowIndex withObject:s];
+        temp[rowIndex] = s;
         [controller setObject:temp forKey:@"FilterBSSIDList"];
     }
     [aTableView reloadData];

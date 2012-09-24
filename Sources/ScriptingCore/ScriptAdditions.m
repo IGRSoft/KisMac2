@@ -31,56 +31,56 @@
 @implementation NSApplication (APLApplicationExtensions)
 
 - (id)showNetworks:(NSScriptCommand *)command {
-    return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] showNetworks]];
+    return @([(ScanController*)[NSApp delegate] showNetworks]);
 }
 - (id)showTraffic:(NSScriptCommand *)command {
-    return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] showTrafficView]];
+    return @([(ScanController*)[NSApp delegate] showTrafficView]);
 }
 - (id)showMap:(NSScriptCommand *)command {
-    return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] showMap]];
+    return @([(ScanController*)[NSApp delegate] showMap]);
 }
 - (id)showDetails:(NSScriptCommand *)command {
-    return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] showDetails]];
+    return @([(ScanController*)[NSApp delegate] showDetails]);
 }
 
 #pragma mark -
 
 - (id)startScan:(NSScriptCommand *)command {
-    return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] startScan]];
+    return @([(ScanController*)[NSApp delegate] startScan]);
 }
 - (id)stopScan:(NSScriptCommand *)command {
-    return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] stopScan]];
+    return @([(ScanController*)[NSApp delegate] stopScan]);
 }
 - (id)toggleScan:(NSScriptCommand *)command {
-    return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] toggleScan]];
+    return @([(ScanController*)[NSApp delegate] toggleScan]);
 }
 
 #pragma mark -
 
 - (id)new:(NSScriptCommand *)command 
 {
-    return [[NSNumber numberWithBool:[(ScanController*)[NSApp delegate] new]] retain];
+    return @([(ScanController*)[NSApp delegate] new]);
 }
 
 - (id)save:(NSScriptCommand *)command {
-    return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] save:[command directParameter]]];
+    return @([(ScanController*)[NSApp delegate] save:[command directParameter]]);
 }
 
 - (id)saveAs:(NSScriptCommand *)command {
-    return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] saveAs:[command directParameter]]];
+    return @([(ScanController*)[NSApp delegate] saveAs:[command directParameter]]);
 }
 
 - (id)importKisMAC:(NSScriptCommand *)command {
-    return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] importKisMAC:[command directParameter]]];
+    return @([(ScanController*)[NSApp delegate] importKisMAC:[command directParameter]]);
 }
 - (id)importImageForMap:(NSScriptCommand *)command {
-    return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] importImageForMap:[command directParameter]]];
+    return @([(ScanController*)[NSApp delegate] importImageForMap:[command directParameter]]);
 }
 - (id)importPCAP:(NSScriptCommand *)command {
-    return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] importPCAP:[command directParameter]]];
+    return @([(ScanController*)[NSApp delegate] importPCAP:[command directParameter]]);
 }
 - (id)exportKML:(NSScriptCommand *)command {
-    return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] exportKML:[command directParameter]]];
+    return @([(ScanController*)[NSApp delegate] exportKML:[command directParameter]]);
 }
 
 
@@ -92,101 +92,101 @@
     NSString *server;
     
     server = [command directParameter];
-    size.width = [[args objectForKey:@"Width"] doubleValue];
-    size.height = [[args objectForKey:@"Height"] doubleValue];
-    w._lat  = [[args objectForKey:@"Latitude"] doubleValue];
-    w._long = [[args objectForKey:@"Longitude"] doubleValue];
-    zoom = [[args objectForKey:@"Zoom"] intValue];
+    size.width = [args[@"Width"] doubleValue];
+    size.height = [args[@"Height"] doubleValue];
+    w._lat  = [args[@"Latitude"] doubleValue];
+    w._long = [args[@"Longitude"] doubleValue];
+    zoom = [args[@"Zoom"] intValue];
     
     BOOL ret = [(ScanController*)[NSApp delegate] downloadMapFrom:server forPoint:w resolution:size zoomLevel:zoom];
-    return [NSNumber numberWithBool:ret];
+    return @(ret);
 }
 
 #pragma mark -
 
 - (id)selectNetworkWithBSSID:(NSScriptCommand *)command {
-   return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] selectNetworkWithBSSID:[command directParameter]]];
+   return @([(ScanController*)[NSApp delegate] selectNetworkWithBSSID:[command directParameter]]);
 }
 
 - (id)selectNetworkAtIndex:(NSScriptCommand *)command {
-   return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] selectNetworkAtIndex:[command directParameter]]];
+   return @([(ScanController*)[NSApp delegate] selectNetworkAtIndex:[command directParameter]]);
 }
 
 - (id)networkCount:(NSScriptCommand *)command {
-   return [NSNumber numberWithInt:[(ScanController*)[NSApp delegate] networkCount]];
+   return @([(ScanController*)[NSApp delegate] networkCount]);
 }
 
 #pragma mark -
 
 - (id)busy:(NSScriptCommand *)command {
-   return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] isBusy]];
+   return @([(ScanController*)[NSApp delegate] isBusy]);
 }
 
 #pragma mark -
 
 - (id)bruteforceNewsham:(NSScriptCommand *)command {
-   return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] bruteforceNewsham]];
+   return @([(ScanController*)[NSApp delegate] bruteforceNewsham]);
 }
 
 - (id)bruteforce40bitLow:(NSScriptCommand *)command {
-   return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] bruteforce40bitLow]];
+   return @([(ScanController*)[NSApp delegate] bruteforce40bitLow]);
 }
 
 - (id)bruteforce40bitAlpha:(NSScriptCommand *)command {
-   return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] bruteforce40bitAlpha]];
+   return @([(ScanController*)[NSApp delegate] bruteforce40bitAlpha]);
 }
 
 - (id)bruteforce40bitAll:(NSScriptCommand *)command {
-   return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] bruteforce40bitAll]];
+   return @([(ScanController*)[NSApp delegate] bruteforce40bitAll]);
 }
 
 - (id)wordlist40bitApple:(NSScriptCommand *)command {
-   return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] wordlist40bitApple:[command directParameter]]];
+   return @([(ScanController*)[NSApp delegate] wordlist40bitApple:[command directParameter]]);
 }
 
 - (id)wordlist104bitApple:(NSScriptCommand *)command {
-   return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] wordlist104bitApple:[command directParameter]]];
+   return @([(ScanController*)[NSApp delegate] wordlist104bitApple:[command directParameter]]);
 }
 
 - (id)wordlist104bitMD5:(NSScriptCommand *)command {
-   return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] wordlist104bitMD5:[command directParameter]]];
+   return @([(ScanController*)[NSApp delegate] wordlist104bitMD5:[command directParameter]]);
 }
 
 - (id)wordlistWPA:(NSScriptCommand *)command {
-   return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] wordlistWPA:[command directParameter]]];
+   return @([(ScanController*)[NSApp delegate] wordlistWPA:[command directParameter]]);
 }
 
 - (id)wordlistLEAP:(NSScriptCommand *)command {
-   return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] wordlistLEAP:[command directParameter]]];
+   return @([(ScanController*)[NSApp delegate] wordlistLEAP:[command directParameter]]);
 }
 
 - (id)weakSchedulingAttack:(NSScriptCommand *)command {
     NSDictionary *args = [command arguments];
     int keyID, keyLen;
     
-    keyID = [[args objectForKey:@"KeyID"] intValue];
-    keyLen = [[args objectForKey:@"KeyLen"] intValue];
+    keyID = [args[@"KeyID"] intValue];
+    keyLen = [args[@"KeyLen"] intValue];
     if (keyLen == 0) keyLen = 13;
     
-    return [NSNumber numberWithBool:[(ScanController*)[NSApp delegate] weakSchedulingAttackForKeyLen:keyLen andKeyID:keyID]];
+    return @([(ScanController*)[NSApp delegate] weakSchedulingAttackForKeyLen:keyLen andKeyID:keyID]);
 }
 
 #pragma mark -
 
 - (id)showNetworksInMap:(NSScriptCommand*)command {
     [[WaveHelper mapView] setShowNetworks:[[command directParameter] boolValue]];
-    return [NSNumber numberWithBool:YES];    
+    return @YES;    
 }
 
 - (id)showTraceInMap:(NSScriptCommand*)command {
     [[WaveHelper mapView] setShowTrace:[[command directParameter] boolValue]];
-    return [NSNumber numberWithBool:YES];    
+    return @YES;    
 }
 
 - (id)setCurrentPosition:(NSScriptCommand*)command {
     NSDictionary *args = [command arguments];
-    BOOL ret = [[WaveHelper mapView] setCurrentPostionToLatitude:[[args objectForKey:@"Latitude"] doubleValue] andLongitude:[[args objectForKey:@"Longitude"] doubleValue]];
-    return [NSNumber numberWithBool:ret];
+    BOOL ret = [[WaveHelper mapView] setCurrentPostionToLatitude:[args[@"Latitude"] doubleValue] andLongitude:[args[@"Longitude"] doubleValue]];
+    return @(ret);
 }
 
 - (id)setWaypoint:(NSScriptCommand*)command {
@@ -196,13 +196,13 @@
     int which;
     
     which = [[command directParameter] intValue];
-    p.x = [[args objectForKey:@"X"] doubleValue];
-    p.y = [[args objectForKey:@"Y"] doubleValue];
-    coord._lat  = [[args objectForKey:@"Latitude"] doubleValue];
-    coord._long = [[args objectForKey:@"Longitude"] doubleValue];
+    p.x = [args[@"X"] doubleValue];
+    p.y = [args[@"Y"] doubleValue];
+    coord._lat  = [args[@"Latitude"] doubleValue];
+    coord._long = [args[@"Longitude"] doubleValue];
     
     BOOL ret = [[WaveHelper mapView] setWaypoint:which toPoint:p atCoordinate:coord];
-    return [NSNumber numberWithBool:ret];
+    return @(ret);
 }
 
 @end

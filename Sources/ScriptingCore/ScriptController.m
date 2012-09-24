@@ -58,6 +58,8 @@
         );
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 - (void)saveDialogDone:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(SEL)overrideFunction {
     switch (returnCode) {
     case NSAlertDefaultReturn:
@@ -69,6 +71,7 @@
         [self performSelector:overrideFunction withObject:self];
     }
 }
+#pragma clang diagnostic pop
 
 #pragma mark -
 
@@ -113,39 +116,54 @@
     [op setAllowsMultipleSelection:NO];
     [op setCanChooseFiles:YES];
     [op setCanChooseDirectories:NO];
-    if ([op runModalForTypes:[NSArray arrayWithObject:@"kismac"]]==NSOKButton) {
-        [ScriptingEngine selfSendEvent:'odoc' withClass:'aevt' andDefaultArgString:[op filename]];
-    }
+	[op setAllowedFileTypes:@[@"kismac"]];
+	[op beginWithCompletionHandler:^(NSInteger result)
+	 {
+		 if (result == NSFileHandlingPanelOKButton)
+		 {
+			 [ScriptingEngine selfSendEvent:'odoc' withClass:'aevt' andDefaultArgString:[[op URL] absoluteString]];
+		 }
+		 
+	 }];
 }
 
 - (IBAction)openKisMAPFile:(id)sender {
-    NSOpenPanel *op;
     
-    op=[NSOpenPanel openPanel];
+	NSOpenPanel *op=[NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:NO];
     [op setCanChooseFiles:YES];
     [op setCanChooseDirectories:NO];
-    if ([op runModalForTypes:[NSArray arrayWithObject:@"kismap"]]==NSOKButton) {
-        [ScriptingEngine selfSendEvent:'odoc' withClass:'aevt' andDefaultArgString:[op filename]];
-    }
+	[op setAllowedFileTypes:@[@"kismap"]];
+	[op beginWithCompletionHandler:^(NSInteger result)
+	 {
+		 if (result == NSFileHandlingPanelOKButton)
+		 {
+			 [ScriptingEngine selfSendEvent:'odoc' withClass:'aevt' andDefaultArgString:[[op URL] absoluteString]];
+		 }
+		 
+	 }];
 }
 
 #pragma mark -
 
 - (IBAction)importKisMACFile:(id)sender {
-    NSOpenPanel *op;
-    int i;
     
-    op = [NSOpenPanel openPanel];
+	NSOpenPanel *op = [NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:YES];
     [op setCanChooseFiles:YES];
     [op setCanChooseDirectories:NO];
-    if ([op runModalForTypes:[NSArray arrayWithObject:@"kismac"]]==NSOKButton) {
-        for (i = 0; i < [[op filenames] count]; i++) {
-            NSString *file = [[op filenames] objectAtIndex:i];
-            [ScriptingEngine selfSendEvent:'KImK' withDefaultArgString:file];
-        }
-    }
+	[op setAllowedFileTypes:@[@"kismac"]];
+	[op beginWithCompletionHandler:^(NSInteger result)
+	 {
+		 if (result == NSFileHandlingPanelOKButton)
+		 {
+			 for (int i = 0; i < [[op URLs] count]; i++) {
+				 NSString *file = [[op URLs][i] absoluteString];
+				 [ScriptingEngine selfSendEvent:'KImK' withDefaultArgString:file];
+			 }
+		 }
+		 
+	 }];
 }
 - (IBAction)importImageForMap:(id)sender {
     NSOpenPanel *op;
@@ -154,24 +172,32 @@
     [op setAllowsMultipleSelection:NO];
     [op setCanChooseFiles:YES];
     [op setCanChooseDirectories:NO];
-    if ([op runModalForTypes:[NSImage imageFileTypes]]==NSOKButton) {
-		[ScriptingEngine selfSendEvent:'KImI' withDefaultArgString:[op filename]];
-    }
+	[op setAllowedFileTypes:[NSImage imageFileTypes]];
+	[op beginWithCompletionHandler:^(NSInteger result)
+	 {
+		 if (result == NSFileHandlingPanelOKButton)
+		 {
+			 [ScriptingEngine selfSendEvent:'KImI' withDefaultArgString:[[op URL] absoluteString]];
+		 }
+		 
+	 }];
 }
 - (IBAction)importPCPFile:(id)sender {
-    NSOpenPanel *op;
-    int i;
-    
-    op = [NSOpenPanel openPanel];
+    NSOpenPanel *op = [NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:YES];
     [op setCanChooseFiles:YES];
     [op setCanChooseDirectories:NO];
-    if ([op runModalForTypes:nil]==NSOKButton) {
-        for (i = 0; i < [[op filenames] count]; i++) {
-            NSString *file = [[op filenames] objectAtIndex:i];
-            [ScriptingEngine selfSendEvent:'KImP' withDefaultArgString:file];
-        }
-    }
+	[op beginWithCompletionHandler:^(NSInteger result)
+	 {
+		 if (result == NSFileHandlingPanelOKButton)
+		 {
+			 for (int i = 0; i < [[op URLs] count]; i++) {
+				 NSString *file = [[op URLs][i] absoluteString];
+				 [ScriptingEngine selfSendEvent:'KImP' withDefaultArgString:file];
+			 }
+		 }
+		 
+	 }];
 }
 
 #pragma mark -
@@ -189,26 +215,36 @@
     NSSavePanel *sp;
     
     sp=[NSSavePanel savePanel];
-    [sp setRequiredFileType:@"kismac"];
+    [sp setAllowedFileTypes:@[@"kismac"]];
     [sp setCanSelectHiddenExtension:YES];
     [sp setTreatsFilePackagesAsDirectories:NO];
-    if ([sp runModal]==NSFileHandlingPanelOKButton) {
-        if (![ScriptingEngine selfSendEvent:'KsaA' withDefaultArgString:[sp filename]]) 
-            [[NSApp delegate] showSavingFailureDialog];    
-    }
+	[sp beginWithCompletionHandler:^(NSInteger result)
+	 {
+		 if (result == NSFileHandlingPanelOKButton)
+		 {
+			 if (![ScriptingEngine selfSendEvent:'KsaA' withDefaultArgString:[[sp URL] absoluteString]])
+				 [[NSApp delegate] showSavingFailureDialog];
+		 }
+		 
+	 }];
 }
 
 - (IBAction)saveKisMAPFile:(id)sender {
     NSSavePanel *sp;
     
     sp=[NSSavePanel savePanel];
-    [sp setRequiredFileType:@"kismap"];
+    [sp setAllowedFileTypes:@[@"kismap"]];
     [sp setCanSelectHiddenExtension:YES];
     [sp setTreatsFilePackagesAsDirectories:NO];
-    if ([sp runModal]==NSFileHandlingPanelOKButton) {
-        if (![ScriptingEngine selfSendEvent:'save' withClass:'core' andDefaultArgString:[sp filename]]) 
-            [[NSApp delegate] showSavingFailureDialog];    
-    }
+	[sp beginWithCompletionHandler:^(NSInteger result)
+	 {
+		 if (result == NSFileHandlingPanelOKButton)
+		 {
+			 if (![ScriptingEngine selfSendEvent:'save' withClass:'core' andDefaultArgString:[[sp URL] absoluteString]])
+				 [[NSApp delegate] showSavingFailureDialog];
+		 }
+		 
+	 }];
 }
 
 #pragma mark -
@@ -244,47 +280,53 @@
 
 - (IBAction)wordlist40bitApple:(id)sender {
     WEPCHECKS;
-    NSOpenPanel *op;
-    int i;
-
-    op = [NSOpenPanel openPanel];
+    NSOpenPanel *op = [NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:YES];
     [op setCanChooseFiles:YES];
     [op setCanChooseDirectories:NO];
-    if ([op runModalForTypes:nil]==NSOKButton) {
-        for (i = 0; i < [[op filenames] count]; i++)
-            [ScriptingEngine selfSendEvent:'KCWa' withDefaultArgString:[[op filenames] objectAtIndex:i]];
-    }
+	[op beginWithCompletionHandler:^(NSInteger result)
+	 {
+		 if (result == NSFileHandlingPanelOKButton)
+		 {
+			 for (int i = 0; i < [[op URLs] count]; i++)
+				 [ScriptingEngine selfSendEvent:'KCWa' withDefaultArgString:[[op URLs][i] absoluteString]];
+		 }
+		 
+	 }];
 }
 
 - (IBAction)wordlist104bitApple:(id)sender {
     WEPCHECKS;
-    NSOpenPanel *op;
-    int i;
-    
-    op = [NSOpenPanel openPanel];
+    NSOpenPanel *op = [NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:YES];
     [op setCanChooseFiles:YES];
     [op setCanChooseDirectories:NO];
-    if ([op runModalForTypes:nil]==NSOKButton) {
-        for (i = 0; i < [[op filenames] count]; i++)
-            [ScriptingEngine selfSendEvent:'KCWA' withDefaultArgString:[[op filenames] objectAtIndex:i]];
-    }
+	[op beginWithCompletionHandler:^(NSInteger result)
+	 {
+		 if (result == NSFileHandlingPanelOKButton)
+		 {
+			 for (int i = 0; i < [[op URLs] count]; i++)
+				 [ScriptingEngine selfSendEvent:'KCWA' withDefaultArgString:[[op URLs][i] absoluteString]];
+		 }
+		 
+	 }];
 }
 
 - (IBAction)wordlist104bitMD5:(id)sender {
     WEPCHECKS;
-    NSOpenPanel *op;
-    int i;
-    
-    op = [NSOpenPanel openPanel];
+    NSOpenPanel *op = [NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:YES];
     [op setCanChooseFiles:YES];
     [op setCanChooseDirectories:NO];
-    if ([op runModalForTypes:nil]==NSOKButton) {
-        for (i = 0; i < [[op filenames] count]; i++)
-            [ScriptingEngine selfSendEvent:'KCWM' withDefaultArgString:[[op filenames] objectAtIndex:i]];
-    }
+	[op beginWithCompletionHandler:^(NSInteger result)
+	 {
+		 if (result == NSFileHandlingPanelOKButton)
+		 {
+			 for (int i = 0; i < [[op URLs] count]; i++)
+				 [ScriptingEngine selfSendEvent:'KCWM' withDefaultArgString:[[op URLs][i] absoluteString]];
+		 }
+		 
+	 }];
 }
 
 - (IBAction)wordlistWPA:(id)sender {
@@ -295,17 +337,19 @@
 	if ([[[[NSApp delegate] selectedNetwork] SSID] length] > 32) { [[NSApp delegate] showNeedToRevealSSID]; return; }
 	if ([[[NSApp delegate] selectedNetwork] capturedEAPOLKeys] == 0) { [[NSApp delegate] showNeedMorePacketsDialog]; return; }
 
-    NSOpenPanel *op;
-    int i;
-    
-    op = [NSOpenPanel openPanel];
+    NSOpenPanel *op = [NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:YES];
     [op setCanChooseFiles:YES];
     [op setCanChooseDirectories:NO];
-    if ([op runModalForTypes:nil]==NSOKButton) {
-        for (i = 0; i < [[op filenames] count]; i++)
-            [ScriptingEngine selfSendEvent:'KCWW' withDefaultArgString:[[op filenames] objectAtIndex:i]];
-    }
+	[op beginWithCompletionHandler:^(NSInteger result)
+	 {
+		 if (result == NSFileHandlingPanelOKButton)
+		 {
+			 for (int i = 0; i < [[op URLs] count]; i++)
+				 [ScriptingEngine selfSendEvent:'KCWW' withDefaultArgString:[[op URLs][i] absoluteString]];
+		 }
+		 
+	 }];
 }
 
 - (IBAction)wordlistLEAP:(id)sender {
@@ -313,17 +357,20 @@
     if ([[[NSApp delegate] selectedNetwork] passwordAvailable]) { [[NSApp delegate] showAlreadyCrackedDialog]; return; }
     if ([[[NSApp delegate] selectedNetwork] wep] != encryptionTypeLEAP) { [[NSApp delegate] showWrongEncryptionType]; return; }
 	if ([[[NSApp delegate] selectedNetwork] capturedLEAPKeys] == 0) { [[NSApp delegate] showNeedMorePacketsDialog]; return; }
-    NSOpenPanel *op;
-    int i;
-    
-    op = [NSOpenPanel openPanel];
+   
+	NSOpenPanel * op = [NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:YES];
     [op setCanChooseFiles:YES];
     [op setCanChooseDirectories:NO];
-    if ([op runModalForTypes:nil]==NSOKButton) {
-        for (i = 0; i < [[op filenames] count]; i++)
-            [ScriptingEngine selfSendEvent:'KCWL' withDefaultArgString:[[op filenames] objectAtIndex:i]];
-    }
+	[op beginWithCompletionHandler:^(NSInteger result)
+	 {
+		 if (result == NSFileHandlingPanelOKButton)
+		 {
+			 for (int i = 0; i < [[op URLs] count]; i++)
+				 [ScriptingEngine selfSendEvent:'KCWL' withDefaultArgString:[[op URLs][i] absoluteString]];
+		 }
+		 
+	 }];
 }
 
 #pragma mark -
@@ -332,7 +379,7 @@
     WEPCHECKS;
     NSAppleEventDescriptor *keyLen = [NSAppleEventDescriptor descriptorWithInt32:5];
     
-    NSDictionary *args = [NSDictionary dictionaryWithObject:keyLen forKey:[NSString stringWithFormat:@"%d", 'KCKl']];
+    NSDictionary *args = @{[NSString stringWithFormat:@"%d", 'KCKl']: keyLen};
     [ScriptingEngine selfSendEvent:'KCSc' withArgs:args];
 }
 
@@ -345,7 +392,7 @@
     WEPCHECKS;
     NSAppleEventDescriptor *keyLen = [NSAppleEventDescriptor descriptorWithInt32:0xFFFFFF];
     
-    NSDictionary *args = [NSDictionary dictionaryWithObject:keyLen forKey:[NSString stringWithFormat:@"%d", 'KCKl']];
+    NSDictionary *args = @{[NSString stringWithFormat:@"%d", 'KCKl']: keyLen};
     [ScriptingEngine selfSendEvent:'KCSc' withArgs:args];
 }
 
@@ -368,6 +415,5 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-	[super dealloc];
 }
 @end

@@ -23,8 +23,8 @@
 }
 
 -(BOOL)updateDictionary {
-    [controller setObject:[NSNumber numberWithFloat:[_areaQual floatValue]] forKey:@"NetAreaQuality"];
-    [controller setObject:[NSNumber numberWithInt:[_areaSens intValue]] forKey:@"NetAreaSensitivity"];
+    [controller setObject:@([_areaQual floatValue]) forKey:@"NetAreaQuality"];
+    [controller setObject:@([_areaSens intValue]) forKey:@"NetAreaSensitivity"];
     
     return YES;
 }
@@ -41,12 +41,12 @@
     } else if(sender == _areaColorBad) {
         [controller setObject:[WaveHelper colorToInt:[sender color]] forKey:@"NetAreaColorBad"];
     } else if(sender == _areaQual) {
-        [controller setObject:[NSNumber numberWithFloat:[sender floatValue]] forKey:@"NetAreaQuality"];
+        [controller setObject:@([sender floatValue]) forKey:@"NetAreaQuality"];
     } else if(sender == _areaSens) {
-        [controller setObject:[NSNumber numberWithInt:[sender intValue]] forKey:@"NetAreaSensitivity"];
+        [controller setObject:@([sender intValue]) forKey:@"NetAreaSensitivity"];
     }
     else {
-        NSLog(@"Error: Invalid sender(%@) in setValueForSender:",sender);
+        DBNSLog(@"Error: Invalid sender(%@) in setValueForSender:",sender);
     }
 }
 

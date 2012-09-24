@@ -58,7 +58,6 @@
     float r1=1, r2=10, x1, y1;
     NSAffineTransform *t;
 
-    [_way1 autorelease];
     _way1=[NSBezierPath bezierPath];
     
     x1=cos(30.0/180.0*pi)*r1;
@@ -89,7 +88,6 @@
     [t translateXBy:0.5*_frame.size.width yBy:0.5*_frame.size.height];
     [_way1 transformUsingAffineTransform: t];
 
-    [_way1 retain];
 }
 
 - (void)_genWayCache {
@@ -130,7 +128,6 @@
         [self _genWayCache];
         [_wayImg[i] unlockFocus];
     }
-    [_way1 release];
     _animLock = [[NSLock alloc] init];
     
     [self setImage:_currImg[35]];
@@ -161,36 +158,33 @@
     BOOL e = NO;
     int scale = 35;
     int wp = 0;
-    NSAutoreleasePool* subpool = [[NSAutoreleasePool alloc] init];
+    @autoreleasepool {
     
-    if([_animLock tryLock]) {
-        [self retain];
-        while(_visible) {
-            if (_wayPointMode) {
-                wp++;
-                wp = wp % 24;
-                [self setImage:_wayImg[wp]];
-            } else {
-                if (e) {
-                    scale++;
-                    if (scale>=25) e=NO;
+        if([_animLock tryLock]) {
+            while(_visible) {
+                if (_wayPointMode) {
+                    wp++;
+                    wp = wp % 24;
+                    [self setImage:_wayImg[wp]];
                 } else {
-                    scale--;
-                    if (scale<=10) e=YES;
+                    if (e) {
+                        scale++;
+                        if (scale>=25) e=NO;
+                    } else {
+                        scale--;
+                        if (scale<=10) e=YES;
+                    }
+                    
+                    [self setImage:_currImg[scale]];
                 }
-                
-                [self setImage:_currImg[scale]];
+                [[WaveHelper mapView] setNeedsDisplayInMoveRect:_frame];
+                NSDate * test = [NSDate dateWithTimeIntervalSinceNow:0.1];
+                [NSThread sleepUntilDate: test];
             }
-            [[WaveHelper mapView] setNeedsDisplayInMoveRect:_frame];
-            NSDate * test = [[NSDate dateWithTimeIntervalSinceNow:0.1] retain];
-            [NSThread sleepUntilDate: test];
-            [test release];
+            [_animLock unlock];
         }
-        [self release];
-        [_animLock unlock];
-    }
 
-    [subpool drain];
+    }
 }
 
 #pragma mark -
@@ -198,10 +192,8 @@
 - (void)dealloc {
     int i;
     
-    [_animLock release];
-    for (i = 0; i <= 35; i++) [_currImg[i] release];
-    for (i = 0; i < 24; i++)  [_wayImg[i] release];
-    [super dealloc];
+    for (i = 0; i <= 35; i++) ;
+    for (i = 0; i < 24; i++)  ;
 }
 
 @end

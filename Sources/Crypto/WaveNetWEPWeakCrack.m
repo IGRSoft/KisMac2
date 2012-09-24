@@ -29,8 +29,8 @@
 #import "WaveHelper.h"
 #import <BIGeneric/BINSExtensions.h>
 
-#define SRET { [[WaveHelper importController] terminateWithCode: 1]; [pool release]; return; }
-#define RET { [[WaveHelper importController] terminateWithCode: -1]; [pool release]; return; }
+#define SRET { [[WaveHelper importController] terminateWithCode: 1]; return; }
+#define RET { [[WaveHelper importController] terminateWithCode: -1]; return; }
 #define CHECK { if (_password != Nil) RET; if (_isWep != encryptionTypeWEP && _isWep != encryptionTypeWEP40) RET; }
 
 @implementation WaveNet(WEPWeakCrackExtension)
@@ -50,42 +50,42 @@
         const UInt8 *k = [d bytes];
         int i;
         
-        _password = [[NSMutableString stringWithFormat:@"%.2X", k[0]] retain];
+        _password = [NSMutableString stringWithFormat:@"%.2X", k[0]];
         for (i=1; i<len;i++)
             [(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", k[i]]];
 		
-		[a release];
 		return TRUE;
     }
     
-    [a release];
 	return FALSE;
 } 
 - (void)performCrackWEPWeakforKeyIDAndLen:(NSNumber*)keyidAndLen {
-    int temp, keyID;
-    enum keyLen len;
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
-    CHECK;
-    
-    temp = [keyidAndLen intValue];
-    
-    keyID = temp & 0xFF;
-    NSParameterAssert(keyID <= 3 && keyID >= 0);
-    len   = (temp >> 8) & 0xFFFFFF;
-    NSParameterAssert(len == keyLen104bit || len == keyLen40bit || len == keyLenAll);
-    
-    if (!_ivData[keyID]) RET;
-    if ([_ivData[keyID] count] <= 8) RET; //need at least 8 IVs
-    
-	if(len == keyLenAll) {
-		if([self doWeakCrackForLen:keyLen40bit andKeyID:keyID]) SRET;
-		if([self doWeakCrackForLen:keyLen104bit andKeyID:keyID]) SRET;
-	} else {
-		if([self doWeakCrackForLen:len andKeyID:keyID]) SRET;
+	@autoreleasepool {
+		int temp, keyID;
+		enum keyLen len;
+		
+		CHECK;
+		
+		temp = [keyidAndLen intValue];
+		
+		keyID = temp & 0xFF;
+		NSParameterAssert(keyID <= 3 && keyID >= 0);
+		len   = (temp >> 8) & 0xFFFFFF;
+		NSParameterAssert(len == keyLen104bit || len == keyLen40bit || len == keyLenAll);
+		
+		if (!_ivData[keyID]) RET;
+		if ([_ivData[keyID] count] <= 8) RET; //need at least 8 IVs
+		
+		if(len == keyLenAll) {
+			if([self doWeakCrackForLen:keyLen40bit andKeyID:keyID]) SRET;
+			if([self doWeakCrackForLen:keyLen104bit andKeyID:keyID]) SRET;
+		} else {
+			if([self doWeakCrackForLen:len andKeyID:keyID]) SRET;
+		}
+		
+		RET;
 	}
- 
-    RET;
 }
 
 @end

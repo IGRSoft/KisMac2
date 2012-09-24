@@ -42,17 +42,17 @@ static NSImage* _networkStrange;
     self = [super init];
     if (self) {
         
-		if (!_networkUnkEnc) _networkUnkEnc = [[NSImage imageNamed:@"NetworkUnkEnc.tif"] retain];
-		if (!_networkNoEnc)  _networkNoEnc  = [[NSImage imageNamed:@"NetworkNoEnc.tif"]  retain];
-		if (!_networkWEP)    _networkWEP    = [[NSImage imageNamed:@"NetworkWEP.tif"]    retain];
-		if (!_networkWPA)    _networkWPA    = [[NSImage imageNamed:@"NetworkWPA.tif"]    retain];
-		if (!_networkLEAP)   _networkLEAP   = [[NSImage imageNamed:@"NetworkLEAP.tif"]   retain];
-		if (!_networkStrange)_networkStrange= [[NSImage imageNamed:@"NetworkStrange.tif"]retain];
+		if (!_networkUnkEnc) _networkUnkEnc = [NSImage imageNamed:@"NetworkUnkEnc.tif"];
+		if (!_networkNoEnc)  _networkNoEnc  = [NSImage imageNamed:@"NetworkNoEnc.tif"];
+		if (!_networkWEP)    _networkWEP    = [NSImage imageNamed:@"NetworkWEP.tif"];
+		if (!_networkWPA)    _networkWPA    = [NSImage imageNamed:@"NetworkWPA.tif"];
+		if (!_networkLEAP)   _networkLEAP   = [NSImage imageNamed:@"NetworkLEAP.tif"];
+		if (!_networkStrange)_networkStrange= [NSImage imageNamed:@"NetworkStrange.tif"];
 		
-		_name = [[NSString stringWithString:@"<no ssid>"] retain];
+		_name = @"<no ssid>";
         
-		_netImg = [_networkUnkEnc retain];
-        _netColor = [[NSColor yellowColor] retain];
+		_netImg = _networkUnkEnc;
+        _netColor = [NSColor yellowColor];
         _wep = 0;
         _wp._lat = 100;
         _wp._long = 0;
@@ -66,7 +66,8 @@ static NSImage* _networkStrange;
 }
 
 - (void) setName:(NSString*)name {
-    [WaveHelper secureReplace:&_name withObject:name];
+	_name = name;
+    //[WaveHelper secureReplace:&_name withObject:name];
     [self setImage:[self generateImage]];
     [[WaveHelper mapView] setNeedsDisplay:YES];
 }
@@ -80,38 +81,41 @@ static NSImage* _networkStrange;
 - (void) setWep:(encryptionType)wep {
     _wep = wep;
 
-    [WaveHelper secureRelease:&_netImg];
-    [WaveHelper secureRelease:&_netColor];
+	_netImg = nil;
+	_netColor = nil;
+	
+    //[WaveHelper secureRelease:&_netImg];
+    //[WaveHelper secureRelease:&_netColor];
     
     switch (_wep) {
     case encryptionTypeUnknown:
-        _netImg = [_networkUnkEnc retain];
-        _netColor = [[NSColor yellowColor] retain];
+        _netImg = _networkUnkEnc;
+        _netColor = [NSColor yellowColor];
         break;
     case encryptionTypeNone:
-        _netImg = [_networkNoEnc retain];
-        _netColor = [[NSColor greenColor] retain];
+        _netImg = _networkNoEnc;
+        _netColor = [NSColor greenColor];
         break;
     case encryptionTypeWEP:
     case encryptionTypeWEP40:
-        _netImg = [_networkWEP retain];
-        _netColor = [[NSColor redColor] retain];
+        _netImg = _networkWEP;
+        _netColor = [NSColor redColor];
         break;
     case encryptionTypeWPA:
-        _netImg = [_networkWPA retain];
-        _netColor = [[NSColor blueColor] retain];
+        _netImg = _networkWPA;
+        _netColor = [NSColor blueColor];
         break;
     case encryptionTypeWPA2:
-        _netImg = [_networkWPA retain];
-        _netColor = [[NSColor blueColor] retain];
+        _netImg = _networkWPA;
+        _netColor = [NSColor blueColor];
         break;
         case encryptionTypeLEAP:
-        _netImg = [_networkLEAP retain];
-        _netColor = [[NSColor cyanColor] retain];
+        _netImg = _networkLEAP;
+        _netColor = [NSColor cyanColor];
         break;
     default:
-        _netImg = [_networkStrange retain];
-        _netColor = [[NSColor magentaColor] retain];
+        _netImg = _networkStrange;
+        _netColor = [NSColor magentaColor];
     }
     
     [self setImage:[self generateImage]];
@@ -161,11 +165,11 @@ static NSImage* _networkStrange;
     NSSize size = NSZeroSize;
     NSImage *img;
         
-    if (!_visible) return [[[NSImage alloc] initWithSize:NSMakeSize(0,0)] autorelease];
+    if (!_visible) return [[NSImage alloc] initWithSize:NSMakeSize(0,0)];
     
     name =[_name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]; 
     if ([name length] > 0) {
-        [attrs setObject:textFont forKey:NSFontAttributeName];
+        attrs[NSFontAttributeName] = textFont;
         
         size = [_name sizeWithAttributes:attrs];
         size.height+=5;
@@ -184,7 +188,7 @@ static NSImage* _networkStrange;
         [NSBezierPath setDefaultLineWidth:2];
         [legendPath stroke];
         
-        [attrs setObject:_netColor forKey:NSForegroundColorAttributeName];
+        attrs[NSForegroundColorAttributeName] = _netColor;
         [_name drawAtPoint:NSMakePoint(r+10, (height + 5 - size.height)/2) withAttributes:attrs];
     }
    
@@ -192,7 +196,7 @@ static NSImage* _networkStrange;
     
     [img unlockFocus];
     
-    return [img autorelease];
+    return img;
 }
 
 - (BOOL)removeFromSuperView {
@@ -205,10 +209,12 @@ static NSImage* _networkStrange;
     [self removeFromSuperView];
 	
     [[WaveHelper mapView] setNeedsDisplay:YES];
-    [WaveHelper secureRelease:&_name];
-    [WaveHelper secureRelease:&_netImg];
-    [WaveHelper secureRelease:&_netColor];
+	_name = nil;
+	_netImg = nil;
+	_netColor = nil;
+    //[WaveHelper secureRelease:&_name];
+    //[WaveHelper secureRelease:&_netImg];
+    //[WaveHelper secureRelease:&_netColor];
     
-    [super dealloc];
 }
 @end

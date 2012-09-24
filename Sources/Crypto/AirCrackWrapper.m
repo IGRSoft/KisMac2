@@ -104,12 +104,11 @@ int safe_write( int fd, void *buf, size_t len )
     size_t valSize = sizeof(value);
     if (sysctlbyname ("hw.activecpu", &value, &valSize, NULL, 0) == 0){
         nfork  =  value;        
-        //NSLog([NSString stringWithFormat:@"Creating %i cracking threads...", nfork]);
+        //DBNSLog([NSString stringWithFormat:@"Creating %i cracking threads...", nfork]);
     }
       
     nb_ivs = 0;
     if (! ( ivbuf = (unsigned char *) malloc( 5 * 256 * 256 * 256 ) ) ) {
-        [self release];
         return nil;
     }
     
@@ -579,7 +578,7 @@ int cmp_votes( const void *bs1, const void *bs2 )
 
             if ([self check_wepkey] == YES) {
             keyfound:
-                key = [[NSData dataWithBytes:wepkey length:weplen] retain];
+                key = [NSData dataWithBytes:wepkey length:weplen];
                 return YES;
             }
         }
@@ -600,7 +599,7 @@ int cmp_votes( const void *bs1, const void *bs2 )
         pipe( mc_pipe[i] );
         pipe( cm_pipe[i] );
 
-        [NSThread detachNewThreadSelector:@selector(calc_votes:) toTarget:self withObject:[NSNumber numberWithInt:i]];
+        [NSThread detachNewThreadSelector:@selector(calc_votes:) toTarget:self withObject:@(i)];
     }
 
     BOOL ret = [self do_wep_crack:0];
@@ -618,8 +617,6 @@ int cmp_votes( const void *bs1, const void *bs2 )
 - (void)dealloc {
     free(ivbuf);
     ivbuf = NULL;
-    [key release];
-    [super dealloc];
 }
 
 @end

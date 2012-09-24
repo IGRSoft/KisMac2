@@ -16,24 +16,24 @@ bool IntersilJack::startCapture(UInt16 channel) {
     if (!_deviceInit) return false;
     
     if ((!_isEnabled) && (_disable() != kIOReturnSuccess)) {
-        NSLog(@"IntersilJack::startCapture: Couldn't disable card\n");
+        DBNSLog(@"IntersilJack::startCapture: Couldn't disable card\n");
         return false;
     }
     
     if (setChannel(channel) == false) {
-        NSLog(@"IntersilJack::startCapture: setChannel(%d) failed - resetting...\n",
+        DBNSLog(@"IntersilJack::startCapture: setChannel(%d) failed - resetting...\n",
               channel);
 		_reset();
         return false;
     }
     
     if (_doCommand(wlcMonitorOn, 0) != kIOReturnSuccess) {
-        NSLog(@"IntersilJack::startCapture: _doCommand(wlcMonitorOn) failed\n");
+        DBNSLog(@"IntersilJack::startCapture: _doCommand(wlcMonitorOn) failed\n");
         return false;
     }
     
     if (_enable() != kIOReturnSuccess) {
-        NSLog(@"IntersilJack::startCapture: Couldn't enable card\n");
+        DBNSLog(@"IntersilJack::startCapture: Couldn't enable card\n");
         return false;
     }
     
@@ -48,7 +48,7 @@ if (!_devicePresent) return false;
 if (!_deviceInit) return false;
 
 if (_doCommand(wlcMonitorOff, 0) != kIOReturnSuccess) {
-    NSLog(@"::stopCapture: _doCommand(wlcMonitorOff) failed\n");
+    DBNSLog(@"::stopCapture: _doCommand(wlcMonitorOff) failed\n");
     return false;
 }
 
@@ -60,7 +60,7 @@ bool IntersilJack::getChannel(UInt16* channel) {
     if (!_deviceInit) return false;
     
     if (_getValue(0xFDC1, channel) != kIOReturnSuccess) {
-        NSLog(@"IntersilJack::getChannel: getValue error\n");
+        DBNSLog(@"IntersilJack::getChannel: getValue error\n");
         return false;
     }
     
@@ -73,7 +73,7 @@ bool IntersilJack::getAllowedChannels(UInt16* channels) {
     if (!_deviceInit) return false;
     
     if (_getValue(0xFD10, channels) != kIOReturnSuccess) {
-        NSLog(@"IntersilJack::getAllowedChannels: getValue error\n");
+        DBNSLog(@"IntersilJack::getAllowedChannels: getValue error\n");
         return false;
     }
     
@@ -87,18 +87,18 @@ bool IntersilJack::setChannel(UInt16 channel) {
     if (_setValue(0xFC03, channel) != kIOReturnSuccess) {
         usleep(10000);
         if (_setValue(0xFC03, channel) != kIOReturnSuccess) {
-            NSLog(@"IntersilJack::setChannel: setValue error\n");
+            DBNSLog(@"IntersilJack::setChannel: setValue error\n");
             return false;
         }
     }
     
     if (_isEnabled) {
         if (_disable() != kIOReturnSuccess) {
-            NSLog(@"IntersilJack::setChannel: Couldn't disable card\n");
+            DBNSLog(@"IntersilJack::setChannel: Couldn't disable card\n");
             return false;
         }
         if (_enable() != kIOReturnSuccess) {
-            NSLog(@"IntersilJack::setChannel: Couldn't enable card\n");
+            DBNSLog(@"IntersilJack::setChannel: Couldn't enable card\n");
             return false;
         }
     }
@@ -117,7 +117,7 @@ IOReturn IntersilJack::_init() {
     int i; 
     
     if(!_attachDevice()){
-        NSLog(@"Device could not be opened");
+        DBNSLog(@"Device could not be opened");
         return kIOReturnNoDevice;
     }
     
@@ -133,14 +133,14 @@ IOReturn IntersilJack::_init() {
      */
     
     if (_getIdentity(&ident) != kIOReturnSuccess) {
-        NSLog(@"IntersilJack::_init: Couldn't read card identity\n");
+        DBNSLog(@"IntersilJack::_init: Couldn't read card identity\n");
         return kIOReturnError;
     }
     
-    NSLog(@"IntersilJack: Firmware vendor %d, variant %d, version %d.%d\n", ident.vendor, ident.variant, ident.major, ident.minor);
+    DBNSLog(@"IntersilJack: Firmware vendor %d, variant %d, version %d.%d\n", ident.vendor, ident.variant, ident.major, ident.minor);
     
     if (_getHardwareAddress(&macAddr) != kIOReturnSuccess) {
-        NSLog(@"IntersilJack::_init: Couldn't read MAC address\n");
+        DBNSLog(@"IntersilJack::_init: Couldn't read MAC address\n");
         return kIOReturnError;
     }
     
@@ -153,7 +153,7 @@ IOReturn IntersilJack::_reset() {
     int i;
     
     if (_doCommand(wlcInit, 0) != kIOReturnSuccess) {
-        NSLog(@"IntersilJack::_reset: _doCommand(wlcInit, 0) failed\n");
+        DBNSLog(@"IntersilJack::_reset: _doCommand(wlcInit, 0) failed\n");
         return kIOReturnError;
     }
     
@@ -181,7 +181,7 @@ IOReturn IntersilJack::_reset() {
     }
     
     if (i==wlTimeout) {
-        NSLog(@"IntersilJack::_reset: could not set port type\n");
+        DBNSLog(@"IntersilJack::_reset: could not set port type\n");
         return kIOReturnError;
     }
     
@@ -217,23 +217,23 @@ bool IntersilJack::sendKFrame(KFrame *frame) {
             headerLength = sizeof(struct ieee80211_hdr_3addr);
             break;
         case IEEE80211_TYPE_DATA:
-            //            NSLog(@"DATA");
+            //            DBNSLog(@"DATA");
             if (subtype == IEEE80211_SUBTYPE_QOS_DATA) {
-                //                NSLog(@"QOS");
+                //                DBNSLog(@"QOS");
                 if (isFrDS && isToDS) {
-                    //                    NSLog(@"isFrDS && isToDS");
+                    //                    DBNSLog(@"isFrDS && isToDS");
                     headerLength = sizeof(struct ieee80211_hdr_4addrqos); //32
                 } else {
-                    //                    NSLog(@"isFrDS || isToDS");
+                    //                    DBNSLog(@"isFrDS || isToDS");
                     headerLength = sizeof(struct ieee80211_hdr_3addrqos); //26                  
                 }
             } else {
-                //                NSLog(@"NO QOS");
+                //                DBNSLog(@"NO QOS");
                 if (isFrDS && isToDS) {
-                    //                    NSLog(@"isFrDS && isToDS");
+                    //                    DBNSLog(@"isFrDS && isToDS");
                     headerLength = sizeof(struct ieee80211_hdr_4addr); //30
                 } else {
-                    //                    NSLog(@"isFrDS || isToDS");
+                    //                    DBNSLog(@"isFrDS || isToDS");
                     headerLength = sizeof(struct ieee80211_hdr_3addr); //24               
                 }
             }
@@ -275,9 +275,9 @@ bool IntersilJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len) {
 
     UInt16 isToDS, isFrDS, subtype, dataLen, headerLength = 0;
     UInt16 type;
-//    NSLog(@"_massagePacket %d", len);
+//    DBNSLog(@"_massagePacket %d", len);
     if (len < sizeof(WLFrame)) {
-        NSLog(@"WTF, packet len %d shorter than header %lu!", len, sizeof(WLFrame));
+        DBNSLog(@"WTF, packet len %d shorter than header %lu!", len, sizeof(WLFrame));
         return false;
     }
 
@@ -286,44 +286,44 @@ bool IntersilJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len) {
     // FCS check
     head->status = NSSwapLittleShortToHost(head->status);
     if (head->status & 0x1 || (head->status & 0x700) != 0x700 || head->status & 0xe000) {
-        NSLog(@"FCS error");
+        DBNSLog(@"FCS error");
         return false;
     }
     dataLen = NSSwapLittleShortToHost(head->dataLen);
-//    NSLog(@"dataLen %d", dataLen);
+//    DBNSLog(@"dataLen %d", dataLen);
     type = (head->frameControl & IEEE80211_TYPE_MASK);
     subtype = (head->frameControl & IEEE80211_SUBTYPE_MASK);
     isToDS = ((head->frameControl & IEEE80211_DIR_TODS) ? YES : NO);
     isFrDS = ((head->frameControl & IEEE80211_DIR_FROMDS) ? YES : NO);
     switch(type) {
         case IEEE80211_TYPE_MGT:
-            NSLog(@"MANAGEMENT");
+            DBNSLog(@"MANAGEMENT");
             headerLength = sizeof(struct ieee80211_hdr_3addr);
             break;
         case IEEE80211_TYPE_DATA:
-            NSLog(@"DATA");
+            DBNSLog(@"DATA");
             if (subtype == IEEE80211_SUBTYPE_QOS_DATA) {
-//                NSLog(@"QOS");
+//                DBNSLog(@"QOS");
                 if (isFrDS && isToDS) {
-//                    NSLog(@"isFrDS && isToDS");
+//                    DBNSLog(@"isFrDS && isToDS");
                     headerLength = sizeof(struct ieee80211_hdr_4addrqos);
                 } else {
-//                    NSLog(@"isFrDS || isToDS");
+//                    DBNSLog(@"isFrDS || isToDS");
                     headerLength = sizeof(struct ieee80211_hdr_3addrqos);                    
                 }
             } else {
-//                NSLog(@"NO QOS");
+//                DBNSLog(@"NO QOS");
                 if (isFrDS && isToDS) {
-//                    NSLog(@"isFrDS && isToDS");
+//                    DBNSLog(@"isFrDS && isToDS");
                     headerLength = sizeof(struct ieee80211_hdr_4addr);
                 } else {
-//                    NSLog(@"isFrDS || isToDS");
+//                    DBNSLog(@"isFrDS || isToDS");
                     headerLength = sizeof(struct ieee80211_hdr_3addr);                    
                 }
             }
             break;
         case IEEE80211_TYPE_CTL:
-            NSLog(@"CTL");
+            DBNSLog(@"CTL");
             switch(subtype) {
                 case IEEE80211_SUBTYPE_PS_POLL:
                 case IEEE80211_SUBTYPE_RTS:
@@ -339,7 +339,7 @@ bool IntersilJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len) {
             }
             break;
         default:
-            NSLog(@"Unknown frame type %u", type);
+            DBNSLog(@"Unknown frame type %u", type);
             return false;
     }
 
@@ -386,11 +386,11 @@ IOReturn IntersilJack::_getHardwareAddress(struct WLHardwareAddress* addr) {
     UInt32 size = sizeof(struct WLHardwareAddress);
     
     if (_getRecord(0xFC01, (UInt16*)addr, &size, false) != kIOReturnSuccess) {
-        NSLog(@"IntersilJack::_getHardwareAddress: getRecord error\n");
+        DBNSLog(@"IntersilJack::_getHardwareAddress: getRecord error\n");
         return kIOReturnError;
     }
     
-    NSLog(@"IntersilJack: MAC 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x\n",
+    DBNSLog(@"IntersilJack: MAC 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x\n",
           addr->bytes[0], addr->bytes[1], addr->bytes[2],
           addr->bytes[3], addr->bytes[4], addr->bytes[5]);
     
@@ -399,7 +399,7 @@ IOReturn IntersilJack::_getHardwareAddress(struct WLHardwareAddress* addr) {
 IOReturn IntersilJack::_getIdentity(WLIdentity* wli) {
     UInt32 size = sizeof(WLIdentity);
     if (_getRecord(0xFD20, (UInt16*)wli, &size) != kIOReturnSuccess) {
-        NSLog(@"IntersilJack::getIdentity: getRecord failed\n");
+        DBNSLog(@"IntersilJack::getIdentity: getRecord failed\n");
         return kIOReturnError;
     }
     
@@ -411,16 +411,16 @@ int      IntersilJack::_getFirmwareType() {
     UInt8 d[8];
     
     if (_getRecord(0xFD0B, (UInt16*)d, &size) != kIOReturnSuccess) {
-        NSLog(@"IntersilJack::_getFirmwareType: getRecord failed\n");
+        DBNSLog(@"IntersilJack::_getFirmwareType: getRecord failed\n");
         return -1;
     }
     
     card_id = *(UInt16*)d;
     if (card_id & 0x8000) {
-        NSLog(@"IntersilJack: Detected a Prism2 card\n");
+        DBNSLog(@"IntersilJack: Detected a Prism2 card\n");
         return WI_INTERSIL;
     } else {
-        NSLog(@"IntersilJack: WARNING detected a Lucent card. This is not supported! 0x%x\n",card_id);
+        DBNSLog(@"IntersilJack: WARNING detected a Lucent card. This is not supported! 0x%x\n",card_id);
         return WI_LUCENT;
     }
 }
@@ -430,7 +430,7 @@ IOReturn IntersilJack::_doCommand(enum WLCommandCode cmd, UInt16 param0, UInt16 
     if (!_devicePresent) return kIOReturnError;
     
     if (_interface == NULL) {
-        NSLog(@"IntersilJack::_doCommand called with NULL interface this is prohibited!\n");
+        DBNSLog(@"IntersilJack::_doCommand called with NULL interface this is prohibited!\n");
         return kIOReturnError;
     }
     
@@ -443,7 +443,7 @@ IOReturn IntersilJack::_doCommand(enum WLCommandCode cmd, UInt16 param0, UInt16 
     _outputBuffer.cmdreq.parm2 =	NSSwapHostShortToLittle(param2);
     
     if (_writeWaitForResponse(sizeof(_outputBuffer.cmdreq)) != kIOReturnSuccess) {
-        NSLog(@"IntersilJack::unable to execute commmand (%08x)\n", cmd);
+        DBNSLog(@"IntersilJack::unable to execute commmand (%08x)\n", cmd);
         _unlockDevice();
         return kIOReturnError;
     }
@@ -452,7 +452,7 @@ IOReturn IntersilJack::_doCommand(enum WLCommandCode cmd, UInt16 param0, UInt16 
     _unlockDevice();
     
     if (status) {
-        NSLog(@"IntersilJack::_doCommand: Status code (0x%x) at command cmd 0x%x\n", status, cmd);
+        DBNSLog(@"IntersilJack::_doCommand: Status code (0x%x) at command cmd 0x%x\n", status, cmd);
         return kIOReturnError;
     }
     
@@ -462,7 +462,7 @@ IOReturn IntersilJack::_doCommandNoWait(enum WLCommandCode cmd, UInt16 param0, U
     IOReturn kr;
     
     if (_interface == NULL) {
-        NSLog(@"IntersilJack::_doCommandNoWait called with NULL interface this is prohibited!\n");
+        DBNSLog(@"IntersilJack::_doCommandNoWait called with NULL interface this is prohibited!\n");
         return kIOReturnError;
     }
     
@@ -485,7 +485,7 @@ IOReturn IntersilJack::_getRecord(UInt16 rid, void* buf, UInt32* n, bool swapByt
     if (!_devicePresent) return kIOReturnError;
     
     if (_interface == NULL) {
-        NSLog(@"IntersilJack::_getRecord called with NULL interface this is prohibited!\n");
+        DBNSLog(@"IntersilJack::_getRecord called with NULL interface this is prohibited!\n");
         return kIOReturnError;
     }
     
@@ -496,14 +496,14 @@ IOReturn IntersilJack::_getRecord(UInt16 rid, void* buf, UInt32* n, bool swapByt
     _outputBuffer.rridreq.rid =    NSSwapHostShortToLittle(rid);
     
     if (_writeWaitForResponse(sizeof(_outputBuffer.rridreq)) != kIOReturnSuccess) {
-        NSLog(@"IntersilJack::unable to write record offset.\n");
+        DBNSLog(@"IntersilJack::unable to write record offset.\n");
         _unlockDevice();
         return kIOReturnError;
     }
     
     readLength = ((NSSwapLittleShortToHost(_inputBuffer.rridresp.frmlen)-1)*2);
     if (readLength != *n) {  
-        //NSLog(@"IntersilJack::RID len mismatch, rid=0x%04x hlen=%d fwlen=%d\n", rid, *n, readLength);
+        //DBNSLog(@"IntersilJack::RID len mismatch, rid=0x%04x hlen=%d fwlen=%d\n", rid, *n, readLength);
         _unlockDevice();
         return kIOReturnError;
     }
@@ -525,7 +525,7 @@ IOReturn IntersilJack::_setRecord(UInt16 rid, const void* buf, UInt32 n, bool sw
     if (!_devicePresent) return kIOReturnError;
     
     if (_interface == NULL) {
-        NSLog(@"IntersilJack::_setRecord called with NULL interface this is prohibited!\n");
+        DBNSLog(@"IntersilJack::_setRecord called with NULL interface this is prohibited!\n");
         return kIOReturnError;
     }
     
@@ -546,14 +546,14 @@ IOReturn IntersilJack::_setRecord(UInt16 rid, const void* buf, UInt32 n, bool sw
                         sizeof(_outputBuffer.wridreq.frmlen) + sizeof(_outputBuffer.wridreq.rid) + n);
     
     if (_writeWaitForResponse(numBytes) != kIOReturnSuccess) {
-        NSLog(@"IntersilJack::unable to write record offset for writing.\n");
+        DBNSLog(@"IntersilJack::unable to write record offset for writing.\n");
         _unlockDevice();
         return kIOReturnError;
     }
     
     status = NSSwapLittleShortToHost(_inputBuffer.wridresp.status);
     if (status & 0x7F00) {
-        NSLog(@"IntersilJack::_setRecord: setRecord result 0x%x\n", status & 0x7F00);
+        DBNSLog(@"IntersilJack::_setRecord: setRecord result 0x%x\n", status & 0x7F00);
         _unlockDevice();
         return kIOReturnError;
     }
@@ -579,7 +579,7 @@ IOReturn IntersilJack::_setValue(UInt16 rid, UInt16 v) {
         return ret;
     
     if (value != v) {
-        //NSLog(@"IntersilJack::setValue: Failed to set value (0x%x != 0x%x) for register 0x%x\n", value, v, rid);
+        //DBNSLog(@"IntersilJack::setValue: Failed to set value (0x%x != 0x%x) for register 0x%x\n", value, v, rid);
         return kIOReturnError;
     }
     
@@ -597,13 +597,13 @@ IOReturn IntersilJack::_writeWaitForResponse(UInt32 size) {
         kr = (*_interface)->WritePipe(_interface, kOutPipe, &_outputBuffer, size);
         if (kr != kIOReturnSuccess) {
             if (kr==wlcDeviceGone) _devicePresent = false;
-            else NSLog(@"IntersilJack::unable to write to USB Device(%08x)\n", kr);
+            else DBNSLog(@"IntersilJack::unable to write to USB Device(%08x)\n", kr);
             return kr;
         }
         
         to.tv_sec  = time(0) + 5;
         error = pthread_cond_timedwait(&_wait_cond, &_wait_mutex, &to);
-        if (error == ETIMEDOUT) NSLog(@"Timeout error.");
+        if (error == ETIMEDOUT) DBNSLog(@"Timeout error.");
         
         if (calls++ == 5) return kIOReturnTimeout;
     } while (error == ETIMEDOUT); //wait for async response
@@ -612,7 +612,7 @@ IOReturn IntersilJack::_writeWaitForResponse(UInt32 size) {
 }
 IOReturn IntersilJack::_enable() {
     if (_doCommand(wlcEnable, 0) != kIOReturnSuccess) {
-        NSLog(@"IntersilJack::startCapture: _doCommand(wlcEnable) failed\n");
+        DBNSLog(@"IntersilJack::startCapture: _doCommand(wlcEnable) failed\n");
         return kIOReturnError;
     }
     _isEnabled = true;
@@ -621,7 +621,7 @@ IOReturn IntersilJack::_enable() {
 }
 IOReturn IntersilJack::_disable() {
     if (_doCommand(wlcDisable, 0) != kIOReturnSuccess) {
-        NSLog(@"IntersilJack::_disable: _doCommand(wlcDisable) failed\n");
+        DBNSLog(@"IntersilJack::_disable: _doCommand(wlcDisable) failed\n");
         return kIOReturnError;
     }
     _isEnabled = false;

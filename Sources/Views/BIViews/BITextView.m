@@ -41,7 +41,6 @@
     
     [self _calcSize];
     
-    [_img autorelease];
     _img = [[NSImage alloc] initWithSize:_frame.size];
     
     [_img lockFocus];
@@ -78,7 +77,6 @@
     if (_cgImg) CGImageRelease(_cgImg);
     _cgImg = NULL;
 #endif
-    [_img autorelease];
     _img = nil;
 }
 
@@ -89,8 +87,8 @@
     if (!self) return nil;
 
     _cgImg = NULL;
-    _color = [[NSColor clearColor] retain];
-    _borderColor = [[NSColor clearColor] retain];
+    _color = [NSColor clearColor];
+    _borderColor = [NSColor clearColor];
     _marginSize = NSMakeSize(8,4);
     _string = [[NSAttributedString alloc] init];
     [self _calcSize];
@@ -118,8 +116,7 @@
 - (void)setString:(NSAttributedString *)attributedString { // set string after initial creation 
     NSParameterAssert(attributedString);
     
-    [_string autorelease];
-    _string = [attributedString retain];
+    _string = attributedString;
     [self _deleteCache];
     [self _calcSize];
 }
@@ -128,7 +125,6 @@
     NSParameterAssert(string);
     NSParameterAssert(attrs);
     
-    [_string autorelease];
     _string = [[NSAttributedString alloc] initWithString:string attributes:attrs];
     [self _deleteCache];
     [self _calcSize];
@@ -137,16 +133,14 @@
 - (void)setBackgroundColor:(NSColor *)color {
     NSParameterAssert(color);
     
-    [_color autorelease];
-    _color = [color retain];
+    _color = color;
     [self _deleteCache];
 }
 
 - (void)setBorderColor:(NSColor *)color {
     NSParameterAssert(color);
     
-    [_borderColor autorelease];
-    _borderColor = [color retain];
+    _borderColor = color;
     [self _deleteCache];
 }
 
@@ -173,10 +167,6 @@
 
 - (void)dealloc {
     [self _deleteCache];
-    [_color release];
-    [_borderColor release];
-    [_string release];
-    [super dealloc];
 }
 
 @end

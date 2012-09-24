@@ -64,7 +64,7 @@
     
     subviews = [_netContainer subViews];
     for (i = 0; i < [subviews count]; i++) {
-        NSObject *o = [subviews objectAtIndex:i];
+        NSObject *o = subviews[i];
         if ([o isMemberOfClass:[NetView class]]) [(NetView*)o align];
     }
     [self _alignCurrentPos];
@@ -95,16 +95,18 @@
 }
 
 - (void)_setStatus:(NSString*)status {
-    NSMutableDictionary* attrs = [[[NSMutableDictionary alloc] init] autorelease];
+    NSMutableDictionary* attrs = [[NSMutableDictionary alloc] init];
     NSFont* textFont = [NSFont fontWithName:@"Monaco" size:16];
     NSColor *col = [NSColor redColor];
     
-    [WaveHelper secureReplace:&_gpsStatus withObject:status];
+	_gpsStatus = status;
+	
+    //[WaveHelper secureReplace:&_gpsStatus withObject:status];
     
-    [attrs setObject:textFont forKey:NSFontAttributeName];
-    [attrs setObject:col forKey:NSForegroundColorAttributeName];
+    attrs[NSFontAttributeName] = textFont;
+    attrs[NSForegroundColorAttributeName] = col;
     
-    NSAttributedString *a = [[[NSAttributedString alloc] initWithString:_gpsStatus attributes:attrs] autorelease];
+    NSAttributedString *a = [[NSAttributedString alloc] initWithString:_gpsStatus attributes:attrs];
     [_statusView setString:a];
     [_statusView setBorderColor:col];
     [_statusView setBackgroundColor:[NSColor colorWithDeviceRed:0.3 green:0 blue:0 alpha:0.5]];
@@ -140,16 +142,17 @@
 }
 
 - (void)_setGPSStatus:(NSString*)status {
-    NSMutableDictionary* attrs = [[[NSMutableDictionary alloc] init] autorelease];
+    NSMutableDictionary* attrs = [[NSMutableDictionary alloc] init];
     NSFont* textFont = [NSFont fontWithName:@"Monaco" size:12];
     NSColor *grey = [NSColor whiteColor];
     
-    [WaveHelper secureReplace:&_gpsStatus withObject:status];
+	_gpsStatus = status;
+    //[WaveHelper secureReplace:&_gpsStatus withObject:status];
     
-    [attrs setObject:textFont forKey:NSFontAttributeName];
-    [attrs setObject:grey forKey:NSForegroundColorAttributeName];
+    attrs[NSFontAttributeName] = textFont;
+    attrs[NSForegroundColorAttributeName] = grey;
     
-    NSAttributedString *a = [[[NSAttributedString alloc] initWithString:_gpsStatus attributes:attrs] autorelease];
+    NSAttributedString *a = [[NSAttributedString alloc] initWithString:_gpsStatus attributes:attrs];
     [_gpsStatusView setString:a];
     [_gpsStatusView setBorderColor:grey];
     [_gpsStatusView setBackgroundColor:[[NSColor darkGrayColor] colorWithAlphaComponent:0.5]];

@@ -36,7 +36,7 @@ struct pointCoords {
     self = [super init];
     if (!self) return nil;
     
-    _trace = [[NSMutableArray array] retain];
+    _trace = [NSMutableArray array];
     _state = stateNoPointPresent;
     return self;
 }
@@ -47,8 +47,7 @@ struct pointCoords {
     
     switch(_state) {
     case stateNoPointPresent:
-        [_lastPoint autorelease];
-        _lastPoint = [[BIValuePair valuePairFromWaypoint:w] retain];
+        _lastPoint = [BIValuePair valuePairFromWaypoint:w];
         _state = stateFirstPointPresent;
         break;
     case stateFirstPointPresent:
@@ -79,7 +78,7 @@ struct pointCoords {
 	NSMutableArray *a;
 	
 	for (i = 0; i < [trace count]; i++) {
-		obj = [trace objectAtIndex:i];
+		obj = trace[i];
 		if ([obj isKindOfClass:[NSMutableArray class]]) {
 			[_trace insertObject:obj atIndex:0];
 		} else if ([obj isKindOfClass:[NSData class]]) {
@@ -91,7 +90,7 @@ struct pointCoords {
 			for (j = 0; j < ([(NSData*)obj length] / sizeof(struct pointCoords)); j++) {
 				vp = [BIValuePair new];
 				[vp setPairX:pL->x Y:pL->y];
-				[a addObject:[vp autorelease]];
+				[a addObject:vp];
 				pL++;
 			}
 			[_trace insertObject:a atIndex:0];
@@ -101,11 +100,9 @@ struct pointCoords {
 }
 
 - (BOOL)setTrace:(NSMutableArray*)trace {
-    [_trace autorelease];
     
 	_trace = [NSMutableArray array];
     [self addTrace: trace];
-	[_trace retain];
     [self cut];
 
     return YES;
@@ -124,13 +121,13 @@ struct pointCoords {
 	
 	a = [NSMutableArray arrayWithCapacity:c];
 	for (i = 0; i < c; i++) {
-		subtrace = [_trace objectAtIndex:i];
+		subtrace = _trace[i];
 		
 		coord = [NSMutableData dataWithLength:[subtrace count] * sizeof(struct pointCoords)];
 		pL = (struct pointCoords *)[coord mutableBytes];
 		
 		for (j = 0; j < [subtrace count]; j++) {
-			vp = [subtrace objectAtIndex:j];
+			vp = subtrace[j];
 			pL->x = [vp getX];
 			pL->y = [vp getY];
 			pL++;
@@ -161,12 +158,12 @@ struct pointCoords {
     [t translateXBy:p.x yBy:p.y];
     
     for (i = 0; i < [_trace count]; i++) {
-        tour = [_trace objectAtIndex:i];
+        tour = _trace[i];
         b = [NSBezierPath bezierPath];
-        p2 = [m pixelForCoordinate:[[tour objectAtIndex:0] wayPoint]];
+        p2 = [m pixelForCoordinate:[tour[0] wayPoint]];
         [b moveToPoint:p2];
         for (j = 1; j < [tour count]; j++) {
-            p2 = [m pixelForCoordinate:[[tour objectAtIndex:j] wayPoint]];
+            p2 = [m pixelForCoordinate:[tour[j] wayPoint]];
             [b lineToPoint:p2];        
         }
         [b transformUsingAffineTransform:t];
@@ -177,9 +174,4 @@ struct pointCoords {
 
 #pragma mark -
 
-- (void)dealloc {
-    [_trace release];
-    [_lastPoint release];
-    [super dealloc];
-}
 @end

@@ -32,33 +32,31 @@ struct leapClientData {
     const UInt8 *response;
     const UInt8 *challenge;
     UInt8    hashend[2];
-    NSString *username;
-    NSString *clientID;
+    __unsafe_unretained NSString *username;
+    __unsafe_unretained NSString *clientID;
 };
 
 @implementation WaveNet(LEAPCrackExtension)
 
 - (void)performWordlistLEAP:(NSString*)wordlist {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    BOOL successful = NO;
+    @autoreleasepool {
+        BOOL successful = NO;
 	
 	NSParameterAssert(_isWep == encryptionTypeLEAP);    
 	NSParameterAssert([self capturedLEAPKeys] > 0);
 	NSParameterAssert(_password == nil);
 	NSParameterAssert(wordlist);
 	
-	[wordlist retain];
 	
 	if ([self crackLEAPWithWordlist:[wordlist stringByExpandingTildeInPath] andImportController:[WaveHelper importController]]) successful = YES;
 	
-    [[WaveHelper importController] terminateWithCode: (successful) ? 1 : -1];
-    [wordlist release];
-	[pool release];
+        [[WaveHelper importController] terminateWithCode: (successful) ? 1 : -1];
+	}
 }
 
 - (BOOL)crackLEAPWithWordlist:(NSString*)wordlist andImportController:(ImportController*)im {
     char wrd[100];
-    FILE* fptr;
+    FILE* fptr = nil;
     unsigned int i, words, curKey;
 	int keys;
     struct leapClientData *c;
@@ -72,14 +70,14 @@ struct leapClientData {
     //initialize all the data structures
     keys = 0;
     for (i = 0; i < [aClientKeys count]; i++) {
-        if ([[aClients objectForKey:[aClientKeys objectAtIndex:i]] leapDataAvailable]) keys++;
+        if ([aClients[aClientKeys[i]] leapDataAvailable]) keys++;
     }
 
     curKey = 0;
     c = malloc(keys * sizeof(struct leapClientData));
     
     for (i = 0; i < [aClientKeys count]; i++) {
-        wc = [aClients objectForKey:[aClientKeys objectAtIndex:i]];
+        wc = aClients[aClientKeys[i]];
         if ([wc leapDataAvailable]) {
             if ([[wc ID] isEqualToString:_BSSID]) {
                 keys--;
@@ -99,7 +97,8 @@ struct leapClientData {
     }
 
     if (keys<=0) {
-		_crackErrorString = [NSLocalizedString(@"The captured challenge response packets are not sufficient to perform this attack", @"Error description for LEAP crack.") retain];
+		_crackErrorString = NSLocalizedString(@"The captured challenge response packets are not sufficient to perform this attack", @"Error description for LEAP crack.");
+		free(c);
 		return NO;
 	}
     
@@ -126,10 +125,10 @@ struct leapClientData {
             if (c[curKey].hashend[0] != pwhash[14] || c[curKey].hashend[1] != pwhash[15]) continue;
             if (testChallenge(c[curKey].challenge, c[curKey].response, pwhash)) continue;
             
-            _password = [[NSString stringWithFormat:@"%s for username %@", wrd, c[curKey].username] retain];
+            _password = [NSString stringWithFormat:@"%s for username %@", wrd, c[curKey].username];
             fclose(fptr);
-            free(c);
-            NSLog(@"Cracking was successful. Password is <%s> for username %@, client %@", wrd, c[curKey].username, c[curKey].clientID);
+            DBNSLog(@"Cracking was successful. Password is <%s> for username %@, client %@", wrd, c[curKey].username, c[curKey].clientID);
+			free(c);
             return YES;
         }
     }
@@ -137,7 +136,7 @@ struct leapClientData {
     free(c);
     fclose(fptr);
     
-    _crackErrorString = [NSLocalizedString(@"The key was none of the tested passwords.", @"Error description for WPA crack.") retain];
+    _crackErrorString = NSLocalizedString(@"The key was none of the tested passwords.", @"Error description for WPA crack.");
     return NO;
 }
 
