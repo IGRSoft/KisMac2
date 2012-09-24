@@ -1,35 +1,34 @@
 /*
-        
-        File:			WaveDriverAirport.m
-        Program:		KisMAC
-		Author:			Geoffrey Kruse
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			WaveDriverAirport.m
+ Program:		KisMAC
+ Author:			Geoffrey Kruse
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "WaveDriverAirport.h"
 #import "WaveHelper.h"
-#include <dlfcn.h>
 
 static int AirPortInstances = 0;
 static WaveDriverAirport * staticInstance = nil;
 
 @implementation WaveDriverAirport
 
-- (id)init 
+- (id)init
 {
     if (!(self = [super init])) return nil;
     NSSet * availableInterfaces;
@@ -37,7 +36,7 @@ static WaveDriverAirport * staticInstance = nil;
     NSError * error;
     
     if(nil == staticInstance)
-    {        
+    {
         //first we must find an interface
         availableInterfaces = [CWInterface interfaceNames];
         
@@ -46,8 +45,8 @@ static WaveDriverAirport * staticInstance = nil;
         //for now just grab the first one
         if([availableInterfaces count] > 0)
         {
-            airportInterface = [CWInterface interfaceWithName: 
-                                             [availableInterfaces allObjects][0]];
+            airportInterface = [CWInterface interfaceWithName:
+								[availableInterfaces allObjects][0]];
             //CFShow(airportInterface);
             if(YES == airportInterface.powerOn)
             {
@@ -69,17 +68,8 @@ static WaveDriverAirport * staticInstance = nil;
         {
             self = nil;
         }
-
+		
         staticInstance = self;
-		
-		libHandle = dlopen("/System/Library/Frameworks/Preferences.framework/Preferences", RTLD_LAZY);
-		open = dlsym(libHandle, "Apple80211Open");
-		bind = dlsym(libHandle, "Apple80211BindToInterface");
-		close = dlsym(libHandle, "Apple80211Close");
-		scan = dlsym(libHandle, "Apple80211Scan");
-		
-		open(&airportHandle);
-		bind(airportHandle, @"en0");
         
         return self;
     }
@@ -87,7 +77,7 @@ static WaveDriverAirport * staticInstance = nil;
     return staticInstance;
 }
 
-+(int) airportInstanceCount 
++(int) airportInstanceCount
 {
     return AirPortInstances;
 }
@@ -103,25 +93,25 @@ static WaveDriverAirport * staticInstance = nil;
 
 #pragma mark -
 
-+ (enum WaveDriverType) type 
++ (enum WaveDriverType) type
 {
     return activeDriver;
 }
 
-+ (NSString*) description 
++ (NSString*) description
 {
-    return NSLocalizedString(@"Apple Airport or Airport Extreme card, active mode", 
-                                                        "long driver description");
+    return NSLocalizedString(@"Apple Airport or Airport Extreme card, active mode",
+							 "long driver description");
 }
 
-+ (NSString*) deviceName 
++ (NSString*) deviceName
 {
     return NSLocalizedString(@"Airport Card", "short driver description");
 }
 
 #pragma mark -
 //apple knows best, ask api if wireless is available
-+ (bool) loadBackend 
++ (bool) loadBackend
 {
     NSSet * availableInterfaces;
     
@@ -130,7 +120,7 @@ static WaveDriverAirport * staticInstance = nil;
     return ([availableInterfaces count] > 0);
 }
 
-+ (bool) unloadBackend 
++ (bool) unloadBackend
 {
     return YES;
 }
@@ -139,28 +129,23 @@ static WaveDriverAirport * staticInstance = nil;
 
 //this is the same as what you would see in the airport menu
 //don't expect any more information than that in active mode
-- (NSArray*) networksInRange 
+- (NSArray*) networksInRange
 {
-	NSArray *scan_networks;
-	NSDictionary *parameters = [[NSDictionary alloc] init];
-	scan(airportHandle, &scan_networks, (__bridge void *)(parameters));
-	int i;
-	for (i = 0; i < [scan_networks count]; i++) {
-		if([networks objectForKey:[[scan_networks objectAtIndex: i] objectForKey:@"BSSID"]] != nil
-		   && ![[networks objectForKey:[[scan_networks objectAtIndex: i] objectForKey:@"BSSID"]] isEqualToDictionary:[scan_networks objectAtIndex: i]])
-		{
-			[networks setObject:[scan_networks objectAtIndex: i] forKey:[[scan_networks objectAtIndex: i] objectForKey:@"BSSID"]];
-		}
+    NSError * error = nil;
+	
+	networks = [[airportInterface scanForNetworksWithName:nil error:&error] allObjects];
+	
+	if (error) {
+		DBNSLog(@"Error: %@", [error localizedDescription]);
 	}
 	
-	 
-	return [NSArray arrayWithObject: networks];
+    return networks;
 }
 
 #pragma mark -
 
 //active driver does not support changing channels
-- (void) hopToNextChannel 
+- (void) hopToNextChannel
 {
 	return;
 }
@@ -172,10 +157,10 @@ static WaveDriverAirport * staticInstance = nil;
     NSEnumerator * enumerator;
     bool foundNet = NO;
     bool success = NO;
-
+	
     if(nil == networks)
     {
-        networks = [[self networksInRange] objectAtIndex:0];
+        networks = [self networksInRange];
     }
     
     enumerator = [networks objectEnumerator];
@@ -205,7 +190,7 @@ static WaveDriverAirport * staticInstance = nil;
     
     if(YES == foundNet)
     {
-		success = [airportInterface associateToNetwork:netToJoin password:passwd error:&error];
+        success = [airportInterface associateToNetwork:netToJoin password:passwd error:&error];
     }
     
     if(error)
@@ -217,7 +202,7 @@ static WaveDriverAirport * staticInstance = nil;
 
 #pragma mark -
 
--(void) dealloc 
+-(void) dealloc
 {
     airportInterface = nil;
 }
