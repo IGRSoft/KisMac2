@@ -123,6 +123,8 @@
     [self updateChannelMenu];
     [_networkTable reloadData];
 
+	[queue cancelAllOperations];
+	
     return result;
 }
 

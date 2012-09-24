@@ -22,6 +22,7 @@
 
 #import "WaveDriverAirport.h"
 #import "WaveHelper.h"
+#include <dlfcn.h>
 
 static int AirPortInstances = 0;
 static WaveDriverAirport * staticInstance = nil;
@@ -70,6 +71,15 @@ static WaveDriverAirport * staticInstance = nil;
         }
 
         staticInstance = self;
+		
+		libHandle = dlopen("/System/Library/Frameworks/Preferences.framework/Preferences", RTLD_LAZY);
+		open = dlsym(libHandle, "Apple80211Open");
+		bind = dlsym(libHandle, "Apple80211BindToInterface");
+		close = dlsym(libHandle, "Apple80211Close");
+		scan = dlsym(libHandle, "Apple80211Scan");
+		
+		open(&airportHandle);
+		bind(airportHandle, @"en0");
         
         return self;
     }
@@ -131,17 +141,20 @@ static WaveDriverAirport * staticInstance = nil;
 //don't expect any more information than that in active mode
 - (NSArray*) networksInRange 
 {
-    NSDictionary *params;
-    NSError * error = nil;
-        
-    //don't merge duplicate ssids
-    params = @{kCWScanKeyMerge: @NO,
-                               kCWScanKeyScanType: @(kCWScanTypePassive),
-                               kCWScanKeyRestTime: @0,
-                               kCWScanKeyDwellTime: @10};
-    networks = [airportInterface scanForNetworksWithParameters:params error: &error]; 
-  
-    return networks;
+	NSArray *scan_networks;
+	NSDictionary *parameters = [[NSDictionary alloc] init];
+	scan(airportHandle, &scan_networks, (__bridge void *)(parameters));
+	int i;
+	for (i = 0; i < [scan_networks count]; i++) {
+		if([networks objectForKey:[[scan_networks objectAtIndex: i] objectForKey:@"BSSID"]] != nil
+		   && ![[networks objectForKey:[[scan_networks objectAtIndex: i] objectForKey:@"BSSID"]] isEqualToDictionary:[scan_networks objectAtIndex: i]])
+		{
+			[networks setObject:[scan_networks objectAtIndex: i] forKey:[[scan_networks objectAtIndex: i] objectForKey:@"BSSID"]];
+		}
+	}
+	
+	 
+	return [NSArray arrayWithObject: networks];
 }
 
 #pragma mark -
@@ -156,14 +169,13 @@ static WaveDriverAirport * staticInstance = nil;
 {
     CWNetwork * netToJoin;
     NSError * error = nil;
-    NSDictionary * assocDict;
     NSEnumerator * enumerator;
     bool foundNet = NO;
     bool success = NO;
 
     if(nil == networks)
     {
-        networks = [self networksInRange];
+        networks = [[self networksInRange] objectAtIndex:0];
     }
     
     enumerator = [networks objectEnumerator];
@@ -193,8 +205,7 @@ static WaveDriverAirport * staticInstance = nil;
     
     if(YES == foundNet)
     {
-        assocDict = @{kCWAssocKeyPassphrase: passwd};
-        success = [airportInterface associateToNetwork: netToJoin parameters: assocDict error:&error];
+		success = [airportInterface associateToNetwork:netToJoin password:passwd error:&error];
     }
     
     if(error)

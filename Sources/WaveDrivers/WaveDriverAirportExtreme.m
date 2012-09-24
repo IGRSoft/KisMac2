@@ -85,7 +85,7 @@ static pcap_t *_device;
 {   
 	CWInterface * airport = [CWInterface interfaceWithName:
                              [[CWInterface interfaceNames] allObjects][0]];
-    return [airport supportsMonitorMode];
+    return [airport serviceActive];
 }
 
 // return 0 for success, 1 for error, 2 for self handled error
@@ -222,7 +222,7 @@ pcap_dumper_t * dumper;
 
 - (unsigned short) getChannelUnCached 
 {
-	return (UInt16)[airportInterface.channel intValue];
+	return [[airportInterface wlanChannel] channelNumber];
 }
 
 - (bool) setChannel:(unsigned short)newChannel 
@@ -230,7 +230,17 @@ pcap_dumper_t * dumper;
     bool success = FALSE;
     NSError * error = nil;
 
-    success = [airportInterface setChannel: newChannel error: &error];
+	NSSet *channels = [airportInterface supportedWLANChannels];
+	CWChannel *wlanChannel = nil;
+	
+	for (CWChannel *_wlanChannel in channels) {
+		if ([_wlanChannel channelNumber] == newChannel) {
+			wlanChannel = _wlanChannel;
+		}
+	}
+	
+	if (wlanChannel != nil)
+		success = [airportInterface setWLANChannel:wlanChannel error: &error];
     
     //this is kindof a hack...  The airport interface may not go completely
     //into monitor mode the first time.  It can be interrupted by a "sw beacon miss"
@@ -240,18 +250,17 @@ pcap_dumper_t * dumper;
     //If it only makes it to "Run" mode, you will see this problem.
     //enable debug output of the driver using the airport utility
     //to see what is happening here.
-    if(!success && newChannel != 0)
+    if(!success && wlanChannel)
     {
         [airportInterface disassociate];
         pcap_set_datalink(_device, 1);
         pcap_set_datalink(_device, DLTType);
         sleep(2);
-        success = [airportInterface setChannel: newChannel error: &error];
+        success = [airportInterface setWLANChannel:wlanChannel error: &error];
     }
         
     _currentChannel = newChannel;
     
-    //CFShow([airportInterface supportedChannels]);
     if(!success)
     {
         CFShow((__bridge CFTypeRef)(error));

@@ -29,7 +29,15 @@
 @interface WaveDriverAirport : WaveDriver
 {
     CWInterface * airportInterface;
-    NSArray * networks;
+    NSMutableDictionary * networks;
+	
+	void *airportHandle;
+	void *libHandle;
+	
+	int (*open)(void *);
+	int (*bind)(void *, NSString *);
+	int (*close)(void *);
+	int (*scan)(void *, NSArray **, void *);
 }
 
 + (int) airportInstanceCount;

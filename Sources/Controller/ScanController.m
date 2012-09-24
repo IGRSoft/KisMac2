@@ -268,8 +268,10 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 						if ([_container netAtIndex:i] == _curNet)
 						{
 							_selectedRow = i;
-							[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:i]
-									   byExtendingSelection: NO];
+							[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+								[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:i]
+										   byExtendingSelection: NO];
+							}];
 							break;
 						}
 				}
@@ -302,8 +304,10 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 						if ([_container netAtIndex:i] == _curNet)
 						{
 							_selectedRow = i;
-							[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex: i]
-									   byExtendingSelection: NO];
+							[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+								[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:i]
+										   byExtendingSelection: NO];
+							}];
 							break;
 						}
 				}
@@ -325,7 +329,6 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 			}
 		}
 	}];
-    
 }
 
 - (void)updateViewItems:(NSNotification*)note {
