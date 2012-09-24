@@ -2,10 +2,10 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1080</int>
-		<string key="IBDocument.SystemVersion">12B19</string>
+		<string key="IBDocument.SystemVersion">12C54</string>
 		<string key="IBDocument.InterfaceBuilderVersion">2840</string>
-		<string key="IBDocument.AppKitVersion">1187</string>
-		<string key="IBDocument.HIToolboxVersion">624.00</string>
+		<string key="IBDocument.AppKitVersion">1187.34</string>
+		<string key="IBDocument.HIToolboxVersion">625.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			<string key="NS.object.0">2840</string>
@@ -47,7 +47,7 @@
 					<object class="NSPopUpButton" id="755413303">
 						<reference key="NSNextResponder" ref="1061965450"/>
 						<int key="NSvFlags">256</int>
-						<string key="NSFrame">{{17, 146}, {330, 26}}</string>
+						<string key="NSFrame">{{17, 146}, {383, 26}}</string>
 						<reference key="NSSuperview" ref="1061965450"/>
 						<reference key="NSWindow"/>
 						<bool key="NSEnabled">YES</bool>
@@ -183,7 +183,7 @@
 					<object class="NSTextField" id="217472866">
 						<reference key="NSNextResponder" ref="1061965450"/>
 						<int key="NSvFlags">256</int>
-						<string key="NSFrame">{{17, 174}, {340, 43}}</string>
+						<string key="NSFrame">{{17, 174}, {383, 43}}</string>
 						<reference key="NSSuperview" ref="1061965450"/>
 						<reference key="NSWindow"/>
 						<bool key="NSEnabled">YES</bool>
@@ -221,7 +221,7 @@
 					<object class="NSPopUpButton" id="776614273">
 						<reference key="NSNextResponder" ref="1061965450"/>
 						<int key="NSvFlags">256</int>
-						<string key="NSFrame">{{147, 110}, {200, 26}}</string>
+						<string key="NSFrame">{{147, 110}, {253, 26}}</string>
 						<reference key="NSSuperview" ref="1061965450"/>
 						<reference key="NSWindow"/>
 						<bool key="NSEnabled">YES</bool>
@@ -330,7 +330,7 @@
 					<object class="NSPopUpButton" id="84042404">
 						<reference key="NSNextResponder" ref="1061965450"/>
 						<int key="NSvFlags">256</int>
-						<string key="NSFrame">{{147, 78}, {200, 26}}</string>
+						<string key="NSFrame">{{147, 78}, {253, 26}}</string>
 						<reference key="NSSuperview" ref="1061965450"/>
 						<reference key="NSWindow"/>
 						<bool key="NSEnabled">YES</bool>
@@ -462,7 +462,7 @@
 					<object class="NSTextField" id="246807222">
 						<reference key="NSNextResponder" ref="1061965450"/>
 						<int key="NSvFlags">256</int>
-						<string key="NSFrame">{{150, 49}, {105, 22}}</string>
+						<string key="NSFrame">{{150, 49}, {158, 22}}</string>
 						<reference key="NSSuperview" ref="1061965450"/>
 						<reference key="NSWindow"/>
 						<bool key="NSEnabled">YES</bool>
@@ -494,7 +494,7 @@
 					<object class="NSTextField" id="439067294">
 						<reference key="NSNextResponder" ref="1061965450"/>
 						<int key="NSvFlags">256</int>
-						<string key="NSFrame">{{294, 49}, {50, 22}}</string>
+						<string key="NSFrame">{{347, 48}, {50, 22}}</string>
 						<reference key="NSSuperview" ref="1061965450"/>
 						<reference key="NSWindow"/>
 						<bool key="NSEnabled">YES</bool>
@@ -594,7 +594,7 @@
 					<object class="NSTextField" id="91523685">
 						<reference key="NSNextResponder" ref="1061965450"/>
 						<int key="NSvFlags">256</int>
-						<string key="NSFrame">{{260, 51}, {36, 14}}</string>
+						<string key="NSFrame">{{313, 50}, {36, 14}}</string>
 						<reference key="NSSuperview" ref="1061965450"/>
 						<reference key="NSWindow"/>
 						<bool key="NSEnabled">YES</bool>
@@ -610,7 +610,7 @@
 						<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 					</object>
 				</array>
-				<string key="NSFrameSize">{364, 230}</string>
+				<string key="NSFrameSize">{417, 230}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<string key="NSClassName">NSView</string>
@@ -756,9 +756,9 @@
 							<reference ref="84042404"/>
 							<reference ref="887456353"/>
 							<reference ref="246807222"/>
-							<reference ref="439067294"/>
 							<reference ref="594068145"/>
 							<reference ref="91523685"/>
+							<reference ref="439067294"/>
 						</array>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">View</string>
