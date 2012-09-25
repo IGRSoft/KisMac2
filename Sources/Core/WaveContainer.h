@@ -46,7 +46,7 @@ typedef struct WaveNetEntry {
 
 } WaveNetEntry;
 
-@interface WaveContainer : NSObject {
+@interface WaveContainer : NSObject <NSFastEnumeration> {
     int _order;
     bool _dropAll;
     bool _ascend;

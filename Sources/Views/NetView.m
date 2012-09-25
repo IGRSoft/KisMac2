@@ -83,9 +83,6 @@ static NSImage* _networkStrange;
 
 	_netImg = nil;
 	_netColor = nil;
-	
-    //[WaveHelper secureRelease:&_netImg];
-    //[WaveHelper secureRelease:&_netColor];
     
     switch (_wep) {
     case encryptionTypeUnknown:
@@ -212,9 +209,6 @@ static NSImage* _networkStrange;
 	_name = nil;
 	_netImg = nil;
 	_netColor = nil;
-    //[WaveHelper secureRelease:&_name];
-    //[WaveHelper secureRelease:&_netImg];
-    //[WaveHelper secureRelease:&_netColor];
     
 }
 @end

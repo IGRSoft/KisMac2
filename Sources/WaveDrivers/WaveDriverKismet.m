@@ -243,8 +243,6 @@ static int KismetInstances = 0;
 -(void) dealloc {
     KismetInstances--;
     close(sockd);
-	
 }
-
 
 @end

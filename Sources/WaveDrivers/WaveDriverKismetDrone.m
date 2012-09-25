@@ -448,10 +448,4 @@
 	return thisFrame; // finally!
 }
 
-#pragma mark -
-
--(void) dealloc {
-		DBNSLog(@"dealloc called");
-}
-
 @end

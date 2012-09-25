@@ -311,6 +311,7 @@
     [_gridFrame setLines:a];
 }
 
+//TODO: rewrite that shit!
 - (void)drawGraphInRect:(NSRect)rect {
     int i, *ptr;
     unsigned int n;
@@ -568,10 +569,6 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    
-    
-    
 }
 
 @end

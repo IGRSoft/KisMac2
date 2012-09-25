@@ -272,7 +272,6 @@
 
     if (_driver)
         delete (_driver);
-    
 }
 
 @end

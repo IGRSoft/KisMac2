@@ -103,9 +103,6 @@ struct termios ttyset;
 	_gpsDevice = device;
 	_lastUpdate = nil;
 	_sectorStart = nil;
-    /*[WaveHelper secureReplace:&_gpsDevice withObject:device];
-    [WaveHelper secureRelease:&_lastUpdate];
-    [WaveHelper secureRelease:&_sectorStart];*/
     
     if ([_gpsDevice length]==0) {
         DBNSLog(@"GPS integration disabled");
@@ -1016,8 +1013,7 @@ int ss(char* inp, char* outp) {
 
 - (void) dealloc {
 	_status = nil;
-    //[WaveHelper secureRelease:&_status];
-    _gpsShallRun=NO;
+    _gpsShallRun = NO;
 }
 
 @end

@@ -220,8 +220,11 @@ struct pointCoords {
 	[im setMax:i];
 	
 	//search for maximum ID. all new nets will be bigger than that
-	for(i = 0, maxID=0; i < [container count]; i++)
-        if ([[container netAtIndex:i] netID] > maxID) maxID = [[container netAtIndex:i] netID];
+	maxID = 0;
+	for (WaveNet *net in container) {
+		if ([net netID] > maxID)
+			maxID = [net netID];
+	}
 	
 	while ((data = [deco nextData]) != NULL) {
 		data = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListImmutable format:nil errorDescription:&error];

@@ -31,11 +31,7 @@
 }
 - (void) dealloc {
     
-    
     _driver = nil;
-    
-    
-    return;
 }
 
 #pragma mark -

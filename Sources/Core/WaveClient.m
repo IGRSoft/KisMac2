@@ -167,9 +167,6 @@
 			_leapUsername = nil;
 			_leapChallenge = nil;
 			_leapResponse = nil;
-            //[WaveHelper secureRelease:&_leapUsername];
-            //[WaveHelper secureRelease:&_leapChallenge];
-            //[WaveHelper secureRelease:&_leapResponse];
             break;
         default:
             break;

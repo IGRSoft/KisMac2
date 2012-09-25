@@ -473,7 +473,6 @@
     if (_importController) [NSApp endSheet:[_importController window]];
     [[_importController window] orderOut:self];
 	_importController = nil;
-    //[WaveHelper secureRelease:&_importController];
 }
 
 #pragma clang diagnostic push
@@ -499,7 +498,6 @@
     [[_importController window] close];
     [_importController stopAnimation];
 	_importController = nil;
-    //[WaveHelper secureRelease:&_importController];
 }
 
 - (void)busyThread:(id)anObject {

@@ -102,8 +102,6 @@
 //does the active scanning (extra thread)
 - (void)doActiveScan:(WaveDriver*)wd {
     NSArray *nets;
-    CWNetwork *network;
-    unsigned int i;
     float interval;
     NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
     
@@ -113,8 +111,7 @@
 			nets = [wd networksInRange];
 			
 			if (nets) {
-				for(i=0; i<[nets count]; i++) {
-					network = nets[i];                
+				for (CWNetwork *network in nets) {
 					[_container addAppleAPIData:network];
 				}
 			}
@@ -368,7 +365,6 @@
 -(void)setGeigerInterval:(int)newGeigerInt sound:(NSString*) newSound {
     
 	_geigerSound = nil;
-    //[WaveHelper secureRelease:&_geigerSound];
     
     if ((newSound==Nil)||(newGeigerInt==0)) return;
     

@@ -583,7 +583,6 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [_importController stopAnimation];
-
 }
 
 #pragma mark -

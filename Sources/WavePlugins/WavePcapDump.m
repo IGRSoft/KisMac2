@@ -87,6 +87,4 @@
         pcap_close(_p);
 }
 
-
-
 @end

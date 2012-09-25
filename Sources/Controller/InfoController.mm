@@ -99,9 +99,6 @@ enum _rowIndexes {
 	aClients = nil;
 	aClientKeys = nil;
 	_n = nil;
-    /*[WaveHelper secureRelease:&aClients];
-    [WaveHelper secureRelease:&aClientKeys];
-    [WaveHelper secureRelease:&_n];*/
     
     //fetch all new interesting stuff
     _n=sender;
@@ -296,7 +293,6 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
         if (_ascending) _ascending=NO;
         else {
 			_lastSorted = nil;
-            //[WaveHelper secureRelease:&_lastSorted];
             
             [tableView setIndicatorImage:Nil inTableColumn:tableColumn];
             [tableView setHighlightedTableColumn:Nil];
@@ -307,7 +303,6 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
         _ascending=YES;
         if (_lastSorted) [tableView setIndicatorImage:nil inTableColumn:[tableView tableColumnWithIdentifier:_lastSorted]];
 		_lastSorted = ident;
-        //[WaveHelper secureReplace:&_lastSorted withObject:ident];
     }
     
     [_n sortByColumn:ident order:_ascending];
@@ -335,9 +330,9 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
 #pragma mark -
 
 -(void) dealloc {
-    if (aClients!=Nil) ;
-    if (aClientKeys!=Nil) ;
-    if (_n!=nil) ;
+	aClients = Nil;
+	aClientKeys = Nil;
+	_n = Nil;
 }
 
 - (NSString *) theRow 

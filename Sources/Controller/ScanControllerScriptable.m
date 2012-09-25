@@ -150,7 +150,6 @@
     [_window setDocumentEdited:NO];
     _curNet = Nil;
 	_fileName = nil;
-    //[WaveHelper secureRelease:&_fileName];
     
     [self refreshScanHierarch];    
     [self updateNetworkTable:self complete:YES];

@@ -483,17 +483,6 @@ static GPSInfoController *_gc;
     //}
 }
 
-/*+ (void)secureRelease:(id*)object {
-    id rel = *object;
-    *object = Nil;
-    [rel release];
-}
-+ (void)secureReplace:(id*)oldObject withObject:(id)newObject {
-    id rel = *oldObject;
-    *oldObject = [newObject retain];
-    [rel release];
-}*/
-
 + (void)addDictionary:(NSDictionary*)s toDictionary:(NSMutableDictionary*)d {
     NSEnumerator* e = [s keyEnumerator];
     id key;

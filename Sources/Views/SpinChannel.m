@@ -133,11 +133,4 @@
     [self setNeedsDisplay:YES];
 }
 
-- (void)dealloc 
-{
-    int i;
-    
-    for(i = 0; i < 12; i++) {
-    }
-}
 @end

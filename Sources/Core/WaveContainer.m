@@ -272,7 +272,6 @@ UInt32 hashForMAC(const UInt8* val) {
         break;
     case 2:
 		_viewSSID = val;
-        //[WaveHelper secureReplace:&_viewSSID withObject:val];
         break;
     case 3:
         _viewCrypto = [val intValue];
@@ -284,15 +283,14 @@ UInt32 hashForMAC(const UInt8* val) {
 }
 
 - (void) setFilterString:(NSString*)filter {
-    if ([filter length] == 0) _filterString = nil; //[WaveHelper secureRelease:&_filterString];
-    else _filterString = filter;//[WaveHelper secureReplace:&_filterString withObject:filter];
+    if ([filter length] == 0) _filterString = nil;
+    else _filterString = filter;
     
     [self refreshView];    
 }
 
 - (void) setFilterType:(NSString*)filter {
 	_filterString = filter;
-    //[WaveHelper secureReplace:&_filterType withObject:filter];
     [self refreshView];    
 }
 
@@ -951,4 +949,10 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 -(NSMutableArray *)displayedNetFields {
     return _displayedNetFields;
 }
+
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id __unsafe_unretained [])buffer count:(NSUInteger)len
+{
+    return [_netFields count];
+}
+
 @end

@@ -98,7 +98,5 @@
 - (void) dealloc {
     DisposeSpeechChannel(_curSpeechChannel);
     _curSpeechChannel = NULL;
- 
-    
 }
 @end

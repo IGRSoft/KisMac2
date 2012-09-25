@@ -589,7 +589,6 @@
 		
 	[self showMap];
 	_importController = nil;
-	//[WaveHelper secureRelease:&_importController];
 }
 
 - (IBAction)showCurNetArea:(id)sender {
@@ -625,7 +624,7 @@
 	} else [_showAllNetsInMap setState: NSOnState];
 	
 	_importController = nil;
-    //[WaveHelper secureRelease:&_importController];
+
 	[self showMap];
 }
 

@@ -58,8 +58,6 @@ bool is8021xPacket(const UInt8* fileData) {
     
 	_SSID = nil;
 	_SSIDs = nil;
-    //[WaveHelper secureRelease:&_SSID];
-	//[WaveHelper secureRelease:&_SSIDs];
 
 	_rateCount = 0;
 	
@@ -182,7 +180,7 @@ bool is8021xPacket(const UInt8* fileData) {
 		return NO;
 	}
 	
-    //[WaveHelper secureRelease:&_SSID];
+
     _netType = networkTypeUnknown;
     _isWep = encryptionTypeUnknown;
     _isEAP = NO;

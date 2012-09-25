@@ -297,7 +297,6 @@ col delta(col c1, col c2, int speed) {
 	if (_timeout) {
 		[_timeout invalidate];
 	}
-    
 }
 
 @end

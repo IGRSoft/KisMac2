@@ -187,13 +187,4 @@
     }
 }
 
-#pragma mark -
-
-- (void)dealloc {
-    int i;
-    
-    for (i = 0; i <= 35; i++) ;
-    for (i = 0; i < 24; i++)  ;
-}
-
 @end

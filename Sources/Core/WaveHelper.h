@@ -102,8 +102,6 @@ void WirelessCryptMD5(char const *str, unsigned char *key);
 + (void) setImportController:(ImportController*)im;
 + (NSMutableArray*) getProbeArrayForID:(char*)ident;
 
-//+ (void)secureRelease:(id*)object;
-//+ (void)secureReplace:(id*)oldObject withObject:(id)newObject;
 + (void)addDictionary:(NSDictionary*)s toDictionary:(NSMutableDictionary*)d;
 
 + (int)showCouldNotInstaniciateDialog:(NSString*)driverName;

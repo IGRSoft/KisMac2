@@ -366,25 +366,22 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
     {
         [rootItem deleteKey];
 		rootItem = nil;
-        //[WaveHelper secureRelease:&rootItem];
     }
     if (rootItem2!=Nil)
     { 
         [rootItem2 deleteKey];
 		rootItem2 = nil;
-        //[WaveHelper secureRelease:&rootItem2];
     }
     if (rootItem3!=Nil) 
     { 
         [rootItem3 deleteKey];
 		rootItem3 = nil;
-        //[WaveHelper secureRelease:&rootItem3];
     }
 }
 
 - (void)dealloc
 {
-    if (children != IsALeafNode) ;
+    children = Nil;
 }
 
 @end
