@@ -203,12 +203,17 @@
                     NSEnumerator *plugins = [_wavePlugins objectEnumerator];
                     response = WavePluginPacketResponseContinue;
                     while ((_wavePlugin = [plugins nextObject]) && (response & WavePluginPacketResponseContinue)) {
-                        response = [_wavePlugin gotPacket:w fromDriver:wd];
-                        // Checks if packet should be forwarded to other plugins
+						response = [_wavePlugin gotPacket:w fromDriver:wd];
+						// Checks if packet should be forwarded to other plugins
+                    
                     }
                     if (!(response & WavePluginPacketResponseContinue))
                         continue;
                     
+					if ([w SSID] == nil || [[w SSID] isEqualToString:@""] || [[w SSID] isEqualToString:@"<no ssid>"] ) {
+						continue;
+					}
+					
                     if ([_container addPacket:w liveCapture:YES] == NO)			// the packet shall be dropped
                     {	
                         continue;

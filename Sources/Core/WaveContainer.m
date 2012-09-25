@@ -142,7 +142,13 @@ UInt32 hashForMAC(const UInt8* val) {
         NSLog(@"invalid view. this is a bug and shall never happen\n");
     }
     
-
+	/*if (entry > 0) {
+		@synchronized(_idList[entry].net)
+		{
+			[self checkEntry:_idList[entry].net];
+		}
+	}*/
+	
 	// switch type here
 	if ( [_filterType isEqualToString:@"SSID"] ) {
 		if (add && (_filterString == nil || [[_idList[entry].net SSID] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location != NSNotFound)) {
@@ -859,6 +865,12 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
     }
     
     _dropAll = NO;
+}
+
+- (void) checkEntry:(WaveNet*)net
+{
+	if ([[net SSID] isEqualToString:@"<no ssid>"])
+		[self clearEntry:net];
 }
 
 - (void) clearEntry:(WaveNet*)net
