@@ -63,7 +63,7 @@
     NSArray *subviews;
     
     subviews = [_netContainer subViews];
-    for (i = 0; i < [subviews count]; i++) {
+    for (i = 0; i < [subviews count]; ++i) {
         NSObject *o = subviews[i];
         if ([o isMemberOfClass:[NetView class]]) [(NetView*)o align];
     }

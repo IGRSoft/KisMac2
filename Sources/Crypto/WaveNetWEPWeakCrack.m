@@ -52,7 +52,7 @@
         int i;
         
         _password = [NSMutableString stringWithFormat:@"%.2X", k[0]];
-        for (i=1; i<len;i++)
+        for (i=1; i<len;++i)
             [(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", k[i]]];
 		
 		return TRUE;

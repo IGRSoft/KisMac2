@@ -75,7 +75,7 @@ int gethashlast2(const unsigned char *challenge, const unsigned char *response, 
     unsigned char zpwhash[7] = { 0, 0, 0, 0, 0, 0, 0 };
     unsigned char cipher[8];
 
-    for (i = 0; i <= 0xffff; i++) {
+    for (i = 0; i <= 0xffff; ++i) {
         zpwhash[0] = i >> 8;
         zpwhash[1] = i & 0xff;
 
@@ -103,7 +103,7 @@ void NtPasswordHash(char *secret, int secret_len, unsigned char *hash)
     /* This implicitly supports 8-bit ISO8859/1 characters. */
     memset(unicodePassword, 0, sizeof(unicodePassword));
 
-    for (i = 0; i < secret_len; i++)
+    for (i = 0; i < secret_len; ++i)
         unicodePassword[i * 2] = (unsigned char) secret[i];
 
     /* Unicode is 2 bytes per char */

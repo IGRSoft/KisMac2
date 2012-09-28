@@ -152,7 +152,7 @@ char WaveDrivers [][30] = {
     _lastChannel = 0;
     
     supChannelMask = [self allowedChannels];
-    for (i = 1; i <= 14; i++)
+    for (i = 1; i <= 14; ++i)
     {
         key=[NSString stringWithFormat:@"useChannel%.2i", i];
         if (((supChannelMask >> (i - 1)) & 0x0001) == 0) 
@@ -166,7 +166,7 @@ char WaveDrivers [][30] = {
         
         if (_useChannel[i - 1])
         {
-            j++;
+            ++j;
         }
         
         if (i == 11 && j == 11) _fcc = YES;
@@ -183,7 +183,7 @@ char WaveDrivers [][30] = {
     
     sets = [NSUserDefaults standardUserDefaults];
     a = [[sets objectForKey:@"ActiveDrivers"] mutableCopy];
-    for (i = 0; i < [a count]; i++) 
+    for (i = 0; i < [a count]; ++i)
     {
         if ([a[i][@"deviceName"] isEqualToString:[self deviceName]]) 
         {
@@ -255,7 +255,7 @@ char WaveDrivers [][30] = {
          if (_currentChannel == channel) {
              return;
          } else {
-             for(i=0; i < 20; i++) {
+             for(i=0; i < 20; ++i) {
                  [self setChannel: channel];
                  _currentChannel = [self getChannelUnCached];
                  if (_currentChannel == channel) break;
@@ -270,7 +270,7 @@ char WaveDrivers [][30] = {
     
     if (_autoAdjustTimer && (_packets!=0)) {
         if (_autoRepeat<1) {
-            _autoRepeat++;
+            ++_autoRepeat;
             return;
         } else _autoRepeat=0;
         _packets = 0;
@@ -288,7 +288,7 @@ char WaveDrivers [][30] = {
     
     //set the channel and make sure it is set
     //but do not force it too bad
-    for(i=0; i < 20; i++) {
+    for(i=0; i < 20; ++i) {
         [self setChannel: channel];
         _currentChannel = [self getChannelUnCached];
         if (channel == _currentChannel) break;
@@ -300,7 +300,7 @@ char WaveDrivers [][30] = {
 
     //see if we can switching channel was successful, otherwise the card does may be not support the card
     if (_lastChannel == _currentChannel) {
-        _hopFailure++;
+        ++_hopFailure;
         if (_hopFailure >= 5) {
             _hopFailure = 0;
             DBNSLog(@"Looks like your card does not support channel %d. KisMAC will disable this channel.", channel);

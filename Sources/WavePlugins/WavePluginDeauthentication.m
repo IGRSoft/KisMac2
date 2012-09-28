@@ -46,10 +46,9 @@
     
     // We do global deauth (addr1 is destination)
     memcpy(deauth->header.addr1, BCAST_MACADDR, ETH_ALEN);
-//    memcpy(deauth->header.addr1, "\x00\x19\x7e\x11\x70\xc3", ETH_ALEN);
     
     // Set frame BSSID and source as our BSSID
-    for (i=0;i<6;i++)
+    for (i=0;i<6;++i)
         x[i]=tmp[i] & 0xff;
     memcpy(deauth->header.addr2, x, 6);
     memcpy(deauth->header.addr3, x, 6);
@@ -64,7 +63,10 @@
     kframe.ctrl.tx_rate = [_driver currentRate];
     
     // Done... send frame
-    [_driver sendKFrame:&kframe howMany:-1 atInterval:interval];
+    [_driver sendKFrame:&kframe
+				howMany:-1
+			 atInterval:interval];
+	
     if (interval != 0)
         _status = WavePluginRunning;
     
@@ -73,7 +75,8 @@
 - (WavePluginPacketResponse) gotPacket:(WavePacket *)packet fromDriver:(WaveDriver *)driver {
     if (_deauthing && [packet toDS]) {
         if (![_container IDFiltered:[packet rawSenderID]] && ![_container IDFiltered:[packet rawBSSID]])
-            [self deauthenticateClient:[packet rawSenderID] inNetworkWithBSSID:[packet rawBSSID]];
+            [self deauthenticateClient:[packet rawSenderID]
+					inNetworkWithBSSID:[packet rawBSSID]];
         
     }
     return WavePluginPacketResponseContinue; 
@@ -112,7 +115,9 @@
     kframe.ctrl.tx_rate = [_driver currentRate];
     
     // Done... send frame
-    [_driver sendKFrame:&kframe howMany:5 atInterval:0.05];
+    [_driver sendKFrame:&kframe
+				howMany:5
+			 atInterval:0.05];
     
     return YES;
 }

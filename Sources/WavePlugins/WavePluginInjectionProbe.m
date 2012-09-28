@@ -48,7 +48,7 @@
     _status = WavePluginRunning;
     
     // set source MAC for this test
-    for (i=0;i<6;i++) {
+    for (i=0;i<6;++i) {
         _randomSourceMAC[i] = random() & 0xFF;
     }
     
@@ -158,7 +158,7 @@
 	} else {
 		memcpy(probe_req->header.addr1, [_networkInTest rawBSSID], 6);
 	}
-//    memcpy(probe_req->header.addr1, "\xff\xff\xff\xff\xff\xff", 6);
+
     memcpy(probe_req->header.addr2, _randomSourceMAC, 6);
     memcpy(probe_req->header.addr3, "\xff\xff\xff\xff\xff\xff", 6);
     probe_req->header.seq_ctl = random() & 0x0FFF;
@@ -219,7 +219,7 @@
     } else {
 		[imageCell setImage:statusNOK];
     }
-//    [self stepTestProbeRequest];
+
     [self stepTestRTS];
 }
 - (WavePluginPacketResponse) gotPacket:(WavePacket *)packet fromDriver:(WaveDriver *)driver {

@@ -81,7 +81,7 @@
     p.x += _loc.x;
     p.y += _loc.y;
 
-    for (i = 0; i < [_subViews count]; i++)
+    for (i = 0; i < [_subViews count]; ++i)
         [(BIGLSubView*)_subViews[i] drawAtPoint:p];
 
     glPushMatrix();
@@ -104,7 +104,7 @@
     p.x += _loc.x;
     p.y += _loc.y;
 
-    for (i = 0; i < [_subViews count]; i++)
+    for (i = 0; i < [_subViews count]; ++i)
         [(BIGLSubView*)_subViews[i] drawCocoaAtPoint:p];
 
     [self drawCocoaSubAtPoint:p];

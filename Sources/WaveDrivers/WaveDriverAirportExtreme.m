@@ -122,7 +122,11 @@ static pcap_t *_device;
         importController = [[ImportController alloc] initWithWindowNibName:@"Import"];
         [importController setTitle:[NSString stringWithFormat:NSLocalizedString(@"Loading %@...", "for Backend loading"), [self description]]];
     
-        [NSApp beginSheet:[importController window] modalForWindow:[WaveHelper mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+        [NSApp beginSheet:[importController window]
+		   modalForWindow:[WaveHelper mainWindow]
+			modalDelegate:nil
+		   didEndSelector:nil
+			  contextInfo:nil];
         
         result = [self initBackend];
     
@@ -199,7 +203,7 @@ pcap_dumper_t * dumper;
         {
             retErr = pcap_set_datalink(_device, dataLinks[i]);
             DLTType = dataLinks[i];
-            i++;
+            ++i;
         };
     } 
     
@@ -405,7 +409,7 @@ static u_int ieee80211_mhz2ieee(u_int freq, u_int flags) {
 		//DBNSLog(@"pcap_next: data:0x%x, len:%u\n", data, header.caplen);
 		if (!data) continue;
         
-        count++;
+        ++count;
         //DBNSLog(@"COUnt: %u", count);
 
         switch(DLTType)
@@ -482,7 +486,7 @@ static u_int ieee80211_mhz2ieee(u_int freq, u_int flags) {
                     //continue would just go around agian in this while loop
                     //pointless
                     if(dataLen <=0) break;
-                    rtBit++;
+                    ++rtBit;
                     rtFieldsPresent >>= 1;
                 } //end while
                 //DBNSLog(@"==============================================================================");
@@ -544,7 +548,7 @@ static u_int ieee80211_mhz2ieee(u_int freq, u_int flags) {
                 DBNSLog(@"DLT %d", DLTType);
                 break;
         } //switch
-        _packets++;
+        ++_packets;
         return f;
     }
 }

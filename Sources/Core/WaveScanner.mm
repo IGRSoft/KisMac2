@@ -69,7 +69,7 @@
     WaveDriver *w = Nil;
     
     a = [WaveHelper getWaveDrivers];
-    for (i = 0; i < [a count]; i++) {
+    for (i = 0; i < [a count]; ++i) {
         w = a[i];
         if ([w allowsInjection]) break;
     }
@@ -91,7 +91,7 @@
     [_container scanUpdate:_graphLength];
     
     if(_graphLength < MAX_YIELD_SIZE)
-        _graphLength++;
+        ++_graphLength;
 
     [aController updateNetworkTable:self complete:NO];
     
@@ -230,7 +230,7 @@
                         }
                     }
                     
-                    _packets++;
+                    ++_packets;
                     
                     _bytes+=[w length];
                 }//end parse frame
@@ -279,7 +279,7 @@
 		_drivers = [WaveHelper getWaveDrivers];
         //[WaveHelper secureReplace:&_drivers withObject:a];
 
-        for (i = 0; i < [_drivers count]; i++)
+        for (i = 0; i < [_drivers count]; ++i)
         {
             w = _drivers[i];
             if ([w type] == passiveDriver) 
@@ -328,13 +328,13 @@
 		DBNSLog(@"Going to sleep...");
         _shouldResumeScan = _scanning;
         [aController stopScan];
-		for (i = 0; i < [_drivers count]; i++) {
+		for (i = 0; i < [_drivers count]; ++i) {
 			w = _drivers[i];
             [w sleepDriver];
         }
     } else {
 		DBNSLog(@"Waking up...");
-		for (i = 0; i < [_drivers count]; i++) {
+		for (i = 0; i < [_drivers count]; ++i) {
 			w = _drivers[i];
             [w wakeDriver];
 		}
@@ -349,7 +349,7 @@
 - (void)doChannelHop:(NSTimer*)timer {
     unsigned int i;
     
-    for (i = 0; i < [_drivers count]; i++) {
+    for (i = 0; i < [_drivers count]; ++i) {
         [_drivers[i] hopToNextChannel];
     }
 }
@@ -574,7 +574,7 @@
     
     // Stop all drivers
     a = [WaveHelper getWaveDrivers];
-    for (i = 0; i < [a count]; i++) {
+    for (i = 0; i < [a count]; ++i) {
         w = a[i];
         if ([w allowsInjection]) [w stopSendingFrames];
     }

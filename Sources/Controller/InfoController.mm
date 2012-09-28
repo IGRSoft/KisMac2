@@ -80,7 +80,7 @@ enum _rowIndexes {
     if (_lastSorted) [_n sortByColumn:_lastSorted order:_ascending];
 
     if (_clientCount == [aClients count]) {
-        for (i = 0; i < [aClients count]; i++) {
+        for (i = 0; i < [aClients count]; ++i) {
             if ([aClients[aClientKeys[i]] changed]) 
                 [aClientTable displayRect:[aClientTable rectOfRow:i]];
         }

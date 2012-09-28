@@ -25,7 +25,7 @@
     id object;
 
     CountVoices(&numOfVoices);
-    for (voiceIndex = 1; voiceIndex <= numOfVoices; voiceIndex++) {
+    for (voiceIndex = 1; voiceIndex <= numOfVoices; ++voiceIndex) {
         GetIndVoice(voiceIndex, &theVoiceSpec);
         GetVoiceDescription(&theVoiceSpec, &theVoiceDesc, sizeof(theVoiceDesc));
         voiceName = @((char*)&(theVoiceDesc.name[1]));

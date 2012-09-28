@@ -92,15 +92,15 @@
         [im setMax:width];
         
         cache = new int* [width];
-        for (x=0; x<width; x++) {
+        for (x=0; x<width; ++x) {
             cache[x] = new int[height];
-            for (t=0; t<height; t++) cache[x][t]=0;
+            for (t=0; t<height; ++t) cache[x][t]=0;
         }
         
         f = new double* [networkCount];
         c = new int [networkCount];
         
-        for (t=0;t<networkCount;t++) {
+        for (t=0;t<networkCount;++t) {
             network = networks[t];
             coord = [network coordinates];
             c[t] = [coord count];
@@ -116,17 +116,17 @@
             }
         }
         
-        for (x = 0; x < width; x++) {
-            for (y = 0; y < height; y++) {
+        for (x = 0; x < width; ++x) {
+            for (y = 0; y < height; ++y) {
                 maxd = 0;
                 xx = x * qual;
                 yy = y * qual;
                 
                 //IDW algorithm with a decline function
-                for (t=0; t < networkCount; t++) {
+                for (t=0; t < networkCount; ++t) {
                     s = 0;
                     av = 0;
-                    for (q=0; q<c[t]; q++) {
+                    for (q=0; q<c[t]; ++q) {
                         NS_DURING
                             d = sqrt((xx-f[t][3*q])*(xx-f[t][3*q])+(yy-f[t][3*q+1])*(yy-f[t][3*q+1]));
                             a = 1 / (d * d);
@@ -160,8 +160,8 @@
         
         [_mapImage lockFocus];
 	NS_DURING
-		for (x = 0; x< width; x++)
-			for (y = 0; y< height; y++) {
+		for (x = 0; x< width; ++x)
+			for (y = 0; y< height; ++y) {
 				i = cache[x][y];
 				if (i==0) continue;
 				
@@ -182,11 +182,11 @@
 	[self setNeedsDisplay:YES];
         
 exit:
-        for(t=0; t<networkCount; t++) delete [] f[t];
+        for(t=0; t<networkCount; ++t) delete [] f[t];
         delete [] f;
         delete [] c;
 
-        for (x = 0; x< width; x++)
+        for (x = 0; x< width; ++x)
             delete [] cache[x];
         delete [] cache;
 

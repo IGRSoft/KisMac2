@@ -46,7 +46,7 @@ typedef struct _header {
 unsigned long doFCS(unsigned char* buf, int len) {
     int i;
     unsigned long crc=0xffffffff;
-    for(i=0;i<len;i++) {
+    for(i=0;i<len; ++i) {
         crc=UPDC32(buf[i],crc);
     }
     return(crc);
@@ -163,13 +163,13 @@ unsigned long doFCS(unsigned char* buf, int len) {
         c = [[_hexKey stringValue] UTF8String];
         
         val = 0;
-        for(i = 0; i < [[_hexKey stringValue] length]; i++) 
+        for(i = 0; i < [[_hexKey stringValue] length]; ++i)
         {
             shift = i & 0x3;
             val ^= (c[i] << (shift * 8));
         }
         
-        for(i = 0; i < 5; i++) {
+        for(i = 0; i < 5; ++i) {
             val *= 0x343fd;
             val += 0x269ec3;
             ckey[i] = val >> 16;
@@ -226,7 +226,7 @@ unsigned long doFCS(unsigned char* buf, int len) {
 
             memcpy(kkey, data, 3);
             RC4InitWithKey(&rc, kkey, keylen+3); 
-            for(s = 4; s < (framelen-24); s++) 
+            for(s = 4; s < (framelen-24); ++i)
                 data[s-4] = data[s] ^ step(&rc);
 
             if (doFCS(data, framelen - 28) == 0xdebb20e3) {
@@ -234,8 +234,8 @@ unsigned long doFCS(unsigned char* buf, int len) {
                 h.caplen-=8;
                 h.len-=8;
                 pcap_dump((u_char*)pw,&h,x);
-                decCount++;
-            } else decError++;
+                ++decCount;
+            } else ++decError;
         } else {
             pcap_dump((u_char*)pw,&h,x);
         }

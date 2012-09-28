@@ -138,7 +138,7 @@ bool is8021xPacket(const UInt8* fileData) {
             break;
         }
         
-        packet++;
+        ++packet;
         length-=(*packet)+2;
         packet+=(*packet)+1;
     }
@@ -705,7 +705,7 @@ bool is8021xPacket(const UInt8* fileData) {
     int a = (_payload[0] + _payload[1]) % N;
     int b = AMOD((_payload[0] + _payload[1]) - _payload[2], N);
 
-    for(UInt8 B = 0; B < 13; B++) {
+    for(UInt8 B = 0; B < 13; ++B) {
       if((((0 <= a && a < B) ||
          (a == B && b == (B + 1) * 2)) &&
          (B % 2 ? a != (B + 1) / 2 : 1)) ||

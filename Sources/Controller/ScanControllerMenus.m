@@ -91,7 +91,7 @@
 			 
 			 int i;
 			 KismetXMLImporter *myImporter =  [[KismetXMLImporter alloc] init];
-			 for (i = 0; i < [[aOP URLs] count]; i++)
+			 for (i = 0; i < [[aOP URLs] count]; ++i)
 			 {
 				 NSString *file = [[aOP URLs][i] absoluteString];
 				 [self showBusyWithText: [NSString stringWithFormat: @"Importing %@ as Kismet XML", [file lastPathComponent]]];
@@ -330,7 +330,7 @@
     }
     
     md = [[wd configuration] mutableCopy];
-    for(y=1; y<15; y++)
+    for(y=1; y<15; ++y)
         md[[NSString stringWithFormat:@"useChannel%.2i",y]] = @((y==newChannel) ? 1 : 0);
   
     [wd setConfiguration: md];
@@ -351,13 +351,13 @@
     
     md = [[wd configuration] mutableCopy];
     if ([[sender title] isEqualToString:NSLocalizedString(@"All FCC/IC Channels (1-11)", "menu item. needs to be the same as in MainMenu.nib")]) {
-        for(y=1; y<=11; y++)
+        for(y=1; y<=11; ++y)
             md[[NSString stringWithFormat:@"useChannel%.2i", y]] = @1;
 
         md[[NSString stringWithFormat:@"useChannel%.2i", 12]] = @0;
         md[[NSString stringWithFormat:@"useChannel%.2i", 13]] = @0;
      } else {
-        for(y=1; y<=13; y++)
+        for(y=1; y<=13; ++y)
             md[[NSString stringWithFormat:@"useChannel%.2i", y]] = @1;
     }
     
@@ -645,7 +645,7 @@
          if ([_showNetInMap state] == NSOnState) [self showCurNetArea:_showNetInMap];
     
         a = [[NSMutableArray alloc] init];
-        for (i=0; i<[_container count]; i++) [a addObject:[_container netAtIndex:i]];
+        for (i=0; i<[_container count]; ++i) [a addObject:[_container netAtIndex:i]];
         [_mappingView showAreaNets:[NSArray arrayWithArray:a]];
         
     } else {
@@ -698,7 +698,7 @@
 		[borderlessWindow makeKeyAndOrderFront:borderlessWindow];
 		[borderlessWindow setLevel:kCGStatusWindowLevel + 1];	
 		int i;
-		for (i=0; i<10; i++) {
+		for (i=0; i<10; ++i) {
 			[borderlessWindow setAlphaValue:[borderlessWindow alphaValue] + 0.1];
 			[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
 		}
@@ -717,7 +717,7 @@
 		}
 		[NSMenu setMenuBarVisible:YES];
 		int i;
-		for (i=0; i<10; i++) {
+		for (i=0; i<10; ++i) {
 			[borderlessWindow setAlphaValue:[borderlessWindow alphaValue] - 0.1];
 			[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
 		}
@@ -778,7 +778,7 @@
     @autoreleasepool {
         int i;
         
-        for (i=0; i< 1500; i++) {
+        for (i=0; i< 1500; ++i) {
             if (![self save:@"~/stressTest.kismac"]) {
                 DBNSLog(@"Stress test broken!");
                 break;
@@ -823,7 +823,7 @@
     
     wpaPasswordHash("password", (const UInt8*)"IEEE", 4, output);
     ms = [NSMutableString string];
-    for (i=0; i < WPA_PMK_LENGTH; i++) {
+    for (i=0; i < WPA_PMK_LENGTH; ++i) {
         j = output[i];
         [ms appendFormat:@"%.2x", j];
     }
@@ -831,7 +831,7 @@
     
     wpaPasswordHash("ThisIsAPassword", (const UInt8*)"ThisIsASSID", 11, output);
     ms = [NSMutableString string];
-    for (i=0; i < WPA_PMK_LENGTH; i++) {
+    for (i=0; i < WPA_PMK_LENGTH; ++i) {
         j = output[i];
         [ms appendFormat:@"%.2x", j];
     }

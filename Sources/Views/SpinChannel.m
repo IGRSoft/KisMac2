@@ -42,7 +42,7 @@
         _state=0;
         _channel=0;
 
-        for (i = 0; i < 12; i++)
+        for (i = 0; i < 12; ++i)
         {
         _stateImg[i] = [NSImage imageNamed:[NSString stringWithFormat:@"ChanState%d.png", i]];
         }
@@ -85,7 +85,7 @@
 #ifdef USE_FAST_BITMAP_METHOD
     [_stateImg[_state] dissolveToPoint:NSMakePoint(0,0) fraction:1.0];
 #else
-    for (i=0;i<12;i++) {
+    for (i=0;i<12;++i) {
         f = ((int)(i+_state) % 12);
         
         [[[NSColor blackColor] blendedColorWithFraction:(f < 10? f/10.0: 1) ofColor:c] set];

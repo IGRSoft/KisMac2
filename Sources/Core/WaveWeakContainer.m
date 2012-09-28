@@ -70,7 +70,7 @@
     
     if (d[0] == 0) {
         d[0] = 1;
-        _count++;
+        ++_count;
     } 
 }
 
@@ -97,9 +97,9 @@
     d = malloc(_count * 5);
     m = d;
     
-    for(x = 0; x < 256; x++) {
+    for(x = 0; x < 256; ++x) {
         if (_data[x] != nil) {
-            for (y = 0; y < 256; y++) {
+            for (y = 0; y < 256; ++y) {
                 if ((_data[x])[y] != nil) {
                     for (z = 0; z < (256 * 3); z+=3) {
                         if (((_data[x])[y])[z] != 0) {
@@ -128,9 +128,9 @@
 - (void) dealloc {
     int x, y;
     
-    for(x = 0; x < 256; x++) {
+    for(x = 0; x < 256; ++x) {
         if (_data[x] != nil) {
-            for (y = 0; y < 256; y++) {
+            for (y = 0; y < 256; ++y) {
                 if ((_data[x])[y] != nil) {
                     free((_data[x])[y]);
                 }

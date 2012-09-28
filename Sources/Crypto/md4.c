@@ -321,7 +321,7 @@ void md4_hmac_starts( md4_context *ctx, const unsigned char *key, size_t keylen 
     memset( ctx->ipad, 0x36, 64 );
     memset( ctx->opad, 0x5C, 64 );
 
-    for( i = 0; i < keylen; i++ )
+    for( i = 0; i < keylen; ++i )
     {
         ctx->ipad[i] = (unsigned char)( ctx->ipad[i] ^ key[i] );
         ctx->opad[i] = (unsigned char)( ctx->opad[i] ^ key[i] );
@@ -425,7 +425,7 @@ int md4_self_test( int verbose )
     int i;
     unsigned char md4sum[16];
 
-    for( i = 0; i < 7; i++ )
+    for( i = 0; i < 7; ++i )
     {
         if( verbose != 0 )
             printf( "  MD4 test #%d: ", i + 1 );

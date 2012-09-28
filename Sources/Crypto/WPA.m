@@ -61,7 +61,7 @@ void fast_hmac_md5 (
      */
      
     /* start out by storing key in pads */
-    for (i = 0; i < key_len; i++) { 
+    for (i = 0; i < key_len; ++i) {
         k_ipad[i] = key[i] ^ 0x36; 
         k_opad[i] = key[i] ^ 0x5c;
     } 
@@ -122,7 +122,7 @@ void hmac_md5 (
     memcpy(k_opad, key, key_len);
      
     /* XOR key with ipad and opad values */
-    for (i = 0; i < 64; i++) {
+    for (i = 0; i < 64; ++i) {
         k_ipad[i] ^= 0x36;
         k_opad[i] ^= 0x5c; 
     } 
@@ -159,7 +159,7 @@ void fast_hmac_sha1( unsigned char *text, int text_len, unsigned char *key, int 
      * and text is the data being protected  */ 
      
     /* XOR key with ipad and opad values */ 
-    for (i = 0; i < key_len; i++) { 
+    for (i = 0; i < key_len; ++i) {
         k_ipad[i] = key[i] ^ 0x36; 
         k_opad[i] = key[i] ^ 0x5c;
     } 
@@ -219,7 +219,7 @@ void hmac_sha1( unsigned char *text, int text_len,
     memcpy(k_opad, key, key_len); 
     
     /* XOR key with ipad and opad values */ 
-    for (i = 0; i < 64; i++) { 
+    for (i = 0; i < 64; ++i) {
         k_ipad[i] ^= 0x36; 
         k_opad[i] ^= 0x5c;
     } 
@@ -257,7 +257,7 @@ void F(
     digest1[SHA_DIGEST_LENGTH];
     int i, j; 
     
-    for(i = 0; i < strlen(password); i++) {
+    for(i = 0; i < strlen(password); ++i) {
         assert((password[i] >= 32) && (password[i] <= 126));
     }
     
@@ -274,7 +274,7 @@ void F(
     /* output = U1 */ 
     memcpy(output, digest1, SHA_DIGEST_LENGTH);
     
-    for (i = 1; i < iterations; i++) { 
+    for (i = 1; i < iterations; ++i) {
         /* Un = PRF(P, Un-1) */ 
         hmac_sha1(digest1, SHA_DIGEST_LENGTH,
             (unsigned char*) password, (int) strlen(password), 
@@ -283,7 +283,7 @@ void F(
         memcpy(digest1, digest, SHA_DIGEST_LENGTH); 
     
         /* output = output xor Un */ 
-        for (j = 0; j < SHA_DIGEST_LENGTH; j++) { 
+        for (j = 0; j < SHA_DIGEST_LENGTH; ++i) {
             output[j] ^= digest[j]; 
         }
     }
@@ -336,9 +336,9 @@ void PRF(
     memcpy(&input[prefix_len+1], data, data_len);
     total_len = prefix_len + 1 + data_len;
     input[total_len] = 0; /* single octet count, starts at 0 */
-    total_len++;
+    ++total_len;
     
-    for(i = 0; i < (len+19)/20; i++) {
+    for(i = 0; i < (len+19)/20; ++i) {
         hmac_sha1(input, total_len, key, key_len, &output[currentindex]);
         currentindex += 20; /* next concatenation location */
         input[total_len-1]++; /* increment octet count */

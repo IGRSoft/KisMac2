@@ -148,7 +148,7 @@ err:
         found = YES;
     }
     
-    for (i=0;i<[a count];i++) {
+    for (i=0;i<[a count];++i) {
         [aGPSSel addItemWithTitle:a[i]];
         if ([[controller objectForKey:@"GPSDevice"] isEqualToString:a[i]]) {
             [aGPSSel selectItemAtIndex:(i+3)];

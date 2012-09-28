@@ -84,7 +84,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
 	_container = container;
     //[WaveHelper secureReplace:&_container withObject:container];
     
-    for (i=0;i<[children count];i++) 
+    for (i=0;i<[children count];++i)
         [children[i] setContainer:container];
 }
 
@@ -112,30 +112,30 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
     
     if (aType==1) 
     { //channel root item
-        for(b=0;b<14;b++) c[b]=0;
+        for(b=0;b<14;++b) c[b]=0;
         
-        for (u=0; u<[_container count]; u++)
+        for (u=0; u<[_container count]; ++u)
         {
             v=[[_container netAtIndex:u] packetsPerChannel];
-            if (v) for(b=0;b<=14;b++) c[b]+=v[b];
+            if (v) for(b=0;b<=14;++b) c[b]+=v[b];
         }
         
-        for (h=1;h<14;h++) 
+        for (h=1;h<14;++h)
             if (c[h])
             { 
                 //we need this item, check whether it exists
                 found = NO;
-                for (d=0;d<[children count];d++)
+                for (d=0;d<[children count];++d)
                     if (([(ScanHierarch*)children[d] type]-20)==h) 
                     {
                         found = YES;
                         break;
                     }
-                if (!found) 
+                if (!found)
                 { 
                     // add a new item
                     tmp=[NSString stringWithFormat:@"%.2i",h];
-                    [children addObject:[[ScanHierarch alloc] initWithName:tmp type:20+h parent:self 
+                    [children addObject:[[ScanHierarch alloc] initWithName:tmp type:20+h parent:self
                                                                  container:_container identkey:@""]];
                     addedItem = YES;
                 }
@@ -143,13 +143,13 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
     } 
     else if (aType==2)
     { // SSID root item
-        for (u=0; u<[_container count]; u++)
+        for (u=0; u<[_container count]; ++u)
         {
             tmp=[[_container netAtIndex:u] SSID];
             
             //check whether item exists
             found = NO;
-            for (d=0;d<[children count];d++) 
+            for (d=0;d<[children count];++d)
             {
                 if ([[children[d] nameString] isEqualToString:tmp])
                 {
@@ -168,16 +168,16 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
         }
         
         // delete all entries which have no BSSIDs below them 
-        for (i=[children count]-1;i>=0;i--) 
+        for (i=[children count]-1;i>=0;i--)
         {
-            if ([children[i] numberOfChildren]==0) [children removeObjectAtIndex:i];            
+            if ([children[i] numberOfChildren]==0) [children removeObjectAtIndex:i];
         }
     
     }
     else if (aType==3)  // these are the different network SSIDS
     {
         a = [[NSMutableArray alloc] init];
-        for (u=0; u<[_container count]; u++)
+        for (u=0; u<[_container count]; ++u)
         {
             n = [_container netAtIndex:u];
             
@@ -191,7 +191,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
             
             found = NO;
             
-            for (d=0;d<[children count];d++) 
+            for (d=0;d<[children count];++d)
                 if ([[children[d] nameString] isEqualToString:tmp]) 
                 {
                     found = YES;
@@ -215,7 +215,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
     //these are the channel items
     else if ((aType>20)&&(aType<35))
     {
-       for (u=0; u<[_container count]; u++)
+       for (u=0; u<[_container count]; ++u)
        {
             n = [_container netAtIndex:u];
             if (!n) continue;
@@ -225,7 +225,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
             
             tmp = [n BSSID];
             found = NO;
-            for (d=0;d<[children count];d++) 
+            for (d=0;d<[children count];++d)
             {
                 if ([[children[d] nameString] isEqualToString:tmp])
                 {
@@ -257,7 +257,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
     }
     
     if (children != IsALeafNode)
-		for(d=0;d<[children count];d++)
+		for(d=0;d<[children count];++d)
 			[children[d] updateKey];
     if (addedItem)
 		[children sortUsingSelector:@selector(compare:)];

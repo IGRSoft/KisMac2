@@ -150,7 +150,7 @@ NSString *const BIGLMainViewResized = @"BIGLMainViewResized";
  
     glPushMatrix();
    
-    for (i = 0; i < [_subViews count]; i++)
+    for (i = 0; i < [_subViews count]; ++i)
         [(BIGLSubView*)_subViews[i] drawAtPoint:NSZeroPoint];
 
     glPopMatrix();
@@ -205,8 +205,8 @@ NSString *const BIGLMainViewResized = @"BIGLMainViewResized";
 
     dest = [b bitmapData];
 
-    for (y = 0; y < height; y++) {
-        for (x = 0; x < width; x++) {
+    for (y = 0; y < height; ++y) {
+        for (x = 0; x < width; ++x) {
             dest[(y * width + x) * 3    ] = src[((height-y-1) * width + x) * 4    ];
             dest[(y * width + x) * 3 + 1] = src[((height-y-1) * width + x) * 4 + 1];
             dest[(y * width + x) * 3 + 2] = src[((height-y-1) * width + x) * 4 + 2];

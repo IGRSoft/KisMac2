@@ -242,7 +242,7 @@
 				int8_t cmd = STREAM_COMMAND_FLUSH;
 
 				stream_recv_bytes = 0;
-				resyncs++;
+				++resyncs;
 
 				if (resyncs > 20) {
 				   DBNSLog(@"too many resync attempts, something is wrong.");
@@ -438,7 +438,7 @@
 			unsigned int x = 0;
 			while (x < sizeof(struct stream_frame_header)) {
 				printf("%02X ", ((uint8_t *) &fhdr)[x]);
-				x++;
+				++x;
 			}
 			printf("\n");
 			

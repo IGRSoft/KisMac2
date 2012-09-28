@@ -214,7 +214,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
 
     if (currentClient&&(![currentClient updateDictionary])) return;
     
-    for(i = 0 ; i < count ; i++) {
+    for(i = 0 ; i < count ; ++i) {
         if([[itemsArray[i] itemIdentifier] isEqualToString:[sender itemIdentifier]]) {
             nibName = nibNamesDict[[itemsArray[i] itemIdentifier]];
             className = classNamesDict[[itemsArray[i] itemIdentifier]];

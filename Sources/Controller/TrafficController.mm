@@ -50,7 +50,7 @@
     
     /* color wheel permutation */
     NSMutableArray *tempColor = [NSMutableArray array];
-    for (int x=0; x<=32; x++) {
+    for (int x=0; x<=32; ++x) {
         float hue=0.0;
         for (int i=2;i<=32;i=i*2) {
             if ( (x % i) >= (i/2) ) hue += 1.0/ (float)i;
@@ -121,7 +121,7 @@
     NSUserDefaults *sets = [NSUserDefaults standardUserDefaults];
     _legendMode = 0;
     
-    if ([[sets objectForKey:@"TrafficViewShowSSID"]  intValue] == 1) _legendMode++;
+    if ([[sets objectForKey:@"TrafficViewShowSSID"]  intValue] == 1) ++_legendMode;
     if ([[sets objectForKey:@"TrafficViewShowBSSID"] intValue] == 1) _legendMode+=2;
 }
 
@@ -178,9 +178,9 @@
     memset(buffer,0,MAX_YIELD_SIZE * sizeof(int));
 
     // find the biggest point on our graph
-    for (i = 0 ; i < length ; i++) {
+    for (i = 0 ; i < length ; ++i) {
         current = 0;
-        for(j = 0 ; j < [allNets count] ; j++) {
+        for(j = 0 ; j < [allNets count] ; ++j) {
             switch(currentMode) {
                 case trafficData:
                     current += [(WaveNet*)allNets[j] graphData].trafficData[i + offset];
@@ -259,7 +259,7 @@
         if(count >= 200)
             multiple = 20;	// show a line very 10kb
     }
-    for(i = 0 ; i * stepy < rect.size.height ; i++) {
+    for(i = 0 ; i * stepy < rect.size.height ; ++i) {
         if(multiple && i % multiple)
             continue;
         curY = (i * stepy);
@@ -278,7 +278,7 @@
         if(count >= 720)
             multiple = 120;	// show a line very 5 minutes
     }
-    for (i = 0 ; i < count ; i++) {
+    for (i = 0 ; i < count ; ++i) {
         if(multiple && i % multiple)
             continue;
         curX = (i * stepx);
@@ -326,7 +326,7 @@
         [_graphs lastObject];
     }
     
-    for(n = 0 ; n < [allNets count] ; n++) {
+    for(n = 0 ; n < [allNets count] ; ++n) {
         WaveNet* net = allNets[n];
         float width = rect.size.width;
         float height;
@@ -355,7 +355,7 @@
         a = [NSMutableArray arrayWithCapacity:length];
         stepx=(rect.size.width) / maxLength;
         
-        for(i = 0 ; i < length ; i++) {
+        for(i = 0 ; i < length ; ++i) {
             height = buffer[i] * vScale;
             if (height > rect.size.height) height = rect.size.height;
             [a addObject:@(width - (((float)(length - i)) * stepx))];
@@ -371,18 +371,18 @@
         {
             static int colorCount = 0;
             [net setGraphColor:colorArray[colorCount % [colorArray count]]];
-            colorCount++;
+            ++colorCount;
         }
         
         NSColor *c = [[net graphColor] copy];
         [curView setColor:c];
 
-        for(i = 0 ; i < length ; i++) {
+        for(i = 0 ; i < length ; ++i) {
             buffer[i] -= ptr[i + offset];
         }
     }
     
-    for(;n < [_graphs count]; n++)
+    for(;n < [_graphs count]; ++n)
         [(BIGLSubView*)_graphs[n] setVisible:NO];
         
 }
@@ -396,7 +396,7 @@
     NSString *zeroStr, *currentStr, *maxStr;
 
     if(length) {
-        for(j = 0 ; j < [allNets count] ; j++) {
+        for(j = 0 ; j < [allNets count] ; ++j) {
             switch(currentMode) {
                 case trafficData:
                     current += (int)([(WaveNet*)allNets[j] graphData].trafficData[length - 2 + offset]  / scanInterval);
@@ -467,7 +467,7 @@
     [_legend setVisible:YES];
     attrs[NSFontAttributeName] = textFont;
 
-    for(i = 0 ; i < [allNets count] ; i++) {
+    for(i = 0 ; i < [allNets count] ; ++i) {
         NSSize size = [[self stringForNetwork:allNets[i]] sizeWithAttributes:attrs];
         if(size.width > width) width = size.width;
         if(size.height > height) height = size.height;
@@ -487,7 +487,7 @@
     [NSBezierPath setDefaultLineWidth:2];
     [legendPath stroke];
 
-    for(i = 0 ; i < [allNets count] ; i++) 
+    for(i = 0 ; i < [allNets count] ; ++i)
     {
         WaveNet * net = (WaveNet*)allNets[i];
         //make sure there is a color
@@ -495,7 +495,7 @@
         {
             static int colorCount = 0;
             [net setGraphColor:colorArray[colorCount % [colorArray count]]];
-            colorCount++;
+            ++colorCount;
         }
         attrs[NSForegroundColorAttributeName] = [net graphColor];
         [[self stringForNetwork:allNets[i]] drawAtPoint:NSMakePoint(9, height - ((i+1) * 20)) withAttributes:attrs];
@@ -549,7 +549,7 @@
 
         if([zoomLock tryLock]) {
             //DBNSLog(@"ZOOMING: frames = %d, delta = %f",frames,delta);    
-            for(i = 0 ; i < frames ; i++) {
+            for(i = 0 ; i < frames ; ++i) {
                 vScale += delta;
                 [self performSelectorOnMainThread:@selector(resized:) withObject:nil waitUntilDone:YES];
                 [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:scanInterval / frames]];

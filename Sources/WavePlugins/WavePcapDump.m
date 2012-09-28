@@ -38,12 +38,16 @@
         i = 1;
         
         //opens output
-        path = [[NSDate date] descriptionWithCalendarFormat:[dumpDestination stringByExpandingTildeInPath] timeZone:nil locale:nil];
+        path = [[NSDate date] descriptionWithCalendarFormat:[dumpDestination stringByExpandingTildeInPath]
+												   timeZone:nil
+													 locale:nil];
         while ([[NSFileManager defaultManager] fileExistsAtPath: path]) 
         {
             path = [[NSString stringWithFormat:@"%@.%u", dumpDestination, i] stringByExpandingTildeInPath];
-            path = [[NSDate date] descriptionWithCalendarFormat:path timeZone:nil locale:nil];
-            i++;
+            path = [[NSDate date] descriptionWithCalendarFormat:path
+													   timeZone:nil
+														 locale:nil];
+            ++i;
         }
         
         _f = pcap_dump_open(_p, [path UTF8String]);

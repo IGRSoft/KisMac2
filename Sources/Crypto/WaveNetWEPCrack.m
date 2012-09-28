@@ -52,11 +52,11 @@
 		
 		memset(key,32,16);
 		
-		for (counter = 0; counter < 256; counter++)
+		for (counter = 0; counter < 256; ++counter)
 			skeletonStateArray[counter] = counter;
 		
 		while(YES) {
-			for(i=0;i<[_packetsLog count];i++) {
+			for(i=0;i<[_packetsLog count];++i) {
 				
 				if (!isInit) {
 					data = [_packetsLog[i] bytes];
@@ -70,7 +70,7 @@
 				memcpy(currentStateArray, skeletonStateArray, 256);
 				y = z = 0;
 				
-				for (counter = 0; counter < 256; counter++) {
+				for (counter = 0; counter < 256; ++counter) {
 					z = (key[y] + currentStateArray[counter] + z);
 					
 					tmp = currentStateArray[counter];
@@ -83,8 +83,8 @@
 				foundCRC = 0xFFFFFFFF;
 				y = z = 0;
 				
-				for (counter = 4; counter < length; counter++) {
-					y++;
+				for (counter = 4; counter < length; ++counter) {
+					++y;
 					z = currentStateArray[y] + z;
 					
 					tmp = currentStateArray[y];
@@ -156,7 +156,7 @@
 			}
 			else {
 				_password = [NSMutableString stringWithFormat:@"%.2X", currentGuess[3]];
-				for (i=4;i<(8);i++)
+				for (i=4;i<(8);++i)
 					[(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", currentGuess[i]]];
 				
 				SRET;
@@ -182,11 +182,11 @@
 		
 		memset(key,32,16);
 		
-		for (counter = 0; counter < 256; counter++)
+		for (counter = 0; counter < 256; ++counter)
 			skeletonStateArray[counter] = counter;
 		
 		while(YES) {
-			for(i=0;i<[_packetsLog count];i++) {
+			for(i=0;i<[_packetsLog count];++i) {
 				
 				if (!isInit) {
 					data = [_packetsLog[i] bytes];
@@ -200,7 +200,7 @@
 				memcpy(currentStateArray, skeletonStateArray, 256);
 				y = z = 0;
 				
-				for (counter = 0; counter < 256; counter++) {
+				for (counter = 0; counter < 256; ++counter) {
 					z = (key[y] + currentStateArray[counter] + z);
 					
 					tmp = currentStateArray[counter];
@@ -213,8 +213,8 @@
 				foundCRC = 0xFFFFFFFF;
 				y = z = 0;
 				
-				for (counter = 4; counter < length; counter++) {
-					y++;
+				for (counter = 4; counter < length; ++counter) {
+					++y;
 					z = currentStateArray[y] + z;
 					
 					tmp = currentStateArray[y];
@@ -286,7 +286,7 @@
 			}
 			else {
 				_password = [NSMutableString stringWithFormat:@"%.2X", currentGuess[3]];
-				for (i=4;i<(8);i++)
+				for (i=4;i<(8);++i)
 					[(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", currentGuess[i]]];
 				
 				SRET;
@@ -314,11 +314,11 @@
 		
 		memset(key,32,16);
 		
-		for (counter = 0; counter < 256; counter++)
+		for (counter = 0; counter < 256; ++counter)
 			skeletonStateArray[counter] = counter;
 		
 		while(YES) {
-			for(i=0;i<[_packetsLog count];i++) {
+			for(i=0;i<[_packetsLog count];++i) {
 				
 				if (!isInit) {
 					data = [_packetsLog[i] bytes];
@@ -332,7 +332,7 @@
 				memcpy(currentStateArray, skeletonStateArray, 256);
 				y = z = 0;
 				
-				for (counter = 0; counter < 256; counter++) {
+				for (counter = 0; counter < 256; ++counter) {
 					z = (key[y] + currentStateArray[counter] + z);
 					
 					tmp = currentStateArray[counter];
@@ -345,8 +345,8 @@
 				foundCRC = 0xFFFFFFFF;
 				y = z = 0;
 				
-				for (counter = 4; counter < length; counter++) {
-					y++;
+				for (counter = 4; counter < length; ++counter) {
+					++y;
 					z = currentStateArray[y] + z;
 					
 					tmp = currentStateArray[y];
@@ -394,7 +394,7 @@
 			}
 			else {
 				_password = [NSMutableString stringWithFormat:@"%.2X", currentGuess[3]];
-				for (i=4;i<(8);i++)
+				for (i=4;i<(8);++i)
 					[(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", currentGuess[i]]];
 				
 				SRET;
@@ -431,9 +431,9 @@
 		selKey = 0;
 		
 		//if we want to do it against 2,3,4 key we have to modifiy this
-		for (i= 0; i < KEYNUM; i++)
+		for (i= 0; i < KEYNUM; ++i)
 		{
-			for(x = 0; x < KEYLENGTH; x++)
+			for(x = 0; x < KEYLENGTH; ++x)
 			{
 				q *= 0x343fd;
 				q += 0x269ec3;
@@ -442,11 +442,11 @@
 		}
 		w=0;
 		
-		for (counter = 0; counter < 256; counter++)
+		for (counter = 0; counter < 256; ++counter)
 			skeletonStateArray[counter] = counter;
 		
 		while(true) {
-			for(i=0;i<[_packetsLog count];i++) {
+			for(i=0;i<[_packetsLog count];++i) {
 				
 				if (!isInit) {
 					data = [_packetsLog[i] bytes];
@@ -461,7 +461,7 @@
 				memcpy(currentStateArray, skeletonStateArray, 256);
 				y = z = 0;
 				
-				for (counter = 0; counter < 256; counter++) {
+				for (counter = 0; counter < 256; ++counter) {
 					z = (key[selKey][y] + currentStateArray[counter] + z);
 					
 					tmp = currentStateArray[counter];
@@ -474,8 +474,8 @@
 				foundCRC = 0xFFFFFFFF;
 				y = z = 0;
 				
-				for (counter = 4; counter < length; counter++) {
-					y++;
+				for (counter = 4; counter < length; ++counter) {
+					++y;
 					z = currentStateArray[y] + z;
 					
 					tmp = currentStateArray[y];
@@ -506,7 +506,7 @@
 				}
 				q = w;
 				
-				for (x = 0; x < KEYNUM; x++) {
+				for (x = 0; x < KEYNUM; ++x) {
 					q = (q * 0x343fd) + 0x269ec3;
 					key[x][3] = q>>16;
 					
@@ -525,7 +525,7 @@
 				
 			} else {
 				_password = [NSMutableString stringWithFormat:@"%.2X", curGuess[3]];
-				for (i=4;i<(8);i++)
+				for (i=4;i<(8);++i)
 					[(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", curGuess[i]]];
 				
 				[(NSMutableString*)_password appendString:[NSString stringWithFormat:@" for Key %d", selKey]];

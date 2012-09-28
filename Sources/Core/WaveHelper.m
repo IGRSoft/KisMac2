@@ -50,7 +50,7 @@ void WirelessCryptMD5(char const *str, unsigned char *key) {
     MD5_CTX ctx;
 
     j = 0;
-    for(i = 0; i < 64; i++) {
+    for(i = 0; i < 64; ++i) {
         if(str[j] == 0) j = 0;
         md5_buf[i] = str[j++];
     }
@@ -110,7 +110,7 @@ static GPSInfoController *_gc;
 	
 	NSMutableString *ms = [NSMutableString stringWithFormat:@"%.2X", data[0]];
     
-	for (i = 1; i < len; i++) {
+	for (i = 1; i < len; ++i) {
         j = data[i];
         [ms appendFormat:@":%.2X", j];
     }
@@ -276,7 +276,7 @@ static GPSInfoController *_gc;
     a = [d objectForKey:@"ActiveDrivers"];
     
     //see if all of the drivers mentioned in our prefs are loaded
-    for (i = 0; i < [a count]; i++) {
+    for (i = 0; i < [a count]; ++i) {
         driverProps = a[i];
         name = driverProps[@"deviceName"];
         
@@ -296,7 +296,7 @@ static GPSInfoController *_gc;
             }
             
             //create an interface
-            for (j = 0; j < 10; j++) 
+            for (j = 0; j < 10; ++j)
             {
                 w = [[driver alloc] init];
                 if (w)
@@ -627,7 +627,7 @@ static GPSInfoController *_gc;
     int i,j;
 	for (i=0;i<size;i=i+8) {
         fprintf(stderr, "0x%.4x ", i);
-        for (j=0;j<8;j++) {
+        for (j=0;j<8;++j) {
             if (idx < size)
                 fprintf(stderr, "%.2x ", data[idx]);
             else

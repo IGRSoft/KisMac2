@@ -55,7 +55,7 @@ void RC4InitWithKey(RC4 *that, unsigned char *K, int l) {
     int a;
 
     RC4init(that);
-    for (a = 0; a < N; a++) keyStep(that, K, l);
+    for (a = 0; a < N; ++a) keyStep(that, K, l);
     that->i = that->j = 0;
 }
 
@@ -68,7 +68,7 @@ int step(RC4 *that) {
 
 int SInverse(RC4 *that, int x) {
   int a;
-  for(a = 0; a < N; a++) if (that->S[a] == x) return(a);
+  for(a = 0; a < N; ++a) if (that->S[a] == x) return(a);
 
   printf("Reality Error #1");
   exit(1);
@@ -98,10 +98,10 @@ int tryIV(unsigned char *key, int B, int out) {
     RC4 rc;
     RC4init(&rc);
     
-    for(a = 0; a < IV_SIZE; a++) keyStep(&rc, key, 16);
+    for(a = 0; a < IV_SIZE; ++a) keyStep(&rc, key, 16);
     /* Checks if the system is in a state where we can use keyGuess. */
     if (!(rc.S[1] < IV_SIZE && NORM(rc.S[1] + rc.S[rc.S[1]]) == IV_SIZE + B)) return(-1);
-    for(a = IV_SIZE; a < IV_SIZE+B; a++) keyStep(&rc, key, 16);
+    for(a = IV_SIZE; a < IV_SIZE+B; ++a) keyStep(&rc, key, 16);
     return keyGuess(&rc, B, out);
 }
 
@@ -114,13 +114,13 @@ int tryIVx(unsigned char *key, int B, int out, int* byte) {
     RC4 rc;
     RC4init(&rc);
     
-    for(a = 0; a < IV_SIZE; a++) keyStep(&rc, key, 16);
+    for(a = 0; a < IV_SIZE; ++a) keyStep(&rc, key, 16);
     /* Checks if the system is in a state where we can use keyGuess. */
     if (!(rc.S[1] < IV_SIZE && (NORM(rc.S[1] + rc.S[rc.S[1]])) == IV_SIZE + B)) {
         return 0;
     }
     
-    for(a = IV_SIZE; a < IV_SIZE+B; a++) keyStep(&rc, key, 16);
+    for(a = IV_SIZE; a < IV_SIZE+B; ++a) keyStep(&rc, key, 16);
     *byte=keyGuess(&rc, B, out);
     if (*byte<0) return 0;
      
@@ -129,14 +129,14 @@ int tryIVx(unsigned char *key, int B, int out, int* byte) {
     else
         a=50;
     
-    if (*byte >= 32 && *byte <= 127) a++;
+    if (*byte >= 32 && *byte <= 127) ++a;
 
     return a;
 }
 
 void setupIdentity() {
   int a;
-  for(a = 0; a < N; a++) Identity[a] = a;
+  for(a = 0; a < N; ++a) Identity[a] = a;
 }
 
 #ifdef __cplusplus

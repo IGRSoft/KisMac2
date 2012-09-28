@@ -306,7 +306,7 @@
     if (!_ID) return Nil;
     
     if (sscanf([_ID UTF8String], "%2X:%2X:%2X:%2X:%2X:%2X", &ID32[0], &ID32[1], &ID32[2], &ID32[3], &ID32[4], &ID32[5]) != 6) return Nil;
-    for (i = 0; i < 6; i++)
+    for (i = 0; i < 6; ++i)
         ID8[i] = ID32[i];
     
     return [NSData dataWithBytes:ID8 length:6];

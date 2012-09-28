@@ -59,7 +59,11 @@
     [operation setStringValue:@"Injecting..."];
     [progIndicator setUsesThreadedAnimation:YES];
     [ssid setStringValue:[net BSSID]];
-    [NSApp beginSheet:probeSheet modalForWindow:[WaveHelper mainWindow] modalDelegate:[WaveHelper mainWindow] didEndSelector:nil contextInfo:nil];
+	NSWindow *window = [WaveHelper mainWindow];
+    [NSApp beginSheet:probeSheet
+	   modalForWindow:window
+		modalDelegate:window
+	   didEndSelector:nil contextInfo:nil];
     
     // Store network reference
     _networkInTest = net;
@@ -74,13 +78,8 @@
     int q;
     NSMutableArray *p;
     NSData *f;
-//    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
     struct ieee80211_hdr_3addr *frame = (struct ieee80211_hdr_3addr *)(_kframe.data);
-    
-    
-//    if (w) p = [_networkInTest arpPacketsLog];
-//    else   p = [_networkInTest ackPacketsLog];
     
     aPacketType = 1;
     
@@ -90,10 +89,7 @@
         _status = WavePluginIdle;
         return;
     }
-    
-    // Ok we could do a step, check if we have packets;
-//    DBNSLog(@"Packet Reinjection: %u ACK Packets.\n",[[_networkInTest ackPacketsLog] count]);
-//    DBNSLog(@"Packet Reinjection: %u ARP Packets.\n",[[_networkInTest arpPacketsLog] count]);
+
     p = [_networkInTest arpPacketsLog];
 
     // if we haven't... Wait a little more
@@ -101,7 +97,11 @@
         [operation setStringValue:@"Waiting for interesting packets..."];
         [progIndicator setIndeterminate:YES];
         [progIndicator startAnimation:self];
-        _timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(stepPerformInjection:) userInfo:nil repeats:NO];
+        _timer = [NSTimer scheduledTimerWithTimeInterval:0.5
+												  target:self
+												selector:@selector(stepPerformInjection:)
+												userInfo:nil
+												 repeats:NO];
         return;
     }
 
@@ -126,7 +126,11 @@
         memcpy(_addr2, frame->addr2, 6); //this is the source
         if (memcmp(frame->addr3, "\xff\xff\xff\xff\xff\xff", 6) != 0) {
             [p removeLastObject];
-            _timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(stepPerformInjection:) userInfo:nil repeats:NO];
+            _timer = [NSTimer scheduledTimerWithTimeInterval:0.5
+													  target:self
+													selector:@selector(stepPerformInjection:)
+													userInfo:nil
+													 repeats:NO];
 			return;
         }
     } else {
@@ -134,7 +138,11 @@
         memcpy(_addr2, frame->addr3, 6); //source
         if (memcmp(frame->addr1, "\xff\xff\xff\xff\xff\xff", 6) != 0) {
             [p removeLastObject];
-            _timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(stepPerformInjection:) userInfo:nil repeats:NO];
+            _timer = [NSTimer scheduledTimerWithTimeInterval:0.5
+													  target:self
+													selector:@selector(stepPerformInjection:)
+													userInfo:nil
+													 repeats:NO];
 			return;
         }
     }
@@ -147,7 +155,11 @@
         
     DBNSLog(@"SEND INJECTION PACKET");
     _checkInjectedPackets = YES;
-    [_driver sendKFrame:&_kframe howMany:100 atInterval:50 notifyTarget:self notifySelectorString:@"stepCheckInjected"];
+    [_driver sendKFrame:&_kframe
+				howMany:100
+			 atInterval:50
+		   notifyTarget:self
+   notifySelectorString:@"stepCheckInjected"];
     return;
 }
 
@@ -164,7 +176,11 @@
         [progIndicator setIndeterminate:YES];
         [progIndicator startAnimation:self];
         [_driver sendKFrame:&_kframe howMany:-1 atInterval:5];
-        _timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkStopInjecting:) userInfo:nil repeats:NO];
+        _timer = [NSTimer scheduledTimerWithTimeInterval:1
+												  target:self
+												selector:@selector(checkStopInjecting:)
+												userInfo:nil
+												 repeats:NO];
     }
     return;
 }
@@ -176,7 +192,11 @@
         [_driver stopSendingFrames];
         return;
     } else {
-        _timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkStopInjecting:) userInfo:nil repeats:NO];
+        _timer = [NSTimer scheduledTimerWithTimeInterval:1
+												  target:self
+												selector:@selector(checkStopInjecting:)
+												userInfo:nil
+												 repeats:NO];
     }
 }
 
@@ -195,7 +215,6 @@
     if ([packet type] != IEEE80211_TYPE_DATA)
         return WavePluginPacketResponseContinue;
     
-//    DBNSLog(@"payloadLength %d", payloadLength);
     if (aPacketType == 0) {        //do rst handling here
         if ((payloadLength == TCPRST_SIZE) && 
             IS_EQUAL_MACADDR([packet addr1], _addr1) && 
@@ -204,29 +223,23 @@
             goto got;
         }
     } else if (payloadLength == ARP_SIZE || payloadLength == ARP_SIZE_PADDING || payloadLength == ARP_SIZE + 4) {
-//        DBNSLog(@"INJ ARP DETECTED From %d To %d", [packet fromDS], [packet toDS]);
-//        DBNSLog(@"%@ %@ %@", mToS([packet addr1]), mToS([packet addr2]), mToS([packet addr3]));
-//        DBNSLog(@"%@ %@ %@", mToS(_addr1), mToS(_addr2), mToS(_addr3));
+
 		if ([packet toDS]) {
 			if (!IS_EQUAL_MACADDR([packet addr1], _addr1))
                 return WavePluginPacketResponseContinue; //check BSSID
 			if (IS_BCAST_MACADDR([packet addr2]) || IS_BCAST_MACADDR([packet addr3]))
                 return WavePluginPacketResponseContinue; //arp replies are no broadcasts
-//			if (!IS_EQUAL_MACADDR([packet addr3], _addr2) && IS_EQUAL_MACADDR([packet addr2], _addr2))
-//                return WavePluginPacketResponseContinue;
 		} else if ([packet fromDS]) {
 			if (!IS_EQUAL_MACADDR([packet addr2], _addr1))
                 return WavePluginPacketResponseContinue; //check BSSID
 			if (IS_BCAST_MACADDR([packet addr1]) || IS_BCAST_MACADDR([packet addr3]))
                 return WavePluginPacketResponseContinue;
-//			if (IS_EQUAL_MACADDR([packet addr1], _addr2) && !IS_EQUAL_MACADDR([packet addr3], _addr2))
-//                return WavePluginPacketResponseContinue;
 		}		
 		goto got;
     }
     return WavePluginPacketResponseContinue;
 got:
-    _injReplies++;
+    ++_injReplies;
     [responses setIntValue:_injReplies];
     [progIndicator setDoubleValue:(double)_injReplies];
     return WavePluginPacketResponseContinue;

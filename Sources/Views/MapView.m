@@ -120,7 +120,7 @@
 #endif
 
     
-    for (i=1;i<=2;i++) {
+    for (i=1;i<=2;++i) {
         wp[i] = [NSMutableDictionary dictionaryWithCapacity:4];
         
         wp[i][@"latitude"] = [NSNumber numberWithFloat:((_wp[i]._lat ) >= 0 ? (_wp[i]._lat ) : -(_wp[i]._lat )) ];
@@ -193,7 +193,7 @@
         return NO;
     NS_ENDHANDLER
 	
-    for (i=1;i<=2;i++) {
+    for (i=1;i<=2;++i) {
         wp = wps[i-1];
         
         wpoint._lat = [wp[@"latitude"] floatValue];

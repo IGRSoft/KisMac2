@@ -38,7 +38,10 @@
     self = [super init];
     if (!self) return nil;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryToSave:) name:KisMACTryToSave object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(tryToSave:)
+												 name:KisMACTryToSave
+											   object:nil];
 
     return self;
 }
@@ -122,7 +125,9 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 [ScriptingEngine selfSendEvent:'odoc' withClass:'aevt' andDefaultArgString:[[op URL] absoluteString]];
+			 [ScriptingEngine selfSendEvent:'odoc'
+								  withClass:'aevt'
+						andDefaultArgString:[[op URL] absoluteString]];
 		 }
 		 
 	 }];
@@ -139,7 +144,9 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 [ScriptingEngine selfSendEvent:'odoc' withClass:'aevt' andDefaultArgString:[[op URL] absoluteString]];
+			 [ScriptingEngine selfSendEvent:'odoc'
+								  withClass:'aevt'
+						andDefaultArgString:[[op URL] absoluteString]];
 		 }
 		 
 	 }];
@@ -158,9 +165,10 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 for (int i = 0; i < [[op URLs] count]; i++) {
+			 for (int i = 0; i < [[op URLs] count]; ++i) {
 				 NSString *file = [[op URLs][i] absoluteString];
-				 [ScriptingEngine selfSendEvent:'KImK' withDefaultArgString:file];
+				 [ScriptingEngine selfSendEvent:'KImK'
+						   withDefaultArgString:file];
 			 }
 		 }
 		 
@@ -178,7 +186,8 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 [ScriptingEngine selfSendEvent:'KImI' withDefaultArgString:[[op URL] absoluteString]];
+			 [ScriptingEngine selfSendEvent:'KImI'
+					   withDefaultArgString:[[op URL] absoluteString]];
 		 }
 		 
 	 }];
@@ -192,9 +201,10 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 for (int i = 0; i < [[op URLs] count]; i++) {
+			 for (int i = 0; i < [[op URLs] count]; ++i) {
 				 NSString *file = [[op URLs][i] absoluteString];
-				 [ScriptingEngine selfSendEvent:'KImP' withDefaultArgString:file];
+				 [ScriptingEngine selfSendEvent:'KImP'
+						   withDefaultArgString:file];
 			 }
 		 }
 		 
@@ -223,7 +233,8 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 if (![ScriptingEngine selfSendEvent:'KsaA' withDefaultArgString:[[sp URL] absoluteString]])
+			 if (![ScriptingEngine selfSendEvent:'KsaA'
+							withDefaultArgString:[[sp URL] absoluteString]])
 				 [[NSApp delegate] showSavingFailureDialog];
 		 }
 		 
@@ -241,7 +252,9 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 if (![ScriptingEngine selfSendEvent:'save' withClass:'core' andDefaultArgString:[[sp URL] absoluteString]])
+			 if (![ScriptingEngine selfSendEvent:'save'
+									   withClass:'core'
+							 andDefaultArgString:[[sp URL] absoluteString]])
 				 [[NSApp delegate] showSavingFailureDialog];
 		 }
 		 
@@ -289,8 +302,9 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 for (int i = 0; i < [[op URLs] count]; i++)
-				 [ScriptingEngine selfSendEvent:'KCWa' withDefaultArgString:[[op URLs][i] absoluteString]];
+			 for (int i = 0; i < [[op URLs] count]; ++i)
+				 [ScriptingEngine selfSendEvent:'KCWa'
+						   withDefaultArgString:[[op URLs][i] absoluteString]];
 		 }
 		 
 	 }];
@@ -306,8 +320,9 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 for (int i = 0; i < [[op URLs] count]; i++)
-				 [ScriptingEngine selfSendEvent:'KCWA' withDefaultArgString:[[op URLs][i] absoluteString]];
+			 for (int i = 0; i < [[op URLs] count]; ++i)
+				 [ScriptingEngine selfSendEvent:'KCWA'
+						   withDefaultArgString:[[op URLs][i] absoluteString]];
 		 }
 		 
 	 }];
@@ -323,8 +338,9 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 for (int i = 0; i < [[op URLs] count]; i++)
-				 [ScriptingEngine selfSendEvent:'KCWM' withDefaultArgString:[[op URLs][i] absoluteString]];
+			 for (int i = 0; i < [[op URLs] count]; ++i)
+				 [ScriptingEngine selfSendEvent:'KCWM'
+						   withDefaultArgString:[[op URLs][i] absoluteString]];
 		 }
 		 
 	 }];
@@ -346,8 +362,9 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 for (int i = 0; i < [[op URLs] count]; i++)
-				 [ScriptingEngine selfSendEvent:'KCWW' withDefaultArgString:[[op URLs][i] absoluteString]];
+			 for (int i = 0; i < [[op URLs] count]; ++i)
+				 [ScriptingEngine selfSendEvent:'KCWW'
+						   withDefaultArgString:[[op URLs][i] absoluteString]];
 		 }
 		 
 	 }];
@@ -367,8 +384,9 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 for (int i = 0; i < [[op URLs] count]; i++)
-				 [ScriptingEngine selfSendEvent:'KCWL' withDefaultArgString:[[op URLs][i] absoluteString]];
+			 for (int i = 0; i < [[op URLs] count]; ++i)
+				 [ScriptingEngine selfSendEvent:'KCWL'
+						   withDefaultArgString:[[op URLs][i] absoluteString]];
 		 }
 		 
 	 }];
@@ -402,13 +420,15 @@
 - (IBAction)showNetworksInMap:(id)sender {
     BOOL show = ([sender state] == NSOffState);
     
-    [ScriptingEngine selfSendEvent:'KMSN' withDefaultArg:[NSAppleEventDescriptor descriptorWithBoolean:show]];
+    [ScriptingEngine selfSendEvent:'KMSN'
+					withDefaultArg:[NSAppleEventDescriptor descriptorWithBoolean:show]];
 }
 
 - (IBAction)showTraceInMap:(id)sender {
     BOOL show = ([sender state] == NSOffState);
     
-    [ScriptingEngine selfSendEvent:'KMST' withDefaultArg:[NSAppleEventDescriptor descriptorWithBoolean:show]];
+    [ScriptingEngine selfSendEvent:'KMST'
+					withDefaultArg:[NSAppleEventDescriptor descriptorWithBoolean:show]];
 }
 
 

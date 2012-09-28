@@ -123,7 +123,7 @@ IOReturn IntersilJack::_init() {
     
     _firmwareType = -1;
     
-    for (i = 0; i< wlResetTries; i++) {
+    for (i = 0; i< wlResetTries; ++i) {
         if (_reset() == kIOReturnSuccess) break;
         if (!_devicePresent) return kIOReturnError;
     }
@@ -159,12 +159,12 @@ IOReturn IntersilJack::_reset() {
     
     usleep(100000); // give it a sec to reset
     
-    for (i = 0; i < wlTimeout; i++) {
+    for (i = 0; i < wlTimeout; ++i) {
         _firmwareType = _getFirmwareType();
         if (_firmwareType != -1) break;
     }
     
-    for (i = 0; i < wlTimeout; i++) {
+    for (i = 0; i < wlTimeout; ++i) {
         if (_setValue(0xFC00, (_firmwareType == WI_LUCENT) ? 0x3 : 0x5) == kIOReturnSuccess) break;
     }
     

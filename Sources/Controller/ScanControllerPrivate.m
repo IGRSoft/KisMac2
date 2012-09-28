@@ -52,7 +52,7 @@
     NSString *whichDriver;
     sets=[NSUserDefaults standardUserDefaults];
     
-    for (x = 0; x < _activeDriversCount; x++) {
+    for (x = 0; x < _activeDriversCount; ++x) {
         [aChannelMenu removeItemAtIndex:0];
     }
     _activeDriversCount = 0;
@@ -64,7 +64,7 @@
         _whichDriver = Nil;
         _activeDriversCount = 1;
         
-        for (x = 0; x < [aChannelMenu numberOfItems]; x++)
+        for (x = 0; x < [aChannelMenu numberOfItems]; ++x)
            [[aChannelMenu itemAtIndex:x] setEnabled: NO];
 
     } else {
@@ -76,10 +76,10 @@
 			[sets setObject:whichDriver forKey:@"whichDriver"];
 		}
 		
-        for (x = 0; x < [a count]; x++) {
+        for (x = 0; x < [a count]; ++x) {
             wd = a[x];
             mi = (NSMenuItem*)[aChannelMenu insertItemWithTitle:[wd deviceName] action:@selector(selDriver:) keyEquivalent:@"" atIndex:0];
-            _activeDriversCount++;
+            ++_activeDriversCount;
             if ([[wd deviceName] isEqualToString: whichDriver]) {
                 [mi setState:NSOnState];
                 actWD = wd;
@@ -97,7 +97,7 @@
         //[WaveHelper secureReplace:&_whichDriver withObject:whichDriver];
 
         
-        for (x = _activeDriversCount; x < [aChannelMenu numberOfItems]; x++) {
+        for (x = _activeDriversCount; x < [aChannelMenu numberOfItems]; ++x) {
            mi = (NSMenuItem*)[aChannelMenu itemAtIndex:x];
            if (![mi isSeparatorItem]) [mi setEnabled:[actWD allowsChannelHopping]];
         }
@@ -110,14 +110,14 @@
         c = 0;
         lc = 0;
         
-        for (x = 1; x <= 14; x++) {
+        for (x = 1; x <= 14; ++x) {
             if ([config[[NSString stringWithFormat:@"useChannel%.2i",x]] intValue]) {
-                c++;
+                ++c;
                 lc = x;
             }
         }
         
-        for (x = 1; x <= 14; x++)
+        for (x = 1; x <= 14; ++x)
             [[aChannelMenu itemAtIndex:x + 5 + _activeDriversCount] setState:((c==1 && lc == x) ? NSOnState : NSOffState)];
         
         [[aChannelMenu itemAtIndex: _activeDriversCount + 1] setState:([actWD autoAdjustTimer]? NSOnState : NSOffState)];
@@ -131,7 +131,7 @@
     int x;
     
     [menu setAutoenablesItems:a];
-    for (x=0;x<[menu numberOfItems];x++) 
+    for (x=0;x<[menu numberOfItems];++x)
         if ([[menu itemAtIndex:x] hasSubmenu]) [self menuSetEnabled:a menu:[[menu itemAtIndex:x] submenu]];
         else [[menu itemAtIndex:x] setEnabled:a];
 }
@@ -257,7 +257,7 @@
     if (returnCode == -1 && ![_importController canceled]) {
 		defs = [NSUserDefaults standardUserDefaults];
 		if([[defs objectForKey:@"playCrackSounds"] intValue]) {
-			for (i=0;i<3;i++) {
+			for (i=0;i<3;++i) {
 				[[NSSound soundNamed:[[NSUserDefaults standardUserDefaults] objectForKey:@"WEPSound"]] play];
 				sleep(1);
 			}
@@ -315,7 +315,7 @@
         } else {
 			defs = [NSUserDefaults standardUserDefaults];
 			if([[defs objectForKey:@"playCrackSounds"] intValue]) {
-				for (i=0;i<3;i++) {
+				for (i=0;i<3;++i) {
 					[[NSSound soundNamed:[[NSUserDefaults standardUserDefaults] objectForKey:@"noWEPSound"]] play];
 					sleep(1);
 				}
@@ -334,7 +334,7 @@
 - (void)startCrackDialogWithTitle:(NSString*)title stopScan:(BOOL)stopScan {
     NSParameterAssert(title);
     NSParameterAssert(_importOpen == 0); //we are already busy
-	_importOpen++;
+	++_importOpen;
 	[self menuSetEnabled:NO menu:[NSApp mainMenu]];
 	
     if (stopScan) [self stopScan];
@@ -450,7 +450,7 @@
 - (void)showBusyWithText:(NSString*)title andEndSelector:(SEL)didEndSelector andDialog:(NSString*)dialog {
     NSParameterAssert(title);
     NSParameterAssert(dialog);	
-    if (_importOpen++ > 0) return; //we are already busy
+    if (++_importOpen > 0) return; //we are already busy
 	[self menuSetEnabled:NO menu:[NSApp mainMenu]];
     
     _importController = [[ImportController alloc] initWithWindowNibName:dialog];

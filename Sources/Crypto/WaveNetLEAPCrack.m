@@ -70,14 +70,14 @@ struct leapClientData {
     
     //initialize all the data structures
     keys = 0;
-    for (i = 0; i < [aClientKeys count]; i++) {
-        if ([aClients[aClientKeys[i]] leapDataAvailable]) keys++;
+    for (i = 0; i < [aClientKeys count]; ++i) {
+        if ([aClients[aClientKeys[i]] leapDataAvailable]) ++keys;
     }
 
     curKey = 0;
     c = malloc(keys * sizeof(struct leapClientData));
     
-    for (i = 0; i < [aClientKeys count]; i++) {
+    for (i = 0; i < [aClientKeys count]; ++i) {
         wc = aClients[aClientKeys[i]];
         if ([wc leapDataAvailable]) {
             if ([[wc ID] isEqualToString:_BSSID]) {
@@ -90,9 +90,9 @@ struct leapClientData {
                 
                 //prepare our attack
                 if (gethashlast2(c[curKey].challenge, c[curKey].response, c[curKey].hashend) == 0)
-                    curKey++;
+                    ++curKey;
                 else 
-                    keys--;
+                    --keys;
             }
         }
     }
@@ -112,7 +112,7 @@ struct leapClientData {
         wrd[i--] = 0;
         if (wrd[i]=='\r') wrd[i] = 0;
         
-        words++;
+        ++words;
 
         if (words % 100000 == 0) {
             [im setStatusField:[NSString stringWithFormat:@"%d words tested", words]];
@@ -122,7 +122,7 @@ struct leapClientData {
         
         NtPasswordHash(wrd, i+1, pwhash);
 
-        for (curKey = 0; curKey < keys; curKey++) {
+        for (curKey = 0; curKey < keys; ++curKey) {
             if (c[curKey].hashend[0] != pwhash[14] || c[curKey].hashend[1] != pwhash[15]) continue;
             if (testChallenge(c[curKey].challenge, c[curKey].response, pwhash)) continue;
             

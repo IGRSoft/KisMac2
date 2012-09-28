@@ -322,7 +322,7 @@ struct pointCoords {
     [output appendString:@"# Latitude\tLongitude\tSSID\tType\tBSSID\tEncryption\tLastSeenDate\tKey\tcrc\n"];
     [output appendString:[[NSDate date] descriptionWithCalendarFormat:@"# $DateGMT: %Y-%m-%d\n" timeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"] locale:nil]];
     
-    for (i=0; i<[container count]; i++) {
+    for (i=0; i<[container count]; ++i) {
         net = [container netAtIndex:i];
         
         switch ([net type]) {
@@ -428,7 +428,7 @@ struct pointCoords {
     }
 
 	[im setMax:[container count]];
-	for (i = 0; i < [container count]; i++) {
+	for (i = 0; i < [container count]; ++i) {
 		data = [NSPropertyListSerialization dataFromPropertyList:[[container netAtIndex:i] dataDictionary] format:NSPropertyListBinaryFormat_v1_0 errorDescription:&error];
 		if (!data)
         {
@@ -473,7 +473,7 @@ struct pointCoords {
     fprintf(fd, "%s", [[[NSDate date] descriptionWithCalendarFormat:@"# $DateGMT: %Y-%m-%d\r\n" timeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"] locale:nil] UTF8String]);
     
 	[im setMax:[container count]];
-    for (i=0; i<[container count]; i++) {
+    for (i=0; i<[container count]; ++i) {
         net = [container netAtIndex:i];
         
         if (sscanf([[net latitude] UTF8String], "%f%c", &f, &c)==2) fprintf(fd, "%c %f0\t",c,f);
@@ -661,7 +661,7 @@ struct pointCoords {
 //    fprintf(fd,"# Latitude\tLongitude\t( SSID )	Type\t( BSSID )\tTime (GMT)\t[ SNR Sig Noise ]\t# ( Name )\tFlags\tChannelbits\tBcnIntvl\r\n");
 
 	[im setMax:[container count]];
-    for (i=0; i<[container count]; i++) {
+    for (i=0; i<[container count]; ++i) {
         net = [container netAtIndex:i];
         
 		lat = 100;
@@ -675,7 +675,7 @@ struct pointCoords {
 		
 		netesc[0]='\0';
 		
-		for (j=0;j<strlen(netname);j++) {
+		for (j=0;j<strlen(netname);++j) {
 			switch(netname[j]) {
 				case '&':
 					strcat(netesc,"&amp;");

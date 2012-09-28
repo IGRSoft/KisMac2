@@ -136,7 +136,7 @@ in Safari.");
     bytesread = read(sockd, buf, 2024);
     while ((bytesread != -1) && ([s length] < 1100)) {
         if (bytesread==0) {
-            errcount++;
+            ++errcount;
             if (errcount == 60) {
                 error = NSLocalizedString(@"Got no response from expedia. Mapsize too big?", "Download Map Error");
                 goto err;

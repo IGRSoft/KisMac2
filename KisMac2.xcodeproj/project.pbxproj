@@ -127,7 +127,6 @@
 		691CF1B30E4CC47C0042B146 /* UsbVendorsRTL8187.plist in Resources */ = {isa = PBXBuildFile; fileRef = 691CF1AF0E4CC47C0042B146 /* UsbVendorsRTL8187.plist */; };
 		69359CB30FB05DD2008B8722 /* WaveSpectrumDriver.m in Sources */ = {isa = PBXBuildFile; fileRef = 69359CB10FB05DD2008B8722 /* WaveSpectrumDriver.m */; };
 		694A888D0F3CD87E006B819C /* WavePcapDump.m in Sources */ = {isa = PBXBuildFile; fileRef = 694A888B0F3CD87E006B819C /* WavePcapDump.m */; };
-		694DB28E0F0FDF9E001CCEA6 /* IEEE80211Elements.m in Sources */ = {isa = PBXBuildFile; fileRef = 694DB28C0F0FDF9E001CCEA6 /* IEEE80211Elements.m */; };
 		697B46400F0620DC00AC69EB /* WavePluginDeauthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 697B463E0F0620DC00AC69EB /* WavePluginDeauthentication.m */; };
 		698665470FAF5899002D1A84 /* spin.gif in Resources */ = {isa = PBXBuildFile; fileRef = 698665460FAF5899002D1A84 /* spin.gif */; };
 		69A9B31F0F04D7C700D1E817 /* WavePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A9B31D0F04D7C700D1E817 /* WavePlugin.m */; };
@@ -435,8 +434,6 @@
 		69359CB10FB05DD2008B8722 /* WaveSpectrumDriver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveSpectrumDriver.m; sourceTree = "<group>"; };
 		694A888A0F3CD87E006B819C /* WavePcapDump.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WavePcapDump.h; sourceTree = "<group>"; };
 		694A888B0F3CD87E006B819C /* WavePcapDump.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WavePcapDump.m; sourceTree = "<group>"; };
-		694DB28B0F0FDF9E001CCEA6 /* IEEE80211Elements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IEEE80211Elements.h; sourceTree = "<group>"; };
-		694DB28C0F0FDF9E001CCEA6 /* IEEE80211Elements.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IEEE80211Elements.m; sourceTree = "<group>"; };
 		69719E740F7E928A00949310 /* BIGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BIGL.h; sourceTree = "<group>"; };
 		69719E780F7E928A00949310 /* BIGL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = BIGL.xcodeproj; sourceTree = "<group>"; };
 		69719E7B0F7E928A00949310 /* BIGLCocoaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BIGLCocoaView.h; sourceTree = "<group>"; };
@@ -1024,7 +1021,6 @@
 			children = (
 				A57E64371607BC9700BE1BCA /* Crypto */,
 				69359CAF0FB05D47008B8722 /* WaveSpectrumDrivers */,
-				694DB2860F0FDEEE001CCEA6 /* PacketGeneration */,
 				69A9B3150F04D74B00D1E817 /* WavePlugins */,
 				003533A006A5DD8500AB4577 /* 3rd Party */,
 				003533A406A5DD8500AB4577 /* Controller */,
@@ -1150,16 +1146,6 @@
 			);
 			name = WaveSpectrumDrivers;
 			path = Sources/WaveSpectrumDrivers;
-			sourceTree = "<group>";
-		};
-		694DB2860F0FDEEE001CCEA6 /* PacketGeneration */ = {
-			isa = PBXGroup;
-			children = (
-				694DB28B0F0FDF9E001CCEA6 /* IEEE80211Elements.h */,
-				694DB28C0F0FDF9E001CCEA6 /* IEEE80211Elements.m */,
-			);
-			name = PacketGeneration;
-			path = Sources/PacketGeneration;
 			sourceTree = "<group>";
 		};
 		69719DAF0F7E928900949310 /* Subprojects */ = {
@@ -1675,7 +1661,6 @@
 				69BFC5770F077867008DB1AF /* WavePluginAuthenticationFlood.m in Sources */,
 				69BFC5F30F078532008DB1AF /* WavePluginBeaconFlood.m in Sources */,
 				69DF1ABE0F0D0F93000E9B94 /* KMCommon.m in Sources */,
-				694DB28E0F0FDF9E001CCEA6 /* IEEE80211Elements.m in Sources */,
 				694A888D0F3CD87E006B819C /* WavePcapDump.m in Sources */,
 				69359CB30FB05DD2008B8722 /* WaveSpectrumDriver.m in Sources */,
 				6C461C6F12CEC58100156CBF /* WavePluginMidi.m in Sources */,

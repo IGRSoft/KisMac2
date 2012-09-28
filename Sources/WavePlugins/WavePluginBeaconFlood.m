@@ -62,7 +62,11 @@
     
     memcpy(beacon->header.addr2, x, 6); //needs to be random
     memcpy(beacon->header.addr3, x, 6); //needs to be random
-    [_driver sendKFrame:kframe howMany:600 atInterval:50 notifyTarget:self notifySelectorString:@"doBeaconFloodNetwork"];
+    [_driver sendKFrame:kframe
+				howMany:600
+			 atInterval:50
+		   notifyTarget:self
+   notifySelectorString:@"doBeaconFloodNetwork"];
     
     return;
 }

@@ -155,7 +155,7 @@ int safe_write( int fd, void *buf, size_t len )
     min = 5 * ( ( (     child ) * nb_ivs ) / nfork );
     max = 5 * ( ( ( 1 + child ) * nb_ivs ) / nfork );
 
-    for( i = 0; i < 256; i++ ) 
+    for( i = 0; i < 256; ++i )
         R[i] = i;
 
 wait_for_master:
@@ -191,7 +191,7 @@ wait_for_master:
 
         if( weplen == 13 )
         {
-            for( i = j = 0; i < q; i++ )
+            for( i = j = 0; i < q; ++i )
             {
                 jj[i] = j = ( j + S[i] + K[i & 15] ) & 0xFF;
                 SWAP( S[i], S[j] );
@@ -425,17 +425,17 @@ wait_for_master:
 
     memcpy( K + 3, wepkey, weplen );
 
-    for( i = 0; i < 256; i++ )
+    for( i = 0; i < 256; ++i )
         R[i] = i;
 
-    for( n = 0; n < 16; n++ )
+    for( n = 0; n < 16; ++n )
     {
         xv = 5 * ( rand() % nb_ivs );
 
         memcpy( K, &ivbuf[xv], 3 );
         memcpy( S, R, 256 );
 
-        for( i = j = 0; i < 256; i++ )
+        for( i = j = 0; i < 256; ++i )
         {
             j = ( j + S[i] + K[i & (2 + weplen)]) & 0xFF;
             SWAP( S[i], S[j] );
@@ -449,7 +449,7 @@ wait_for_master:
 
         if( ( x1 == 0xAA && x2 == 0xAA ) ||
             ( x1 == 0xE0 && x2 == 0xE0 ) )
-            match++;
+            ++match;
     }
 
     if( match >= 8 )
@@ -479,7 +479,7 @@ int cmp_votes( const void *bs1, const void *bs2 )
 - (BOOL)do_wep_crack:(int) B {
     int child, i, n, *vi;
 
-    for( i = 0; i < 256; i++ )
+    for( i = 0; i < 256; ++i )
     {
         wpoll[B][i].index = i;
         wpoll[B][i].votes = 0;
@@ -492,7 +492,7 @@ int cmp_votes( const void *bs1, const void *bs2 )
     buffer[0] = (unsigned char) B;
     memcpy( buffer + 1, wepkey, 13 );
 
-    for( child = 0; child < nfork; child++ )
+    for( child = 0; child < nfork; ++child )
     {
         if( safe_write( mc_pipe[child][1], buffer, 14 ) != 14 )
         {
@@ -503,7 +503,7 @@ int cmp_votes( const void *bs1, const void *bs2 )
 
     /* collect the poll results from each child */
 
-    for( child = 0; child < nfork; child++ )
+    for( child = 0; child < nfork; ++child )
     {
         if( safe_read( cm_pipe[child][0], buffer, sizeof( _votes ) /13 ) !=
                                                   sizeof( _votes ) /13 )
@@ -514,16 +514,16 @@ int cmp_votes( const void *bs1, const void *bs2 )
 
         vi = (int *) buffer;
 
-        for( n = 0; n < N_ATTACKS; n++ )
-            for( i = 0; i < 256; i++, vi++ )
+        for( n = 0; n < N_ATTACKS; ++n )
+            for( i = 0; i < 256; ++i, ++vi )
                 _votes[B][n][i] += *vi;
     }
 
     /* compute the average vote and reject the unlikely keybytes */
 
-    for( i = 0; i < 256; i++ )
+    for( i = 0; i < 256; ++i )
     {
-        for( n = 0; n < N_ATTACKS; n++ )
+        for( n = 0; n < N_ATTACKS; ++n )
         {
             wpoll[B][i].votes += coeff_attacks[stability][n] *
                                  _votes[B][n][i];
@@ -552,7 +552,7 @@ int cmp_votes( const void *bs1, const void *bs2 )
     for( depth[B] = 0; depth[B] < fudge[B]; depth[B]++ )
     {
         if( B == weplen - 1 )
-            tried++;
+            ++tried;
 
         if (tried % 1000 == 0 && tried != 0) {
             if ([[WaveHelper importController] canceled]) return NO;
@@ -595,7 +595,7 @@ int cmp_votes( const void *bs1, const void *bs2 )
     NSParameterAssert(nb_ivs > 8);
     srand( time( NULL ) );
 
-    for( i = 0; i < nfork; i++) {
+    for( i = 0; i < nfork; ++i) {
         pipe( mc_pipe[i] );
         pipe( cm_pipe[i] );
 
@@ -604,7 +604,7 @@ int cmp_votes( const void *bs1, const void *bs2 )
 
     BOOL ret = [self do_wep_crack:0];
     
-    for( i = 0; i < nfork; i++) {
+    for( i = 0; i < nfork; ++i) {
         close( mc_pipe[i][1] );
         close( mc_pipe[i][0] );
         close( cm_pipe[i][1] );

@@ -27,7 +27,6 @@
     
     memset(kframe, 0, sizeof(KFrame));
     
-//    frame->header.frame_ctl = IEEE80211_TYPE_MGT | IEEE80211_SUBTYPE_AUTH | IEEE80211_DIR_TODS;
     frame->header.frame_ctl = IEEE80211_TYPE_MGT | IEEE80211_SUBTYPE_AUTH;
     
     memcpy(frame->header.addr1, [net rawBSSID], 6);
@@ -42,7 +41,9 @@
     kframe->ctrl.len = sizeof(struct ieee80211_auth);
     kframe->ctrl.tx_rate = [_driver currentRate];
     
-    [NSThread detachNewThreadSelector:@selector(doAuthFloodNetwork:) toTarget:self withObject:nil];
+    [NSThread detachNewThreadSelector:@selector(doAuthFloodNetwork:)
+							 toTarget:self
+						   withObject:nil];
 	
     return YES;
 }

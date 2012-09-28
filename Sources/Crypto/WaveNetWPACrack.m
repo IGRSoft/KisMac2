@@ -157,7 +157,7 @@ void SHA1FinalFastWith20ByteData(unsigned char digest[20], SHA1_CTX* context,uns
 
         SHA1Transform(context->state,  (unsigned long *)data);
 
-	for (i = 0; i < 20; i++) {
+	for (i = 0; i < 20; ++i) {
 		digest[i] = (unsigned char)
 			((context->state[i >> 2] >> ((3 - (i & 3)) * 8)) & 255);
 	}
@@ -196,16 +196,16 @@ void fastF(unsigned char *password, int pwdLen, const unsigned char *ssid, int s
     /* output = U1 */ 
     memcpy(output, digest, SHA_DIGEST_LENGTH);
 
-    for (i = 1; i < 4096; i++) { 
+    for (i = 1; i < 4096; ++i) {
         /* Un = PRF(P, Un-1) */ 
         prepared_hmac_sha1(ipadContext, opadContext, digest); 
     
-        j=0;
+        j = 0;
         /* output = output xor Un */
-        ((int*)output)[j] ^= ((int*)digest)[j]; j++;
-        ((int*)output)[j] ^= ((int*)digest)[j]; j++;
-        ((int*)output)[j] ^= ((int*)digest)[j]; j++;
-        ((int*)output)[j] ^= ((int*)digest)[j]; j++;
+        ((int*)output)[j] ^= ((int*)digest)[j]; ++j;
+        ((int*)output)[j] ^= ((int*)digest)[j]; ++j;
+        ((int*)output)[j] ^= ((int*)digest)[j]; ++j;
+        ((int*)output)[j] ^= ((int*)digest)[j]; ++j;
         ((int*)output)[j] ^= ((int*)digest)[j];
     }
 } 
@@ -218,7 +218,7 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
     int i, pwdLen = strlen(password);
     
     /* XOR key with ipad and opad values */ 
-    for (i = 0; i < pwdLen; i++) { 
+    for (i = 0; i < pwdLen; ++i) {
         k_ipad[i] = password[i] ^ 0x36; 
         k_opad[i] = password[i] ^ 0x5c;
     } 
@@ -252,9 +252,9 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
     if (!fptr) return NO;
     
     keys = 0;
-    for (i = 0; i < [aClientKeys count]; i++) {
+    for (i = 0; i < [aClientKeys count]; ++i) {
         if ([aClients[aClientKeys[i]] eapolDataAvailable])
-            keys++;
+            ++keys;
     }
 
     NSAssert(keys!=0, @"There must be more keys");
@@ -262,7 +262,7 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
     curKey = 0;
     c = malloc(keys * sizeof(struct clientData));
     
-    for (i = 0; i < [aClientKeys count]; i++) {
+    for (i = 0; i < [aClientKeys count]; ++i) {
         wc = aClients[aClientKeys[i]];
         if ([wc eapolDataAvailable]) {
             if ([[wc ID] isEqualToString: _BSSID]) {
@@ -291,7 +291,7 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
                 c[curKey].mic           = [[wc eapolMIC]    bytes];
                 c[curKey].clientID      = [wc ID];
                 c[curKey].wpaKeyCipher  = [wc wpaKeyCipher];
-                curKey++;
+                ++curKey;
             }
         }
     }
@@ -326,7 +326,7 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
         //passwords must be shorter than 63 signs
         if (i < 8 || i > 63) continue;        
         
-        words++;
+        ++words;
 
         if (words % 500 == 0)
         {
@@ -335,13 +335,13 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
             prevTime = theTime;
         }
         
-        for(j = 0; j < i; j++)
+        for(j = 0; j < i; ++j)
             if ((wrd[j] < 32) || (wrd[j] > 126)) break;
         if (j!=i) continue;
         
         fastWP_passwordHash(wrd, (const UInt8*)ssid, ssidLength, pmk);
     
-        for (curKey = 0; curKey < keys; curKey++) {
+        for (curKey = 0; curKey < keys; ++curKey) {
             PRF(pmk, 32, prefix, strlen((char *)prefix), c[curKey].ptkInput, WPA_NONCE_LENGTH*2 + 12, ptk, 16);
             
             if (c[curKey].wpaKeyCipher == 1)

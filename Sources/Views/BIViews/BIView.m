@@ -57,7 +57,7 @@
     [self drawRectSub:rect];
     
     [_lock lock];
-    for (i = 0; i < [_subViews count]; i++) {
+    for (i = 0; i < [_subViews count]; ++i) {
         [(BISubView*)_subViews[i] drawAtPoint:NSZeroPoint inRect:rect];
     }
     [_lock unlock];

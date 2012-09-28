@@ -165,7 +165,7 @@ static void RawDeviceAdded(void* refcon, io_iterator_t iterator) {
         }
         memcpy(samples+buf[0], buf+1, 7);
         if (buf[0] == 77) {
-            for (i=0;i<84;i++) {
+            for (i=0;i<84;++i) {
                 printf("%.2d ", samples[i]);
             }
             printf("\n");

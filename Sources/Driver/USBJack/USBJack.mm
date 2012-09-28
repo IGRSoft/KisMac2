@@ -546,7 +546,7 @@ IOReturn USBJack::_findInterfaces(IOUSBDeviceInterface197 **dev) {
             break;
         }
         
-        for (pipeRef = 1; pipeRef <= intfNumEndpoints; pipeRef++)
+        for (pipeRef = 1; pipeRef <= intfNumEndpoints; ++pipeRef)
         {
             IOReturn	kr2;
             UInt8	direction;
@@ -723,7 +723,7 @@ void USBJack::_addDevice(void *refCon, io_iterator_t iterator) {
         
         CFDictionaryGetKeysAndValues( (CFDictionaryRef) (me->_vendorsPlist) , keys, values);
         DBNSLog(@"---");
-        for (i=0;i<count;i++) {
+        for (i=0;i<count;++i) {
             n = CFDictionaryGetValue((CFDictionaryRef)values[i], CFSTR("idProduct"));
             CFNumberGetValue((CFNumberRef)n, kCFNumberSInt16Type, &productId);
             n = CFDictionaryGetValue((CFDictionaryRef)values[i], CFSTR("idVendor"));
@@ -758,7 +758,7 @@ void USBJack::_handleDeviceRemoval(void *refCon, io_iterator_t iterator)
     
     while ((obj = IOIteratorNext(iterator)))
     {
-        count++;
+        ++count;
         //we need to not release devices that don't belong to us!?
         DBNSLog(@"USBJack: Device removed.\n");
         kr = IOObjectRelease(obj);

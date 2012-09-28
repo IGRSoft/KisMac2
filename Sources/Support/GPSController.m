@@ -342,7 +342,7 @@ int ss(char* inp, char* outp) {
             return x;
         }
         outp[x]=inp[x];
-        x++;
+        ++x;
     }
     
     return x;
@@ -373,7 +373,7 @@ int ss(char* inp, char* outp) {
     
     if (_debugEnabled) DBNSLog(@"GPS read data returned.");
     [self setStatus:nil];
-    _linesRead++;
+    ++_linesRead;
     
     gpsin[q+len]=0;
     updated = NO;
@@ -587,7 +587,7 @@ int ss(char* inp, char* outp) {
         
         if (_debugEnabled) DBNSLog(@"GPSd read data returned.");
         [self setStatus:nil];
-        _linesRead++;
+        ++_linesRead;
         
         gpsbuf[0+len]=0;
 	gpsbufII[0+len]=0;
@@ -707,7 +707,7 @@ int ss(char* inp, char* outp) {
 			
 			length = [prns count];
 			unsigned item; 
-			for (item = 1; item <= 12; item++)
+			for (item = 1; item <= 12; ++item)
 			{
 				if (item < length - 1) {
 					thisprn = prns[item];
@@ -727,7 +727,7 @@ int ss(char* inp, char* outp) {
 		}
 		@catch (NSException *exception) {
 		unsigned item; 
-		for (item = 1; item <= 12; item++) {
+		for (item = 1; item <= 12; ++item) {
 			[asdf updateSatPRNForSat:item prn:0];
 			[asdf updateSatSignalStrength:item signal:-1];
 		}

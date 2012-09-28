@@ -80,7 +80,7 @@ static NSString *trackString,*trackStringClient;
             }
 
             [self playChord:[packet signal]];
-            _numMidi++;
+            ++_numMidi;
             //	[self closeChannel];
         #endif
     }//tracking

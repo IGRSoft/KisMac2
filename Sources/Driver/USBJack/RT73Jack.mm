@@ -22,7 +22,7 @@ void RT73Jack::dumpFrame(UInt8 *data, UInt16 size) {
     int i,j;
 	for (i=0;i<size;i=i+8) {
         fprintf(stderr, "0x%.4x ", i);
-        for (j=0;j<8;j++) {
+        for (j=0;j<8;++j) {
             if (idx < size)
                 fprintf(stderr, "%.2x ", data[idx]);
             else
@@ -61,7 +61,7 @@ IOReturn RT73Jack::_init() {
 		sleep(1);
 		RTUSBReadMACRegister(MAC_CSR0, &temp);
 
-		i++;
+		++i;
 	}
 	DBNSLog(@"\n");
 	DBNSLog(@"Init: MAC_CSR0=0x%08lx\n", (unsigned long)temp);
@@ -372,7 +372,7 @@ IOReturn	RT73Jack::RTUSBReadBBPRegister(
 		if (!(PhyCsr3.field.Busy == BUSY)) {
 			break;
 		}
-		i++;
+		++i;
 	}
 	while (i < RETRY_LIMIT);
 
@@ -403,7 +403,7 @@ IOReturn	RT73Jack::RTUSBReadBBPRegister(
 			*pValue = (unsigned char)PhyCsr3.field.Value;
 			break;
 		}
-		i++;
+		++i;
 	}
 	while (i < RETRY_LIMIT);
     
@@ -429,7 +429,7 @@ IOReturn	RT73Jack::RTUSBWriteBBPRegister(
 		RTUSBReadMACRegister(PHY_CSR3, &PhyCsr3.word);
 		if (!(PhyCsr3.field.Busy == BUSY))
 			break;
-		i++;
+		++i;
 	}
 	while (i < RETRY_LIMIT);
     
@@ -462,7 +462,7 @@ IOReturn	RT73Jack::RTUSBWriteRFRegister(
 		RTUSBReadMACRegister(PHY_CSR4, &PhyCsr4.word);
 		if (!(PhyCsr4.field.Busy))
 			break;
-		i++;
+		++i;
 	}
 	while (i < RETRY_LIMIT);
     
@@ -536,7 +536,7 @@ IOReturn RT73Jack::NICInitializeAsic()
 	RTUSBReadMACRegister(MAC_CSR0, &Version);
 	
 	// Initialize MAC register to default value
-	for (Index = 0; Index < NUM_MAC_REG_PARMS; Index++)
+	for (Index = 0; Index < NUM_MAC_REG_PARMS; ++Index)
 	{
 		RTUSBWriteMACRegister((unsigned short)MACRegTable[Index].Register, MACRegTable[Index].Value);
 	}
@@ -570,7 +570,7 @@ IOReturn RT73Jack::NICInitializeAsic()
 	} while ((++Index < 100) && ((Value == 0xff) || (Value == 0x00)));
 		  
 	// Initialize BBP register to default value
-	for (Index = 0; Index < NUM_BBP_REG_PARMS; Index++)
+	for (Index = 0; Index < NUM_BBP_REG_PARMS; ++Index)
 	{
 		RTUSBWriteBBPRegister(RT73BBPRegTable[Index].Register, RT73BBPRegTable[Index].Value);
 	}
@@ -641,20 +641,20 @@ void	RT73Jack::NICReadEEPROMParameters()
 
 	// Init the channel number for TX channel power
 	// 0. 11b/g
-	for (i = 0; i < 14; i++)
+	for (i = 0; i < 14; ++i)
 		TxPower[i].Channel = i + 1;
 	// 1. UNI 36 - 64
-	for (i = 0; i < 8; i++)
+	for (i = 0; i < 8; ++i)
 		TxPower[i + 14].Channel = 36 + i * 4;
 	// 2. HipperLAN 2 100 - 140
-	for (i = 0; i < 11; i++)
+	for (i = 0; i < 11; ++i)
 		TxPower[i + 22].Channel = 100 + i * 4;
 	// 3. UNI 140 - 165
-	for (i = 0; i < 5; i++)
+	for (i = 0; i < 5; ++i)
 		TxPower[i + 33].Channel = 149 + i * 4; 	   
 
 	// 34/38/42/46
-	for (i = 0; i < 4; i++)
+	for (i = 0; i < 4; ++i)
 		TxPower[i + 38].Channel = 34 + i * 4;
 
 	// if E2PROM version mismatch with driver's expectation, then skip
@@ -708,7 +708,7 @@ void	RT73Jack::NICReadEEPROMParameters()
 	// 0. 11b/g
 	// Power value 0xFA (-6) ~ 0x24 (36)
 	RTUSBReadEEPROM(EEPROM_G_TX_PWR_OFFSET, (unsigned char *)ChannelTxPower, 2 * NUM_EEPROM_TX_G_PARMS);
-	for (i = 0; i < 2 * NUM_EEPROM_TX_G_PARMS; i++)
+	for (i = 0; i < 2 * NUM_EEPROM_TX_G_PARMS; ++i)
 	{
 		if ((ChannelTxPower[i] > 36) || (ChannelTxPower[i] < -6))
 			TxPower[i].Power = 24;			
@@ -721,7 +721,7 @@ void	RT73Jack::NICReadEEPROMParameters()
 	// 1. UNI 36 - 64, HipperLAN 2 100 - 140, UNI 140 - 165
 	// Power value 0xFA (-6) ~ 0x24 (36)
 	RTUSBReadEEPROM(EEPROM_A_TX_PWR_OFFSET, (unsigned char *)ChannelTxPower, MAX_NUM_OF_A_CHANNELS);
-	for (i = 0; i < MAX_NUM_OF_A_CHANNELS; i++)
+	for (i = 0; i < MAX_NUM_OF_A_CHANNELS; ++i)
 	{
 		if ((ChannelTxPower[i] > 36) || (ChannelTxPower[i] < -6))
 			TxPower[i + 14].Power = 24;
@@ -737,7 +737,7 @@ void	RT73Jack::NICReadEEPROMParameters()
 	// for J52, 34/38/42/46
 	RTUSBReadEEPROM(EEPROM_J52_TX_PWR_OFFSET, (unsigned char *)ChannelTxPower, 6); //must Read even valuse
 
-	for (i = 0; i < 4; i++)
+	for (i = 0; i < 4; ++i)
 	{
 //		ASSERT(TxPower[J52_CHANNEL_START_OFFSET + i].Channel == 34 + i * 4);
 		if ((ChannelTxPower[i] > 36) || (ChannelTxPower[i] < -6))
@@ -1034,7 +1034,7 @@ void RT73Jack::NICInitAsicFromEEPROM()
 
 	DBNSLog(@"--> NICInitAsicFromEEPROM\n");
 
-	for(i = 3; i < NUM_EEPROM_BBP_PARMS; i++)
+	for(i = 3; i < NUM_EEPROM_BBP_PARMS; ++i)
 	{
 		UCHAR BbpRegIdx, BbpValue;
 	
@@ -1432,7 +1432,7 @@ bool    RT73Jack::setChannel(UInt16 channel){
 	{
 		case RFIC_2528:
 			
-			for (index = 0; index < NUM_OF_2528_CHNL; index++)
+			for (index = 0; index < NUM_OF_2528_CHNL; ++index)
 			{
 				if (channel == RF2528RegTable[index].Channel)
 				{
@@ -1452,7 +1452,7 @@ bool    RT73Jack::setChannel(UInt16 channel){
 			break;
 
 		case RFIC_5226:
-			for (index = 0; index < NUM_OF_5226_CHNL; index++)
+			for (index = 0; index < NUM_OF_5226_CHNL; ++index)
 			{
 				if (channel == RF5226RegTable[index].Channel)
 				{
@@ -1473,7 +1473,7 @@ bool    RT73Jack::setChannel(UInt16 channel){
 			
 		case RFIC_5225:
 		case RFIC_2527:
-			for (index = 0; index < NUM_OF_5225_CHNL; index++)
+			for (index = 0; index < NUM_OF_5225_CHNL; ++index)
 			{
 				if (channel == RF5225RegTable[index].Channel)
 				{
@@ -1807,7 +1807,7 @@ bool RT73Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len) {
 void    RT73Jack::RTMPDescriptorEndianChange(unsigned char *  pData, unsigned long DescriptorType) {
     int size = (DescriptorType == TYPE_TXD) ? TXD_SIZE : RXD_SIZE;
     int i;
-    for (i=1; i<size/4; i++) {
+    for (i=1; i<size/4; ++i) {
         /*
          * Handle IV and EIV with little endian
          */
@@ -1831,7 +1831,7 @@ void    RT73Jack::WriteBackToDescriptor(unsigned char *Dest, unsigned char *Src,
 
         p1 = ((unsigned long *)Dest) + 1;
         p2 = ((unsigned long *)Src) + 1;
-        for (i = 1; i < size/4 ; i++)
+        for (i = 1; i < size/4 ; ++i)
                 *p1++ = *p2++;
         *(unsigned long *)Dest = *(unsigned long *)Src;         // Word 0; this must be written back last
 }
@@ -1893,7 +1893,7 @@ void    RT73Jack::RTUSBWriteTxDescriptor(
             Residual = ((Length * 16) % (11 * (1 + Rate - RATE_5_5)));
             Length = Length * 16 / (11 * (1 + Rate - RATE_5_5));
             if (Residual != 0) {
-                    Length++;
+                    ++Length;
             }
             if ((Residual <= (3 * (1 + Rate - RATE_5_5))) && (Residual != 0)) {
                 if (Rate == RATE_11)                    // Only 11Mbps require length extension bit

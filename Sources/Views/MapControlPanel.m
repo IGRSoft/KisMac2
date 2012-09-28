@@ -40,8 +40,8 @@
     self = [super init];
     if (!self) return nil;
     
-	for (x=0; x<3; x++) {
-        for (y=0; y<2; y++) {
+	for (x=0; x<3; ++x) {
+        for (y=0; y<2; ++y) {
 			i = (x + (y * 3));
 			_items[i] = [[MapControlItem alloc] initForID:i];
 			[self addSubView:_items[i]];
@@ -76,8 +76,8 @@
 		[[WaveHelper mapView] setNeedsDisplayInRect:_frame];
 		[self setSize:NSMakeSize(3 * CONTROLSIZE, 2 * CONTROLSIZE)];
 		[self setLocation:p];
-		for (x=0; x<3; x++) {
-			for (y=0; y<2; y++) {
+		for (x=0; x<3; ++x) {
+			for (y=0; y<2; ++y) {
 				[_items[(x + (y * 3))] setLocation:NSMakePoint(x*CONTROLSIZE, y*CONTROLSIZE)];
 				[_items[(x + (y * 3))] setVisible:YES];
 			}
@@ -147,7 +147,7 @@
 		[_items[3] slide:visible forParentLocation:_frame.origin];
 		[_items[5] slide:visible forParentLocation:_frame.origin];
 	} else {
-		for (i = 0; i < 6; i++) {
+		for (i = 0; i < 6; ++i) {
 			[_items[i] slide:visible forParentLocation:_frame.origin];
 		}
 	}

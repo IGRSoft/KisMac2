@@ -50,7 +50,7 @@
 	[[NSColor colorWithCalibratedRed:0.3 green:0.3 blue:0.3 alpha:1] set];
 	[bp fill];
 	
-	for (currentsat = 1; currentsat <= 12; currentsat++) {
+	for (currentsat = 1; currentsat <= 12; ++currentsat) {
 		strength = [self getSignalForSat:currentsat];
 		prn = [self getPRNForSat:currentsat];
 		used = [self getUsedForSat:currentsat];

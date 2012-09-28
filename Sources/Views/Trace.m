@@ -77,7 +77,7 @@ struct pointCoords {
 	const struct pointCoords *pL;
 	NSMutableArray *a;
 	
-	for (i = 0; i < [trace count]; i++) {
+	for (i = 0; i < [trace count]; ++i) {
 		obj = trace[i];
 		if ([obj isKindOfClass:[NSMutableArray class]]) {
 			[_trace insertObject:obj atIndex:0];
@@ -87,11 +87,11 @@ struct pointCoords {
 			a = [NSMutableArray arrayWithCapacity:[(NSData*)obj length] / sizeof(struct pointCoords)];
 			pL = (const struct pointCoords *)[obj bytes];
 		
-			for (j = 0; j < ([(NSData*)obj length] / sizeof(struct pointCoords)); j++) {
+			for (j = 0; j < ([(NSData*)obj length] / sizeof(struct pointCoords)); ++j) {
 				vp = [BIValuePair new];
 				[vp setPairX:pL->x Y:pL->y];
 				[a addObject:vp];
-				pL++;
+				++pL;
 			}
 			[_trace insertObject:a atIndex:0];
 		}
@@ -120,17 +120,17 @@ struct pointCoords {
 	if (c == 0) return nil;
 	
 	a = [NSMutableArray arrayWithCapacity:c];
-	for (i = 0; i < c; i++) {
+	for (i = 0; i < c; ++i) {
 		subtrace = _trace[i];
 		
 		coord = [NSMutableData dataWithLength:[subtrace count] * sizeof(struct pointCoords)];
 		pL = (struct pointCoords *)[coord mutableBytes];
 		
-		for (j = 0; j < [subtrace count]; j++) {
+		for (j = 0; j < [subtrace count]; ++j) {
 			vp = subtrace[j];
 			pL->x = [vp getX];
 			pL->y = [vp getY];
-			pL++;
+			++pL;
 		}
 		
 		[a addObject:coord];
@@ -157,12 +157,12 @@ struct pointCoords {
     t = [NSAffineTransform transform];
     [t translateXBy:p.x yBy:p.y];
     
-    for (i = 0; i < [_trace count]; i++) {
+    for (i = 0; i < [_trace count]; ++i) {
         tour = _trace[i];
         b = [NSBezierPath bezierPath];
         p2 = [m pixelForCoordinate:[tour[0] wayPoint]];
         [b moveToPoint:p2];
-        for (j = 1; j < [tour count]; j++) {
+        for (j = 1; j < [tour count]; ++j) {
             p2 = [m pixelForCoordinate:[tour[j] wayPoint]];
             [b lineToPoint:p2];        
         }

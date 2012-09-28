@@ -81,7 +81,7 @@
             items[i].valueLength = [forCommands[i] cStringLength];
             items[i].flags = 0;
             
-            i++;
+            ++i;
         }
         
         rights.count = numItems;
@@ -151,7 +151,7 @@
 		items[i].valueLength = [forCommands[i] cStringLength];
 		items[i].flags = 0;
 		
-		i++;
+		++i;
 	}
 	
 	rights.count = numItems;

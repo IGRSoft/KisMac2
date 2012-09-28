@@ -115,14 +115,14 @@
     if (!self) return nil;
     
     [self setSize:NSMakeSize(35, 35)];
-    for (i = 2; i <= 35; i++) {
+    for (i = 2; i <= 35; ++i) {
         _currImg[i] = [[NSImage alloc] initWithSize:NSMakeSize(35, 35)];
         [_currImg[i] lockFocus];
         [self _genCacheForSize:i];
         [_currImg[i] unlockFocus];
     }
     [self setupViewForFrame];
-    for (i = 0; i < 24; i++) {
+    for (i = 0; i < 24; ++i) {
         _wayImg[i] = [[NSImage alloc] initWithSize:NSMakeSize(35, 35)];
         [_wayImg[i] lockFocus];
         [self _genWayCache];
@@ -163,15 +163,15 @@
         if([_animLock tryLock]) {
             while(_visible) {
                 if (_wayPointMode) {
-                    wp++;
+                    ++wp;
                     wp = wp % 24;
                     [self setImage:_wayImg[wp]];
                 } else {
                     if (e) {
-                        scale++;
+                        ++scale;
                         if (scale>=25) e=NO;
                     } else {
-                        scale--;
+                        --scale;
                         if (scale<=10) e=YES;
                     }
                     

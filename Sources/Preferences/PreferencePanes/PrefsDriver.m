@@ -28,7 +28,7 @@
     
     while (WaveDrivers[i][0]) {
         s = @(WaveDrivers[i]);
-        for (j = 0; j < [drivers count]; j++) {
+        for (j = 0; j < [drivers count]; ++j) {
             c = NSClassFromString(s);
             
             //check if device exists
@@ -43,7 +43,7 @@
             [_driver addItemWithTitle:[NSClassFromString(s) description]];
             [[_driver lastItem] setTag:i];
         }
-        i++;
+        ++i;
     }
 }
 
@@ -118,16 +118,16 @@
     if (enableChannel) {
         [_firstChannel  setIntValue:    [d[@"firstChannel"] intValue]];
 
-        for (x = 0; x<2; x++) 
-            for (y = 0; y < 7; y++) {
+        for (x = 0; x<2; ++x)
+            for (y = 0; y < 7; ++y) {
                 val = [d[[NSString stringWithFormat:@"useChannel%.2i",(x*7+y+1)]] boolValue] ? NSOnState : NSOffState;
                 [[_channelSel cellAtRow:y column:x] setState:val];
                 if (x*7+y+1 == [_firstChannel intValue]) startCorrect = val;
             }
         
         if (startCorrect==0) {
-            for (x = 0; x<2; x++) {
-                for (y = 0; y < 7; y++) {
+            for (x = 0; x<2; ++x) {
+                for (y = 0; y < 7; ++y) {
                     val = [d[[NSString stringWithFormat:@"useChannel%.2i",(x*7+y+1)]] boolValue] ? NSOnState : NSOffState;
                     if (val) {  
                         [_firstChannel setIntValue:x*7+y+1];
@@ -138,8 +138,8 @@
             }
         }
     } else {
-        for (x = 0; x<2; x++) 
-            for (y = 0; y < 7; y++)
+        for (x = 0; x<2; ++x)
+            for (y = 0; y < 7; ++y)
                 [[_channelSel cellAtRow:y column:x] setState:NSOffState];
 
         
@@ -177,8 +177,8 @@
     if (!d) return YES;
     
     if ([[self getCurrentDriver] allowsChannelHopping]) {
-        for (x = 0; x<2; x++) 
-            for (y = 0; y < 7; y++) {
+        for (x = 0; x<2; ++x)
+            for (y = 0; y < 7; ++y) {
                 val+=[[_channelSel cellAtRow:y column:x] state];
                 if (x*7+y+1 == [_firstChannel intValue]) startCorrect = [[_channelSel cellAtRow:y column:x] state];
             }    
@@ -193,8 +193,8 @@
         }
     }
 
-    for (x = 0; x<2; x++) 
-        for (y = 0; y < 7; y++) {
+    for (x = 0; x<2; ++x)
+        for (y = 0; y < 7; ++y) {
             val = [[_channelSel cellAtRow:y column:x] state];
             d[[NSString stringWithFormat:@"useChannel%.2i",(x*7+y+1)]] = [NSNumber numberWithBool: val ? YES : NO];
         }

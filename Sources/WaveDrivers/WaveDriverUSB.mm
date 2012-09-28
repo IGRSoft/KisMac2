@@ -177,7 +177,7 @@
     }
     else
     {
-        _packets++;
+        ++_packets;
     }
     
     return f;

@@ -82,7 +82,7 @@ IOReturn RalinkJack::_init() {
             sleep(1);
             RTUSBReadMACRegister(MAC_CSR17, &temp);
                     
-            i++;
+            ++i;
         }
         if (i == 50)
         {
@@ -141,7 +141,7 @@ IOReturn RalinkJack::_init() {
                 return kIOReturnNoDevice;
             }
             DBNSLog(@"Read BBP_Version Value = %d\n", Value);
-            i++;
+            ++i;
         } while (((Value == 0xff) || (Value == 0x00)) && (i < 50));
         if (i < 50)//BBP ready
         {
@@ -159,7 +159,7 @@ IOReturn RalinkJack::_init() {
 	}while (1);
     
 	// Initialize BBP register to default value
-	for (Index = 0; Index < NUM_BBP_REG_PARMS; Index++)
+	for (Index = 0; Index < NUM_BBP_REG_PARMS; ++Index)
 	{
 		i = 0;
 		do
@@ -167,7 +167,7 @@ IOReturn RalinkJack::_init() {
 			RTUSBReadMACRegister(PHY_CSR8, &temp);
 			if (!(temp & BUSY))
 				break;
-			i++;
+			++i;
 		}
 		while (i < RETRY_LIMIT);
 		
@@ -304,7 +304,7 @@ IOReturn	RalinkJack::RTUSBReadBBPRegister(unsigned char Id,
 		RTUSBReadMACRegister(PHY_CSR8, &temp);
 		if (!(temp & BUSY))
 			break;
-		i++;
+		++i;
 	}
 	while (i < RETRY_LIMIT);
     
@@ -332,7 +332,7 @@ IOReturn	RalinkJack::RTUSBWriteBBPRegister(unsigned char Id,
 		RTUSBReadMACRegister(PHY_CSR8, &temp);
 		if (!(temp & BUSY))
 			break;
-		i++;
+		++i;
 	}
 	while (i < RETRY_LIMIT);
     
@@ -362,7 +362,7 @@ IOReturn	RalinkJack::RTUSBWriteRFRegister(unsigned long Value)
 		RTUSBReadMACRegister(PHY_CSR10, (unsigned short*)&PhyCsr10);
 		if (!(PhyCsr10.field.Busy))
 			break;
-		i++;
+		++i;
 	}
 	while (i < RETRY_LIMIT);
     
@@ -590,7 +590,7 @@ void	RalinkJack::NICReadEEPROMParameters()
 	// Value from 1 - 0x7f. Default value is 24.
     char ChannelTxPower[14];
 	RTUSBReadEEPROM(EEPROM_TX_PWR_OFFSET, (unsigned char *)ChannelTxPower, 2 * NUM_EEPROM_TX_PARMS);
-	for (i = 0; i < 2 * NUM_EEPROM_TX_PARMS; i++)
+	for (i = 0; i < 2 * NUM_EEPROM_TX_PARMS; ++i)
 	{
         
 		if (ChannelTxPower[i] > 31)
@@ -602,7 +602,7 @@ void	RalinkJack::NICReadEEPROMParameters()
     
 	// Read Tx TSSI reference value, OK to reuse Power data structure
 	RTUSBReadEEPROM(EEPROM_TSSI_REF_OFFSET, PortCfg.ChannelTssiRef, 2 * NUM_EEPROM_TX_PARMS);
-	for (i = 0; i < 2 * NUM_EEPROM_TX_PARMS; i++)
+	for (i = 0; i < 2 * NUM_EEPROM_TX_PARMS; ++i)
 	{
 		if (PortCfg.ChannelTssiRef[i] == 0xff)
 			PortCfg.bAutoTxAgc = FALSE;					
@@ -692,7 +692,7 @@ void RalinkJack::NICInitAsicFromEEPROM()
 	DBNSLog(@"--> NICInitAsicFromEEPROM\n");
     
 	//Initialize BBP registers.
-	for(i = 3; i < NUM_EEPROM_BBP_PARMS; i++)
+	for(i = 3; i < NUM_EEPROM_BBP_PARMS; ++i)
 	{
 		value = EEPROMDefaultValue[i];
 		
@@ -709,7 +709,7 @@ void RalinkJack::NICInitAsicFromEEPROM()
 					RTUSBReadMACRegister(PHY_CSR8, &temp);
 					if (!(temp & BUSY))
 						break;
-					j++;
+					++j;
 				}
 				while (j < RETRY_LIMIT);
 				
@@ -895,7 +895,7 @@ bool RalinkJack::setChannel(UInt16 channel){
 	switch (RfType)
 	{
 		case RFIC_2522:
-			for (index = 0; index < NUM_OF_2522_CHNL; index++)
+			for (index = 0; index < NUM_OF_2522_CHNL; ++index)
 			{
 				if (channel == RF2522RegTable[index].Channel)
 				{
@@ -909,7 +909,7 @@ bool RalinkJack::setChannel(UInt16 channel){
 			break;
             
 		case RFIC_2523:
-			for (index = 0; index < NUM_OF_2523_CHNL; index++)
+			for (index = 0; index < NUM_OF_2523_CHNL; ++index)
 			{
 				if (channel == RF2523RegTable[index].Channel)
 				{
@@ -929,7 +929,7 @@ bool RalinkJack::setChannel(UInt16 channel){
 			break;
             
 		case RFIC_2524:
-			for (index = 0; index < NUM_OF_2524_CHNL; index++)
+			for (index = 0; index < NUM_OF_2524_CHNL; ++index)
 			{
 				if (channel == RF2524RegTable[index].Channel)
 				{
@@ -949,7 +949,7 @@ bool RalinkJack::setChannel(UInt16 channel){
 			break;
 			
 		case RFIC_2525:
-			for (index = 0; index < NUM_OF_2525_CHNL; index++)
+			for (index = 0; index < NUM_OF_2525_CHNL; ++index)
 			{
 				if (channel == RF2525RegTable[index].Channel)
 				{
@@ -973,7 +973,7 @@ bool RalinkJack::setChannel(UInt16 channel){
 			break;
 			
 		case RFIC_2525E:
-			for (index = 0; index < NUM_OF_2525E_CHNL; index++)
+			for (index = 0; index < NUM_OF_2525E_CHNL; ++index)
 			{
 				if (channel == RF2525eRegTable[index].Channel)
 				{
@@ -995,7 +995,7 @@ bool RalinkJack::setChannel(UInt16 channel){
 			break;
 			
 		case RFIC_5222:
-			for (index = 0; index < NUM_OF_5222_CHNL; index++)
+			for (index = 0; index < NUM_OF_5222_CHNL; ++index)
 			{
 				if (channel == RF5222RegTable[index].Channel)
 				{
@@ -1062,7 +1062,8 @@ bool RalinkJack::sendKFrame(KFrame *frame) {
 void    RalinkJack::RTMPDescriptorEndianChange(unsigned char *  pData, unsigned long DescriptorType) {
     int size = (DescriptorType == TYPE_TXD) ? TXD_SIZE : RXD_SIZE;
     int i;
-    for (i=1; i<size/4; i++) {
+	int _size = size/4;
+    for (i=1; i<_size; ++i) {
         /*
          * Handle IV and EIV with little endian
          */

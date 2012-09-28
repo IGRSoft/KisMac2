@@ -191,7 +191,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
         }
             
         [menuItem setTarget:self];
-        i++;
+        ++i;
     }
     colsEnumerator = [colsToRemove objectEnumerator];
     while ((tableColumn = [colsEnumerator nextObject]))
@@ -455,7 +455,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
         case 99: //BSSID selector
             if (sscanf([[item identKey] UTF8String], "%2X%2X%2X%2X%2X%2X", &tmpID[0], &tmpID[1], &tmpID[2], &tmpID[3], &tmpID[4], &tmpID[5]) !=6 ) 
                 DBNSLog(@"Error could not decode ID %@!", [item identKey]);
-            for (i=0; i<6; i++) ID[i] = tmpID[i];
+            for (i=0; i<6; ++i) ID[i] = tmpID[i];
             
             [self showDetailsFor:[_container netForKey:ID]];
             break;
@@ -567,7 +567,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     int ndx;
 	[_container setFilterType:[sender title]];
     NSMenu * searchMenu = [sender menu];
-    for (ndx=0; ndx < [searchMenu numberOfItems]; ndx++) {
+    for (ndx=0; ndx < [searchMenu numberOfItems]; ++ndx) {
         [[searchMenu itemAtIndex:ndx] setState:0];
     }
     //[searchMenu release];

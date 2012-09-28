@@ -45,7 +45,7 @@ static int KismetInstances = 0;
     self = [super init];
     if (!self)  return nil;
     
-    KismetInstances++;
+    ++KismetInstances;
 
     return self;
 }
@@ -177,7 +177,7 @@ static int KismetInstances = 0;
 	netrcvd = @(netbuf);
 	rcvd2 = [netrcvd componentsSeparatedByString:@"\n"]; // split packet into lines
 	int arrayCount = [rcvd2 count];
-	for (i = 0; i < arrayCount; i++) { // iterate through each line - 1 line = 1 network
+	for (i = 0; i < arrayCount; ++i) { // iterate through each line - 1 line = 1 network
 		@try {
 				netrcvd = rcvd2[i]; // put the current object into netrcvd
 				rcvd = [netrcvd componentsSeparatedByString:@"\x01"]; // strip the SSID out
@@ -185,7 +185,7 @@ static int KismetInstances = 0;
 				if ([rcvd3[0] isEqualToString:@"*NETWORK:"]) { // if this is a line specifying a new network
 					bssidar = [rcvd3[1] componentsSeparatedByString:@":"]; // get the BSSID
 					
-					for (j=0; j<6; j++) {
+					for (j=0; j<6; ++i) {
 						sscanf([bssidar[j] UTF8String], "%x", &bssidbyte); // convert it from ascii 12:34:56 into raw binary
 						bssidstring[j] = bssidbyte;
 					}

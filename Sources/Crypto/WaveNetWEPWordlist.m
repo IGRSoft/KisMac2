@@ -57,7 +57,7 @@
 		if (!fptr) RET;
 		
 		//select the right increment function for each character set
-		for (counter = 0; counter < 256; counter++)
+		for (counter = 0; counter < 256; ++counter)
 			skeletonStateArray[counter] = counter;
 		
 		words = 0;
@@ -69,13 +69,13 @@
 			wrd[i] = 0;
 			if (wrd[i - 1]=='\r') wrd[--i] = 0;
 			
-			words++;
+			++words;
 			
 			//Null terminate
 			wrd[i-1] = 0;
 			WirelessEncrypt((__bridge CFStringRef)@(wrd),(WirelessKey*)(key+3),0);
 			
-			for(i=0;i<[_packetsLog count];i++) {
+			for(i=0;i<[_packetsLog count];++i) {
 				if (!isInit) {
 					data = [_packetsLog[i] bytes];
 					length=[(NSData*)_packetsLog[i] length];
@@ -88,7 +88,7 @@
 				memcpy(currentStateArray, skeletonStateArray, 256);
 				y = z = 0;
 				
-				for (counter = 0; counter < 256; counter++) {
+				for (counter = 0; counter < 256; ++counter) {
 					z = (key[y] + currentStateArray[counter] + z);
 					
 					tmp = currentStateArray[counter];
@@ -101,8 +101,8 @@
 				foundCRC = 0xFFFFFFFF;
 				y = z = 0;
 				
-				for (counter = 4; counter < length; counter++) {
-					y++;
+				for (counter = 4; counter < length; ++counter) {
+					++y;
 					z = currentStateArray[y] + z;
 					
 					tmp = currentStateArray[y];
@@ -124,7 +124,7 @@
 			
 			if (i >= 8) {
 				_password=[NSMutableString stringWithFormat:@"%.2X", currentGuess[3]];
-				for (i=4;i<(8);i++)
+				for (i=4;i<(8);++i)
 					[(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", currentGuess[i]]];
 				fclose(fptr);
 				DBNSLog(@"Cracking was successful. Password is <%s>", wrd);
@@ -161,7 +161,7 @@
 		if (!fptr) RET;
 		
 		//select the right increment function for each character set
-		for (counter = 0; counter < 256; counter++)
+		for (counter = 0; counter < 256; ++counter)
 			skeletonStateArray[counter] = counter;
 		
 		words = 0;
@@ -173,13 +173,13 @@
 			wrd[i] = 0;
 			if (wrd[i - 1]=='\r') wrd[--i] = 0;
 			
-			words++;
+			++words;
 			
 			//NULL terminate
 			wrd[i-1] = 0;
 			WirelessEncrypt((__bridge CFStringRef)@(wrd),(WirelessKey*)(key+3),1);
 			
-			for(i=0; i<[_packetsLog count]; i++) {
+			for(i=0; i<[_packetsLog count]; ++i) {
 				if (!isInit) {
 					data = [_packetsLog[i] bytes];
 					length=[(NSData*)_packetsLog[i] length];
@@ -192,7 +192,7 @@
 				memcpy(currentStateArray, skeletonStateArray, 256);
 				y = z = 0;
 				
-				for (counter = 0; counter < 256; counter++) {
+				for (counter = 0; counter < 256; ++counter) {
 					z = (key[y] + currentStateArray[counter] + z);
 					
 					tmp = currentStateArray[counter];
@@ -205,8 +205,8 @@
 				foundCRC = 0xFFFFFFFF;
 				y = z = 0;
 				
-				for (counter = 4; counter < length; counter++) {
-					y++;
+				for (counter = 4; counter < length; ++counter) {
+					++y;
 					z = currentStateArray[y] + z;
 					
 					tmp = currentStateArray[y];
@@ -228,7 +228,7 @@
 			
 			if (i >= 8) {
 				_password=[NSMutableString stringWithFormat:@"%.2X", currentGuess[3]];
-				for (i=4;i<(16);i++)
+				for (i=4;i<(16);++i)
 					[(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", currentGuess[i]]];
 				fclose(fptr);
 				DBNSLog(@"Cracking was successful. Password is <%s>", wrd);
@@ -265,7 +265,7 @@
 		if (!fptr) RET;
 		
 		//select the right increment function for each character set
-		for (counter = 0; counter < 256; counter++)
+		for (counter = 0; counter < 256; ++counter)
 			skeletonStateArray[counter] = counter;
 		
 		words = 0;
@@ -277,11 +277,11 @@
 			wrd[i--] = 0;
 			if (wrd[i]=='\r') wrd[i] = 0;
 			
-			words++;
+			++words;
 			
 			WirelessCryptMD5(wrd, key+3);
 			
-			for(i=0; i<[_packetsLog count]; i++) {
+			for(i=0; i<[_packetsLog count]; ++i) {
 				if (!isInit) {
 					data = [_packetsLog[i] bytes];
 					length=[(NSData*)_packetsLog[i] length];
@@ -294,7 +294,7 @@
 				memcpy(currentStateArray, skeletonStateArray, 256);
 				y = z = 0;
 				
-				for (counter = 0; counter < 256; counter++) {
+				for (counter = 0; counter < 256; ++counter) {
 					z = (key[y] + currentStateArray[counter] + z);
 					
 					tmp = currentStateArray[counter];
@@ -307,8 +307,8 @@
 				foundCRC = 0xFFFFFFFF;
 				y = z = 0;
 				
-				for (counter = 4; counter < length; counter++) {
-					y++;
+				for (counter = 4; counter < length; ++counter) {
+					++y;
 					z = currentStateArray[y] + z;
 					
 					tmp = currentStateArray[y];
@@ -330,7 +330,7 @@
 			
 			if (i >= 8) {
 				_password=[NSMutableString stringWithFormat:@"%.2X", currentGuess[3]];
-				for (i=4;i<(16);i++)
+				for (i=4;i<(16);++i)
 					[(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", currentGuess[i]]];
 				fclose(fptr);
 				DBNSLog(@"Cracking was successful. Password is <%s>", wrd);

@@ -305,7 +305,7 @@ void eeprom_93cx6_multiread(struct eeprom_93cx6 *eeprom, const UInt8 word, UInt1
 	unsigned int i;
 	UInt16 tmp;
     
-	for (i = 0; i < words; i++) {
+	for (i = 0; i < words; ++i) {
 		tmp = 0;
 		eeprom_93cx6_read(eeprom, word + i, &tmp);
 //		DBNSLog(@"%s %.4x %.4x", __func__, word+i, CFSwapInt16HostToLittle(tmp));
@@ -482,7 +482,7 @@ static void rtl8225_rf_set_tx_power(struct rtl8187_priv *priv, int channel) {
 	else
 		tmp = &rtl8225_tx_power_cck[(cck_power % 6) * 8];
     
-	for (i = 0; i < 8; i++)
+	for (i = 0; i < 8; ++i)
 		rtl8225_write_phy_cck(priv, 0x44 + i, *tmp++);
     
 	usleep(1000); // FIXME: optional?
@@ -530,7 +530,7 @@ static void rtl8225z2_rf_set_tx_power(struct rtl8187_priv *priv, int channel) {
 	else
 		tmp = rtl8225z2_tx_power_cck;
     
-	for (i = 0; i < 8; i++)
+	for (i = 0; i < 8; ++i)
 		rtl8225_write_phy_cck(priv, 0x44 + i, *tmp++);
     
 	rtl818x_iowrite8(priv, RTL818X_ADDR_TX_GAIN_CCK, rtl8225z2_tx_gain_cck_ofdm[cck_power]);
@@ -751,7 +751,7 @@ void rtl8225_rf_init(struct rtl8187_priv *priv) {
     
 	rtl8225_write(priv, 0x0, 0x127);
     
-	for (i = 0; i < ARRAY_SIZE(rtl8225bcd_rxgain); i++) {
+	for (i = 0; i < ARRAY_SIZE(rtl8225bcd_rxgain); ++i) {
 		rtl8225_write(priv, 0x1, i + 1);
 		rtl8225_write(priv, 0x2, rtl8225bcd_rxgain[i]);
 	}
@@ -759,7 +759,7 @@ void rtl8225_rf_init(struct rtl8187_priv *priv) {
 	rtl8225_write(priv, 0x0, 0x027);
 	rtl8225_write(priv, 0x0, 0x22F);
     
-	for (i = 0; i < ARRAY_SIZE(rtl8225_agc); i++) {
+	for (i = 0; i < ARRAY_SIZE(rtl8225_agc); ++i) {
 		rtl8225_write_phy_ofdm(priv, 0xB, rtl8225_agc[i]);
 		usleep(1000);
 		rtl8225_write_phy_ofdm(priv, 0xA, 0x80 + i);
@@ -881,7 +881,7 @@ void rtl8225z2_rf_init(struct rtl8187_priv *priv) {
     
 	rtl8225_write(priv, 0x0, 0x1B7);
     
-	for (i = 0; i < ARRAY_SIZE(rtl8225z2_rxgain); i++) {
+	for (i = 0; i < ARRAY_SIZE(rtl8225z2_rxgain); ++i) {
 		rtl8225_write(priv, 0x1, i + 1);
 		rtl8225_write(priv, 0x2, rtl8225z2_rxgain[i]);
 	}
@@ -908,7 +908,7 @@ void rtl8225z2_rf_init(struct rtl8187_priv *priv) {
     
 	rtl8225_write(priv, 0x0, 0x2BF);
     
-	for (i = 0; i < ARRAY_SIZE(rtl8225_agc); i++) {
+	for (i = 0; i < ARRAY_SIZE(rtl8225_agc); ++i) {
 		rtl8225_write_phy_ofdm(priv, 0xB, rtl8225_agc[i]);
 		usleep(1000);
 		rtl8225_write_phy_ofdm(priv, 0xA, 0x80 + i);
@@ -1339,19 +1339,19 @@ int  RTL8187Jack::rtl8187_probe(void) {
 //	}
     
 	channel = priv->channels;
-	for (i = 0; i < 3; i++) {
+	for (i = 0; i < 3; ++i) {
 		eeprom_93cx6_read(&eeprom, RTL8187_EEPROM_TXPWR_CHAN_1 + i,
                           &txpwr);
 		(*channel++).val = txpwr & 0xFF;
 		(*channel++).val = txpwr >> 8;
 	}
-	for (i = 0; i < 2; i++) {
+	for (i = 0; i < 2; ++i) {
 		eeprom_93cx6_read(&eeprom, RTL8187_EEPROM_TXPWR_CHAN_4 + i,
                           &txpwr);
 		(*channel++).val = txpwr & 0xFF;
 		(*channel++).val = txpwr >> 8;
 	}
-	for (i = 0; i < 2; i++) {
+	for (i = 0; i < 2; ++i) {
 		eeprom_93cx6_read(&eeprom, RTL8187_EEPROM_TXPWR_CHAN_6 + i,
                           &txpwr);
 		(*channel++).val = txpwr & 0xFF;
@@ -1542,7 +1542,7 @@ void RTL8187Jack::dumpFrame(UInt8 *data, UInt16 size) {
     int i,j;
 	for (i=0;i<size;i=i+8) {
         fprintf(stderr, "0x%.4x ", i);
-        for (j=0;j<8;j++) {
+        for (j=0;j<8;++j) {
             if (idx < size)
                 fprintf(stderr, "%.2x ", data[idx]);
             else
