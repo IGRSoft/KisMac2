@@ -170,13 +170,17 @@
 				g =  (i >> 8 ) & 0xFF;
 				b =  (i      ) & 0xFF;
 				
-				[[NSColor colorWithCalibratedRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:a/255.0] set];
+				[[NSColor colorWithCalibratedRed:r/255.0
+										   green:g/255.0
+											blue:b/255.0
+										   alpha:a/255.0] set];
 				rec.origin=NSMakePoint(x * rec.size.width, y * rec.size.height);
 				[NSBezierPath fillRect:rec];
 			}
 	NS_HANDLER
 		//if an error occurs make this invalid...
-		[[NSNotificationCenter defaultCenter] postNotificationName:KisMACAdvNetViewInvalid object:self];
+		[[NSNotificationCenter defaultCenter] postNotificationName:KisMACAdvNetViewInvalid
+															object:self];
 	NS_ENDHANDLER
 	[_mapImage unlockFocus];
 	[self setNeedsDisplay:YES];
@@ -198,13 +202,17 @@ exitNoCleanUp:
 - (void)showAreaNet:(WaveNet*)net {
 	NSParameterAssert(net);
 	_mapImage = [_orgImage copy];
-    [NSThread detachNewThreadSelector:@selector(makeCache:) toTarget:self withObject:@[net]];
+    [NSThread detachNewThreadSelector:@selector(makeCache:)
+							 toTarget:self
+						   withObject:@[net]];
 }
 
 - (void)showAreaNets:(NSArray*)nets {
 	NSParameterAssert(nets);
 	_mapImage = [_orgImage copy];
-    [NSThread detachNewThreadSelector:@selector(makeCache:) toTarget:self withObject:nets];
+    [NSThread detachNewThreadSelector:@selector(makeCache:)
+							 toTarget:self
+						   withObject:nets];
 }
 
 @end

@@ -115,7 +115,7 @@
 					[_container addAppleAPIData:network];
 				}
 			}
-			[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:interval]];
+			//[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:interval]];
 		}
 	}
 }
@@ -215,7 +215,6 @@
                     {	
                         continue;
                     }
-
                                         
                     if ((geiger!=Nil) && ((_packets % _geigerInt)==0)) 
                     {
@@ -255,7 +254,6 @@
 
 - (void)doScan:(WaveDriver*)w {
     @autoreleasepool {
-        [NSThread setThreadPriority:1.0];	//we are important
         
         if ([w type] == passiveDriver) { //for PseudoJack this is done by the timer
             [self doPassiveScan:w];
@@ -269,30 +267,38 @@
 }
 
 - (bool)startScanning {
-    WaveDriver *w;
     //NSArray *a;
-    unsigned int i;
     
     if (!_scanning) {			//we are already scanning
         _scanning=YES;
-        //a = [WaveHelper getWaveDrivers];
-		_drivers = [WaveHelper getWaveDrivers];
-        //[WaveHelper secureReplace:&_drivers withObject:a];
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+			//a = [WaveHelper getWaveDrivers];
+			_drivers = [WaveHelper getWaveDrivers];
+			//[WaveHelper secureReplace:&_drivers withObject:a];
 
-        for (i = 0; i < [_drivers count]; ++i)
-        {
-            w = _drivers[i];
-            if ([w type] == passiveDriver) 
-            { //for PseudoJack this is done by the timer
-                [w startCapture:0];
-            }
-            
-            [NSThread detachNewThreadSelector:@selector(doScan:) toTarget:self withObject:w];
-        }
-        
-        _scanTimer = [NSTimer scheduledTimerWithTimeInterval:_scanInterval target:self selector:@selector(performScan:) userInfo:Nil repeats:TRUE];
+			WaveDriver *w;
+			for (int i = 0; i < [_drivers count]; ++i)
+			{
+				w = _drivers[i];
+				if ([w type] == passiveDriver) 
+				{ //for PseudoJack this is done by the timer
+					[w startCapture:0];
+				}
+					[self doScan:w];
+				}
+			}
+        );
+        _scanTimer = [NSTimer scheduledTimerWithTimeInterval:_scanInterval
+													  target:self
+													selector:@selector(performScan:)
+													userInfo:Nil
+													 repeats:TRUE];
         if (_hopTimer == Nil)
-            _hopTimer=[NSTimer scheduledTimerWithTimeInterval:aFreq target:self selector:@selector(doChannelHop:) userInfo:Nil repeats:TRUE];
+            _hopTimer=[NSTimer scheduledTimerWithTimeInterval:aFreq
+													   target:self
+													 selector:@selector(doChannelHop:)
+													 userInfo:Nil
+													  repeats:TRUE];
     }
     
     return YES;

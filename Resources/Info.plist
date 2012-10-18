@@ -50,7 +50,7 @@
 	<key>CFBundleIconFile</key>
 	<string>devil</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.kismac-ng.kismac</string>
+	<string>com.igrsoft.kismac</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
