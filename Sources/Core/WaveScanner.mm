@@ -133,7 +133,6 @@
 
     NSDictionary *d;
     
-    id _wavePlugin;
     WavePcapDump *_wavePcapDumper = nil;
     WavePluginPacketResponse response;
     
@@ -143,23 +142,23 @@
     // Initialize WavePlugins
     _wavePlugins = [[NSMutableDictionary alloc] init];
     
-    _wavePlugin = [[WavePluginInjectionProbe alloc] initWithDriver:wd];
-    [_wavePlugins setValue:_wavePlugin forKey:@"InjectionProbe"];
+    [_wavePlugins setValue:[[WavePluginInjectionProbe alloc] initWithDriver:wd]
+					forKey:@"InjectionProbe"];
 
-    _wavePlugin = [[WavePluginDeauthentication alloc] initWithDriver:wd andContainer:_container];
-    [_wavePlugins setValue:_wavePlugin forKey:@"Deauthentication"];
+    [_wavePlugins setValue:[[WavePluginDeauthentication alloc] initWithDriver:wd andContainer:_container]
+					forKey:@"Deauthentication"];
  
-    _wavePlugin = [[WavePluginInjecting alloc] initWithDriver:wd];
-    [_wavePlugins setValue:_wavePlugin forKey:@"Injecting"];
+    [_wavePlugins setValue:[[WavePluginInjecting alloc] initWithDriver:wd]
+					forKey:@"Injecting"];
     
-    _wavePlugin = [[WavePluginAuthenticationFlood alloc] initWithDriver:wd];
-    [_wavePlugins setValue:_wavePlugin forKey:@"AuthenticationFlood"];
+    [_wavePlugins setValue:[[WavePluginAuthenticationFlood alloc] initWithDriver:wd]
+					forKey:@"AuthenticationFlood"];
     
-    _wavePlugin = [[WavePluginBeaconFlood alloc] initWithDriver:wd];
-    [_wavePlugins setValue:_wavePlugin  forKey:@"BeaconFlood"];
+    [_wavePlugins setValue:[[WavePluginBeaconFlood alloc] initWithDriver:wd]
+					forKey:@"BeaconFlood"];
     
-    _wavePlugin = [[WavePluginMidi alloc] initWithDriver: wd];
-    [_wavePlugins setValue:_wavePlugin  forKey:@"MidiTrack"];
+    [_wavePlugins setValue:[[WavePluginMidi alloc] initWithDriver: wd]
+					forKey:@"MidiTrack"];
     
     //tries to open the dump file
     if (dumpFilter) {
@@ -199,6 +198,7 @@
                     // Send packet to ALL plugins
                     NSEnumerator *plugins = [_wavePlugins objectEnumerator];
                     response = WavePluginPacketResponseContinue;
+					WavePlugin *_wavePlugin = nil;
                     while ((_wavePlugin = [plugins nextObject]) && (response & WavePluginPacketResponseContinue)) {
 						response = [_wavePlugin gotPacket:w fromDriver:wd];
 						// Checks if packet should be forwarded to other plugins
