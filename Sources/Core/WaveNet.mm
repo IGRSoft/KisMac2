@@ -1314,6 +1314,22 @@ NSInteger lengthSort(id string1, id string2, void *context)
 		return ssid;
 	}
 }
+
+- (bool)isCorrectSSID {
+	NSString *ssid = [self SSID];
+	if (ssid && [ssid length]
+		&& ![ssid isEqualToString:NSLocalizedString(@"<tunnel>", "the ssid for tunnels")]
+		&& ![ssid isEqualToString:NSLocalizedString(@"<lucent tunnel>", "ssid for lucent tunnels")]
+		&& ![ssid isEqualToString:NSLocalizedString(@"<any ssid>", "the any ssid for probe nets")]
+		&& ![ssid isEqualToString:@"<no ssid>"]
+		)
+	{
+		return true;
+	}
+	
+	return false;
+}
+
 - (NSString *)rawSSID {
     return [_SSID isEqualToString:@""] ? nil : _SSID;
 }

@@ -390,7 +390,11 @@ static u_int ieee80211_mhz2ieee(u_int freq, u_int flags) {
     //DBNSLog(@"DLT %d", DLTType);
     
 	while(YES)
-    {      
+    {
+		if (!_device) {
+			continue;
+		}
+		
 		data = pcap_next(_device, &header);
         
         if(data && dumper)

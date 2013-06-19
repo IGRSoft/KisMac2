@@ -93,7 +93,9 @@ struct pointCoords {
 				[a addObject:vp];
 				++pL;
 			}
-			[_trace insertObject:a atIndex:0];
+			if (a) {
+				[_trace insertObject:a atIndex:0];
+			}
 		}
 	}
     return YES;

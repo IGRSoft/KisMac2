@@ -153,6 +153,7 @@ struct graphStruct {
 - (NSString *)ID;
 - (NSString *)BSSID;
 - (NSString *)SSID;
+- (bool)isCorrectSSID;
 - (NSArray *)SSIDs;
 - (NSString *)rawSSID;
 - (NSString *)date;

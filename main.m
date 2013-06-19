@@ -25,9 +25,15 @@ int main(int argc, const char *argv[])
     //setup our own logfile but save the old one for crash reporter
     NSString * path = [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Logs/KisMAC.log"];
     NSString * oldLogPath = [NSString stringWithFormat:@"%@.%u", path, 1];
-    NSError * error;
+	
+	NSFileManager *fm = [NSFileManager defaultManager];
+	NSError * error = nil;
+	
+	if ([fm fileExistsAtPath:oldLogPath]) {
+		[fm removeItemAtPath:oldLogPath error:&error];
+	}
     
-    [[NSFileManager defaultManager] moveItemAtPath:path toPath: oldLogPath error: &error];
+    [fm moveItemAtPath:path toPath: oldLogPath error: &error];
     
     freopen([path UTF8String], "w+", stderr);
     

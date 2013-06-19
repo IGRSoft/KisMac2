@@ -731,9 +731,9 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
     
     @synchronized(_idList[entry].net) {
 		[_idList[entry].net parsePacket:p withSound:live];		//add the packet to the network
+		_idList[entry].changed = YES;
     }
 	
-	_idList[entry].changed = YES;
     return YES;
 }
 
@@ -808,20 +808,28 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
     
     a = [NSMutableArray array];
     for (i=0; i<_sortedCount; ++i)
-        [a addObject:_idList[_sortedList[i]].net];
-    
+	{
+		WaveNet *w = _idList[_sortedList[i]].net;
+		if (w) {
+			[a addObject:w];
+		}
+    }
     return a;
 }
 
 - (void) scanUpdate:(int)graphLength {
     unsigned int i;
-    
-    for(i = 0 ; i < _netCount ; ++i) {
-        if ([_idList[i].net noteFinishedSweep:graphLength]) {
-            //make sure this is going to be updated
-            _idList[i].changed = YES;
-        }
-    }
+
+	for(i = 0 ; i < _netCount ; ++i) {
+		WaveNet *w = _idList[i].net;
+		@synchronized(w)
+		{
+			if ([w noteFinishedSweep:graphLength]) {
+				//make sure this is going to be updated
+				_idList[i].changed = YES;
+			}
+		}
+	}
 }
 
 - (void) ackChanges {
@@ -836,7 +844,12 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
     else nxt = lastRow + 1;
     
     while (nxt < _sortedCount) {
-        if (_idList[_sortedList[nxt]].changed) return nxt;
+        if (_idList[_sortedList[nxt]].changed)
+		{
+			if ([_idList[_sortedList[nxt]].net isCorrectSSID]) {
+				return nxt;
+			}
+		}
         ++nxt;
     }
 
@@ -873,6 +886,10 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 
 - (void) clearEntry:(WaveNet*)net
 {
+	if (!net) {
+		return;
+	}
+	
     unsigned char *ID = [net rawID];
     unsigned int i, l, entry = LOOKUPSIZE;
 	WaveNet* n;
@@ -930,8 +947,21 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 
     //enable capture engine again
     _dropAll = NO;
+}
+
+- (void) clearAllBrokenEntries
+{
+	int i, oldcount;
+    WaveNet *e;
+    
+    oldcount = _netCount;
 	
-    return;
+    for (i=0; i<oldcount; ++i) {
+        e = _idList[i].net;
+        if (![e isCorrectSSID]) {
+			[self clearEntry:e];
+		}
+    }
 }
 
 -(void) dealloc {

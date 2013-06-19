@@ -116,7 +116,9 @@
     while ((sdev = IOIteratorNext (serialIterator)))
     {
         NSString *tty = [self getRegistryString: sdev name:kIODialinDeviceKey];
-        [a addObject: tty];
+		if (tty) {
+			[a addObject: tty];
+		}
     }
     IOObjectRelease (serialIterator);
     

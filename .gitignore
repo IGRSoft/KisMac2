@@ -13,3 +13,5 @@ build/*
 xcuserdata
 profile
 *.moved-aside
+
+Resources/Generic/vendor.db

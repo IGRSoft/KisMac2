@@ -47,14 +47,16 @@
 - (bool)setURL:(NSURL*) url {
     NSAssert(!_inProgress, @"Stream already working");
     
-    [WaveHelper secureReplace:&_url withObject:url];
+    //[WaveHelper secureReplace:&_url withObject:url];
+	_url = url;
     return YES;
 }
 
 - (bool)setPostVariables:(NSDictionary*)postVariables {
     NSAssert(!_inProgress, @"Stream already working");
     
-    [WaveHelper secureReplace:&_postVariables withObject:postVariables];
+    //[WaveHelper secureReplace:&_postVariables withObject:postVariables];
+	_postVariables = postVariables;
     return YES;
 }
 
@@ -102,8 +104,8 @@
             "Host: %@\r\n"
             "Connection: close\r\n"
             "Content-Type: application/x-www-form-urlencoded\r\n"
-            "Content-Length: %d\r\n\r\n%@", 
-                [_url path], [_url host], [topost length], topost];
+            "Content-Length: %ld\r\n\r\n%@", 
+                [_url path], [_url host], (unsigned long)[topost length], topost];
 
 
     sockd = socket(AF_INET, SOCK_STREAM, 0);
@@ -181,7 +183,7 @@ error:
         OK, NULL, NULL, [WaveHelper mainWindow], self, NULL, NULL, NULL,
         [NSString stringWithFormat:@"%@: %@", 
         NSLocalizedString(@"The transmittion of the report failed because of the following error", "Dialog text for Crashreporter"), 
-        errstr]);
+        errstr], nil);
 
     _errorCode = -1;
     _inProgress = NO;
@@ -191,8 +193,6 @@ error:
 #pragma mark -
 
 - (void)dealloc {
-    [WaveHelper secureRelease:&_url];
-    [WaveHelper secureRelease:&_postVariables];
-	[super dealloc];
+   
 }
 @end

@@ -254,6 +254,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 	[queue addOperationWithBlock:^{
 		int row;
 		__block int i;
+		__block WaveNet *net = nil;
 		
 		if ([_container count] != [_networkTable numberOfRows])
 			_complete = YES;
@@ -261,7 +262,9 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 		[_channelProg setChannel:[[WaveHelper driverWithName:_whichDriver] getChannel]];
 		
 		if (_visibleTab == tabTraffic) {
-			[_trafficController updateGraph];
+			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+				[_trafficController updateGraph];
+			}];
 		} else if (_visibleTab == tabNetworks) {
 			if (_lastSorted)
 				[_container sortWithShakerByColumn:_lastSorted order:_ascending];
@@ -272,30 +275,36 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 				}];
 				if (_detailsPaneVisibile)
 					[aInfoController reloadData];
-				if ([_container netAtIndex:_selectedRow] != _curNet) { //we lost our selected network
+				net = [_container netAtIndex:_selectedRow];
+				if ([net isCorrectSSID] && net != _curNet) { //we lost our selected network
 					for (i = [_container count]; i>=0; i--)
-						if ([_container netAtIndex:i] == _curNet)
+					{
+						net = [_container netAtIndex:i];
+						if ([net isCorrectSSID] && net == _curNet)
 						{
 							_selectedRow = i;
 							[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-								[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:i]
+								[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
 										   byExtendingSelection: NO];
 							}];
 							break;
 						}
+					}
 				}
 			}
 			else {
 				row = [_container nextChangedRow:0xFFFFFFFF];
 				while (row != 0xFFFFFFFF) {
-					if ([_container netAtIndex:row] == _curNet)
+					net = [_container netAtIndex:row];
+
+					if ([net isCorrectSSID] && net == _curNet)
 					{
 						[[NSOperationQueue mainQueue] addOperationWithBlock:^{
 							if (_detailsPaneVisibile) [aInfoController reloadData];
 						}];
 						
 						_selectedRow = row;
-						[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex: row]
+						[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
 								   byExtendingSelection: NO];
 					}
 					[_networkTable displayRect:[_networkTable rectOfRow:row]];
@@ -307,36 +316,47 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 				[[NSOperationQueue mainQueue] addOperationWithBlock:^{
 					[aInfoController reloadData];
 				}];
-				
-				if ([_container netAtIndex:_selectedRow] != _curNet) { //we lost our selected network
+				net = [_container netAtIndex:_selectedRow];
+				if ([net isCorrectSSID] && net != _curNet) { //we lost our selected network
 					for (i = [_container count]; i>=0; i--)
-						if ([_container netAtIndex:i] == _curNet)
+					{
+						net = [_container netAtIndex:i];
+						if ([net isCorrectSSID] && net == _curNet)
 						{
 							_selectedRow = i;
 							[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-								[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:i]
+								[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
 										   byExtendingSelection: NO];
 							}];
 							break;
 						}
+					}
 				}
 			} else {
 				row = [_container nextChangedRow:0xFFFFFFFF];
 				while (row != 0xFFFFFFFF) {
-					if ([_container netAtIndex:row] == _curNet)
+					net = [_container netAtIndex:row];
+					if ([net isCorrectSSID] && net == _curNet)
 					{
 						[[NSOperationQueue mainQueue] addOperationWithBlock:^{
 							[aInfoController reloadData];
 						}];
 						
 						_selectedRow = row;
-						[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex: row]
-								   byExtendingSelection: NO];
+						[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+							[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
+									   byExtendingSelection: NO];
+						}];
 					}
 					row = [_container nextChangedRow:row];
 				}
 			}
 		}
+		
+		[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+			[_container clearAllBrokenEntries];
+		}];
+		
 	}];
 }
 

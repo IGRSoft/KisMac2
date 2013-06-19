@@ -673,6 +673,20 @@ bool is8021xPacket(const UInt8* fileData) {
 - (NSArray*)SSIDs {
     return _SSIDs;
 }
+- (bool)isCorrectSSID {
+	NSString *ssid = [self SSID];
+	if (ssid && [ssid length]
+		&& ![ssid isEqualToString:NSLocalizedString(@"<tunnel>", "the ssid for tunnels")]
+		&& ![ssid isEqualToString:NSLocalizedString(@"<lucent tunnel>", "ssid for lucent tunnels")]
+		&& ![ssid isEqualToString:NSLocalizedString(@"<any ssid>", "the any ssid for probe nets")]
+		&& ![ssid isEqualToString:@"<no ssid>"]
+		)
+	{
+		return true;
+	}
+	
+	return false;
+}
 - (UInt8)getRates:(UInt8*)rates {
 	memcpy(rates, _rates, _rateCount);
 	return _rateCount;

@@ -645,7 +645,13 @@
          if ([_showNetInMap state] == NSOnState) [self showCurNetArea:_showNetInMap];
     
         a = [[NSMutableArray alloc] init];
-        for (i=0; i<[_container count]; ++i) [a addObject:[_container netAtIndex:i]];
+        for (i=0; i<[_container count]; ++i)
+		{
+			WaveNet *w = [_container netAtIndex:i];
+			if (w) {
+				[a addObject:w];
+			}
+		}
         [_mappingView showAreaNets:[NSArray arrayWithArray:a]];
         
     } else {

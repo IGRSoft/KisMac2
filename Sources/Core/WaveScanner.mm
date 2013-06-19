@@ -207,7 +207,7 @@
                     if (!(response & WavePluginPacketResponseContinue))
                         continue;
                     
-					if ([w SSID] == nil || [[w SSID] isEqualToString:@""] || [[w SSID] isEqualToString:@"<no ssid>"] ) {
+					if ([w SSID] == nil || ![w isCorrectSSID] ) {
 						continue;
 					}
 					

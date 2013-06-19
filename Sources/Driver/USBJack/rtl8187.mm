@@ -35,7 +35,7 @@
  Supported chipsets: 93c46 & 93c66.
  */
 
-#include <eeprom_93cx6.h>
+#include "eeprom_93cx6.h"
 
 static const UInt16 rtl8225bcd_rxgain[] = {
 	0x0400, 0x0401, 0x0402, 0x0403, 0x0404, 0x0405, 0x0408, 0x0409,
@@ -352,9 +352,9 @@ UInt16 rtl818x_ioread16(struct rtl8187_priv *priv, UInt16 addr) {
 	return CFSwapInt16LittleToHost(val);
 }
 UInt32 rtl818x_ioread32(struct rtl8187_priv *priv, UInt16 addr) {
-	UInt32 val;
+	UInt32 val = 0;
     
-    IOReturn ret;
+    IOReturn ret = 0;
     IOUSBDevRequest theRequest;
     
     if(priv->_interface != NULL)

@@ -196,6 +196,7 @@
 		A57E646B1607BD3200BE1BCA /* DownloadMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64671607BD3200BE1BCA /* DownloadMapController.m */; };
 		A57E646F1607BD6700BE1BCA /* MapDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E646D1607BD6700BE1BCA /* MapDownload.m */; };
 		A57E64731607BD8C00BE1BCA /* WaveWeakContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64711607BD8C00BE1BCA /* WaveWeakContainer.m */; };
+		A585F77B1771DB7100045928 /* HTTPStream.m in Sources */ = {isa = PBXBuildFile; fileRef = A585F77A1771DB7100045928 /* HTTPStream.m */; };
 		A597210616109F45007CC31D /* driver.icns in Resources */ = {isa = PBXBuildFile; fileRef = A59720F716109F42007CC31D /* driver.icns */; };
 		A597210716109F45007CC31D /* EnergySaver.icns in Resources */ = {isa = PBXBuildFile; fileRef = A59720F816109F42007CC31D /* EnergySaver.icns */; };
 		A597210816109F45007CC31D /* filter.icns in Resources */ = {isa = PBXBuildFile; fileRef = A59720F916109F42007CC31D /* filter.icns */; };
@@ -532,6 +533,8 @@
 		A57E646D1607BD6700BE1BCA /* MapDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapDownload.m; sourceTree = "<group>"; };
 		A57E64701607BD8B00BE1BCA /* WaveWeakContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveWeakContainer.h; sourceTree = "<group>"; };
 		A57E64711607BD8C00BE1BCA /* WaveWeakContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveWeakContainer.m; sourceTree = "<group>"; };
+		A585F7791771DB7100045928 /* HTTPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPStream.h; sourceTree = "<group>"; };
+		A585F77A1771DB7100045928 /* HTTPStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPStream.m; sourceTree = "<group>"; };
 		A59720CF161072A8007CC31D /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		A59720F716109F42007CC31D /* driver.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = driver.icns; sourceTree = "<group>"; };
 		A59720F816109F42007CC31D /* EnergySaver.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = EnergySaver.icns; sourceTree = "<group>"; };
@@ -802,6 +805,8 @@
 		003533F906A5DD8500AB4577 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				A585F7791771DB7100045928 /* HTTPStream.h */,
+				A585F77A1771DB7100045928 /* HTTPStream.m */,
 				A57E646C1607BD6700BE1BCA /* MapDownload.h */,
 				A57E646D1607BD6700BE1BCA /* MapDownload.m */,
 				003533FA06A5DD8500AB4577 /* GPSController.h */,
@@ -1408,7 +1413,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$PROJECT_DIR/Resources/Generic/OUItoVendorDB.pl -d /tmp/OUI.txt $PROJECT_DIR/Resources/Generic/vendor.db";
+			shellScript = "\"$PROJECT_DIR/Resources/Generic/OUItoVendorDB.pl\" -d /tmp/OUI.txt \"$PROJECT_DIR/Resources/Generic/vendor.db\"";
 		};
 		6910302B0F9E313700C4E466 /* Create DMG */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1536,6 +1541,7 @@
 				A57E64731607BD8C00BE1BCA /* WaveWeakContainer.m in Sources */,
 				A576DDA81609FC2B007CBA80 /* md5.m in Sources */,
 				A59721421610CB39007CC31D /* md4.c in Sources */,
+				A585F77B1771DB7100045928 /* HTTPStream.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1660,8 +1666,10 @@
 		00A9158F0858D6410093943F /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "IGR Software";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1674,7 +1682,7 @@
 				GCC_PREFIX_HEADER = KisMac_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				INFOPLIST_FILE = Resources/Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
+				INSTALL_PATH = /Applications;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
@@ -1684,6 +1692,7 @@
 					"-lpcap",
 				);
 				PRODUCT_NAME = KisMac2;
+				PROVISIONING_PROFILE = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -1721,10 +1730,13 @@
 		690377A00F8B1D8F00627C6D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "IGR Software";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 					"$(SRCROOT)/Resources",
@@ -1734,7 +1746,7 @@
 				GCC_PREFIX_HEADER = KisMac_Prefix.pch;
 				GCC_UNROLL_LOOPS = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
+				INSTALL_PATH = /Applications;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
@@ -1744,6 +1756,7 @@
 					"-lpcap",
 				);
 				PRODUCT_NAME = KisMac2;
+				PROVISIONING_PROFILE = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",

@@ -118,5 +118,6 @@ typedef struct WaveNetEntry {
 
 - (void) clearAllEntries;
 - (void) clearEntry:(WaveNet*)net;
+- (void) clearAllBrokenEntries;
 
 @end

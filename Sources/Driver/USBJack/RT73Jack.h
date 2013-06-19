@@ -233,7 +233,7 @@ private:
 	char	ARssiOffset2;
     EEPROM_TXPOWER_DELTA_STRUC  TxPowerDeltaConfig;				// Compensate the Tx power BBP94 with this configurate value
 	unsigned char					RfIcType;		// RFIC_xxx
-	unsigned long					ExtraInfo;				// Extra information for displaying status
+	//unsigned long					ExtraInfo;				// Extra information for displaying status
     
 	RTMP_RF_REGS			LatchRfRegs;	// latch th latest RF programming value since RF IC doesn't support READ
     

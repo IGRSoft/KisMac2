@@ -152,6 +152,7 @@ typedef enum _leapAuthCode {
 - (NSString*)SSID;
 - (NSArray*)SSIDs;
 - (UInt8)getRates:(UInt8*)rates;
+- (bool)isCorrectSSID;
 
 - (UInt8*)rawSenderID;
 - (NSString*)stringSenderID;

@@ -27,7 +27,7 @@
 #import "../WaveDrivers/WaveDriverAirport.h"
 #import "../WaveDrivers/WaveDriver.h"
 
-#include <md5.h>
+#include "md5.h"
 #include <unistd.h>
 #import <CoreFoundation/CoreFoundation.h>
 #import <IOKit/IOKitLib.h>

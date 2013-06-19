@@ -51,7 +51,7 @@ public:
     IOReturn    _enable();
     
 private:
-        int temp;
+        //int temp;
 };
 
 

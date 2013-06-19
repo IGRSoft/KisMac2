@@ -97,7 +97,7 @@ public:
     UInt32 currentRate;
     
 private:
-    int temp;
+    //int temp;
     unsigned short EEPROMDefaultValue[NUM_EEPROM_BBP_PARMS];
     unsigned short EEPROMBBPTuningParameters[NUM_EEPROM_BBP_TUNING_PARMS];
     BBP_TUNING_PARAMETERS_STRUC			BBPTuningParameters;
