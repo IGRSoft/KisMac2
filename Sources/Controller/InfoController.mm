@@ -61,7 +61,8 @@ enum _rowIndexes {
 
 @implementation InfoController
 
-- (void)awakeFromNib {
+- (void)awakeFromNib
+{
     _clientCount = 0;
     [aShortTable setHeaderView:nil];
 	[aClientTable setDoubleAction:@selector(trackClient:)];
@@ -71,11 +72,12 @@ enum _rowIndexes {
     aDetailsPane=visible;
 }
 
-- (void)reloadData {
+- (void)reloadData
+{
     unsigned int i;
     
     if (aDetailsPane) [aShortTable displayRect:[aShortTable rectOfColumn:1]];
-    else [aTable displayRect:[aTable rectOfColumn:1]]; //[aTable reloadData];
+    else [aTable displayRect:[aTable rectOfColumn:1]];
     
     if (_lastSorted) [_n sortByColumn:_lastSorted order:_ascending];
 
@@ -113,22 +115,21 @@ enum _rowIndexes {
     else  [_commentField setStringValue:@""];
 }
 
-- (IBAction)commentChanged:(id)sender {
+- (IBAction)commentChanged:(id)sender
+{
     [_n setComment:[sender stringValue]];
-
 }
 
 #pragma mark -
 
-- (id) tableView:(NSTableView *) aTableView
-objectValueForTableColumn:(NSTableColumn *) aTableColumn
-             row:(int) rowIndex
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 { 
     int col;
     NSString *key;
     WaveClient *lWCl;
     
-    if([aTableView isEqualTo:aTable]) {
+    if ([aTableView isEqualTo:aTable])
+	{
         if ([[aTableColumn identifier] isEqualToString:@"key"]) col=1;
         else col=0;
     
@@ -223,7 +224,9 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
 		return (col) ? NSLocalizedString(@"Elevation", "GPS status string.") : [_n elevation];
         }
         return @"unknown row";
-    } else if([aTableView isEqualTo:aClientTable]) {
+    }
+	else if([aTableView isEqualTo:aClientTable])
+	{
         key = aClientKeys[rowIndex];
         lWCl = aClients[key];
         if ([[aTableColumn identifier] isEqualToString:@"client"]) return key;
@@ -234,7 +237,9 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
         else if ([[aTableColumn identifier] isEqualToString:@"received"]) return [lWCl received];
         else if ([[aTableColumn identifier] isEqualToString:@"ipa"]) return [lWCl getIPAddress];
         else return [NSString stringWithFormat: @"unknown column %@", [aTableColumn identifier]];
-    } else if([aTableView isEqualTo:aShortTable]) {
+    }
+	else if([aTableView isEqualTo:aShortTable])
+	{
         if ([[aTableColumn identifier] isEqualToString:@"key"]) col=1;
         else col=0;
     
@@ -273,8 +278,8 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
     return @"unknown table"; 
 }
 
-
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView {
+- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+{
     if([aTableView isEqualTo:aTable])
         return 29;
     else if([aTableView isEqualTo:aClientTable])
@@ -284,7 +289,8 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
    return 0;
 }
 
-- (void)tableView:(NSTableView*)tableView didClickTableColumn:(NSTableColumn *)tableColumn {
+- (void)tableView:(NSTableView*)tableView didClickTableColumn:(NSTableColumn *)tableColumn
+{
     NSString *ident = [tableColumn identifier];
     
     if(![tableView isEqualTo:aClientTable]) return;
@@ -313,15 +319,18 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
     [tableView reloadData];
 }
 
-- (BOOL)tableView:(NSTableView *)aTableView shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex {
+- (BOOL)tableView:(NSTableView *)aTableView shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+{
     if ([aTableView isEqualTo:aShortTable]) {
         if (rowIndex==12)  return YES;	//only the comment field is to be edited
     }
+	
     return NO;
 }
 
 
--(void)tableView:(NSTableView *)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex {
+- (void)tableView:(NSTableView *)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+{
     if([aTableView isEqualTo:aTable] || [aTableView isEqualTo:aShortTable]) {
         [_n setComment:anObject];	//save the comment
     }
@@ -329,7 +338,8 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
 
 #pragma mark -
 
--(void) dealloc {
+- (void) dealloc
+{
 	aClients = Nil;
 	aClientKeys = Nil;
 	_n = Nil;
@@ -338,10 +348,12 @@ objectValueForTableColumn:(NSTableColumn *) aTableColumn
 - (NSString *) theRow 
 {
     SInt32 row = [aClientTable selectedRow];
-    if (row == -1)
+    
+	if (row == -1)
     {
         return nil;
     }
+	
 	return aClientKeys[[aClientTable selectedRow]];
 }
 

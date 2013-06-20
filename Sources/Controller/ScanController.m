@@ -60,7 +60,8 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
 @implementation ScanController
 
-+ (void)initialize {
++ (void)initialize
+{
     id registrationDict = nil ;
     NSDictionary * defaultDriverDict = @{@"driverID": @"WaveDriverAirport", @"deviceName": @"Airport Card"};
 
@@ -127,10 +128,14 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     [[NSUserDefaults standardUserDefaults] registerDefaults:networkTableFields];
 }
 
--(id) init {
-    self=[super init];
-    if (self==Nil) return Nil;
-
+- (id)init
+{
+    self = [super init];
+    if (self == nil)
+	{
+		return nil;
+	}
+	
     aNetHierarchVisible = NO;
     _visibleTab = tabNetworks;
     [_window setDocumentEdited:NO];
@@ -144,7 +149,8 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     return self;
 }
 
--(void)awakeFromNib {
+- (void)awakeFromNib
+{
     static BOOL alreadyAwake = NO;
     NSUserDefaults *sets;
 
@@ -171,13 +177,14 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     
     // Custom table fields
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Network table columns"];
-    id tableColumn;
-    NSMenuItem *menuItem;
+    id tableColumn = nil;
+    NSMenuItem *menuItem = nil;
     NSMutableArray *colsToRemove = [[NSMutableArray alloc] init];
    
     NSDictionary *networkTableFieldsVisibility = [[NSUserDefaults standardUserDefaults] objectForKey:@"networkTableFieldsVisibility"];
     NSEnumerator *colsEnumerator = [[_networkTable tableColumns] objectEnumerator];
-    int i = 0;
+    
+	int i = 0;
     while ((tableColumn = [colsEnumerator nextObject])) {
         menuItem = [menu insertItemWithTitle:[[tableColumn headerCell] title]
                                       action:@selector(selectedTableContextMenuItem:)
@@ -194,6 +201,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
         [menuItem setTarget:self];
         ++i;
     }
+	
     colsEnumerator = [colsToRemove objectEnumerator];
     while ((tableColumn = [colsEnumerator nextObject]))
     {
@@ -201,7 +209,6 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     }
     [[_networkTable headerView] setMenu:menu];
     
-    //
     [_window makeFirstResponder:_networkTable]; //select the network table not the search box
     
     [self menuSetEnabled:NO menu:aNetworkMenu];
@@ -237,7 +244,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     root_port = IORegisterForSystemPower( (__bridge void *)(scanner), &notifyPortRef, NotifySleep, &notifierObject );
     if ( MACH_PORT_NULL == root_port ) 
     {
-        printf("IORegisterForSystemPower failed\n");
+        DBNSLog(@"IORegisterForSystemPower failed\n");
     } else {		
 		// add the notification port to the application runloop
 		CFRunLoopAddSource( CFRunLoopGetCurrent(),
@@ -362,16 +369,25 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 	[queue waitUntilAllOperationsAreFinished];
 }
 
-- (void)updateViewItems:(NSNotification*)note {
-    if (!_refreshGUI) return;
-    [self performSelectorOnMainThread:@selector(doUpdateViewItems:) withObject:nil waitUntilDone:NO];
+- (void)updateViewItems:(NSNotification*)note
+{
+    if (!_refreshGUI)
+		return;
+	
+    [self performSelectorOnMainThread:@selector(doUpdateViewItems:)
+						   withObject:nil
+						waitUntilDone:NO];
 }
 
-- (void)doUpdateViewItems:(id)anObject {
+- (void)doUpdateViewItems:(id)anObject
+{
     [_container refreshView];
     if (_lastSorted)
-		[_container sortWithShakerByColumn:_lastSorted order:_ascending];
-    
+	{
+		[_container sortWithShakerByColumn:_lastSorted
+									 order:_ascending];
+    }
+	
     if (aNetHierarchVisible) {
         [ScanHierarch updateTree];
         [aOutView reloadData];
@@ -380,14 +396,16 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
 #pragma mark -
 
-- (void)stopScanForced:(NSNotification*)note {
+- (void)stopScanForced:(NSNotification*)note
+{
     [self stopScan];
 }
 
 #pragma mark -
 #pragma mark Columns layout
 #pragma mark -
-- (void) selectedColumnHeader {
+- (void) selectedColumnHeader
+{
     
 }
 
@@ -395,31 +413,44 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 #pragma mark Table datasource methods
 #pragma mark -
 
-- (id) tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *) aTableColumn row:(int) rowIndex {
+- (id) tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *) aTableColumn row:(int) rowIndex
+{
     WaveNet *net = [_container netAtIndex:rowIndex];
     
 	return [net cache][[aTableColumn identifier]];
 }
 
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView {
+- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+{
     return [_container count];
 }
 
-- (void)tableViewSelectionDidChange:(NSNotification *)aNotification {
-    if ([_networkTable selectedRow]<0) [self hideDetails]; 
-    else [self selectNet:[_container netAtIndex:[_networkTable selectedRow]]];
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
+{
+    if ([_networkTable selectedRow] < 0)
+	{
+		[self hideDetails];
+	}
+    else
+	{
+		[self selectNet:[_container netAtIndex:[_networkTable selectedRow]]];
+	}
 }
 
-- (void)tableView:(NSTableView*)tableView didClickTableColumn:(NSTableColumn *)tableColumn {
+- (void)tableView:(NSTableView*)tableView didClickTableColumn:(NSTableColumn *)tableColumn
+{
     NSString *ident = [tableColumn identifier];
     
-    if(![tableView isEqualTo:_networkTable]) return;
+    if (![tableView isEqualTo:_networkTable])
+		return;
 
     if ((_lastSorted) && ([_lastSorted isEqualToString:ident])) {
-        if (_ascending) _ascending=NO;
+        if (_ascending)
+			_ascending=NO;
         else {
             _lastSorted = Nil;
-            [tableView setIndicatorImage:Nil inTableColumn:tableColumn];
+            [tableView setIndicatorImage:Nil
+						   inTableColumn:tableColumn];
             [tableView setHighlightedTableColumn:Nil];
             [tableView reloadData];
             return;
@@ -427,15 +458,18 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     } else {
         _ascending=YES;
         if (_lastSorted) {
-            [tableView setIndicatorImage:nil inTableColumn:[tableView tableColumnWithIdentifier:_lastSorted]];
+            [tableView setIndicatorImage:nil
+						   inTableColumn:[tableView tableColumnWithIdentifier:_lastSorted]];
         }
         _lastSorted=ident;
     }
     
     if (_ascending)
-        [tableView setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"] inTableColumn:tableColumn];
+        [tableView setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"]
+					   inTableColumn:tableColumn];
     else 
-        [tableView setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"] inTableColumn:tableColumn];
+        [tableView setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"]
+					   inTableColumn:tableColumn];
     
 	//speedy sort (quick sort is faster than shaker sort, but not stable)
 	[_container sortByColumn:_lastSorted order:_ascending];
@@ -445,12 +479,16 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
 #pragma mark -
 
-- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
+- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+{
     return (item == nil) ? 3 : [item numberOfChildren];
 }
-- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
+{
     return ([item numberOfChildren] != -1);
 }
+
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
     if (item != Nil)
@@ -462,16 +500,24 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
         return [ScanHierarch rootItem:_container index:index];
     }
 }
-- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
+
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
+{
     return (item == nil) ? nil : (id)[item nameString];
 }
-- (BOOL)outlineView:(NSOutlineView *)outlineView shouldEditTableColumn:(NSTableColumn *)tableColumn item:(id)item {
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView shouldEditTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
     return NO;
 }
-- (BOOL)outlineView:(NSOutlineView *)outlineView shouldSelectItem:(id)item {
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView shouldSelectItem:(id)item
+{
     unsigned int tmpID[6], i;
     unsigned char ID[6];
-    if (item==nil) return YES;
+	
+    if (item==nil)
+		return YES;
     
     switch ([(ScanHierarch*)item type]) {
         case 99: //BSSID selector
@@ -507,13 +553,15 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
             [_container setViewType:1 value:@([(ScanHierarch*)item type]-20)];
             if (_lastSorted) [_container sortByColumn:_lastSorted order:_ascending];
     }
+	
     [_networkTable reloadData];
     return YES;
 }
 
 #pragma mark -
 
-- (IBAction)showInfo:(id)sender {
+- (IBAction)showInfo:(id)sender
+{
     NSSize contentSize;
     
     if (_detailsPaneVisibile) {
@@ -523,7 +571,8 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
         return;
     }
-    if (_visibleTab == tabDetails) return;
+    if (_visibleTab == tabDetails)
+		return;
     
     if (!_detailsDrawer) {
         contentSize = NSMakeSize(200, 250);
@@ -544,7 +593,8 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     _detailsPaneVisibile = YES;
 }
 
-- (IBAction)showNetHierarch:(id)sender {
+- (IBAction)showNetHierarch:(id)sender
+{
     if (!aNetHierarchVisible) {
         [sender setTitle: NSLocalizedString(@"Hide Hierarchy", "menu item")];
         [_netHierarchDrawer openOnEdge:NSMinXEdge];
@@ -559,14 +609,16 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     [_showHierarch setState: aNetHierarchVisible ? NSOnState : NSOffState];
 }
 
-- (IBAction)changeSearchValue:(id)sender {
+- (IBAction)changeSearchValue:(id)sender
+{
     [_container setFilterString:[_searchField stringValue]];
     [_networkTable reloadData];
 	[(NSView*)_mappingView setNeedsDisplay:YES];
 	[self tableViewSelectionDidChange:nil];
 }
 
-- (void)checkFilter:(id)sender {
+- (void)checkFilter:(id)sender
+{
     NSAlert *alert;
     //written by themacuser
 	if(![[_searchField stringValue] isEqualToString:@""]){
@@ -585,7 +637,8 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     }
 }
 
-- (IBAction)changeSearchType:(id)sender {
+- (IBAction)changeSearchType:(id)sender
+{
     int ndx;
 	[_container setFilterType:[sender title]];
     NSMenu * searchMenu = [sender menu];
@@ -601,7 +654,8 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
 #pragma mark -
 
--(void) dealloc {
+-(void) dealloc
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [_importController stopAnimation];
@@ -611,11 +665,13 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
 #pragma mark Application delegates
 
-- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename {
+- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
+{
     return [self open:filename];
 }
 
-- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {    
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
+{
     if (![self isSaved]) {
 		[self showWantToSaveDialog:@selector(reallyQuitDidEnd:returnCode:contextInfo:)];
         return NSTerminateLater;
@@ -624,7 +680,8 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     return NSTerminateNow;
 }
 
-- (void)reallyQuitDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo {
+- (void)reallyQuitDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
     [self menuSetEnabled:YES menu:[NSApp mainMenu]];
 	switch (returnCode) {
     case NSAlertOtherReturn:
@@ -648,7 +705,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     NSMutableData * crashLogs = nil;
     
     [self updatePrefs:nil];
-    sets=[NSUserDefaults standardUserDefaults];
+    sets = [NSUserDefaults standardUserDefaults];
 
     logPath = [@"~/Library/Logs/DiagnosticReports/" stringByExpandingTildeInPath];
     mang = [NSFileManager defaultManager];
@@ -692,7 +749,8 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     }//crash logs enabled
 }
 
-- (void)applicationWillTerminate:(NSNotification *)notification {
+- (void)applicationWillTerminate:(NSNotification *)notification
+{
     [self stopScan];
     [self stopActiveAttacks];
     [[WaveHelper gpsController] stop];
@@ -702,7 +760,8 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
 #pragma mark Main Window delegates
 
-- (NSRect)windowWillUseStandardFrame:(NSWindow *)sender defaultFrame:(NSRect)defaultFrame {
+- (NSRect)windowWillUseStandardFrame:(NSWindow *)sender defaultFrame:(NSRect)defaultFrame
+{
     if (aNetHierarchVisible) {
         defaultFrame.size.width-=[_netHierarchDrawer contentSize].width+10;
         defaultFrame.origin.x+=[_netHierarchDrawer contentSize].width+10;
@@ -715,8 +774,10 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     return defaultFrame;
 }
 
-- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize {
+- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize
+{
     [_detailsDrawer setTrailingOffset:proposedFrameSize.height-280];
+	
     return proposedFrameSize;
 }
 
@@ -741,6 +802,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
         return NO;
     }
 }
+
 - (void)reallyCloseDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	[self menuSetEnabled:YES menu:[NSApp mainMenu]];
@@ -759,7 +821,8 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
 #pragma mark Fade Out Code
 
-- (void)fade:(NSTimer *)timer {
+- (void)fade:(NSTimer *)timer
+{
     if ([_window alphaValue] > 0.0) {
         // If window is still partially opaque, reduce its opacity.
         [_window setAlphaValue:[_window alphaValue] - 0.2];
@@ -794,7 +857,8 @@ void NotifySleep( void * refCon, io_service_t service,
     }
 }
 
-- (void)trackClient:(id)sender {
+- (void)trackClient:(id)sender
+{
 	[_monitorMenu setState:NSOnState];
 	[_monitorAllMenu setState:NSOffState];
 	NSString *bssid, *mac;
@@ -806,7 +870,8 @@ void NotifySleep( void * refCon, io_service_t service,
 
 }
 
-- (void)selectedTableContextMenuItem:(id)sender{
+- (void)selectedTableContextMenuItem:(id)sender
+{
     if ([sender state] == NSOnState) {
         [_networkTable removeTableColumn:[sender representedObject]];
         [sender setState:NSOffState];
