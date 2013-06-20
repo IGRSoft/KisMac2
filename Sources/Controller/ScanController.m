@@ -353,9 +353,9 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 			}
 		}
 		
-		[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+		/*[[NSOperationQueue mainQueue] addOperationWithBlock:^{
 			[_container clearAllBrokenEntries];
-		}];
+		}];*/
 		
 	}];
 }
