@@ -59,6 +59,7 @@ NSString *const KisMACTryToSave             = @"KisMACTryToSave";
 NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
 @implementation ScanController
+
 + (void)initialize {
     id registrationDict = nil ;
     NSDictionary * defaultDriverDict = @{@"driverID": @"WaveDriverAirport", @"deviceName": @"Airport Card"};
@@ -269,7 +270,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 			if (_lastSorted)
 				[_container sortWithShakerByColumn:_lastSorted order:_ascending];
 			
-			if (complete) {
+			if (_complete) {
 				[[NSOperationQueue mainQueue] addOperationWithBlock:^{
 					[_networkTable reloadData];
 				}];
@@ -312,7 +313,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 				}
 			}
 		} else if (_visibleTab == tabDetails) {
-			if (complete) {
+			if (_complete) {
 				[[NSOperationQueue mainQueue] addOperationWithBlock:^{
 					[aInfoController reloadData];
 				}];
@@ -356,8 +357,9 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 		/*[[NSOperationQueue mainQueue] addOperationWithBlock:^{
 			[_container clearAllBrokenEntries];
 		}];*/
-		
 	}];
+	
+	[queue waitUntilAllOperationsAreFinished];
 }
 
 - (void)updateViewItems:(NSNotification*)note {
