@@ -22,3 +22,8 @@ Developed by:
 -------
 
 Vitaliy Parovishnik (Korich) - http://IGRSoft.com
+
+Nightly Builds:
+-------
+
+http://downloads.igrsoft.com/beta/KisMac2.zip
