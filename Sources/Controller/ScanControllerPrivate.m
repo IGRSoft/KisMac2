@@ -94,8 +94,6 @@
             return;
         }
 		_whichDriver = whichDriver;
-        //[WaveHelper secureReplace:&_whichDriver withObject:whichDriver];
-
         
         for (x = _activeDriversCount; x < [aChannelMenu numberOfItems]; ++x) {
            mi = (NSMenuItem*)[aChannelMenu itemAtIndex:x];
@@ -450,7 +448,7 @@
 - (void)showBusyWithText:(NSString*)title andEndSelector:(SEL)didEndSelector andDialog:(NSString*)dialog {
     NSParameterAssert(title);
     NSParameterAssert(dialog);	
-    if (++_importOpen > 0) return; //we are already busy
+    if (++_importOpen > 1) return; //we are already busy
 	[self menuSetEnabled:NO menu:[NSApp mainMenu]];
     
     _importController = [[ImportController alloc] initWithWindowNibName:dialog];
@@ -475,8 +473,6 @@
 	_importController = nil;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 - (void)showBusy:(SEL)function withArg:(id)obj {
     _busyFunction = function;
     
@@ -490,8 +486,11 @@
 	[self menuSetEnabled:NO menu:[NSApp mainMenu]];
     [NSApp beginSheet:[_importController window] modalForWindow:_window modalDelegate:self didEndSelector:nil contextInfo:nil];
       
-    [self performSelector:_busyFunction withObject:obj];
-        
+	NSMethodSignature *methodSignature = [self methodSignatureForSelector:_busyFunction];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+	[invocation setSelector:_busyFunction];
+	[invocation setArgument:&obj atIndex:2];
+	[invocation invoke];
 
     [self menuSetEnabled:YES menu:[NSApp mainMenu]];
     [NSApp endSheet: [_importController window]];        
@@ -503,8 +502,11 @@
 - (void)busyThread:(id)anObject {
     @autoreleasepool {
     
-        [self performSelector:_busyFunction withObject:anObject];
-        
+        NSMethodSignature *methodSignature = [self methodSignatureForSelector:_busyFunction];
+		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+		[invocation setSelector:_busyFunction];
+		[invocation setArgument:(__bridge void *)(anObject) atIndex:0];
+		[invocation invoke];
         _doModal = NO;
 	
 	[self menuSetEnabled:YES menu:[NSApp mainMenu]];
@@ -514,7 +516,6 @@
         [_importController stopAnimation];
     }
 }
-#pragma clang diagnostic pop
 
 #pragma mark -
 

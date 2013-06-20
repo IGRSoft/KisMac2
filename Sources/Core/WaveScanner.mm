@@ -267,14 +267,11 @@
 }
 
 - (bool)startScanning {
-    //NSArray *a;
     
     if (!_scanning) {			//we are already scanning
         _scanning=YES;
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-			//a = [WaveHelper getWaveDrivers];
 			_drivers = [WaveHelper getWaveDrivers];
-			//[WaveHelper secureReplace:&_drivers withObject:a];
 
 			WaveDriver *w;
 			for (int i = 0; i < [_drivers count]; ++i)
@@ -323,12 +320,9 @@
 
 - (bool)sleepDrivers: (bool)isSleepy{
     WaveDriver *w;
-    //NSArray *a;
     unsigned int i;
     
-    //a = [WaveHelper getWaveDrivers];
 	_drivers = [WaveHelper getWaveDrivers];
-    //[WaveHelper secureReplace:&_drivers withObject:a];
         
    if (isSleepy) {
 		DBNSLog(@"Going to sleep...");

@@ -47,7 +47,6 @@
 - (bool)setURL:(NSURL*) url {
     NSAssert(!_inProgress, @"Stream already working");
     
-    //[WaveHelper secureReplace:&_url withObject:url];
 	_url = url;
     return YES;
 }
@@ -55,7 +54,6 @@
 - (bool)setPostVariables:(NSDictionary*)postVariables {
     NSAssert(!_inProgress, @"Stream already working");
     
-    //[WaveHelper secureReplace:&_postVariables withObject:postVariables];
 	_postVariables = postVariables;
     return YES;
 }

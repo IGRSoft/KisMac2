@@ -644,10 +644,8 @@ NSInteger lengthSort(id string1, id string2, void *context)
 	if (isHidden) {
 		if (_SSID!=Nil) return; //we might have the real ssid already
 		_SSID = @"";
-		//[WaveHelper secureReplace:&_SSID withObject:@""];
 	} else {
 		_SSID = newSSID;
-		//[WaveHelper secureReplace:&_SSID withObject:newSSID];
 		if (updatedSSID) {
 			[GrowlController notifyGrowlSSIDRevealed:@"" BSSID:_BSSID SSID:newSSID];
 		}
@@ -737,7 +735,6 @@ NSInteger lengthSort(id string1, id string2, void *context)
             }
             
 			_date = [NSDate date];
-            //[WaveHelper secureReplace:&_date withObject:[[NSDate date] retain]];
 
             if (cp._lat!=100) {
                 pV = [BIValuePair new];
@@ -758,11 +755,11 @@ NSInteger lengthSort(id string1, id string2, void *context)
                     }
                     gpsc = [WaveHelper gpsController];
                     s = [gpsc NSCoord];
-                    if (s) aLat = s; //[WaveHelper secureReplace:&aLat withObject:s];
+                    if (s) aLat = s;
                     s = [gpsc EWCoord];
-                    if (s) aLong = s; //[WaveHelper secureReplace:&aLong withObject:s];
+                    if (s) aLong = s;
                     s = [gpsc ElevCoord];
-                    if (s) aElev = s; //[WaveHelper secureReplace:&aElev withObject:s];
+                    if (s) aElev = s;
                     [_netView setCoord:cp];
                 }
             }
@@ -787,9 +784,6 @@ NSInteger lengthSort(id string1, id string2, void *context)
 		aLat = [net latitude];
 		aLong = [net longitude];
 		aElev = [net elevation];
-        //[WaveHelper secureReplace:&aLat  withObject:[net latitude]];
-        //[WaveHelper secureReplace:&aLong withObject:[net longitude]];
-		//[WaveHelper secureReplace:&aElev withObject:[net elevation]];
     }
     
     if ([_date compare:[net lastSeenDate]] == NSOrderedDescending) {
@@ -808,15 +802,14 @@ NSInteger lengthSort(id string1, id string2, void *context)
         if (temp) _channel = temp;
         
         if ([net rawSSID]) [self updateSSID:[net rawSSID] withSound:NO];
-        if ([net SSIDs]) _SSIDs = [net SSIDs]; //[WaveHelper secureReplace:&_SSIDs withObject:[net SSIDs]];
+        if ([net SSIDs]) _SSIDs = [net SSIDs];
 		
 		_date = [net lastSeenDate];
-        //[WaveHelper secureReplace:&_date withObject:[net lastSeenDate]];
-        if (![[net comment] isEqualToString:@""]) aComment = [net comment]; //[WaveHelper secureReplace:&aComment withObject:[net comment]];
+        if (![[net comment] isEqualToString:@""]) aComment = [net comment];
     }
     
-    if ([aFirstDate compare:[net firstSeenDate]] == NSOrderedAscending) aFirstDate = [net firstSeenDate];// [WaveHelper secureReplace:&aFirstDate withObject:[net firstSeenDate]];
-        
+    if ([aFirstDate compare:[net firstSeenDate]] == NSOrderedAscending) aFirstDate = [net firstSeenDate];
+	
     _packets +=     [net packets];
     _dataPackets += [net dataPackets];
     _mgmtPackets += [net mgmtPackets];
@@ -978,7 +971,6 @@ NSInteger lengthSort(id string1, id string2, void *context)
 			if ([w SSIDs])
 			{
 				_SSIDs = [w SSIDs];
-				//[WaveHelper secureReplace:&_SSIDs withObject:[w SSIDs]];
 			}
 			[self updateSSID:[w SSID] withSound:sound]; //might contain SSID infos
             
@@ -1700,7 +1692,6 @@ NSInteger lengthSort(id string1, id string2, void *context)
         @"challengeResponse": image};
 	
 	_cache = cache;
-	//[WaveHelper secureReplace:&_cache withObject:cache];
 	_cacheValid = YES;
 	return _cache; 
 }

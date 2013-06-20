@@ -139,7 +139,6 @@ char WaveDrivers [][30] = {
     NSMutableArray *a;
     
 	_config = dict;
-    //[WaveHelper secureReplace:&_config withObject:dict];
     
     _firstChannel = [_config[@"firstChannel"] intValue];
     if (_firstChannel == 0) _firstChannel = 1;

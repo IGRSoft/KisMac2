@@ -62,8 +62,6 @@
         );
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 - (void)saveDialogDone:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(SEL)overrideFunction {
     switch (returnCode) {
     case NSAlertDefaultReturn:
@@ -72,10 +70,15 @@
         break;
     case NSAlertAlternateReturn:
     default:
-        [self performSelector:overrideFunction withObject:self];
+		{
+			NSMethodSignature *methodSignature = [self methodSignatureForSelector:overrideFunction];
+			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+			[invocation setSelector:overrideFunction];
+			//[invocation setArgument:&sheet atIndex:2];
+			[invocation invoke];
+		}
     }
 }
-#pragma clang diagnostic pop
 
 #pragma mark -
 
@@ -127,7 +130,7 @@
 		 {
 			 [ScriptingEngine selfSendEvent:'odoc'
 								  withClass:'aevt'
-						andDefaultArgString:[[op URL] absoluteString]];
+						andDefaultArgString:[[op URL] path]];
 		 }
 		 
 	 }];
@@ -146,7 +149,7 @@
 		 {
 			 [ScriptingEngine selfSendEvent:'odoc'
 								  withClass:'aevt'
-						andDefaultArgString:[[op URL] absoluteString]];
+						andDefaultArgString:[[op URL] path]];
 		 }
 		 
 	 }];
@@ -166,7 +169,7 @@
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
 			 for (int i = 0; i < [[op URLs] count]; ++i) {
-				 NSString *file = [[op URLs][i] absoluteString];
+				 NSString *file = [[op URLs][i] path];
 				 [ScriptingEngine selfSendEvent:'KImK'
 						   withDefaultArgString:file];
 			 }
@@ -187,7 +190,7 @@
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
 			 [ScriptingEngine selfSendEvent:'KImI'
-					   withDefaultArgString:[[op URL] absoluteString]];
+					   withDefaultArgString:[[op URL] path]];
 		 }
 		 
 	 }];
@@ -202,7 +205,7 @@
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
 			 for (int i = 0; i < [[op URLs] count]; ++i) {
-				 NSString *file = [[op URLs][i] absoluteString];
+				 NSString *file = [[op URLs][i] path];
 				 [ScriptingEngine selfSendEvent:'KImP'
 						   withDefaultArgString:file];
 			 }
@@ -234,7 +237,7 @@
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
 			 if (![ScriptingEngine selfSendEvent:'KsaA'
-							withDefaultArgString:[[sp URL] absoluteString]])
+							withDefaultArgString:[[sp URL] path]])
 				 [[NSApp delegate] showSavingFailureDialog];
 		 }
 		 
@@ -254,7 +257,7 @@
 		 {
 			 if (![ScriptingEngine selfSendEvent:'save'
 									   withClass:'core'
-							 andDefaultArgString:[[sp URL] absoluteString]])
+							 andDefaultArgString:[[sp URL] path]])
 				 [[NSApp delegate] showSavingFailureDialog];
 		 }
 		 
@@ -304,7 +307,7 @@
 		 {
 			 for (int i = 0; i < [[op URLs] count]; ++i)
 				 [ScriptingEngine selfSendEvent:'KCWa'
-						   withDefaultArgString:[[op URLs][i] absoluteString]];
+						   withDefaultArgString:[[op URLs][i] path]];
 		 }
 		 
 	 }];
@@ -322,7 +325,7 @@
 		 {
 			 for (int i = 0; i < [[op URLs] count]; ++i)
 				 [ScriptingEngine selfSendEvent:'KCWA'
-						   withDefaultArgString:[[op URLs][i] absoluteString]];
+						   withDefaultArgString:[[op URLs][i] path]];
 		 }
 		 
 	 }];
@@ -340,7 +343,7 @@
 		 {
 			 for (int i = 0; i < [[op URLs] count]; ++i)
 				 [ScriptingEngine selfSendEvent:'KCWM'
-						   withDefaultArgString:[[op URLs][i] absoluteString]];
+						   withDefaultArgString:[[op URLs][i] path]];
 		 }
 		 
 	 }];
@@ -364,7 +367,7 @@
 		 {
 			 for (int i = 0; i < [[op URLs] count]; ++i)
 				 [ScriptingEngine selfSendEvent:'KCWW'
-						   withDefaultArgString:[[op URLs][i] absoluteString]];
+						   withDefaultArgString:[[op URLs][i] path]];
 		 }
 		 
 	 }];
@@ -386,7 +389,7 @@
 		 {
 			 for (int i = 0; i < [[op URLs] count]; ++i)
 				 [ScriptingEngine selfSendEvent:'KCWL'
-						   withDefaultArgString:[[op URLs][i] absoluteString]];
+						   withDefaultArgString:[[op URLs][i] path]];
 		 }
 		 
 	 }];

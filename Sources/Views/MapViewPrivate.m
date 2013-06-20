@@ -100,8 +100,6 @@
     NSColor *col = [NSColor redColor];
     
 	_gpsStatus = status;
-	
-    //[WaveHelper secureReplace:&_gpsStatus withObject:status];
     
     attrs[NSFontAttributeName] = textFont;
     attrs[NSForegroundColorAttributeName] = col;
@@ -147,7 +145,6 @@
     NSColor *grey = [NSColor whiteColor];
     
 	_gpsStatus = status;
-    //[WaveHelper secureReplace:&_gpsStatus withObject:status];
     
     attrs[NSFontAttributeName] = textFont;
     attrs[NSForegroundColorAttributeName] = grey;

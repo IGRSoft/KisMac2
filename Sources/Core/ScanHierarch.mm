@@ -82,7 +82,6 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
     unsigned int i;
     
 	_container = container;
-    //[WaveHelper secureReplace:&_container withObject:container];
     
     for (i=0;i<[children count];++i)
         [children[i] setContainer:container];

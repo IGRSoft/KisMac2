@@ -93,7 +93,7 @@
 			 KismetXMLImporter *myImporter =  [[KismetXMLImporter alloc] init];
 			 for (i = 0; i < [[aOP URLs] count]; ++i)
 			 {
-				 NSString *file = [[aOP URLs][i] absoluteString];
+				 NSString *file = [[aOP URLs][i] path];
 				 [self showBusyWithText: [NSString stringWithFormat: @"Importing %@ as Kismet XML", [file lastPathComponent]]];
 				 [myImporter performKismetImport: file withContainer:_container];
 				 [self busyDone];
@@ -134,7 +134,7 @@
 			 [self stopActiveAttacks];
 			 [self stopScan];
 			 
-			 [self showBusy:@selector(performImportNetstumbler:) withArg:[[aOP URL] absoluteString]];
+			 [self showBusy:@selector(performImportNetstumbler:) withArg:[[aOP URL] path]];
 			 
 			 [[NSNotificationCenter defaultCenter] postNotificationName:KisMACViewItemChanged object:self];
 		 }
@@ -163,7 +163,7 @@
     [aSP setCanSelectHiddenExtension:YES];
     [aSP setTreatsFilePackagesAsDirectories:NO];
     if ([aSP runModal]==NSFileHandlingPanelOKButton) {
-        [self showBusy:@selector(performExportNS:) withArg:[[aSP URL] absoluteString]];
+        [self showBusy:@selector(performExportNS:) withArg:[[aSP URL] path]];
         if (_asyncFailure) [self showExportFailureDialog];
     }
 }
@@ -193,7 +193,7 @@
     [aSP setTreatsFilePackagesAsDirectories:NO];
     if ([aSP runModal]==NSFileHandlingPanelOKButton)
     {
-        [self showBusy:@selector(performExportKML:) withArg:[[aSP URL] absoluteString]];
+        [self showBusy:@selector(performExportKML:) withArg:[[aSP URL] path]];
     }
 }
 
@@ -205,7 +205,7 @@
     [aSP setCanSelectHiddenExtension:YES];
     [aSP setTreatsFilePackagesAsDirectories:NO];
     if ([aSP runModal]==NSFileHandlingPanelOKButton) {
-        [self showBusy:@selector(performExportWarD:) withArg:[[aSP URL] absoluteString]];
+        [self showBusy:@selector(performExportWarD:) withArg:[[aSP URL] path]];
         if (_asyncFailure) [self showExportFailureDialog];
     }
 }
@@ -225,7 +225,7 @@
     [aSP setCanSelectHiddenExtension:YES];
     [aSP setTreatsFilePackagesAsDirectories:NO];
     if ([aSP runModal]==NSFileHandlingPanelOKButton) {
-        [self showBusy:@selector(performExportMacStumbler:) withArg:[[aSP URL] absoluteString]];
+        [self showBusy:@selector(performExportMacStumbler:) withArg:[[aSP URL] path]];
         if (_asyncFailure) [self showExportFailureDialog];
     }
 }
@@ -247,7 +247,7 @@
     [aSP setCanSelectHiddenExtension:YES];
     [aSP setTreatsFilePackagesAsDirectories:NO];
     if ([aSP runModal]==NSFileHandlingPanelOKButton) {
-        [self showBusy:@selector(performExportPDF:) withArg:[[aSP URL] absoluteString]];
+        [self showBusy:@selector(performExportPDF:) withArg:[[aSP URL] path]];
         if (_asyncFailure) [self showExportFailureDialog];
     }
 }
@@ -276,7 +276,7 @@
     [aSP setCanSelectHiddenExtension:YES];
     [aSP setTreatsFilePackagesAsDirectories:NO];
     if ([aSP runModal]==NSFileHandlingPanelOKButton) {
-        [self showBusy:@selector(performExportJPEG:) withArg:[[aSP URL] absoluteString]];
+        [self showBusy:@selector(performExportJPEG:) withArg:[[aSP URL] path]];
         if (_asyncFailure) [self showExportFailureDialog];
     }
 }

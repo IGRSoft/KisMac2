@@ -89,7 +89,6 @@ io_connect_t  root_port;    // a reference to the Root Power Domain IOService
 	NSOperationQueue *queue;
     
     IBOutlet WaveContainer      *_container;
-	WaveContainer				*_visibleContainer;
     IBOutlet WaveScanner        *scanner;
     IBOutlet NSBox              *_mainView;
     

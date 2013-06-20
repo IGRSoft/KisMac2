@@ -217,8 +217,6 @@
 	}
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 -(bool) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval notifyTarget:(id)target notifySelectorString:(NSString *)selector {
     NSThread *thr = [NSThread currentThread];
     if (howMany != 0) {
@@ -233,12 +231,14 @@
         _driver->sendKFrame(f);
         if (target && selector) {
             SEL sel = NSSelectorFromString(selector);
-            [target performSelector:sel withObject:nil];
+			NSMethodSignature *methodSignature = [target methodSignatureForSelector:sel];
+			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+			[invocation setSelector:sel];
+			[invocation invoke];
         }
     }
     return YES;
 }
-#pragma clang diagnostic pop
 
 -(bool) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval {
     return [self sendKFrame:f howMany:howMany atInterval:interval notifyTarget:nil notifySelectorString:nil];

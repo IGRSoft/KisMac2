@@ -135,7 +135,6 @@
 				[GrowlController notifyGrowlWPAChallenge:@"" mac:_ID bssid:[w BSSIDString]];
                 DBNSLog(@"Nonce %.2X %.2X", nonce[0], nonce[WPA_NONCE_LENGTH-1]);
 				_aNonce = [NSData dataWithBytes:nonce length:WPA_NONCE_LENGTH];
-                //[WaveHelper secureReplace:&_aNonce withObject:[NSData dataWithBytes:nonce length:WPA_NONCE_LENGTH]];
                 _wpaKeyCipher = [w wpaKeyCipher];
                 break;
             case wpaNonceSNonce:
@@ -143,7 +142,6 @@
 				[GrowlController notifyGrowlWPAResponse:@"" mac:_ID bssid:[w BSSIDString]];
                 DBNSLog(@"Nonce %.2X %.2X", nonce[0], nonce[WPA_NONCE_LENGTH-1]);
 				_sNonce = [NSData dataWithBytes:nonce length:WPA_NONCE_LENGTH];
-                //[WaveHelper secureReplace:&_sNonce withObject:[NSData dataWithBytes:nonce length:WPA_NONCE_LENGTH]];
                 break;
             case wpaNonceNone:
                 DBNSLog(@"Nonce None");
@@ -151,16 +149,16 @@
         }
         packet = [w eapolData];
         mic = [w eapolMIC];
-        if (packet) _packet = packet; //[WaveHelper secureReplace:&_packet withObject:packet];
-        if (mic)    _MIC = mic; //[WaveHelper secureReplace:&_MIC    withObject:mic];
+        if (packet) _packet = packet;
+        if (mic)    _MIC = mic;
     } else if ([w isLEAPKeyPacket]) {
         switch ([w leapCode]) {
         case leapAuthCodeChallenge:
-			if (!_leapUsername) _leapUsername = [w username]; //[WaveHelper secureReplace:&_leapUsername  withObject:];
-			if (!_leapChallenge) _leapChallenge = [w challenge]; //[WaveHelper secureReplace:&_leapChallenge withObject:[w challenge]];
+			if (!_leapUsername) _leapUsername = [w username];
+			if (!_leapChallenge) _leapChallenge = [w challenge];
             break;
         case leapAuthCodeResponse:
-			if (!_leapResponse) _leapResponse = [w response]; //[WaveHelper secureReplace:&_leapResponse  withObject:[w response]];
+			if (!_leapResponse) _leapResponse = [w response];
             break;
         case leapAuthCodeFailure:
             DBNSLog(@"Detected LEAP authentication failure for client %@! Username: %@. Deleting all collected auth data!", _ID, _leapUsername);
@@ -210,7 +208,6 @@
 		}
     }
 	_date = [NSDate date];
-    //[WaveHelper secureReplace:&_date withObject:[NSDate date]];
     
     _curSignal=[w signal];
     _sentBytes+=[w length];    

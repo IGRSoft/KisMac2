@@ -138,13 +138,11 @@ static NSString *trackString,*trackStringClient;
 + (void)setTrackString:(NSString*)cs
 {
 	trackString = cs;
-	//[WaveHelper secureReplace:&trackString withObject:cs];
 }
 
 + (void)setTrackStringClient:(NSString*)cs
 {
 	trackStringClient = cs;
-	//[WaveHelper secureReplace:&trackStringClient withObject:cs];
 }
 
 + (NSString*)trackString

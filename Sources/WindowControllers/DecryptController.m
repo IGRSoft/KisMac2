@@ -295,7 +295,7 @@ error1:
 		 {
 			 if (result == NSFileHandlingPanelOKButton)
 			 {
-				 [_inFile setStringValue:[[OP URL] absoluteString]];
+				 [_inFile setStringValue:[[OP URL] path]];
 			 }
 			 
 		 }];
@@ -305,7 +305,7 @@ error1:
         [SP setCanSelectHiddenExtension:YES];
         [SP setTreatsFilePackagesAsDirectories:NO];
         if ([SP runModal]==NSFileHandlingPanelOKButton) {
-            [_outFile setStringValue:[[SP URL] absoluteString]];
+            [_outFile setStringValue:[[SP URL] path]];
         }
     }
 }

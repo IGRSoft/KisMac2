@@ -1045,13 +1045,10 @@ int isValidPacket(UInt8 *fileData, int fileLength) {
             if (_payloadLength-24 < userLength) return NO;
 			_challenge = [NSData dataWithBytes:l->challenge length:8];
 			_username = [NSString stringWithCharacters:(unichar*)&l->name length:userLength];
-            //[WaveHelper secureReplace:&_challenge   withObject:[NSData dataWithBytes:l->challenge length:8]];
-            //[WaveHelper secureReplace:&_username    withObject:[NSString stringWithCharacters:(unichar*)&l->name length:userLength]];
             break;
         case leapAuthCodeResponse:  //handle response
             if (_payloadLength-16 < 24) return NO;
 			_response = [NSData dataWithBytes:l->challenge length:24];
-            //[WaveHelper secureReplace:&_response   withObject:[NSData dataWithBytes:l->challenge length:24]];
             break; 
         default:
             break;

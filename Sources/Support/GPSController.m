@@ -243,7 +243,6 @@ struct termios ttyset;
 
 - (void)setStatus:(NSString*)status {
 	_status = status;
-    //[WaveHelper secureReplace:&_status withObject:status];
     [[NSNotificationCenter defaultCenter] postNotificationName:KisMACGPSStatusChanged object:_status];
 }
 
@@ -278,8 +277,6 @@ struct termios ttyset;
     
 	_lastUpdate = [NSDate date];
 	_lastAdd = [NSDate date];
-    //[WaveHelper secureReplace:&_lastUpdate withObject:[NSDate date]];
-    //[WaveHelper secureReplace:&_lastAdd withObject:[NSDate date]];
     
     if (abs(ns)>=0 && abs(ns)<=90 && abs(ew)>=0 && abs(ew)<=180) {
         w._long = ew;
@@ -507,7 +504,6 @@ int ss(char* inp, char* outp) {
 						_sectordist = 0;
 						_sectortime = 0;
 						_sectorStart = date;
-						//[WaveHelper secureReplace:&_sectorStart withObject:date];
 					} else if ((velkt > 0) || (_velkt > 0)) {
 						// update distances only if we're moving (or just stopped)
 						displacement = (velkt + _velkt)*timeinterval/7200;
@@ -536,14 +532,13 @@ int ss(char* inp, char* outp) {
         }
 
 			_lastUpdate = date;
-        //[WaveHelper secureReplace:&_lastUpdate withObject:date];
 
         if (_reliable) {
             if (([_lastUpdate timeIntervalSinceDate:_lastAdd]>_traceInterval) && (_traceInterval != 100)) {
                 waypoint w;
                 w._lat  = _ns.coordinates * ((_ns.dir=='N') ? 1.0 : -1.0);
                 w._long = _ew.coordinates * ((_ew.dir=='E') ? 1.0 : -1.0);
-                if ([[WaveHelper trace] addPoint:w]) _lastAdd = date; //[WaveHelper secureReplace:&_lastAdd withObject:date];
+                if ([[WaveHelper trace] addPoint:w]) _lastAdd = date;
             }
         } else {
             [[WaveHelper trace] cut];
@@ -605,11 +600,10 @@ int ss(char* inp, char* outp) {
             
             if (_debugEnabled) DBNSLog(@"GPSd data updated.");
 		
-		timeinterval = [date timeIntervalSinceDate:_lastUpdate];
-		_lastUpdate = date;
-            //[WaveHelper secureReplace:&_lastUpdate withObject:date];
+			timeinterval = [date timeIntervalSinceDate:_lastUpdate];
+			_lastUpdate = date;
         } else {
-		_reliable = NO;
+			_reliable = NO;
         }
 
 	if ((_reliable)||(_onNoFix==0)) {
@@ -627,7 +621,6 @@ int ss(char* inp, char* outp) {
 			_sectordist = 0;
 			_sectortime = 0;
 			_sectorStart = date;
-			//[WaveHelper secureReplace:&_sectorStart withObject:date];
 		} else if ((velkt > 0) || (_velkt > 0)) {
 			// update distances only if we're moving (or just stopped)
 			displacement = (velkt + _velkt)*timeinterval/7200;
@@ -660,7 +653,7 @@ int ss(char* inp, char* outp) {
 			waypoint w;
 			w._lat  = _ns.coordinates * ((_ns.dir=='N') ? 1.0 : -1.0);
 			w._long = _ew.coordinates * ((_ew.dir=='E') ? 1.0 : -1.0);
-			if ([[WaveHelper trace] addPoint:w]) _lastAdd = date; //[WaveHelper secureReplace:&_lastAdd withObject:date];
+			if ([[WaveHelper trace] addPoint:w]) _lastAdd = date;
 		}
 	} else {
 		[[WaveHelper trace] cut];

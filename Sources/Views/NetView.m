@@ -67,7 +67,6 @@ static NSImage* _networkStrange;
 
 - (void) setName:(NSString*)name {
 	_name = name;
-    //[WaveHelper secureReplace:&_name withObject:name];
     [self setImage:[self generateImage]];
     [[WaveHelper mapView] setNeedsDisplay:YES];
 }

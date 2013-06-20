@@ -143,7 +143,6 @@
     unsigned int j;
     
 	allNets = [_container allNets];
-    //[WaveHelper secureReplace:&allNets withObject:[_container allNets]];
     
     // order networks by signal value
     switch(currentMode) {

@@ -317,7 +317,6 @@
 		003533C206A5DD8500AB4577 /* WavePacket.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = WavePacket.mm; sourceTree = "<group>"; };
 		003533C306A5DD8500AB4577 /* WaveScanner.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = WaveScanner.h; sourceTree = "<group>"; };
 		003533C406A5DD8500AB4577 /* WaveScanner.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = WaveScanner.mm; sourceTree = "<group>"; };
-		003533D906A5DD8500AB4577 /* WaveSecret.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = WaveSecret.h; sourceTree = "<group>"; };
 		003533DC06A5DD8500AB4577 /* PrefsClient.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PrefsClient.h; sourceTree = "<group>"; };
 		003533DD06A5DD8500AB4577 /* PrefsClient.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = PrefsClient.m; sourceTree = "<group>"; };
 		003533DE06A5DD8500AB4577 /* PrefsDriver.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PrefsDriver.h; sourceTree = "<group>"; };
@@ -743,15 +742,6 @@
 			path = Sources/Driver;
 			sourceTree = "<group>";
 		};
-		003533D806A5DD8500AB4577 /* not public */ = {
-			isa = PBXGroup;
-			children = (
-				003533D906A5DD8500AB4577 /* WaveSecret.h */,
-			);
-			name = "not public";
-			path = "Sources/not public";
-			sourceTree = "<group>";
-		};
 		003533DA06A5DD8500AB4577 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
@@ -959,7 +949,6 @@
 				003533A406A5DD8500AB4577 /* Controller */,
 				003533B206A5DD8500AB4577 /* Core */,
 				003533D206A5DD8500AB4577 /* Driver */,
-				003533D806A5DD8500AB4577 /* not public */,
 				003533DA06A5DD8500AB4577 /* Preferences */,
 				003533F406A5DD8500AB4577 /* ScriptingCore */,
 				003533F906A5DD8500AB4577 /* Support */,

@@ -31,7 +31,6 @@
 #import "WaveNet.h"
 #import "WaveContainer.h"
 #import "Trace.h"
-#import "WaveSecret.h"
 #import "ImportController.h"
 
 #ifndef CRCFUNCTION

@@ -170,7 +170,6 @@
         
         [self new];
 		_fileName = filename;
-        //[WaveHelper secureReplace:&_fileName withObject:filename];
         
         NS_DURING
             ret = [WaveStorageController loadFromFile:filename withContainer:_container andImportController:_importController];
@@ -351,7 +350,6 @@
             [self stopScan];
             ret = [WaveStorageController saveToFile:filename withContainer:_container andImportController:_importController];
 			_fileName = filename;
-			//[WaveHelper secureReplace:&_fileName withObject:filename];
             if (!ret) [self showSavingFailureDialog];
             else [_window setDocumentEdited: _scanning];
     
