@@ -191,7 +191,7 @@ void USBJack::startMatching()
 
 KFrame *USBJack::receiveFrame()
 {
-    UInt16 len, channel;
+    UInt16 len = 0, channel = 0;
     KFrame *ret = (KFrame *)&_frameBuffer;
     void *receivedFrame;
     

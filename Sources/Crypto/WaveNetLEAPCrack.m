@@ -60,7 +60,7 @@ struct leapClientData {
     FILE* fptr = nil;
     unsigned int i, words, curKey;
 	int keys;
-    struct leapClientData *c;
+    struct leapClientData *c = NULL;
     WaveClient *wc;
     unsigned char pwhash[MD4_DIGEST_LENGTH];
     
@@ -73,33 +73,36 @@ struct leapClientData {
     for (i = 0; i < [aClientKeys count]; ++i) {
         if ([aClients[aClientKeys[i]] leapDataAvailable]) ++keys;
     }
-
-    curKey = 0;
-    c = malloc(keys * sizeof(struct leapClientData));
     
-    for (i = 0; i < [aClientKeys count]; ++i) {
-        wc = aClients[aClientKeys[i]];
-        if ([wc leapDataAvailable]) {
-            if ([[wc ID] isEqualToString:_BSSID]) {
-                keys--;
-            } else {
-                c[curKey].username  = [wc leapUsername];
-                c[curKey].challenge = [[wc leapChallenge] bytes];
-                c[curKey].response  = [[wc leapResponse]  bytes];
-                c[curKey].clientID  = [wc ID];
-                
-                //prepare our attack
-                if (gethashlast2(c[curKey].challenge, c[curKey].response, c[curKey].hashend) == 0)
-                    ++curKey;
-                else 
-                    --keys;
-            }
-        }
-    }
+	if (keys>0)
+	{
+		curKey = 0;
+		c = malloc(keys * sizeof(struct leapClientData));
+	
+		for (i = 0; i < [aClientKeys count]; ++i) {
+			wc = aClients[aClientKeys[i]];
+			if ([wc leapDataAvailable]) {
+				if ([[wc ID] isEqualToString:_BSSID]) {
+					keys--;
+				} else {
+					c[curKey].username  = [wc leapUsername];
+					c[curKey].challenge = [[wc leapChallenge] bytes];
+					c[curKey].response  = [[wc leapResponse]  bytes];
+					c[curKey].clientID  = [wc ID];
+					
+					//prepare our attack
+					if (gethashlast2(c[curKey].challenge, c[curKey].response, c[curKey].hashend) == 0)
+						++curKey;
+					else 
+						--keys;
+				}
+			}
+		}
+	}
 
     if (keys<=0) {
 		_crackErrorString = NSLocalizedString(@"The captured challenge response packets are not sufficient to perform this attack", @"Error description for LEAP crack.");
-		free(c);
+		if (c) free(c);
 		return NO;
 	}
     

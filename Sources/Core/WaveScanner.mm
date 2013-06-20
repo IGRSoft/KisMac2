@@ -102,10 +102,10 @@
 //does the active scanning (extra thread)
 - (void)doActiveScan:(WaveDriver*)wd {
     NSArray *nets;
-    float interval;
-    NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
+    //float interval;
+    //NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
     
-    interval = [defs floatForKey:@"activeScanInterval"];
+    //interval = [defs floatForKey:@"activeScanInterval"];
     if ([wd startedScanning]) {
 		while (_scanning) {
 			nets = [wd networksInRange];
@@ -456,7 +456,7 @@
 //returns the next frame in a pcap file
 -(KFrame*) nextFrame:(bool*)corrupted
 {
-    UInt8 *b;
+    UInt8 *b = NULL;
     struct pcap_pkthdr h;
     int offset;
 

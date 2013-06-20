@@ -345,8 +345,8 @@ IOReturn	RT73Jack::RTUSBReadMACRegister(
 				USHORT	Offset,
 				ULONG	*pValue)
 {
-	IOReturn Status;
-	UInt32 reg;
+	IOReturn Status = kIOReturnSuccess;
+	UInt32 reg = 0;
 	Status = RTUSB_VendorRequest(kUSBIn,
                                  0x7,
                                  0,
@@ -1340,8 +1340,8 @@ v*/
 
 bool    RT73Jack::setChannel(UInt16 channel){
 	unsigned long	R3 = DEFAULT_RF_TX_POWER, R4;
-	char	Bbp94 = BBPR94_DEFAULT;	
-	unsigned char	index, BbpReg;
+	char			Bbp94 = BBPR94_DEFAULT;	
+	unsigned char	index = 0, BbpReg = 0;
 
 /*
 	// Select antenna

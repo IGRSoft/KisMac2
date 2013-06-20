@@ -64,7 +64,7 @@ set_odd_parity(unsigned char *key)
 
 static u_char Get7Bits(const unsigned char *input, int startBit)
 {
-    register unsigned int       word;
+    register unsigned int       word = 0;
 	
     word  = (unsigned)input[startBit / 8] << 8;
     word |= (unsigned)input[startBit / 8 + 1];

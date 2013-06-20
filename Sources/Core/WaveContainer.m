@@ -347,9 +347,9 @@ UInt32 hashForMAC(const UInt8* val) {
 }
 
 - (bool) loadData:(NSArray*)data {
-    id n;
-    int i;
-    WaveNet *net;
+    id n = nil;
+    int i = 0;
+    WaveNet *net = nil;
      
     for (i=0; i<[data count]; ++i) {
         n = [data objectAtIndex:i];
@@ -368,8 +368,9 @@ UInt32 hashForMAC(const UInt8* val) {
         }
         
         CFRetain((__bridge CFTypeRef)(n));
-        net = n;
-        
+        net = [n copy];
+        CFRelease((__bridge CFTypeRef)(n));
+		
         [self addNetwork:net];
     }
     
@@ -430,6 +431,7 @@ UInt32 hashForMAC(const UInt8* val) {
         
         if (_netCount == MAXNETS) {
             NSLog(@"Loaded more networks, but could not add them since you reached MAXNETS. Please recompile with a higher value");
+			CFRetain((__bridge CFTypeRef)(n));
             return YES;
         }
         

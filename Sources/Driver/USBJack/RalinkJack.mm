@@ -35,11 +35,11 @@ char *RalinkJack::getPlistFile()
 }
 
 IOReturn RalinkJack::_init() {
-    unsigned long			Index;
-	unsigned short			temp;
+    unsigned long			Index = 0;
+	unsigned short			temp = 0;
 	unsigned char			Value = 0xff;
-	unsigned int			i;
-    IOReturn                ret;
+	unsigned int			i = 0;
+    IOReturn                ret = kIOReturnSuccess;
     
     if(!_attachDevice()){
         DBNSLog(@"Device could not be opened");
@@ -324,8 +324,8 @@ IOReturn	RalinkJack::RTUSBWriteBBPRegister(unsigned char Id,
                                   unsigned char Value)
 {
 	PHY_CSR7_STRUC	PhyCsr7;
-	unsigned short	temp;
-	unsigned int			i = 0;
+	unsigned short	temp = 0;
+	unsigned int	i = 0;
 
 	do
 	{
@@ -548,7 +548,7 @@ IOReturn	RalinkJack::RTUSBReadEEPROM(unsigned short Offset,
                                         unsigned char * pData,
                                         unsigned short length)
 {
-	IOReturn	Status;
+	IOReturn	Status = kIOReturnSuccess;
 	
 	Status = RTUSB_VendorRequest(kUSBIn,
                                  0x9,
@@ -563,9 +563,9 @@ IOReturn	RalinkJack::RTUSBReadEEPROM(unsigned short Offset,
 
 void	RalinkJack::NICReadEEPROMParameters()
 {
-	USHORT			i;
-	int			value;
-    unsigned char PermanentAddress[ETH_LENGTH_OF_ADDRESS];
+	USHORT		i = 0;
+	int			value = 0;
+    unsigned char PermanentAddress[ETH_LENGTH_OF_ADDRESS] = {0, 0, 0, 0, 0, 0};
 	EEPROM_ANTENNA_STRUC	Antenna;//blue
     //	EEPROM_VERSION_STRUC	Version;
         
@@ -588,7 +588,7 @@ void	RalinkJack::NICReadEEPROMParameters()
     
 	// Read Tx power value for all 14 channels
 	// Value from 1 - 0x7f. Default value is 24.
-    char ChannelTxPower[14];
+    char ChannelTxPower[14] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 	RTUSBReadEEPROM(EEPROM_TX_PWR_OFFSET, (unsigned char *)ChannelTxPower, 2 * NUM_EEPROM_TX_PARMS);
 	for (i = 0; i < 2 * NUM_EEPROM_TX_PARMS; ++i)
 	{
@@ -699,8 +699,8 @@ void RalinkJack::NICInitAsicFromEEPROM()
 		if((value != 0xFFFF) && (value != 0))
 		{
 			//blue,RTUSBWriteMACRegister(PHY_CSR7, value);
-			USHORT	ID;
-			ID = ((value & 0xff00) >> 8);
+			//USHORT	ID;
+			//ID = ((value & 0xff00) >> 8);
 			{
 				unsigned short	temp;
 				unsigned int	j = 0;
