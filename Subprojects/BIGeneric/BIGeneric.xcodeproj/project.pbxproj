@@ -436,6 +436,7 @@
 				);
 				PRODUCT_NAME = BIGeneric;
 				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -493,6 +494,7 @@
 				);
 				PRODUCT_NAME = BIGeneric;
 				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
