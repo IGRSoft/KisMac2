@@ -117,7 +117,6 @@
 		00F9C64006DB378F00E357F0 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00F9C63F06DB378F00E357F0 /* Security.framework */; };
 		00F9C65006DB37E200E357F0 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00F9C64E06DB37E200E357F0 /* Carbon.framework */; };
 		00F9C65106DB37E200E357F0 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00F9C64F06DB37E200E357F0 /* IOKit.framework */; };
-		689FF0720DB9AEF500ED7BE5 /* OUItoVendorDB.pl in Resources */ = {isa = PBXBuildFile; fileRef = 689FF0710DB9AEF500ED7BE5 /* OUItoVendorDB.pl */; };
 		6902662E0F25C0B500CEE671 /* wepInjection.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6902662D0F25C0B500CEE671 /* wepInjection.xib */; };
 		691CF1B00E4CC47C0042B146 /* UsbVendorsIntersil.plist in Resources */ = {isa = PBXBuildFile; fileRef = 691CF1AC0E4CC47B0042B146 /* UsbVendorsIntersil.plist */; };
 		691CF1B10E4CC47C0042B146 /* UsbVendorsRT73.plist in Resources */ = {isa = PBXBuildFile; fileRef = 691CF1AD0E4CC47C0042B146 /* UsbVendorsRT73.plist */; };
@@ -1348,7 +1347,6 @@
 				6C541AAB0A72002F00B58A95 /* growl-ap-revealed.png in Resources */,
 				6C541AAC0A72003000B58A95 /* growl-wpa-challenge.png in Resources */,
 				6C541AAD0A72003000B58A95 /* growl-wpa-response.png in Resources */,
-				689FF0720DB9AEF500ED7BE5 /* OUItoVendorDB.pl in Resources */,
 				691CF1B00E4CC47C0042B146 /* UsbVendorsIntersil.plist in Resources */,
 				691CF1B10E4CC47C0042B146 /* UsbVendorsRT73.plist in Resources */,
 				691CF1B20E4CC47C0042B146 /* UsbVendorsRT2570.plist in Resources */,

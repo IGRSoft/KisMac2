@@ -42,7 +42,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleGetInfoString</key>
-	<string>KisMAC 0.3, © 2002-2012 Geoffrey Kruse &amp; KisMAC Community</string>
+	<string>KisMAC 0.3, © 2002-2013 Geoffrey Kruse &amp; KisMAC Community (Rewrited by Vitalii Parovishnyk &amp; IGR Software)</string>
 	<key>CFBundleHelpBookFolder</key>
 	<string>KisMACHelp</string>
 	<key>CFBundleHelpBookName</key>
