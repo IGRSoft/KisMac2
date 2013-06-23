@@ -1314,6 +1314,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 		&& ![ssid isEqualToString:NSLocalizedString(@"<lucent tunnel>", "ssid for lucent tunnels")]
 		&& ![ssid isEqualToString:NSLocalizedString(@"<any ssid>", "the any ssid for probe nets")]
 		&& ![ssid isEqualToString:@"<no ssid>"]
+		&& ![ssid isEqualToString:@""]
 		)
 	{
 		return true;

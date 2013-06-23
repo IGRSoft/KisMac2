@@ -70,7 +70,8 @@ UInt32 hashForMAC(const UInt8* val) {
 
 @implementation WaveContainer
 
--(id) init {
+- (id)init
+{
     int i;
     self = [super init];
     if (!self) return Nil;
@@ -90,8 +91,12 @@ UInt32 hashForMAC(const UInt8* val) {
     
     _sortLock = [[NSLock alloc] init];
     
-    for(i=0; i<LOOKUPSIZE; ++i) _lookup[i]=LOOKUPSIZE;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSettings:) name:KisMACFiltersChanged object:nil];
+    for( i = 0 ; i < LOOKUPSIZE ; ++i)
+		_lookup[i]=LOOKUPSIZE;
+    
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(updateSettings:)
+												 name:KisMACFiltersChanged object:nil];
     [self updateSettings:nil];
 	
 	queue = [[NSOperationQueue alloc] init];
@@ -101,7 +106,8 @@ UInt32 hashForMAC(const UInt8* val) {
 
 #pragma mark -
 
-- (void)updateSettings:(NSNotification*)note {
+- (void)updateSettings:(NSNotification*)note
+{
     NSArray *filtered;
     unsigned int i, j, tmp[6];
     NSUserDefaults *sets = [NSUserDefaults standardUserDefaults];
@@ -109,10 +115,12 @@ UInt32 hashForMAC(const UInt8* val) {
     filtered = [sets objectForKey:@"FilterBSSIDList"];
     
     _filterCount = 0;
-    for(i=0; i<[filtered count]; ++i) {
-        if (sscanf([[filtered objectAtIndex:i] UTF8String],"%2X%2X%2X%2X%2X%2X", &tmp[0], &tmp[1], &tmp[2], &tmp[3], &tmp[4], &tmp[5]) != 6) continue;
+    for( i = 0 ; i < [filtered count] ; ++i)
+	{
+        if (sscanf([[filtered objectAtIndex:i] UTF8String],"%2X%2X%2X%2X%2X%2X", &tmp[0], &tmp[1], &tmp[2], &tmp[3], &tmp[4], &tmp[5]) != 6)
+			continue;
     
-        for (j=0; j<6; ++j)
+        for ( j = 0 ; j < 6 ; ++j)
             _filter[i][j] = tmp[j];
         
         ++_filterCount;
@@ -122,7 +130,8 @@ UInt32 hashForMAC(const UInt8* val) {
 
 #pragma mark -
 
-- (void) addNetToView:(unsigned int)entry {
+- (void) addNetToView:(unsigned int)entry
+{
     BOOL add = NO;
     
     switch (_viewType) {
@@ -150,59 +159,123 @@ UInt32 hashForMAC(const UInt8* val) {
 	}*/
 	
 	// switch type here
-	if ( [_filterType isEqualToString:@"SSID"] ) {
-		if (add && (_filterString == nil || [[_idList[entry].net SSID] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location != NSNotFound)) {
+	if ( [_filterType isEqualToString:@"SSID"] )
+	{
+		if (add
+			&& ((_filterString == nil || [[_idList[entry].net SSID] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location != NSNotFound))
+			&& [_idList[entry].net isCorrectSSID])
+		{
 			_sortedList[_sortedCount] = entry;
 			++_sortedCount;
 			[_idList[entry].net setVisible: YES];
-		} else [_idList[entry].net setVisible: NO];
-	} else if ( [_filterType isEqualToString:@"BSSID"] ) {
-		if (add && (_filterString == nil || [[_idList[entry].net BSSID] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location != NSNotFound)) {
+		}
+		else
+		{
+			[_idList[entry].net setVisible: NO];
+		}
+	} else if ( [_filterType isEqualToString:@"BSSID"] )
+	{
+		if (add
+			&& ((_filterString == nil || [[_idList[entry].net BSSID] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location != NSNotFound))
+			&& [_idList[entry].net isCorrectSSID])
+		{
 			_sortedList[_sortedCount] = entry;
 			++_sortedCount;
 			[_idList[entry].net setVisible: YES];
-		} else [_idList[entry].net setVisible: NO];
-	} else if ( [_filterType isEqualToString:@"Vendor"]) {
-		if (add && (_filterString == nil || [[_idList[entry].net getVendor] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location != NSNotFound)) {
+		}
+		else
+		{
+			[_idList[entry].net setVisible: NO];
+		}
+	} else if ( [_filterType isEqualToString:@"Vendor"])
+	{
+		if (add
+			&& ((_filterString == nil || [[_idList[entry].net getVendor] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location != NSNotFound))
+			&& [_idList[entry].net isCorrectSSID])
+		{
 			_sortedList[_sortedCount] = entry;
 			++_sortedCount;
 			[_idList[entry].net setVisible: YES];
-		} else [_idList[entry].net setVisible: NO];
-	} else if ( [_filterType isEqualToString:@"Encryption"]) { 
-		if (add && (_filterString == nil || ( [[self getStringForEncryptionType:[_idList[entry].net wep]] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location) != NSNotFound)) {
+		}
+		else
+		{
+			[_idList[entry].net setVisible: NO];
+		}
+	} else if ( [_filterType isEqualToString:@"Encryption"])
+	{
+		if (add
+			&& ((_filterString == nil || ( [[self getStringForEncryptionType:[_idList[entry].net wep]] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location) != NSNotFound))
+			&& [_idList[entry].net isCorrectSSID])
+		{
 			_sortedList[_sortedCount] = entry;
 			++_sortedCount;
 			[_idList[entry].net setVisible: YES];
-		} else [_idList[entry].net setVisible: NO]; 
-	} else if ( [_filterType isEqualToString:@"Main Channel"]) { 
-		if (add && (_filterString == nil || ( [[NSString stringWithFormat:@"%i",[_idList[entry].net originalChannel]] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location) != NSNotFound)) {
+		}
+		else
+		{
+			[_idList[entry].net setVisible: NO];
+		}
+	} else if ( [_filterType isEqualToString:@"Main Channel"])
+	{
+		if (add
+			&& ((_filterString == nil || ( [[NSString stringWithFormat:@"%i",[_idList[entry].net originalChannel]] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location) != NSNotFound))
+			&& [_idList[entry].net isCorrectSSID])
+		{
 			_sortedList[_sortedCount] = entry;
 			++_sortedCount;
 			[_idList[entry].net setVisible: YES];
-		} else [_idList[entry].net setVisible: NO]; 
-	} else if ( [_filterType isEqualToString:@"Comment"]) { 
-		if (add && (_filterString == nil || ( [[_idList[entry].net comment] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location) != NSNotFound)) {
+		}
+		else {
+			[_idList[entry].net setVisible: NO];
+		}
+	} else if ( [_filterType isEqualToString:@"Comment"])
+	{
+		if (add
+			&& ((_filterString == nil || ( [[_idList[entry].net comment] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location) != NSNotFound))
+			&& [_idList[entry].net isCorrectSSID])
+		{
 			_sortedList[_sortedCount] = entry;
 			++_sortedCount;
 			[_idList[entry].net setVisible: YES];
-		} else [_idList[entry].net setVisible: NO]; 
-	} else if ( [_filterType isEqualToString:@"Type"]) {
-		if (add && (_filterString == nil || ( [[self getStringForNetType:[_idList[entry].net type]] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location) != NSNotFound)) {
+		}
+		else
+		{
+			[_idList[entry].net setVisible: NO];
+		}
+	} else if ( [_filterType isEqualToString:@"Type"])
+	{
+		if (add
+			&& ((_filterString == nil || ( [[self getStringForNetType:[_idList[entry].net type]] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location) != NSNotFound))
+			&& [_idList[entry].net isCorrectSSID])
+		{
 			_sortedList[_sortedCount] = entry;
 			++_sortedCount;
 			[_idList[entry].net setVisible: YES];
-		} else [_idList[entry].net setVisible: NO]; 
-	} else {		_filterType = @"SSID";
-		if (add && (_filterString == nil || [[_idList[entry].net SSID] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location != NSNotFound)) {
+		}
+		else
+		{
+			[_idList[entry].net setVisible: NO];
+		}
+	} else
+	{
+		_filterType = @"SSID";
+		if (add
+			&& ((_filterString == nil || [[_idList[entry].net SSID] rangeOfString:_filterString options:NSCaseInsensitiveSearch].location != NSNotFound))
+			&& [_idList[entry].net isCorrectSSID])
+		{
 			_sortedList[_sortedCount] = entry;
 			++_sortedCount;
 			[_idList[entry].net setVisible: YES];
-		} else [_idList[entry].net setVisible: NO];
+		}
+		else
+		{
+			[_idList[entry].net setVisible: NO];
+		}
 	}
-	
 }
 
-- (NSString*) getImageForChallengeResponse:(int)challengeResponseStatus {
+- (NSString*) getImageForChallengeResponse:(int)challengeResponseStatus
+{
     switch (challengeResponseStatus) {
         case chreResponse:
         case chreChallenge:
@@ -215,7 +288,8 @@ UInt32 hashForMAC(const UInt8* val) {
     }
 }
 
-- (NSString*) getStringForEncryptionType:(encryptionType)encryption {
+- (NSString*) getStringForEncryptionType:(encryptionType)encryption
+{
 	switch(encryption) {
 		case encryptionTypeNone: 
 			return @"NO";
@@ -230,10 +304,10 @@ UInt32 hashForMAC(const UInt8* val) {
 		default:
 			return @"Unknown";
 	}
-	
 }
 
-- (NSString*) getStringForNetType:(networkType)type {
+- (NSString*) getStringForNetType:(networkType)type
+{
 	switch (type) {
 		case networkTypeUnknown:
 			return @"Unknown";
@@ -253,15 +327,17 @@ UInt32 hashForMAC(const UInt8* val) {
 	}
 }
 
-- (void) refreshView {
+- (void) refreshView
+{
     unsigned int i;
     
     _sortedCount = 0;
-    for (i=0; i<_netCount; ++i)
+    for ( i = 0 ; i < _netCount ; ++i)
         [self addNetToView:i];
 }
 
-- (void) setViewType:(int)type value:(id)val {
+- (void) setViewType:(int)type value:(id)val
+{
     _viewType = type;
     
     switch(_viewType) {
@@ -282,26 +358,32 @@ UInt32 hashForMAC(const UInt8* val) {
     [self refreshView];
 }
 
-- (void) setFilterString:(NSString*)filter {
-    if ([filter length] == 0) _filterString = nil;
-    else _filterString = filter;
+- (void) setFilterString:(NSString*)filter
+{
+    if ([filter length] == 0)
+		_filterString = nil;
+    else
+		_filterString = filter;
     
     [self refreshView];    
 }
 
-- (void) setFilterType:(NSString*)filter {
+- (void) setFilterType:(NSString*)filter
+{
 	_filterString = filter;
     [self refreshView];    
 }
 
 #pragma mark -
 
-- (bool) addNetwork:(WaveNet*)net {
+- (bool) addNetwork:(WaveNet*)net
+{
     unsigned int entry, l;
     
 	NSParameterAssert(net);
 	
-    if (_netCount >= MAXNETS) return NO;
+    if (_netCount >= MAXNETS)
+		return NO;
     
     ++_netCount;
     entry = _netCount - 1;
@@ -321,7 +403,8 @@ UInt32 hashForMAC(const UInt8* val) {
     return YES;
 }
 
-- (bool) loadLegacyData:(NSDictionary*)data {
+- (bool) loadLegacyData:(NSDictionary*)data
+{
     NSEnumerator *e;
     id n;
     WaveNet *net;
@@ -346,23 +429,29 @@ UInt32 hashForMAC(const UInt8* val) {
     return YES;
 }
 
-- (bool) loadData:(NSArray*)data {
+- (bool) loadData:(NSArray*)data
+{
     id n = nil;
     int i = 0;
     WaveNet *net = nil;
      
-    for (i=0; i<[data count]; ++i) {
+    for ( i = 0 ; i < [data count] ; ++i)
+	{
         n = [data objectAtIndex:i];
-        if (![n isMemberOfClass:[WaveNet class]]) {
-			if (![n isKindOfClass:[NSDictionary class]]) {
+        if (![n isMemberOfClass:[WaveNet class]])
+		{
+			if (![n isKindOfClass:[NSDictionary class]])
+			{
 				NSLog(@"Could not load data, because it is bad!");
 				return NO;
 			}
 			n = [[WaveNet alloc] initWithDataDictionary:n];
-			if (!n) continue;
+			if (!n)
+				continue;
         }
         
-        if (_netCount == MAXNETS) {
+        if (_netCount == MAXNETS)
+		{
             NSLog(@"Loaded more networks, but could not add them since you reached MAXNETS. Please recompile with a higher value");
             return YES;
         }
@@ -377,7 +466,8 @@ UInt32 hashForMAC(const UInt8* val) {
     return YES;
 }
 
-- (bool) importLegacyData:(NSDictionary*)data {
+- (bool) importLegacyData:(NSDictionary*)data
+{
     NSEnumerator *e;
     id n;
     WaveNet *net;
@@ -387,8 +477,10 @@ UInt32 hashForMAC(const UInt8* val) {
         if ([_idList[i].net netID] > maxID) maxID = [_idList[i].net netID];
 
     e = [data objectEnumerator];
-    while ((n = [e nextObject])) {
-        if (![n isMemberOfClass:[WaveNet class]]) {
+    while ((n = [e nextObject]))
+	{
+        if (![n isMemberOfClass:[WaveNet class]])
+		{
             NSLog(@"Could not load legacy data, because it is bad!");
             return NO;
         }
@@ -400,16 +492,20 @@ UInt32 hashForMAC(const UInt8* val) {
         
         net = [self netForKey:[n rawID]];
         
-        if (!net) {
+        if (!net)
+		{
             [self addNetwork:n];
             [n setNetID:++maxID];
-        } else [net mergeWithNet:n];
+        }
+		else
+			[net mergeWithNet:n];
     }
     
     return YES;
 }
 
-- (bool) importData:(NSArray*)data {
+- (bool) importData:(NSArray*)data
+{
     id n;
     int i, maxID = 0;
     WaveNet *net = nil;
@@ -417,10 +513,13 @@ UInt32 hashForMAC(const UInt8* val) {
     for(i = 0; i < _netCount; ++i)
         if ([_idList[i].net netID] > maxID) maxID = [_idList[i].net netID];
     
-    for (i=0; i<[data count]; ++i) {
+    for ( i = 0 ; i < [data count] ; ++i)
+	{
         n = [data objectAtIndex:i];
-        if (![n isMemberOfClass:[WaveNet class]]) {
-			if (![n isMemberOfClass:[NSDictionary class]]) {
+        if (![n isMemberOfClass:[WaveNet class]])
+		{
+			if (![n isMemberOfClass:[NSDictionary class]])
+			{
 				NSLog(@"Could not load data, because it is bad!");
 				return NO;
 			}
@@ -429,7 +528,8 @@ UInt32 hashForMAC(const UInt8* val) {
         
         [n setNetID:0];
         
-        if (_netCount == MAXNETS) {
+        if (_netCount == MAXNETS)
+		{
             NSLog(@"Loaded more networks, but could not add them since you reached MAXNETS. Please recompile with a higher value");
 			CFRetain((__bridge CFTypeRef)(n));
             return YES;
@@ -442,18 +542,21 @@ UInt32 hashForMAC(const UInt8* val) {
         {
             [self addNetwork:n];
             [n setNetID:++maxID];
-        } else [net mergeWithNet:n];
+        }
+		else
+			[net mergeWithNet:n];
     }
 
     return YES;
 }
 
-- (NSArray*) dataToSave {
+- (NSArray*) dataToSave
+{
     NSMutableArray *a;
     unsigned int i;
     
     a = [NSMutableArray arrayWithCapacity:_netCount];
-    for (i=0; i<_netCount; ++i)
+    for ( i = 0 ; i < _netCount ; ++i)
         [a addObject:[_idList[i].net dataDictionary]];
 
     return a;
@@ -462,76 +565,103 @@ UInt32 hashForMAC(const UInt8* val) {
 #pragma mark -
 
 
-int compValues(int v1, int v2) {
+int compValues(int v1, int v2)
+{
     if (v1 < v2) return NSOrderedAscending;
     else if (v1 > v2) return NSOrderedDescending;
     else return NSOrderedSame;
 }
-int channelSort(WaveSort* p, const int *index1, const int *index2) {
+
+int channelSort(WaveSort* p, const int *index1, const int *index2)
+{
     int v1 = [(*p).idList[*index1].net channel];
     int v2 = [(*p).idList[*index2].net channel];
     return (*p).ascend * compValues(v1,v2);
 }
-int primaryChannelSort(WaveSort* p, const int *index1, const int *index2) {
+
+int primaryChannelSort(WaveSort* p, const int *index1, const int *index2)
+{
     int v1 = [(*p).idList[*index1].net originalChannel];
     int v2 = [(*p).idList[*index2].net originalChannel];
     return (*p).ascend * compValues(v1,v2);
 }
-int idSort(WaveSort* p, const int *index1, const int *index2) {
+
+int idSort(WaveSort* p, const int *index1, const int *index2)
+{
     int v1 = [(*p).idList[*index1].net netID];
     int v2 = [(*p).idList[*index2].net netID];
     return (*p).ascend * compValues(v1,v2);
 }
-int bssidSort(WaveSort* p, const int *index1, const int *index2) {
+
+int bssidSort(WaveSort* p, const int *index1, const int *index2)
+{
     NSString *d1 = [(*p).idList[*index1].net BSSID];
     NSString *d2 = [(*p).idList[*index2].net BSSID];
     return (*p).ascend * [d1 compare:d2 options:NSLiteralSearch];
 }
-int ssidSort(WaveSort* p, const int *index1, const int *index2) {
+
+int ssidSort(WaveSort* p, const int *index1, const int *index2)
+{
     int i;
     NSString *d1 = [(*p).idList[*index1].net SSID];
     NSString *d2 = [(*p).idList[*index2].net SSID];
     i =  [d1 compare:d2 options:NSLiteralSearch|NSCaseInsensitiveSearch];
     return (*p).ascend * i;
 }
-int wepSort(WaveSort* p, const int *index1, const int *index2) {
+
+int wepSort(WaveSort* p, const int *index1, const int *index2)
+{
     int v1 = [(*p).idList[*index1].net wep];
     int v2 = [(*p).idList[*index2].net wep];
     return (*p).ascend * compValues(v1,v2);
 }
-int typeSort(WaveSort* p, const int *index1, const int *index2) {
+
+int typeSort(WaveSort* p, const int *index1, const int *index2)
+{
     int v1 = [(*p).idList[*index1].net type];
     int v2 = [(*p).idList[*index2].net type];
     return (*p).ascend * compValues(v1,v2);
 }
-int signalSort(WaveSort* p, const int *index1, const int *index2) {
+
+int signalSort(WaveSort* p, const int *index1, const int *index2)
+{
     int v1 = [(*p).idList[*index1].net curSignal];
     int v2 = [(*p).idList[*index2].net curSignal];
     return (*p).ascend * compValues(v1,v2);
 }
-int maxSignalSort(WaveSort* p, const int *index1, const int *index2) {
+
+int maxSignalSort(WaveSort* p, const int *index1, const int *index2)
+{
     int v1 = [(*p).idList[*index1].net maxSignal];
     int v2 = [(*p).idList[*index2].net maxSignal];
     return (*p).ascend * compValues(v1,v2);
 }
-int avgSignalSort(WaveSort* p, const int *index1, const int *index2) {
+
+int avgSignalSort(WaveSort* p, const int *index1, const int *index2)
+{
     int v1 = [(*p).idList[*index1].net avgSignal];
     int v2 = [(*p).idList[*index2].net avgSignal];
     return (*p).ascend * compValues(v1,v2);
 }
-int packetsSort(WaveSort* p, const int *index1, const int *index2) {
+
+int packetsSort(WaveSort* p, const int *index1, const int *index2)
+{
     int v1 = [(*p).idList[*index1].net packets];
     int v2 = [(*p).idList[*index2].net packets];
     return (*p).ascend * compValues(v1,v2);
 }
-int dataSort(WaveSort* p, const int *index1, const int *index2) {
+
+int dataSort(WaveSort* p, const int *index1, const int *index2)
+{
     float v1 = [(*p).idList[*index1].net dataCount];
     float v2 = [(*p).idList[*index2].net dataCount];
     if (v1 < v2) return (*p).ascend * NSOrderedAscending;
     else if (v1 > v2) return (*p).ascend * NSOrderedDescending;
     else return NSOrderedSame;
 }
-int lastSeenSort(WaveSort* p, const int *index1, const int *index2) {
+
+int lastSeenSort(WaveSort* p, const int *index1, const int *index2)
+{
     NSDate *d1 = [(*p).idList[*index1].net lastSeenDate];
     NSDate *d2 = [(*p).idList[*index2].net lastSeenDate];
     return (*p).ascend * [d1 compare:d2];
@@ -539,7 +669,8 @@ int lastSeenSort(WaveSort* p, const int *index1, const int *index2) {
 
 typedef int (*SORTFUNC)(void *, const void *, const void *);
 
-- (void) sortByColumn:(NSString*)ident order:(bool)ascend {
+- (void) sortByColumn:(NSString*)ident order:(bool)ascend
+{
 	[queue addOperationWithBlock:^{
 		WaveSort ws;
 		
@@ -568,7 +699,8 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 	}];
 }
 
-- (void) sortWithShakerByColumn:(NSString*)ident order:(bool)ascend {
+- (void) sortWithShakerByColumn:(NSString*)ident order:(bool)ascend
+{
 	
 	[queue addOperationWithBlock:^{
 
@@ -585,28 +717,30 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 		ws.idList = _idList;
 		ws.sortedList = _sortedList;
 		
-		if ([ident isEqualToString:@"channel"]) func = (SORTFUNC)channelSort;
+		if ([ident isEqualToString:@"channel"])				func = (SORTFUNC)channelSort;
 		else if ([ident isEqualToString:@"primaryChannel"]) func = (SORTFUNC)primaryChannelSort;
-		else if ([ident isEqualToString:@"id"]) func = (SORTFUNC)idSort;
-		else if ([ident isEqualToString:@"bssid"]) func = (SORTFUNC)bssidSort;
-		else if ([ident isEqualToString:@"ssid"]) func = (SORTFUNC)ssidSort;
-		else if ([ident isEqualToString:@"wep"]) func = (SORTFUNC)wepSort;
-		else if ([ident isEqualToString:@"type"]) func = (SORTFUNC)typeSort;
-		else if ([ident isEqualToString:@"signal"]) func = (SORTFUNC)signalSort;
-		else if ([ident isEqualToString:@"maxsignal"]) func = (SORTFUNC)maxSignalSort;
-		else if ([ident isEqualToString:@"avgsignal"]) func = (SORTFUNC)avgSignalSort;
-		else if ([ident isEqualToString:@"packets"]) func = (SORTFUNC)packetsSort;
-		else if ([ident isEqualToString:@"data"]) func = (SORTFUNC)dataSort;
-		else if ([ident isEqualToString:@"lastseen"]) func = (SORTFUNC)lastSeenSort;
-		else {
+		else if ([ident isEqualToString:@"id"])				func = (SORTFUNC)idSort;
+		else if ([ident isEqualToString:@"bssid"])			func = (SORTFUNC)bssidSort;
+		else if ([ident isEqualToString:@"ssid"])			func = (SORTFUNC)ssidSort;
+		else if ([ident isEqualToString:@"wep"])			func = (SORTFUNC)wepSort;
+		else if ([ident isEqualToString:@"type"])			func = (SORTFUNC)typeSort;
+		else if ([ident isEqualToString:@"signal"])			func = (SORTFUNC)signalSort;
+		else if ([ident isEqualToString:@"maxsignal"])		func = (SORTFUNC)maxSignalSort;
+		else if ([ident isEqualToString:@"avgsignal"])		func = (SORTFUNC)avgSignalSort;
+		else if ([ident isEqualToString:@"packets"])		func = (SORTFUNC)packetsSort;
+		else if ([ident isEqualToString:@"data"])			func = (SORTFUNC)dataSort;
+		else if ([ident isEqualToString:@"lastseen"])		func = (SORTFUNC)lastSeenSort;
+		else
+		{
 			[_sortLock unlock];
 			NSLog(@"Unknown sorting column. This is a bug and should never happen.");
 			return;
 		}
 		
-		for (y = 1; y <= _sortedCount; ++y) {
+		for (y = 1 ; y <= _sortedCount ; ++y) {
 			
-			for (x = y - 1; x < (_sortedCount - y); ++x) {
+			for (x = y - 1; x < (_sortedCount - y); ++x)
+			{
 				w = x + 1;
 				ret = (*func)(&ws, &_sortedList[x], &_sortedList[w]);
 				if (ret == NSOrderedDescending) {
@@ -622,13 +756,16 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 				}
 			}
 			
-			if (sorted) break;
+			if (sorted)
+				break;
+			
 			sorted = YES;
 			
-			for (x = (_sortedCount - y); x >= y; x--) {
+			for (x = (_sortedCount - y) ; x >= y ; x--) {
 				w = x - 1;
 				ret = (*func)(&ws, &_sortedList[w], &_sortedList[x]);
-				if (ret == NSOrderedDescending) {
+				if (ret == NSOrderedDescending)
+				{
 					sorted = NO;
 					
 					//switch places
@@ -651,23 +788,27 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 
 #pragma mark -
 
-- (BOOL)IDFiltered:(const unsigned char*)ID {
+- (BOOL)IDFiltered:(const unsigned char*)ID
+{
 	unsigned int i;
 	
-	for (i=0; i<_filterCount; ++i)
-		if (memcmp(ID, _filter[i], 6)==0) return YES;
+	for ( i = 0 ; i < _filterCount ; ++i)
+		if (memcmp(ID, _filter[i], 6)==0)
+			return YES;
 	
 	return NO;
 }
 
-- (unsigned int) findNetwork:(const unsigned char*)ID {
+- (unsigned int) findNetwork:(const unsigned char*)ID
+{
     unsigned int i, lentry;
     unsigned int entry = 0xFFFFFFFF;
     unsigned int l = 0;
     
     
     //see if it is filtered
-    if ([self IDFiltered:ID]) return 0xFFFFFFFF;
+    if ([self IDFiltered:ID])
+		return 0xFFFFFFFF;
 
     
     //lookup the net in the hashtable
@@ -675,7 +816,8 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
     lentry = l;
     
     i=_lookup[l];
-    while (i!=LOOKUPSIZE) {
+    while (i!=LOOKUPSIZE)
+	{
         if (memcmp(ID, _idList[i].ID, 6)==0) {
             entry = i;
             break;
@@ -684,10 +826,12 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
         i=_lookup[l];
     }
             
-    if (entry==0xFFFFFFFF) {
+    if (entry==0xFFFFFFFF)
+	{
         //the net does not exist - add it
         
-        if (_netCount == MAXNETS) {
+        if (_netCount == MAXNETS)
+		{
             NSLog(@"Found network, but could not add it since you reached MAXNETS. Please recompile with a higher value");
             return 0xFFFFFFFF;
         }
@@ -696,7 +840,8 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
         entry = _netCount - 1;
         memcpy(&_idList[entry].ID, ID, 6);
 		WaveNet *net = [[WaveNet alloc] initWithID:entry];
-		if ([[net SSID] isEqualToString:@"<no ssid>"]) {
+		if ([[net SSID] isEqualToString:@"<no ssid>"])
+		{
 			_idList[entry].net = net;
 			CFRetain((__bridge CFTypeRef)(_idList[entry].net));
 			_lookup[l] = entry;
@@ -711,7 +856,8 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 		}
     }
     
-    if (l != lentry) {
+    if (l != lentry)
+	{
         //optimize the hash table...
         i = _lookup[lentry];
         _lookup[lentry] = _lookup[l];
@@ -721,15 +867,20 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
     return entry;
 }
 
-- (bool) addPacket:(WavePacket*)p liveCapture:(bool)live {
+- (bool) addPacket:(WavePacket*)p liveCapture:(bool)live
+{
     unsigned int entry;
     unsigned char ID[6];
     
-    if (_dropAll) return YES;
-    if (![p ID:ID]) return YES;
+    if (_dropAll)
+		return YES;
+    
+	if (![p ID:ID])
+		return YES;
     
     entry = [self findNetwork:ID];
-    if (entry == 0xFFFFFFFF) return NO;                          //the object is filtered...
+    if (entry == 0xFFFFFFFF)
+		return NO;                          //the object is filtered...
     
     @synchronized(_idList[entry].net) {
 		[_idList[entry].net parsePacket:p withSound:live];		//add the packet to the network
@@ -750,12 +901,15 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 	
 	// [CWInterface bssid] returns a string formatted "00:00:00:00:00:00".
 	NSString* macString = [net bssid];
-	if (macString && ([macString length] == 17)) {
-		for (NSUInteger i = 0; i < 6; ++i) {
+	if (macString && ([macString length] == 17))
+	{
+		for (NSUInteger i = 0; i < 6; ++i)
+		{
 			NSString* part = [macString substringWithRange:NSMakeRange(i * 3, 2)];
 			NSScanner* scanner = [NSScanner scannerWithString:part];
 			unsigned int data = 0;
-			if (![scanner scanHexInt:&data]) {
+			if (![scanner scanHexInt:&data])
+			{
 				data = 0;
 			}
 			macData[i] = (unsigned char) data;
@@ -776,50 +930,63 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 
 #pragma mark -
 
-- (unsigned int) count {
+- (unsigned int) count
+{
     return _sortedCount;
 }
 
-- (WaveNet*) netAtIndex:(unsigned int)index {
-    if (index >= _sortedCount) return 0;
+- (WaveNet*) netAtIndex:(unsigned int)index
+{
+    if (index >= _sortedCount)
+		return 0;
+	
     return _idList[_sortedList[index]].net;
 }
-- (WaveNet*) netForKey:(unsigned char*) ID {
+
+- (WaveNet*) netForKey:(unsigned char*) ID
+{
     unsigned long i, l, entry = LOOKUPSIZE;
     
     //lookup the net in the hashtable
     l = hashForMAC(ID);
     
     i=_lookup[l];
-    while (i!=LOOKUPSIZE) {
-        if (memcmp(ID, _idList[i].ID, 6)==0) {
-                entry = i;
-                break;
+    while (i!=LOOKUPSIZE)
+	{
+        if (memcmp(ID, _idList[i].ID, 6)==0)
+		{
+			entry = i;
+			break;
         }
         l = (l + 1) % LOOKUPSIZE;
         i=_lookup[l];
     }
     
-    if (entry==LOOKUPSIZE) return nil;
+    if (entry==LOOKUPSIZE)
+		return nil;
     
     return _idList[entry].net;
 }
-- (NSMutableArray*) allNets {
+
+- (NSMutableArray*) allNets
+{
     NSMutableArray *a;
     unsigned int i;
     
     a = [NSMutableArray array];
-    for (i=0; i<_sortedCount; ++i)
+    for ( i = 0; i < _sortedCount ; ++i)
 	{
 		WaveNet *w = _idList[_sortedList[i]].net;
 		if (w) {
 			[a addObject:w];
 		}
     }
+	
     return a;
 }
 
-- (void) scanUpdate:(int)graphLength {
+- (void) scanUpdate:(int)graphLength
+{
     unsigned int i;
 
 	for(i = 0 ; i < _netCount ; ++i) {
@@ -834,18 +1001,23 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 	}
 }
 
-- (void) ackChanges {
+- (void) ackChanges
+{
     unsigned int i;
     for(i = 0 ; i < _netCount ; ++i) _idList[i].changed = NO;
 }
 
-- (unsigned int) nextChangedRow:(unsigned int)lastRow {
+- (unsigned int) nextChangedRow:(unsigned int)lastRow
+{
     unsigned int nxt;
     
-    if (lastRow==0xFFFFFFFF) nxt=0;
-    else nxt = lastRow + 1;
+    if (lastRow==0xFFFFFFFF)
+		nxt=0;
+    else
+		nxt = lastRow + 1;
     
-    while (nxt < _sortedCount) {
+    while (nxt < _sortedCount)
+	{
         if (_idList[_sortedList[nxt]].changed)
 		{
 			if ([_idList[_sortedList[nxt]].net isCorrectSSID]) {
@@ -859,7 +1031,8 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 }
 #pragma mark -
 
--(void) clearAllEntries {
+- (void) clearAllEntries
+{
     int i, oldcount;
     WaveNet *e;
     
@@ -867,11 +1040,14 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
     [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
     
     oldcount = _netCount;
-    for(i=0; i<LOOKUPSIZE; ++i) _lookup[i]=LOOKUPSIZE;
-    _sortedCount = 0;
+    for ( i = 0 ; i < LOOKUPSIZE ; ++i )
+		_lookup[i]=LOOKUPSIZE;
+    
+	_sortedCount = 0;
     _netCount = 0;
 
-    for (i=0; i<oldcount; ++i) {
+    for ( i = 0 ; i < oldcount ; ++i )
+	{
         e = _idList[i].net;
         _idList[i].net = Nil;
         CFRelease((__bridge CFTypeRef)(e));
@@ -903,13 +1079,13 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 	n = net;
     CFRelease((__bridge CFTypeRef)(n));
 	
-    for(i = 0; i < LOOKUPSIZE; ++i)
+    for( i = 0 ; i < LOOKUPSIZE; ++i )
     {
         _lookup[i] = LOOKUPSIZE;
     }
         
     //find the entry in the sorted list
-    for (i=0; i<_sortedCount; ++i)
+    for ( i = 0 ; i < _sortedCount ; ++i )
     {
 		entry = _sortedList[i];
 		if (memcmp(ID, _idList[entry].ID, 6)==0) break;
@@ -925,17 +1101,18 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
     _netCount--;
     
     //move down from the whole list
-    for (i = entry; i < _netCount; ++i)
+    for ( i = entry ; i < _netCount ; ++i)
     {
         _idList[i] = _idList[i+1];
     }
     
     //if it was not the last item in the list eradicate the one before
-    if (entry != i) _idList[i+1].net = nil;
-    else _idList[entry].net = nil;
+    if (entry != i)
+		_idList[i+1].net = nil;
+    else
+		_idList[entry].net = nil;
     
-    
-    for (i=0; i < _netCount; ++i)
+    for ( i = 0 ; i < _netCount ; ++i )
     {
         //add to hash table
         l = hashForMAC(_idList[i].ID);
@@ -958,15 +1135,18 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
     
     oldcount = _netCount;
 	
-    for (i=0; i<oldcount; ++i) {
+    for ( i = 0 ; i < oldcount ; ++i)
+	{
         e = _idList[i].net;
-        if (![e isCorrectSSID]) {
+        if (![e isCorrectSSID])
+		{
 			[self clearEntry:e];
 		}
     }
 }
 
--(void) dealloc {
+- (void) dealloc
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [self clearAllEntries];
@@ -974,11 +1154,13 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 	[queue cancelAllOperations];
 }
 
--(NSArray *)netFields {
+- (NSArray *)netFields
+{
     return _netFields;
 }
 
--(NSMutableArray *)displayedNetFields {
+- (NSMutableArray *)displayedNetFields
+{
     return _displayedNetFields;
 }
 
