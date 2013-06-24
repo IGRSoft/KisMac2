@@ -133,21 +133,21 @@
     
     data = [NSPropertyListSerialization dataFromPropertyList:@[wp[1],wp[2]] format:NSPropertyListXMLFormat_v1_0 errorDescription:&error];
     
-    if (error==Nil) [data writeToFile:[mapName stringByAppendingPathComponent:@"waypoints.plist"] atomically:NO];
+    if (error==nil) [data writeToFile:[mapName stringByAppendingPathComponent:@"waypoints.plist"] atomically:NO];
     else DBNSLog(@"Could not write XML File with Coordinates:%@", error);
     
-    return (error==Nil);
+    return (error==nil);
 }
 
 - (BOOL)loadFromFile:(NSString*)fileName {
     NSString *mapName = [fileName stringByExpandingTildeInPath];
-    NSString *error = Nil;
+    NSString *error = nil;
     NSArray *wps;
     NSDictionary *wp;
     int i;
     NSData* data;
 	NSDictionary* settings;
-    NSImage* img = Nil;
+    NSImage* img = nil;
     waypoint wpoint;
     
 	NS_DURING
@@ -158,7 +158,7 @@
         return NO;
     NS_ENDHANDLER
     
-    if (error!=Nil) {
+    if (error!=nil) {
         DBNSLog(@"Could not open XML File with Coordinates: %@", error);
         return NO; 
     }

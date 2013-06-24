@@ -247,7 +247,7 @@ unsigned long doFCS(unsigned char* buf, int len) {
     if (decCount>0&& decError>0) {
         NSBeginInformationalAlertSheet(
             NSLocalizedString(@"Decryption done.", "Decrypt error title"),
-            OK, nil, nil, [self window], self, NULL, @selector(closeWindow:returnCode:contextInfo:), (__bridge void *)(self), 
+            OK, nil, nil, [self window], self, nil, @selector(closeWindow:returnCode:contextInfo:), (__bridge void *)(self), 
             [NSString stringWithFormat: 
                 NSLocalizedString(@"KisMAC decrypted %u data frames. There were %u dropped frames, because of CRC errors.", "Decrypt dialog"), 
                 decCount, decError], nil
@@ -255,7 +255,7 @@ unsigned long doFCS(unsigned char* buf, int len) {
     } else if (decCount) {
         NSBeginInformationalAlertSheet(
             NSLocalizedString(@"Decryption done.", "Decrypt error title"),
-            OK, nil, nil, [self window], self, NULL, @selector(closeWindow:returnCode:contextInfo:), (__bridge void *)(self), 
+            OK, nil, nil, [self window], self, nil, @selector(closeWindow:returnCode:contextInfo:), (__bridge void *)(self), 
             [NSString stringWithFormat: 
                 NSLocalizedString(@"KisMAC decrypted all %u data frames.", "Decrypt dialog"), 
                 decCount], nil
@@ -263,7 +263,7 @@ unsigned long doFCS(unsigned char* buf, int len) {
     } else {
         NSBeginCriticalAlertSheet(
             NSLocalizedString(@"Decryption failed.", "Decrypt error title"),
-            OK, nil, nil, [self window], Nil, Nil, Nil, Nil, 
+            OK, nil, nil, [self window], nil, nil, nil, nil,
             [NSString stringWithFormat: 
                 NSLocalizedString(@"KisMAC dropped all %u data frames, because of CRC errors! This is most likely because you entered a wrong password.", "Decrypt dialog"), 
                 decError], nil

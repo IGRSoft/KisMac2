@@ -30,7 +30,7 @@
 
 - (id)initWithURL:(NSURL*)url andPostVariables:(NSDictionary*)postVariables reportErrors:(bool)reportErrors {
     self = [self init];
-    if (!self) return Nil;
+    if (!self) return nil;
     
     NSParameterAssert(url);
 

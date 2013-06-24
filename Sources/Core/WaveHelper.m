@@ -68,12 +68,12 @@ static NSDictionary *_vendors = nil;	//Dictionary
 static BISpeechController *_speechController = nil;
 
 // Global dictionary to keeps drivers
-static NSMutableDictionary* _waveDrivers = Nil;
+static NSMutableDictionary* _waveDrivers = nil;
 
 static NSWindow* aMainWindow;
 static GPSController* aGPSController;
 static MapView *_mapView;
-static NSMutableDictionary *_probes = Nil;
+static NSMutableDictionary *_probes = nil;
 static Trace *_trace;
 static ImportController *_im;
 static ScanController *_scanController;
@@ -128,7 +128,7 @@ static GPSInfoController *_gc;
     NSString *aVendor;
     
     // The dictionary is cached for speed, but it needs to be loaded the first time
-    if (_vendors == Nil) { 
+    if (_vendors == nil) { 
         _vendors = [NSDictionary dictionaryWithContentsOfFile:[[[NSBundle bundleForClass:[WaveHelper class]] resourcePath] stringByAppendingString:@"/vendor.db"]];
 		if (!_vendors) {
 			DBNSLog(@"No vendors Database found!");
@@ -249,7 +249,7 @@ static GPSInfoController *_gc;
         w = _waveDrivers[key];
         [_waveDrivers removeObjectForKey:key];
         [w unloadBackend];
-        w = Nil;
+        w = nil;
     }
     
     return YES;
@@ -313,7 +313,7 @@ static GPSInfoController *_gc;
                 NSRunCriticalAlertPanel(NSLocalizedString(@"Could not instantiate Driver.", "Driver init failed"),
                 [NSString stringWithFormat: NSLocalizedString (@"Instantiation Failure Description", @"LONG description of what might have gone wrong"),
                 name],
-                OK, Nil, Nil);
+                OK, nil, nil);
             
                 DBNSLog(@"Error could not instantiate driver %@", interfaceName);
                 return NO;
@@ -456,7 +456,7 @@ static GPSInfoController *_gc;
 }
 
 + (bool)runScript:(NSString*)script {
-    return [self runScript:script withArguments:Nil];
+    return [self runScript:script withArguments:nil];
 }
 + (bool)runScript:(NSString*)script withArguments:(NSArray*)args {
     //int perm;
@@ -472,7 +472,7 @@ static GPSInfoController *_gc;
             NSRunCriticalAlertPanel(NSLocalizedString(@"Execution failure.", "Execution failure title"),
                 NSLocalizedString(@"Execution failure description", "LONG Description of execution failure. No root privileges?!"),
                 //@"KisMAC could not execute an internal shell script. This is most likely since you have no root privileges."
-                OK ,Nil ,Nil);
+                OK ,nil ,nil);
             return NO;
         }
         return YES;
@@ -506,7 +506,7 @@ static GPSInfoController *_gc;
         warning, 
         NSLocalizedString(@"Retry", "Retry button"),
         NSLocalizedString(@"Abort", "Abort button"),
-        Nil);
+        nil);
 }
 
 #pragma mark -

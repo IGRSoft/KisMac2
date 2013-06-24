@@ -141,7 +141,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     [_window setDocumentEdited:NO];
     _refreshGUI = YES;
 	_refreshGPS = YES;
-    aMS = Nil;
+    aMS = nil;
     _zoomToRect = NSZeroRect;
     _importOpen = 0;
 	queue = [[NSOperationQueue alloc] init];
@@ -448,10 +448,10 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
         if (_ascending)
 			_ascending=NO;
         else {
-            _lastSorted = Nil;
-            [tableView setIndicatorImage:Nil
+            _lastSorted = nil;
+            [tableView setIndicatorImage:nil
 						   inTableColumn:tableColumn];
-            [tableView setHighlightedTableColumn:Nil];
+            [tableView setHighlightedTableColumn:nil];
             [tableView reloadData];
             return;
         }
@@ -491,7 +491,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
-    if (item != Nil)
+    if (item != nil)
     {
         return [(ScanHierarch*)item childAtIndex:index];
     }

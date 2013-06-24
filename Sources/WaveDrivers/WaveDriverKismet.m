@@ -96,7 +96,7 @@ static int KismetInstances = 0;
 			NSRunCriticalAlertPanel(
             NSLocalizedString(@"Could not connect to the Kismet server", "Error dialog title"),
             NSLocalizedString(@"Socket creation failed! This really shouldn't happen!", "LONG desc"),
-            OK, Nil, Nil);
+            OK, nil, nil);
 		return nil;
 	}
 	
@@ -138,7 +138,7 @@ static int KismetInstances = 0;
 		NSRunCriticalAlertPanel(
             NSLocalizedString(@"Could not connect to the Kismet server", "Error dialog title"),
             [NSString stringWithFormat:@"KisMac could not connect to the Kismet server at %s port %d. Check the IP address and port.",hostname,port],
-            OK, Nil, Nil);
+            OK, nil, nil);
 		return nil;
 	}
 		

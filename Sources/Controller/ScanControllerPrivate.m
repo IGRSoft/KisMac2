@@ -48,7 +48,7 @@
     unsigned int x, c, lc;
     NSMenuItem *mi;
     WaveDriver *wd;
-    WaveDriver *actWD = Nil;
+    WaveDriver *actWD = nil;
     NSDictionary *config;
     NSString *whichDriver;
     sets=[NSUserDefaults standardUserDefaults];
@@ -67,7 +67,7 @@
 											  keyEquivalent:@""
 													atIndex:0];
         [mi setEnabled:NO];
-        _whichDriver = Nil;
+        _whichDriver = nil;
         _activeDriversCount = 1;
         
         for (x = 0; x < [aChannelMenu numberOfItems]; ++x)
@@ -168,7 +168,7 @@
 	key=[sets objectForKey:@"GeigerSound"];
     
 	if ([key isEqualToString:@"None"])
-		key=Nil;
+		key=nil;
     
 	[scanner setGeigerInterval:[sets integerForKey:@"GeigerSensity"] sound:key];
 
@@ -371,7 +371,7 @@
 		}
     }
 
-    _importController = Nil;
+    _importController = nil;
 }
 
 - (void)startCrackDialogWithTitle:(NSString*)title stopScan:(BOOL)stopScan
@@ -409,7 +409,7 @@
 {
     WaveDriver *wd;
     
-    if (_curNet == Nil) {
+    if (_curNet == nil) {
         NSBeginAlertSheet(NSLocalizedString(@"No network selected.", "Error box title for active attacks"),
             OK, NULL, NULL, _window, self, NULL, NULL, NULL, 
             NSLocalizedString(@"No network selected failure description", "LONG description")
@@ -452,7 +452,7 @@
 
 - (void)stopActiveAttacks
 {
-    _activeAttackNetID = Nil;
+    _activeAttackNetID = nil;
     
     [scanner stopSendingFrames];
 	[scanner setDeauthingAll:NO];

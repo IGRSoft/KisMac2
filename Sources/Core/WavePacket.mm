@@ -65,7 +65,7 @@ bool is8021xPacket(const UInt8* fileData) {
         switch (*packet) {
         case IEEE80211_ELEMID_SSID:
             len=(*(packet+1));
-            if ((length >= len+2) && (_SSID == Nil) && (len <= 32)) {
+            if ((length >= len+2) && (_SSID == nil) && (len <= 32)) {
 				@try  {
 					memcpy(ssid, packet+2, len);
 					ssid[len]=0;
@@ -1001,7 +1001,7 @@ int isValidPacket(UInt8 *fileData, int fileLength) {
     UInt16 flags = *((UInt16*)(_payload+13));
     
     if ((flags & (WPA_FLAG_MIC | WPA_FLAG_ACK | WPA_FLAG_INSTALL)) != (WPA_FLAG_MIC | WPA_FLAG_ACK | WPA_FLAG_INSTALL))
-        return Nil; //no MIC present
+        return nil; //no MIC present
     
     return [NSData dataWithBytes:(_payload+89) length:WPA_EAP_MIC_LENGTH];
 }
@@ -1011,7 +1011,7 @@ int isValidPacket(UInt8 *fileData, int fileLength) {
     NSMutableData *md;
     
     if ((flags & (WPA_FLAG_MIC | WPA_FLAG_ACK | WPA_FLAG_INSTALL)) != (WPA_FLAG_MIC | WPA_FLAG_ACK | WPA_FLAG_INSTALL))
-        return Nil; //no MIC present
+        return nil; //no MIC present
 
     md = [NSMutableData dataWithBytes:(_payload+8) length:_payloadLength - 8];    //copy the whole key packet
     memset(&((UInt8*)[md mutableBytes])[81], 0, WPA_EAP_MIC_LENGTH);

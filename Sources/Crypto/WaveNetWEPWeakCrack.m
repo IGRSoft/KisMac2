@@ -32,7 +32,7 @@
 
 #define SRET { [[WaveHelper importController] terminateWithCode: 1]; return; }
 #define RET { [[WaveHelper importController] terminateWithCode: -1]; return; }
-#define CHECK { if (_password != Nil) RET; if (_isWep != encryptionTypeWEP && _isWep != encryptionTypeWEP40) RET; }
+#define CHECK { if (_password != nil) RET; if (_isWep != encryptionTypeWEP && _isWep != encryptionTypeWEP40) RET; }
 
 @implementation WaveNet(WEPWeakCrackExtension)
 

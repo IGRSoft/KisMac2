@@ -300,8 +300,8 @@ enum _rowIndexes {
         else {
 			_lastSorted = nil;
             
-            [tableView setIndicatorImage:Nil inTableColumn:tableColumn];
-            [tableView setHighlightedTableColumn:Nil];
+            [tableView setIndicatorImage:nil inTableColumn:tableColumn];
+            [tableView setHighlightedTableColumn:nil];
             [tableView reloadData];
             return;
         }
@@ -340,9 +340,9 @@ enum _rowIndexes {
 
 - (void) dealloc
 {
-	aClients = Nil;
-	aClientKeys = Nil;
-	_n = Nil;
+	aClients = nil;
+	aClientKeys = nil;
+	_n = nil;
 }
 
 - (NSString *) theRow 

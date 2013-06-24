@@ -243,12 +243,12 @@
 }
 
 - (NSString *)date {
-    if (_date==Nil) return @"";
+    if (_date==nil) return @"";
     else return [NSString stringWithFormat:@"%@", _date]; //return [_date descriptionWithCalendarFormat:@"%H:%M %d-%m-%y" timeZone:nil locale:nil];
 }
 
 - (NSString *)getIPAddress{
-    if (_IPAddress == Nil) return @"unknown";
+    if (_IPAddress == nil) return @"unknown";
     return _IPAddress;
 }
 
@@ -300,9 +300,9 @@
     int     ID32[6];
     int i;
     
-    if (!_ID) return Nil;
+    if (!_ID) return nil;
     
-    if (sscanf([_ID UTF8String], "%2X:%2X:%2X:%2X:%2X:%2X", &ID32[0], &ID32[1], &ID32[2], &ID32[3], &ID32[4], &ID32[5]) != 6) return Nil;
+    if (sscanf([_ID UTF8String], "%2X:%2X:%2X:%2X:%2X:%2X", &ID32[0], &ID32[1], &ID32[2], &ID32[3], &ID32[4], &ID32[5]) != 6) return nil;
     for (i = 0; i < 6; ++i)
         ID8[i] = ID32[i];
     

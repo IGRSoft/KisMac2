@@ -44,7 +44,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
     self = [super init];
     if (!self) return nil;
     
-    children = Nil;
+    children = nil;
     aNameString = [name copy];
     aIdentKey = [idkey copy];
     parent = obj;
@@ -71,7 +71,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
                                                                  container:container identkey:@""];
             return rootItem3;
         default:
-            return Nil;
+            return nil;
     }
 }
 
@@ -361,17 +361,17 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
 
 + (void) clearAllItems
 {
-    if (rootItem!=Nil)
+    if (rootItem!=nil)
     {
         [rootItem deleteKey];
 		rootItem = nil;
     }
-    if (rootItem2!=Nil)
+    if (rootItem2!=nil)
     { 
         [rootItem2 deleteKey];
 		rootItem2 = nil;
     }
-    if (rootItem3!=Nil) 
+    if (rootItem3!=nil) 
     { 
         [rootItem3 deleteKey];
 		rootItem3 = nil;
@@ -380,7 +380,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
 
 - (void)dealloc
 {
-    children = Nil;
+    children = nil;
 }
 
 @end

@@ -148,7 +148,7 @@
     [_container clearAllEntries];
     
     [_window setDocumentEdited:NO];
-    _curNet = Nil;
+    _curNet = nil;
 	_fileName = nil;
     
     [self refreshScanHierarch];    
@@ -437,7 +437,7 @@
 
 #define WEPCHECKS {\
     if (_importOpen) return NO; \
-    if (_curNet==Nil) return NO; \
+    if (_curNet==nil) return NO; \
     if ([_curNet passwordAvailable]) return YES; \
     if ([_curNet wep] != encryptionTypeWEP && [_curNet wep] != encryptionTypeWEP40) return NO; \
     if ([[_curNet cryptedPacketsLog] count] < 8) return NO; \
@@ -523,10 +523,10 @@
 }
 - (BOOL)wordlistWPA:(NSString*)wordlist {
     if (_importOpen) return NO;
-    if (_curNet==Nil) return NO;
+    if (_curNet==nil) return NO;
     if ([_curNet passwordAvailable]) return YES;
     if (([_curNet wep] != encryptionTypeWPA) && ([_curNet wep] != encryptionTypeWPA2)) return NO;
-	if ([_curNet SSID] == Nil) return NO;
+	if ([_curNet SSID] == nil) return NO;
 	if ([[_curNet SSID] length] > 32) return NO;
 	if ([_curNet capturedEAPOLKeys] == 0) return NO;
 
@@ -540,7 +540,7 @@
 
 - (BOOL)wordlistLEAP:(NSString*)wordlist {
     if (_importOpen) return NO;
-    if (_curNet==Nil) return NO;
+    if (_curNet==nil) return NO;
     if ([_curNet passwordAvailable]) return YES;
     if ([_curNet wep] != encryptionTypeLEAP) return NO;
 	if ([_curNet capturedLEAPKeys] == 0) return NO;
@@ -555,7 +555,7 @@
 
 - (BOOL)weakSchedulingAttackForKeyLen:(int)keyLen andKeyID:(int)keyID {
     if (_importOpen) return NO;
-    if (_curNet==Nil) return NO;
+    if (_curNet==nil) return NO;
     if ([_curNet passwordAvailable]) return YES;
     if ([_curNet wep] != encryptionTypeWEP && [_curNet wep] != encryptionTypeWEP40) return NO;
     if ([_curNet uniqueIVs] < 8) return NO;

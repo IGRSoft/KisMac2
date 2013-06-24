@@ -316,11 +316,11 @@ char WaveDrivers [][30] = {
 #pragma mark -
 
 - (NSArray*) networksInRange {
-    return Nil;
+    return nil;
 }
 
 - (KFrame*) nextFrame {
-    return Nil;
+    return nil;
 }
 
 #pragma mark -

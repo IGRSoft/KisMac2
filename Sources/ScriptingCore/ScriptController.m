@@ -353,7 +353,7 @@
     if (![[NSApp delegate] selectedNetwork]) { NSBeep(); return; }
     if ([[[NSApp delegate] selectedNetwork] passwordAvailable]) { [[NSApp delegate] showAlreadyCrackedDialog]; return; }
     if (([[[NSApp delegate] selectedNetwork] wep] != encryptionTypeWPA) && ([[[NSApp delegate] selectedNetwork] wep] != encryptionTypeWPA2 )){ [[NSApp delegate] showWrongEncryptionType]; return; }
-	if ([[[NSApp delegate] selectedNetwork] SSID] == Nil) { [[NSApp delegate] showNeedToRevealSSID]; return; }
+	if ([[[NSApp delegate] selectedNetwork] SSID] == nil) { [[NSApp delegate] showNeedToRevealSSID]; return; }
 	if ([[[[NSApp delegate] selectedNetwork] SSID] length] > 32) { [[NSApp delegate] showNeedToRevealSSID]; return; }
 	if ([[[NSApp delegate] selectedNetwork] capturedEAPOLKeys] == 0) { [[NSApp delegate] showNeedMorePacketsDialog]; return; }
 

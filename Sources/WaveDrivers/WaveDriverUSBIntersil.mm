@@ -47,14 +47,14 @@ bool explicitlyLoadedUSBIntersil = NO;
         NSRunCriticalAlertPanel(
                                 NSLocalizedString(@"WARNING! Please unplug your USB device now.", "Warning dialog title"),
                                 NSLocalizedString(@"Due a bug in Intersils Prism USB driver you must unplug your device now temporarily, otherwise you will not be able to use it any more. KisMAC will prompt you again to put it back in after loading is completed.", "USB driver bug warning."),
-                                OK, Nil, Nil);
+                                OK, nil, nil);
         
 		if (![WaveHelper runScript:@"usbprism2_prep.sh"]) return NO;
         
         NSRunInformationalAlertPanel(
                                      NSLocalizedString(@"Connect your device again!", "dialog title"),
                                      NSLocalizedString(@"KisMAC completed the unload process. Please plug your device back in before you continue.", "USB driver bug warning."),
-                                     OK, Nil, Nil);
+                                     OK, nil, nil);
 		explicitlyLoadedUSBIntersil = YES;
     } else  if ([WaveHelper isServiceAvailable: (char*)"AeroPad"]) {
 		if (![WaveHelper runScript:@"usbprism2_prep.sh"]) return NO;

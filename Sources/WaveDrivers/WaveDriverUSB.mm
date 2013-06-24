@@ -30,7 +30,7 @@
     self=[super init];
 
     if (!self)
-        return Nil;
+        return nil;
     
     _driver = nil;
     
@@ -173,7 +173,7 @@
                                 NSLocalizedString(@"USB device error description", "LONG Error description"),
                                 //@"A driver error occured with your USB device, make sure it is properly connected. Scanning will "
                                 //"be canceled. Errors may have be printed to console.log."
-                                OK, Nil, Nil);
+                                OK, nil, nil);
     }
     else
     {

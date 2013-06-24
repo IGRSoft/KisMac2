@@ -506,7 +506,7 @@
 		
 		[_container clearEntry:net];
     }
-    _curNet = Nil;
+    _curNet = nil;
     
     [self refreshScanHierarch];
     [self updateNetworkTable:self complete:YES];
@@ -529,7 +529,7 @@
         temp = [NSMutableArray arrayWithArray:[sets objectForKey:@"FilterBSSIDList"]];
         mac = [_curNet ID];
         
-        if (mac!=Nil && [temp indexOfObject:mac]==NSNotFound)
+        if (mac!=nil && [temp indexOfObject:mac]==NSNotFound)
 		{
             [temp addObject:mac];
             [sets setObject:temp forKey:@"FilterBSSIDList"];

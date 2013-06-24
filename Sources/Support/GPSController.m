@@ -112,7 +112,7 @@ struct termios ttyset;
 
     [self setStatus:NSLocalizedString(@"Starting GPS subsystem.", @"GPS status")];
     
-    if ([_gpsDevice isEqualToString:@"GPSd"]) [NSThread detachNewThreadSelector:@selector(gpsThreadGPSd:) toTarget:self withObject:Nil];
+    if ([_gpsDevice isEqualToString:@"GPSd"]) [NSThread detachNewThreadSelector:@selector(gpsThreadGPSd:) toTarget:self withObject:nil];
     else if([_gpsDevice isEqualToString:@"CoreLocation"])
     {
         //Initialize core location
@@ -124,7 +124,7 @@ struct termios ttyset;
             [self setStatus:NSLocalizedString(@"CoreLocation initialized.", @"GPS status")];
         }
     }
-    else [NSThread detachNewThreadSelector:@selector(gpsThreadSerial:) toTarget:self withObject:Nil];
+    else [NSThread detachNewThreadSelector:@selector(gpsThreadSerial:) toTarget:self withObject:nil];
     return YES;
 }
 
@@ -738,7 +738,7 @@ int ss(char* inp, char* outp) {
 	
     while (_gpsShallRun && [self gps_parse:fd]) {
 		@autoreleasepool {     //actually once a sec should be enough, but sometimes we dont get any information. so do it more often.
-            if ((i++ % 10 == 0) && (_status == Nil))
+            if ((i++ % 10 == 0) && (_status == nil))
                 [[NSNotificationCenter defaultCenter] postNotificationName:KisMACGPSStatusChanged object:[self status]];
             date = [[NSDate alloc] initWithTimeIntervalSinceNow:0.1];
             [NSThread sleepUntilDate:date];
@@ -752,7 +752,7 @@ int ss(char* inp, char* outp) {
 
     while (_gpsShallRun && [self gpsd_parse:fd]) {
 		@autoreleasepool {
-			if ((i++ % 2 == 0) && (_status == Nil))
+			if ((i++ % 2 == 0) && (_status == nil))
                 [[NSNotificationCenter defaultCenter] postNotificationName:KisMACGPSStatusChanged object:[self status]];
             date = [[NSDate alloc] initWithTimeIntervalSinceNow:0.5];
             [NSThread sleepUntilDate:date];

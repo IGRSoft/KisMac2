@@ -122,7 +122,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     curPacketData = 0;
     _rateCount = 0;
 	
-    _SSID = Nil;
+    _SSID = nil;
     _firstPacket = YES;
     _liveCaptured = NO;
     aFirstDate = [NSDate date];
@@ -145,9 +145,9 @@ NSInteger lengthSort(id string1, id string2, void *context)
         return nil;
     }
 
-    if ([coder decodeObjectForKey:@"aFirstDate"] == Nil) {
+    if ([coder decodeObjectForKey:@"aFirstDate"] == nil) {
         DBNSLog(@"Invalid net, dropping!");
-        return Nil;
+        return nil;
     }
     
     self = [self init];
@@ -183,7 +183,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     aElev = [coder decodeObjectForKey:@"aElev"];
     
     _ID=[coder decodeObjectForKey:@"aID"];
-    if (_ID!=Nil && sscanf([_ID UTF8String], "%2X%2X%2X%2X%2X%2X", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) {
+    if (_ID!=nil && sscanf([_ID UTF8String], "%2X%2X%2X%2X%2X%2X", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) {
         DBNSLog(@"Error could not decode ID %@!", _ID);
     }
     
@@ -193,7 +193,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     _SSID=[coder decodeObjectForKey:@"aSSID"];
     _BSSID=[coder decodeObjectForKey:@"aBSSID"];
     if (![_BSSID isEqualToString:@"<no bssid>"]) {
-        if (_BSSID!=Nil && sscanf([_BSSID UTF8String], "%2X:%2X:%2X:%2X:%2X:%2X", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) 
+        if (_BSSID!=nil && sscanf([_BSSID UTF8String], "%2X:%2X:%2X:%2X:%2X:%2X", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) 
             DBNSLog(@"Error could not decode BSSID %@!", _BSSID);
         for (int x=0; x<6; ++x)
             _rawBSSID[x] = bssid[x];
@@ -278,7 +278,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     &_maxSignal,
     &flags, &channelbits, &interval) < 9) {
         DBNSLog(@"line in backup file is corrupt or not compatible");
-        return Nil;
+        return nil;
     }
 
     if(ssid[strlen(ssid) - 1] == ' ') ssid[strlen(ssid) - 1] = '\0';
@@ -360,9 +360,9 @@ NSInteger lengthSort(id string1, id string2, void *context)
 	
 	NSParameterAssert(dict);
 	
-	if (dict[@"ID"] == Nil) {
+	if (dict[@"ID"] == nil) {
         DBNSLog(@"Invalid net, dropping!");
-        return Nil;
+        return nil;
     }
     
     self = [self init];
@@ -398,7 +398,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     (wp._lat < 0) ? ew_dir = 'W' :  ew_dir = 'E';
     
     _ID=dict[@"ID"];
-    if (_ID!=Nil && sscanf([_ID UTF8String], "%2X%2X%2X%2X%2X%2X", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) {
+    if (_ID!=nil && sscanf([_ID UTF8String], "%2X%2X%2X%2X%2X%2X", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) {
         DBNSLog(@"Error could not decode ID %@!", _ID);
     }
     
@@ -409,7 +409,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     _SSIDs = dict[@"SSIDs"];
     _BSSID=dict[@"BSSID"];
     if (![_BSSID isEqualToString:@"<no bssid>"]) {
-        if (_BSSID!=Nil && sscanf([_BSSID UTF8String], "%2X:%2X:%2X:%2X:%2X:%2X", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) 
+        if (_BSSID!=nil && sscanf([_BSSID UTF8String], "%2X:%2X:%2X:%2X:%2X:%2X", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) 
             DBNSLog(@"Error could not decode BSSID %@!", _BSSID);
         for (int x=0; x<6; ++x)
             _rawBSSID[x] = bssid[x];
@@ -627,7 +627,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     bool isHidden = YES;
     bool updatedSSID;
     
-    if (newSSID==Nil || [newSSID isEqualToString:_SSID]) return;
+    if (newSSID==nil || [newSSID isEqualToString:_SSID]) return;
 
 	pc = [newSSID UTF8String];
 	for (i = 0; i < [newSSID length]; ++i) {
@@ -642,7 +642,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 	else updatedSSID = YES;
 	
 	if (isHidden) {
-		if (_SSID!=Nil) return; //we might have the real ssid already
+		if (_SSID!=nil) return; //we might have the real ssid already
 		_SSID = @"";
 	} else {
 		_SSID = newSSID;
@@ -700,14 +700,14 @@ NSInteger lengthSort(id string1, id string2, void *context)
             gpsc = [WaveHelper gpsController];
             cp = [gpsc currentPoint];    
             //after the first packet we should play some sound 
-            if (_date == Nil)
+            if (_date == nil)
             {
                 if (cp._lat != 100) 
                 {
                     // we have a new network with a GPS position - initialise _netView
                     _netView = [[NetView alloc] initWithNetwork:self];
                     [_netView setWep:_isWep];
-                    if (_SSID==Nil) [_netView setName:_BSSID]; // use BSSID for map label
+                    if (_SSID==nil) [_netView setName:_BSSID]; // use BSSID for map label
                     else [_netView setName:_SSID];
                     [_netView setCoord:cp];
                 }
@@ -740,7 +740,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
                 pV = [BIValuePair new];
                 [pV setPairFromWaypoint:cp];
                 v = _coordinates[pV];
-                if ((v==Nil) || ([v intValue]<_curSignal))
+                if ((v==nil) || ([v intValue]<_curSignal))
                     _coordinates[pV] = @(_curSignal);
                 if(_curSignal>=_maxSignal || ([aLat floatValue] == 0)) 
                 {
@@ -750,7 +750,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
                         DBNSLog(@"First GPS fix for net %@ - initialising",_BSSID);
                         _netView = [[NetView alloc] initWithNetwork:self];
                         [_netView setWep:_isWep];
-                        if (_SSID==Nil) [_netView setName:_BSSID]; // use BSSID for map label
+                        if (_SSID==nil) [_netView setName:_BSSID]; // use BSSID for map label
                         else [_netView setName:_SSID];
                     }
                     gpsc = [WaveHelper gpsController];
@@ -843,7 +843,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     
     [_packetsLog addObjectsFromArray:[net cryptedPacketsLog]];
     //sort them so that the smallest packet is in front of the array => faster cracking
-    [_packetsLog sortUsingFunction:lengthSort context:Nil];
+    [_packetsLog sortUsingFunction:lengthSort context:nil];
     [_dataLock unlock];
 }
 
@@ -893,7 +893,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
         curTrafficData += [w length];
     }
 
-    if (_BSSID == Nil) {
+    if (_BSSID == nil) {
         _BSSID = [NSString stringWithString:[w BSSIDString]];
         [w BSSID:_rawBSSID];
     }
@@ -936,7 +936,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
                     if ([_packetsLog count]<20 || [(NSString*)_packetsLog[0] length] > bodyLength) {
                         [_packetsLog addObject:[NSData dataWithBytes:body length:bodyLength]];
                         //sort them so that the smallest packet is in front of the array => faster cracking
-                        [_packetsLog sortUsingFunction:lengthSort context:Nil];
+                        [_packetsLog sortUsingFunction:lengthSort context:nil];
                     }
 
                     //log those packets for reinjection attack
@@ -1015,7 +1015,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     // If it doesn't exists, we will create it
     
     clientid = [w stringReceiverID];
-    if (clientid != Nil) {
+    if (clientid != nil) {
         lWCl = aClients[clientid];
         if (lWCl == nil) {
             lWCl = [[WaveClient alloc] init];
@@ -1025,7 +1025,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
         [lWCl parseFrameAsIncoming:w];
     }
     clientid = [w stringSenderID];
-    if (clientid != Nil) {
+    if (clientid != nil) {
         lWCl=aClients[clientid];
         if (lWCl == nil) {
             lWCl = [[WaveClient alloc] init];
@@ -1273,12 +1273,12 @@ NSInteger lengthSort(id string1, id string2, void *context)
     return _ID;
 }
 - (NSString *)BSSID {
-    if (_BSSID==Nil) return NSLocalizedString(@"<no bssid>", "for tunnels");
+    if (_BSSID==nil) return NSLocalizedString(@"<no bssid>", "for tunnels");
     return _BSSID;
 }
 - (NSString *)SSID {
 	NSString *ssid;
-    if (_SSID==Nil) {
+    if (_SSID==nil) {
         switch (_type) {
         case networkTypeTunnel:
             ssid = NSLocalizedString(@"<tunnel>", "the ssid for tunnels");
@@ -1472,7 +1472,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     return _ACKLog;
 }
 - (NSString*)key {
-    if ((_password==Nil)&&(_isWep > encryptionTypeNone)) return NSLocalizedString(@"<unresolved>", "Unresolved password");
+    if ((_password==nil)&&(_isWep > encryptionTypeNone)) return NSLocalizedString(@"<unresolved>", "Unresolved password");
     return _password;
 }
 
@@ -1490,7 +1490,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     int i;
     
     //if it is wep but we don't have the passwd
-    if ((Nil == _password) && (_isWep > encryptionTypeNone))
+    if ((nil == _password) && (_isWep > encryptionTypeNone))
     {
 		asciiKey = NSLocalizedString(@"<unresolved>", "Unresolved password");
 	}

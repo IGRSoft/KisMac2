@@ -167,17 +167,17 @@ error:
         {
             crashPath = [NSString stringWithFormat:@"%@/%@", logPath, file];
             DBNSLog(@"Removing crash log at: %@", crashPath);
-            [mang removeItemAtPath:crashPath error:Nil];
+            [mang removeItemAtPath:crashPath error:nil];
         }
     }
     
-    [[self window] performClose:Nil];
+    [[self window] performClose:nil];
 }
 
 - (IBAction)alwaysDenyAction:(id)sender
 {
     [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:@"SupressCrashReport"]; 
-    [[self window] performClose:Nil];
+    [[self window] performClose:nil];
 }
 
 - (void)handleNetworkEvent:(CFStreamEventType)type 

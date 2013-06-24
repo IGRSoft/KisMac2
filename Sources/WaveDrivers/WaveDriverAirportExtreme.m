@@ -133,7 +133,7 @@ static pcap_t *_device;
         [NSApp endSheet: [importController window]];        
         [[importController window] close];
         [importController stopAnimation];
-        importController=Nil;
+        importController=nil;
             
         if (result == 1) {	//see if we actually have the driver accessed
             x = [WaveHelper showCouldNotInstaniciateDialog:[self description]];
@@ -178,7 +178,7 @@ pcap_dumper_t * dumper;
 	if (!_device && !shouldPlayback)
     {
         args = @[@"0777", @"/dev/bpf0", @"/dev/bpf1", @"/dev/bpf2", @"/dev/bpf3"]; 
-		if (![[BLAuthentication sharedInstance] executeCommand:@"/bin/chmod" withArgs: args]) return Nil;
+		if (![[BLAuthentication sharedInstance] executeCommand:@"/bin/chmod" withArgs: args]) return nil;
 		[NSThread sleep:0.5];
 	
         CFShow((__bridge CFTypeRef)([[CWInterface interfaceNames] allObjects]));
@@ -186,7 +186,7 @@ pcap_dumper_t * dumper;
         
 		[[BLAuthentication sharedInstance] executeCommand:@"/bin/chmod" withArgs:args];
 
-		if (!_device) return Nil;
+		if (!_device) return nil;
     }
     
     if(shouldPlayback)
@@ -216,11 +216,11 @@ pcap_dumper_t * dumper;
     if(retErr != 0)
     {
         DBNSLog(@"Error opening airpot device using pcap_set_datalink()");
-        return Nil;
+        return nil;
     }
     
 	self=[super init];
-    if(!self) return Nil;
+    if(!self) return nil;
 
     return self;
 }

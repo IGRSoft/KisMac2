@@ -74,11 +74,11 @@ UInt32 hashForMAC(const UInt8* val) {
 {
     int i;
     self = [super init];
-    if (!self) return Nil;
+    if (!self) return nil;
     
     //todo fixme!! we should not allocate a fixed list
     _idList = malloc(sizeof(WaveNetEntry) * MAXNETS);
-    if(!_idList) return Nil;
+    if(!_idList) return nil;
     
     _order = -1;
     _dropAll = NO;
@@ -1049,7 +1049,7 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
     for ( i = 0 ; i < oldcount ; ++i )
 	{
         e = _idList[i].net;
-        _idList[i].net = Nil;
+        _idList[i].net = nil;
         CFRelease((__bridge CFTypeRef)(e));
     }
     

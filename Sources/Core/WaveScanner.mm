@@ -66,7 +66,7 @@
 - (WaveDriver*) getInjectionDriver {
     unsigned int i;
     NSArray *a;
-    WaveDriver *w = Nil;
+    WaveDriver *w = nil;
     
     a = [WaveHelper getWaveDrivers];
     for (i = 0; i < [a count]; ++i) {
@@ -78,8 +78,8 @@
         NSRunAlertPanel(NSLocalizedString(@"Invalid Injection Option.", "No injection driver title"),
             NSLocalizedString(@"Invalid Injection Option description", "LONG description of the error"),
             //@"None of the drivers selected are able to send raw frames. Currently only PrismII based device are able to perform this task."
-            OK, Nil, Nil);
-        return Nil;
+            OK, nil, nil);
+        return nil;
     }
     
     return w;
@@ -122,7 +122,7 @@
 
 //does the actual scanning (extra thread)
 - (void)doPassiveScan:(WaveDriver*)wd {
-    WavePacket *w = Nil;
+    WavePacket *w = nil;
     KFrame* frame = NULL;
 
     int dumpFilter;
@@ -174,11 +174,11 @@
     {
         w = [[WavePacket alloc] init];
         
-        if (_geigerSound!=Nil)
+        if (_geigerSound!=nil)
         {
             geiger=[NSSound soundNamed:_geigerSound];
-            if (geiger!=Nil) [geiger setDelegate:self];
-        } else geiger=Nil;
+            if (geiger!=nil) [geiger setDelegate:self];
+        } else geiger=nil;
         
         if (![wd startedScanning])
         {
@@ -216,7 +216,7 @@
                         continue;
                     }
                                         
-                    if ((geiger!=Nil) && ((_packets % _geigerInt)==0)) 
+                    if ((geiger!=nil) && ((_packets % _geigerInt)==0)) 
                     {
                         if (_soundBusy) 
                         {
@@ -288,13 +288,13 @@
         _scanTimer = [NSTimer scheduledTimerWithTimeInterval:_scanInterval
 													  target:self
 													selector:@selector(performScan:)
-													userInfo:Nil
+													userInfo:nil
 													 repeats:TRUE];
-        if (_hopTimer == Nil)
+        if (_hopTimer == nil)
             _hopTimer=[NSTimer scheduledTimerWithTimeInterval:aFreq
 													   target:self
 													 selector:@selector(doChannelHop:)
-													 userInfo:Nil
+													 userInfo:nil
 													  repeats:TRUE];
     }
     
@@ -309,9 +309,9 @@
         _scanTimer = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:KisMACStopScanForced object:self];
 
-        if (_hopTimer!=Nil) {
+        if (_hopTimer!=nil) {
             [_hopTimer invalidate];
-            _hopTimer=Nil;
+            _hopTimer=nil;
         }
 		
     }
@@ -356,9 +356,9 @@
 
 -(void)setFrequency:(double)newFreq {
     aFreq=newFreq;
-    if (_hopTimer!=Nil) {
+    if (_hopTimer!=nil) {
         [_hopTimer invalidate];
-        _hopTimer=[NSTimer scheduledTimerWithTimeInterval:aFreq target:self selector:@selector(doChannelHop:) userInfo:Nil repeats:TRUE];
+        _hopTimer=[NSTimer scheduledTimerWithTimeInterval:aFreq target:self selector:@selector(doChannelHop:) userInfo:nil repeats:TRUE];
     }
    
 }
@@ -366,7 +366,7 @@
     
 	_geigerSound = nil;
     
-    if ((newSound==Nil)||(newGeigerInt==0)) return;
+    if ((newSound==nil)||(newGeigerInt==0)) return;
     
     _geigerSound=newSound;
     _geigerInt=newGeigerInt;
