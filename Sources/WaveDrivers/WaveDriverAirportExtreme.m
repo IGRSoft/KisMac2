@@ -96,9 +96,9 @@ static pcap_t *_device;
 {
 	int ret = -1;
 
-    if (NSAppKitVersionNumber < 949.00) 
+    if (NSAppKitVersionNumber < NSAppKitVersionNumber10_5)
     {
-        DBNSLog(@"MacOS is not 10.5.1! AppKitVersion: %f < 949.00", NSAppKitVersionNumber);
+        DBNSLog(@"MacOS is not 10.5.1! AppKitVersion: %f < NSAppKitVersionNumber10_5", NSAppKitVersionNumber);
     
         NSRunCriticalAlertPanel(
                             NSLocalizedString(@"Could not enable Monitor Mode for Airport Extreme.", "Error dialog title"),

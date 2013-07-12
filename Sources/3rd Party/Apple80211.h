@@ -1,8 +1,4 @@
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-// this was shamelessly stolen from macstumbler.com
+/* From MacStumbler, which is under GPL */
 
 /*
  *  Apple80211.h
@@ -21,23 +17,23 @@ extern "C" {
  *
  *  Last updated by korben on 5/15/2002
  */
+
+/* ChangeLog:
  
- /* ChangeLog:
+ 2002-05-14 ragge
+ Changed argument types and count to procedures
+ Added WirelessScan
+ Changed name of unknown field to beaconInterval
+ Added error values and error return types
  
-   2002-05-14 ragge
-   Changed argument types and count to procedures
-   Added WirelessScan
-   Changed name of unknown field to beaconInterval
-   Added error values and error return types
-   
-   2002-05-15 korben
-   Combined ragge's changes with jason's
-   
-   2002-05-17 korben
-   fixed adhoc and mangaged WINetworkInfoFlags per ragge's request
-   Added WirelessEncrypt and WirelessKey declarations
-   Updated WirelessJoinWEP and WirelessMakeIBSS comments regarding keys
-   
+ 2002-05-15 korben
+ Combined ragge's changes with jason's
+ 
+ 2002-05-17 korben
+ fixed adhoc and mangaged WINetworkInfoFlags per ragge's request
+ Added WirelessEncrypt and WirelessKey declarations
+ Updated WirelessJoinWEP and WirelessMakeIBSS comments regarding keys
+ 
  */
 
 #ifndef __APPLE_80211__
@@ -46,10 +42,10 @@ extern "C" {
 #include <CoreFoundation/CoreFoundation.h>
 
 /*
-	A WirelessContext should be created using WirelessAttach
-	before any other Wireless functions are called. WirelessDetach
-	is used to dispose of a WirelessContext.
-*/
+ A WirelessContext should be created using WirelessAttach
+ before any other Wireless functions are called. WirelessDetach
+ is used to dispose of a WirelessContext.
+ */
 typedef struct __WirelessContext *WirelessContextPtr;
 
 struct WirelessInfo
@@ -58,7 +54,7 @@ struct WirelessInfo
 	UInt16	comms_qual;    /* Communication Quality */
 	UInt16	signal;        /* Signal level */
 	UInt16	noise;         /* Noise level */
-	UInt16  port_stat;     /* HERMES_RID_PORTSTAT? (Uncertain about the meaning of this! 1=off? 2=connetion bad? 3=AdHoc Create? 4=BSS (Client)? 5=BSS+OutOfRange?) */
+	UInt16	port_stat;     /* HERMES_RID_PORTSTAT? (Uncertain about the meaning of this! 1=off? 2=connetion bad? 3=AdHoc Create? 4=BSS (Client)? 5=BSS+OutOfRange?) */
 	UInt16	client_mode;   /* 1 = BSS, 4 = Create IBSS */
 	UInt16	u7;            /* ? */
 	UInt16	power;         /* Power on flag */
@@ -68,59 +64,52 @@ struct WirelessInfo
 };
 typedef struct WirelessInfo WirelessInfo;
 /*
-	I'm not sure what most of the values in the WirelessInfo structure
-	are for, but here are some examples of the numbers returned:
-	
-	With Airport Off:
-	0 0 0 0 1 1 0 0 1
-
-	With Airport On:
-	72 22 31 9 4 1 0 1 1
-
-	With Computer to Computer Network:
-	0 0 0 0 3 4 0 1 1
-	
-	- jason
-*/
+ I'm not sure what most of the values in the WirelessInfo structure
+ are for, but here are some examples of the numbers returned:
+ 
+ With Airport Off:
+ 0 0 0 0 1 1 0 0 1
+ 
+ With Airport On:
+ 72 22 31 9 4 1 0 1 1
+ 
+ With Computer to Computer Network:
+ 0 0 0 0 3 4 0 1 1
+ 
+ - jason
+ */
 
 
 /*
-	WINetworkInfoFlags are used in the WirelessNetworkInfo struct
-	returned by the WirelessScanSplit function.
-	
-	I filled in the rest of this list from the netstumbler FAQ:
-	http://www.netstumbler.com/modules.php?op=modload&name=FAQ&file=index&myfaq=yes&id_cat=1&categories=Official+NetStumbler+Version+0.3+FAQ
-
-	These are aparrently also defined in section 7.3.1.4 of the 802.11b spec
-*/
+ WINetworkInfoFlags are used in the WirelessNetworkInfo struct
+ returned by the WirelessScanSplit function.
+ 
+ I have seen other flags, but I don't know what they stand for. - korben
+ 
+ I think these should probably be bit masks, but I am using what
+ korben figured out. - jason
+ */
 typedef UInt16 WINetworkInfoFlags;
 enum
 {
-	kWINetworkManagedFlag 		=	0x0001,
-	kWINetworkAdhocFlag 		=	0x0002,
-	kWINetworkCFPollable 		=	0x0004,
-	kWINetworkCFPollRequest		=	0x0008,
-	kWINetworkEncryptedFlag		=	0x0010,
-	kWINetworkShortPreamble		=	0x0020,
-	kWINetworkPBCC                  =	0x0040,
-	kWINetworkChannelAgility	=	0x0080,
-	kWINetworkReserved              =	0xFF00
-	
+	kWINetworkManagedFlag =   0x0001,
+	kWINetworkAdhocFlag =     0x0002,
+	kWINetworkEncryptedFlag = 0x0010
 };
 
 typedef SInt32 WIErr;
 enum {
-  airpParamErr        = -2013261823, /* 0x88001001 */
-  airpNoIOServiceErr  = -2013261822, /* 0x88001002 */
-  airpInternalErr     = -2013261821, /* 0x88001003 */
-  airpUnk4Err         = -2013261820, /* 0x88001004 */
-  airpOutOfMemErr     = -2013261819, /* 0x88001005 */
-  airpInternal2Err    = -2013261818, /* 0x88001006 */
-  airpUnk7Err         = -2013261817, /* 0x88001007 */
-  airpUnk8Err         = -2013261816, /* 0x88001008 */
-  airpUnk9Err         = -2013261815, /* 0x88001009 */
-  airpUnkaErr         = -2013261814, /* 0x8800100a */
-  airpNoPowerErr      = -2013261813  /* 0x8800100b */
+	airpParamErr        = -2013261823, /* 0x88001001 */
+	airpNoIOServiceErr  = -2013261822, /* 0x88001002 */
+	airpInternalErr     = -2013261821, /* 0x88001003 */
+	airpUnk4Err         = -2013261820, /* 0x88001004 */
+	airpOutOfMemErr     = -2013261819, /* 0x88001005 */
+	airpInternal2Err    = -2013261818, /* 0x88001006 */
+	airpUnk7Err         = -2013261817, /* 0x88001007 */
+	airpUnk8Err         = -2013261816, /* 0x88001008 */
+	airpUnk9Err         = -2013261815, /* 0x88001009 */
+	airpUnkaErr         = -2013261814, /* 0x8800100a */
+	airpNoPowerErr      = -2013261813  /* 0x8800100b */
 };
 /* The meaning of these error codes can be wrong, and the list is not
  * complete. In general checking for noErr (0) should be enough */
@@ -150,7 +139,7 @@ extern int WirelessIsAvailable(void);
 
 /*
  *  WirelessAttach()
- *  
+ *
  *  WirelessAttach should be called before all other Wireless functions.
  *
  *  outContext returns the contextPtr you will pass
@@ -158,8 +147,8 @@ extern int WirelessIsAvailable(void);
  *  The second argument must be zero.
  */
 extern WIErr WirelessAttach(
-	WirelessContextPtr *outContext,
-	const UInt32);
+							WirelessContextPtr *outContext,
+							const UInt32);
 
 /*
  *  WirelessDetach()
@@ -170,7 +159,7 @@ extern WIErr WirelessAttach(
  *  inContext is the contextPtr you want to dispose of.
  */
 extern WIErr WirelessDetach(
-	WirelessContextPtr inContext);
+							WirelessContextPtr inContext);
 
 /*
  *  WirelessGetPower()
@@ -181,8 +170,8 @@ extern WIErr WirelessDetach(
  *  outPower is 0 for off and 1 for on.
  */
 extern WIErr WirelessGetPower(
-	WirelessContextPtr inContext,
-	UInt8 *outPower);
+							  WirelessContextPtr inContext,
+							  UInt8 *outPower);
 
 /*
  *  WirelessSetPower()
@@ -193,8 +182,8 @@ extern WIErr WirelessGetPower(
  *  inPower is 0 for off and 1 for on.
  */
 extern WIErr WirelessSetPower(
-	WirelessContextPtr inContext,
-	UInt8 inPower);
+							  WirelessContextPtr inContext,
+							  UInt8 inPower);
 
 /*
  *  WirelessGetEnabled()
@@ -206,8 +195,8 @@ extern WIErr WirelessSetPower(
  *  outEnabled is 0 for off and 1 for on.
  */
 extern WIErr WirelessGetEnabled(
-	WirelessContextPtr inContext,
-	UInt8 *outEnabled);
+								WirelessContextPtr inContext,
+								UInt8 *outEnabled);
 
 /*
  *  WirelessSetEnabled()
@@ -218,8 +207,8 @@ extern WIErr WirelessGetEnabled(
  *  inEnabled is 0 for off and 1 for on.
  */
 extern WIErr WirelessSetEnabled(
-	WirelessContextPtr inContext,
-	UInt32 inEnabled);
+								WirelessContextPtr inContext,
+								UInt32 inEnabled);
 
 /*
  *  WirelessGetInfo()
@@ -231,8 +220,8 @@ extern WIErr WirelessSetEnabled(
  *  outInfo is a WirelessInfo structure containing state info.
  */
 extern WIErr WirelessGetInfo(
-	WirelessContextPtr inContext,
-	WirelessInfo *outInfo);
+							 WirelessContextPtr inContext,
+							 WirelessInfo *outInfo);
 
 /*
  *  WirelessScanSplit(), WirelessScan()
@@ -256,23 +245,15 @@ extern WIErr WirelessGetInfo(
  *  WirelessScan works the same way but does not split the list by AP type
  */
 extern WIErr WirelessScanSplit(
-	WirelessContextPtr inContext,
-	CFArrayRef *apList,
-	CFArrayRef *adhocList,
-	const UInt32 stripDups);
-	
-extern WIErr WirelessScan(
-	WirelessContextPtr inContext,
-	CFArrayRef *apList,
-	const UInt32 stripDups);
+							   WirelessContextPtr inContext,
+							   CFArrayRef *apList,
+							   CFArrayRef *adhocList,
+							   const UInt32 stripDups);
 
-//reverse engineered by mick
-extern WIErr WirelessCreateScanResults(
-	WirelessContextPtr inContext,
-	CFDataRef ssidFilter,
-	CFArrayRef *apList,
-	CFArrayRef *adhocList,
-	const UInt32 stripDups);
+extern WIErr WirelessScan(
+						  WirelessContextPtr inContext,
+						  CFArrayRef *apList,
+						  const UInt32 stripDups);
 
 /*
  *  WirelessJoin()
@@ -283,8 +264,8 @@ extern WIErr WirelessCreateScanResults(
  *  inNetworkName is the name of the network to join.
  */
 extern WIErr WirelessJoin(
-	WirelessContextPtr inContext,
-	CFStringRef inNetworkName);
+						  WirelessContextPtr inContext,
+						  CFStringRef inNetworkName);
 
 /*
  *  WirelessJoinWEP()
@@ -301,19 +282,14 @@ extern WIErr WirelessJoin(
  *    and must be either 10 digits for a 40bit key or 26 digits for a 104bit key,
  *    or an ascii/binary representation of the key, 5 or 13 bytes long.
  *  - It can also be the empty string, meaning no encryption.
- *  
+ *
  *  For more info see:
  *  http://kbase.info.apple.com/cgi-bin/WebObjects/kbase.woa/11/wa/query?searchMode=Expert&type=id&val=KC.106424
  */
 extern WIErr WirelessJoinWEP(
-	WirelessContextPtr inContext,
-	CFStringRef inNetworkName,
-	CFStringRef inNetworkPassword);
-
-extern WIErr WirelessJoin8021x(
-	WirelessContextPtr inContext,
-	CFStringRef inNetworkName,
-        CFStringRef inNetworkPassword);
+							 WirelessContextPtr inContext,
+							 CFStringRef inNetworkName,
+							 CFStringRef inNetworkPassword);
 
 /*
  *  WirelessEncrypt
@@ -332,9 +308,9 @@ extern WIErr WirelessJoin8021x(
  *
  */
 extern WIErr WirelessEncrypt(
-        CFStringRef inNetworkPassword,
-        WirelessKey *wepKey,
-        const UInt32 use104bits);
+							 CFStringRef inNetworkPassword,
+							 WirelessKey *wepKey,
+							 const UInt32 use104bits);
 
 /*
  *  WirelessGetChannels()
@@ -348,8 +324,8 @@ extern WIErr WirelessEncrypt(
  *  are set, which means channels 1 through 11 are valid.
  */
 extern WIErr WirelessGetChannels(
-	WirelessContextPtr inContext,
-	UInt16 *outChannelBitField);
+								 WirelessContextPtr inContext,
+								 UInt16 *outChannelBitField);
 
 /*
  *  WirelessGetBestChannel()
@@ -361,8 +337,8 @@ extern WIErr WirelessGetChannels(
  *  outBestChannel is the best channel for a wireless network.
  */
 extern WIErr WirelessGetBestChannel(
-	WirelessContextPtr inContext,
-	UInt16 *outBestChannel);
+									WirelessContextPtr inContext,
+									UInt16 *outBestChannel);
 
 /*
  *  WirelessMakeIBSS()
@@ -380,19 +356,19 @@ extern WIErr WirelessGetBestChannel(
  *  - Keys should be passed as a hex string, optionally beginning with 0x,
  *    and must be either 10 digits for a 40bit key or 26 digits for a 104bit key.
  *  - It can also be the empty string, meaning no encryption.
- *  
+ *
  *  For more info see:
  *  http://kbase.info.apple.com/cgi-bin/WebObjects/kbase.woa/11/wa/query?searchMode=Expert&type=id&val=KC.106424
  */
 extern WIErr WirelessMakeIBSS(
-	WirelessContextPtr inContex,
-	CFStringRef inNetworkName,
-	CFStringRef inNetworkPassword,
-	UInt32 inChannel);
+							  WirelessContextPtr inContex,
+							  CFStringRef inNetworkName,
+							  CFStringRef inNetworkPassword,
+							  UInt32 inChannel);
 
 /*
  *  Get information from the Hermes chip.
- *  
+ *
  *  RIDno is the Hermes RID number for the data to get, as
  *  0xFC01 - HERMES_RID_CNFOWNMACADDR
  *  0xFC02 - HERMES_RID_CNFDESIREDSSID
@@ -403,65 +379,56 @@ extern WIErr WirelessMakeIBSS(
  *  returned seems to be lagging, though, call twice for fresh data.)
  */
 extern WIErr WirelessHCF_GetInfo(
-	WirelessContextPtr inContext,
-	UInt16 RIDno,
-	UInt32 outBufSize,
-	void *outBuf);
+								 WirelessContextPtr inContext,
+								 UInt16 RIDno,
+								 UInt32 outBufSize,
+								 void *outBuf);
 
-
-extern WIErr WirelessPrivate(
-							 WirelessContextPtr inContext,
-							 void* in_ptr,
-							 int in_bytes,
-							 void* out_ptr,
-							 int out_bytes);
 
 /*
-	***** MISSING FUNCTIONS *****
-	
-	These functions are used to configure an Access Point (Base Station).
-	Most of these are used by the Airport Admin Utility.app, and some like
-	WirelessAP_GetStatus are even used by Internet Connect.app. - jason
-	
-		WirelessAP_BinaryCurrentVersion
-		WirelessAP_BinaryCurrentVersion2
-		WirelessAP_BinaryIsCurrent
-		WirelessAP_BinaryUpload
-		WirelessAP_BinaryUploadACP
-		WirelessAP_BinaryVersion
-		WirelessAP_Dial
-		WirelessAP_DialDynamic
-		WirelessAP_Explore
-		WirelessAP_ForceIPAddress
-		WirelessAP_GetBridgeStatus
-		WirelessAP_GetCommonVariables
-		WirelessAP_GetCommonVariablesACP
-		WirelessAP_GetFullStatus
-		WirelessAP_GetModemVersion
-		WirelessAP_GetModemVersionACP
-		WirelessAP_GetStatus
-		WirelessAP_GetType
-		WirelessAP_GetVersion
-		WirelessAP_Hangup
-		WirelessAP_IsConnected
-		WirelessAP_Read
-		WirelessAP_ReadACP
-		WirelessAP_ResetNVRAM
-		WirelessAP_Restart
-		WirelessAP_RestartACP
-		WirelessAP_Write
-		WirelessAP_WriteACP
-	
-	I can't find any apps that use these functions. - jason
-	
-		WirelessAccessPoint
-		WirelessConfigure
-		WirelessDownloadFW
-		WirelessSetKey
-*/
+ ***** MISSING FUNCTIONS *****
+ 
+ These functions are used to configure an Access Point (Base Station).
+ Most of these are used by the Airport Admin Utility.app, and some like
+ WirelessAP_GetStatus are even used by Internet Connect.app. - jason
+ 
+ WirelessAP_BinaryCurrentVersion
+ WirelessAP_BinaryCurrentVersion2
+ WirelessAP_BinaryIsCurrent
+ WirelessAP_BinaryUpload
+ WirelessAP_BinaryUploadACP
+ WirelessAP_BinaryVersion
+ WirelessAP_Dial
+ WirelessAP_DialDynamic
+ WirelessAP_Explore
+ WirelessAP_ForceIPAddress
+ WirelessAP_GetBridgeStatus
+ WirelessAP_GetCommonVariables
+ WirelessAP_GetCommonVariablesACP
+ WirelessAP_GetFullStatus
+ WirelessAP_GetModemVersion
+ WirelessAP_GetModemVersionACP
+ WirelessAP_GetStatus
+ WirelessAP_GetType
+ WirelessAP_GetVersion
+ WirelessAP_Hangup
+ WirelessAP_IsConnected
+ WirelessAP_Read
+ WirelessAP_ReadACP
+ WirelessAP_ResetNVRAM
+ WirelessAP_Restart
+ WirelessAP_RestartACP
+ WirelessAP_Write
+ WirelessAP_WriteACP
+ 
+ I can't find any apps that use these functions. - jason
+ 
+ WirelessAccessPoint
+ WirelessConfigure
+ WirelessDownloadFW
+ WirelessSetKey
+ */
+
+extern WIErr WirelessPrivate(WirelessContextPtr inContext,void* in_ptr,int in_bytes,void* out_ptr,int  out_bytes);
 
 #endif // __APPLE_80211__
-
-#ifdef __cplusplus
-}
-#endif

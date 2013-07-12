@@ -1103,38 +1103,47 @@ NSInteger lengthSort(id string1, id string2, void *context)
     curSignalData += _curSignal;
     ++curPacketData;
     
-	CWSecurityMode sm = kCWSecurityModeOpen;
+	/*kCWSecurityNone                 = 0,
+	 kCWSecurityWEP                  = 1,
+	 kCWSecurityWPAPersonal          = 2,
+	 kCWSecurityWPAPersonalMixed     = 3,
+	 kCWSecurityWPA2Personal         = 4,
+	 kCWSecurityPersonal             = 5,
+	 kCWSecurityDynamicWEP           = 6,
+	 kCWSecurityWPAEnterprise        = 7,
+	 kCWSecurityWPAEnterpriseMixed   = 8,
+	 kCWSecurityWPA2Enterprise       = 9,
+	 kCWSecurityEnterprise           = 10,
+	 kCWSecurityUnknown              = NSIntegerMax,*/
+	CWSecurity sm = kCWSecurityNone;
 	
-	for (; sm <= kCWSecurityModeWPS; ++sm) {
+	for (; sm <= kCWSecurityEnterprise; ++sm) {
 		if ([info supportsSecurity:sm])
 			break;
 	}
 	
     switch (sm)
     {
-        case kCWSecurityModeOpen:
+        case kCWSecurityNone:
             wep = encryptionTypeNone;
         break;
             
-        case kCWSecurityModeDynamicWEP:
-        case kCWSecurityModeWEP:
+        case kCWSecurityWEP:
+		case kCWSecurityDynamicWEP:
             wep = encryptionTypeWEP;
         break;
             
-        case kCWSecurityModeWPA_PSK:
-        case kCWSecurityModeWPA_Enterprise:
+        case kCWSecurityWPAPersonal:
+        case kCWSecurityWPAPersonalMixed:
+		case kCWSecurityWPAEnterprise:
+		case kCWSecurityWPAEnterpriseMixed:
             wep = encryptionTypeWPA;
         break;
             
-        case kCWSecurityModeWPA2_PSK:
-        case kCWSecurityModeWPA2_Enterprise:
+        case kCWSecurityWPA2Personal:
+        case kCWSecurityWPA2Enterprise:
             wep = encryptionTypeWPA2;
         break;
-            
-        case kCWSecurityModeWPS:
-            wep = encryptionTypeUnknown;
-        break;
-            
         default:
             wep = encryptionTypeUnknown;
         break;

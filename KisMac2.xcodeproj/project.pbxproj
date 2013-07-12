@@ -23,7 +23,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		00122EA706B1A7E5007FA5FE /* FCS.m in Sources */ = {isa = PBXBuildFile; fileRef = 00122EA506B1A7E5007FA5FE /* FCS.m */; };
 		00174DBA06B2AC8F003485E6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 00174DB906B2AC8F003485E6 /* Localizable.strings */; };
 		002E7DFC06A86C6F00C9D931 /* ImportController.m in Sources */ = {isa = PBXBuildFile; fileRef = 002E7DF806A86C6F00C9D931 /* ImportController.m */; };
 		0035335606A5DD5700AB4577 /* details-button.tif in Resources */ = {isa = PBXBuildFile; fileRef = 0035330406A5DD5700AB4577 /* details-button.tif */; };
@@ -191,10 +190,10 @@
 		A57E645D1607BC9700BE1BCA /* WaveNetWPACrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64491607BC9700BE1BCA /* WaveNetWPACrack.m */; };
 		A57E645F1607BC9700BE1BCA /* WPA.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E644B1607BC9700BE1BCA /* WPA.m */; };
 		A57E64631607BD0900BE1BCA /* CrashReportController.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64611607BD0900BE1BCA /* CrashReportController.m */; };
-		A57E646A1607BD3200BE1BCA /* DecryptController.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64661607BD3200BE1BCA /* DecryptController.m */; };
 		A57E646B1607BD3200BE1BCA /* DownloadMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64671607BD3200BE1BCA /* DownloadMapController.m */; };
 		A57E646F1607BD6700BE1BCA /* MapDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E646D1607BD6700BE1BCA /* MapDownload.m */; };
 		A57E64731607BD8C00BE1BCA /* WaveWeakContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64711607BD8C00BE1BCA /* WaveWeakContainer.m */; };
+		A581FC2C177B36AC00C05CE9 /* FCS.m in Sources */ = {isa = PBXBuildFile; fileRef = A581FC2B177B36A800C05CE9 /* FCS.m */; };
 		A585F77B1771DB7100045928 /* HTTPStream.m in Sources */ = {isa = PBXBuildFile; fileRef = A585F77A1771DB7100045928 /* HTTPStream.m */; };
 		A597210616109F45007CC31D /* driver.icns in Resources */ = {isa = PBXBuildFile; fileRef = A59720F716109F42007CC31D /* driver.icns */; };
 		A597210716109F45007CC31D /* EnergySaver.icns in Resources */ = {isa = PBXBuildFile; fileRef = A59720F816109F42007CC31D /* EnergySaver.icns */; };
@@ -254,8 +253,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		00122EA406B1A7E5007FA5FE /* FCS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCS.h; sourceTree = "<group>"; };
-		00122EA506B1A7E5007FA5FE /* FCS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCS.m; sourceTree = "<group>"; };
 		002E7DF706A86C6F00C9D931 /* ImportController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ImportController.h; path = Sources/WindowControllers/ImportController.h; sourceTree = SOURCE_ROOT; };
 		002E7DF806A86C6F00C9D931 /* ImportController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ImportController.m; path = Sources/WindowControllers/ImportController.m; sourceTree = SOURCE_ROOT; };
 		0035330406A5DD5700AB4577 /* details-button.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "details-button.tif"; sourceTree = "<group>"; };
@@ -524,14 +521,15 @@
 		A57E644B1607BC9700BE1BCA /* WPA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPA.m; sourceTree = "<group>"; };
 		A57E64601607BD0900BE1BCA /* CrashReportController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReportController.h; sourceTree = "<group>"; };
 		A57E64611607BD0900BE1BCA /* CrashReportController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrashReportController.m; sourceTree = "<group>"; };
-		A57E64641607BD3200BE1BCA /* DecryptController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DecryptController.h; sourceTree = "<group>"; };
 		A57E64651607BD3200BE1BCA /* DownloadMapController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadMapController.h; sourceTree = "<group>"; };
-		A57E64661607BD3200BE1BCA /* DecryptController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DecryptController.m; sourceTree = "<group>"; };
 		A57E64671607BD3200BE1BCA /* DownloadMapController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadMapController.m; sourceTree = "<group>"; };
 		A57E646C1607BD6700BE1BCA /* MapDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapDownload.h; sourceTree = "<group>"; };
 		A57E646D1607BD6700BE1BCA /* MapDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapDownload.m; sourceTree = "<group>"; };
 		A57E64701607BD8B00BE1BCA /* WaveWeakContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveWeakContainer.h; sourceTree = "<group>"; };
 		A57E64711607BD8C00BE1BCA /* WaveWeakContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveWeakContainer.m; sourceTree = "<group>"; };
+		A581FC27177B2B6700C05CE9 /* Apple80211.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Apple80211.h; sourceTree = "<group>"; };
+		A581FC2A177B36A800C05CE9 /* FCS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCS.h; sourceTree = "<group>"; };
+		A581FC2B177B36A800C05CE9 /* FCS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCS.m; sourceTree = "<group>"; };
 		A585F7791771DB7100045928 /* HTTPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPStream.h; sourceTree = "<group>"; };
 		A585F77A1771DB7100045928 /* HTTPStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPStream.m; sourceTree = "<group>"; };
 		A59720CF161072A8007CC31D /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -670,10 +668,11 @@
 		003533A006A5DD8500AB4577 /* 3rd Party */ = {
 			isa = PBXGroup;
 			children = (
+				A581FC2A177B36A800C05CE9 /* FCS.h */,
+				A581FC2B177B36A800C05CE9 /* FCS.m */,
+				A581FC27177B2B6700C05CE9 /* Apple80211.h */,
 				003533A206A5DD8500AB4577 /* quicksort.h */,
 				003533A306A5DD8500AB4577 /* quicksort.m */,
-				00122EA406B1A7E5007FA5FE /* FCS.h */,
-				00122EA506B1A7E5007FA5FE /* FCS.m */,
 			);
 			name = "3rd Party";
 			path = "Sources/3rd Party";
@@ -867,9 +866,7 @@
 		0035341F06A5DD8500AB4577 /* WindowControllers */ = {
 			isa = PBXGroup;
 			children = (
-				A57E64641607BD3200BE1BCA /* DecryptController.h */,
 				A57E64651607BD3200BE1BCA /* DownloadMapController.h */,
-				A57E64661607BD3200BE1BCA /* DecryptController.m */,
 				A57E64671607BD3200BE1BCA /* DownloadMapController.m */,
 				A57E64601607BD0900BE1BCA /* CrashReportController.h */,
 				A57E64611607BD0900BE1BCA /* CrashReportController.m */,
@@ -1444,6 +1441,7 @@
 				0035342806A5DD8500AB4577 /* quicksort.m in Sources */,
 				0035342C06A5DD8500AB4577 /* InfoController.mm in Sources */,
 				0035342E06A5DD8500AB4577 /* ScanController.m in Sources */,
+				A581FC2C177B36AC00C05CE9 /* FCS.m in Sources */,
 				0035342F06A5DD8500AB4577 /* ScanControllerMenus.m in Sources */,
 				0035343106A5DD8500AB4577 /* ScanControllerPrivate.m in Sources */,
 				0035343306A5DD8500AB4577 /* ScanControllerScriptable.m in Sources */,
@@ -1473,7 +1471,6 @@
 				0035349406A5DD8500AB4577 /* WaveDriverUSBIntersil.mm in Sources */,
 				0035349C06A5DD8500AB4577 /* WayPoint.m in Sources */,
 				002E7DFC06A86C6F00C9D931 /* ImportController.m in Sources */,
-				00122EA706B1A7E5007FA5FE /* FCS.m in Sources */,
 				00CBA34106DB8FDE000ACD19 /* MapView.m in Sources */,
 				00C5F12D06DE0C98001EC02F /* MapViewPrivate.m in Sources */,
 				00ED80A906E32C9600455A05 /* NetView.m in Sources */,
@@ -1526,7 +1523,6 @@
 				A57E645D1607BC9700BE1BCA /* WaveNetWPACrack.m in Sources */,
 				A57E645F1607BC9700BE1BCA /* WPA.m in Sources */,
 				A57E64631607BD0900BE1BCA /* CrashReportController.m in Sources */,
-				A57E646A1607BD3200BE1BCA /* DecryptController.m in Sources */,
 				A57E646B1607BD3200BE1BCA /* DownloadMapController.m in Sources */,
 				A57E646F1607BD6700BE1BCA /* MapDownload.m in Sources */,
 				A57E64731607BD8C00BE1BCA /* WaveWeakContainer.m in Sources */,
@@ -1660,7 +1656,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "IGR Software";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1724,7 +1719,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "IGR Software";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
