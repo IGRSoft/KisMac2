@@ -87,17 +87,16 @@ for(my $i = 0; $i < @oui; $i++){
 	# If it's possible to split the line
 	if($oui[$i] =~ s/([0-9a-fA-F]{2}-[0-9a-fA-F]{2}-[0-9a-fA-F]{2})\s+\(hex\)\s+(.+)$/$1 $2/){
 		
-		# Lrn2Format, DuPont Pixel Systems
-		$oui[$i] =~ s/^(.+?)\s+\.\s+$/$1/;
-		# &s are lame
-		$oui[$i] =~ s/&/&amp;/g;
-		
+		my $line = $oui[$i];
+		$line =~ s/^ +//;
+		$line =~ s/^(.+?)\s+\.\s+$/$1/;
+		$line =~ s/&/&amp;/g;
 		
 		# Chomp off trailing newline
-		chomp $oui[$i];
+		chomp $line;
 		
 		# Split apart mac address and name
-		my @thisVendor = split(/ /, $oui[$i], 2);
+		my @thisVendor = split(/ /, $line, 2);
 		
 		# Change - into : in the mac address
 		$thisVendor[0] =~ s/-/:/g;
@@ -135,7 +134,7 @@ exit;
 sub printHeader() {
 print OUTFILE <<END_HEADER;
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>01:00:0C</key>
