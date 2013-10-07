@@ -305,13 +305,11 @@
             NSBeginAlertSheet(NSLocalizedString(@"Cracking unsuccessful", "Error box title for WEP attacks"),
             OK, NULL, NULL, _window, self, NULL, NULL, NULL, 
             NSLocalizedString(@"Cracking unsuccessful description for weak scheduling attack", "LONG description with possible causes"));
-            //@"KisMAC was not able to recover the WEP key. This is either because you have not collected enough weak keys, you will need a value way bigger than 1000. Or another reason might be the fact that the base station is using extended features like WEP+ or the key was simply changed during the collection process.");
             break;
         case 2:
             NSBeginAlertSheet(NSLocalizedString(@"Cracking unsuccessful", "Error box title for WEP attacks"),
             OK, NULL, NULL, _window, self, NULL, NULL, NULL, 
             NSLocalizedString(@"Cracking unsuccessful description for brutforce", "LONG description with possible causes")
-            //@"The key could not have been recovered. Possible reasons are: 1. The key was not a 40-bit key. 2.The crypto algorithm is not WEP. 3. Advanced Features like LEAP are activated."
             );
             break;
         case 3:

@@ -23,7 +23,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		00122EA706B1A7E5007FA5FE /* FCS.m in Sources */ = {isa = PBXBuildFile; fileRef = 00122EA506B1A7E5007FA5FE /* FCS.m */; };
 		00174DBA06B2AC8F003485E6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 00174DB906B2AC8F003485E6 /* Localizable.strings */; };
 		002E7DFC06A86C6F00C9D931 /* ImportController.m in Sources */ = {isa = PBXBuildFile; fileRef = 002E7DF806A86C6F00C9D931 /* ImportController.m */; };
 		0035335606A5DD5700AB4577 /* details-button.tif in Resources */ = {isa = PBXBuildFile; fileRef = 0035330406A5DD5700AB4577 /* details-button.tif */; };
@@ -180,6 +179,10 @@
 		A5295C461653C3A600A0B5D9 /* BIGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5295C3A1653C38E00A0B5D9 /* BIGL.framework */; };
 		A5295C471653C3BD00A0B5D9 /* BIGeneric.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A5295C441653C39800A0B5D9 /* BIGeneric.framework */; };
 		A5295C481653C3BD00A0B5D9 /* BIGL.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A5295C3A1653C38E00A0B5D9 /* BIGL.framework */; };
+		A57698121796AA7400B88B4E /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A57698111796AA7400B88B4E /* SenTestingKit.framework */; };
+		A57698141796AA7400B88B4E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A57698131796AA7400B88B4E /* Cocoa.framework */; };
+		A576981B1796AA7400B88B4E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A57698191796AA7400B88B4E /* InfoPlist.strings */; };
+		A576981E1796AA7400B88B4E /* KisMac2_Test.m in Sources */ = {isa = PBXBuildFile; fileRef = A576981D1796AA7400B88B4E /* KisMac2_Test.m */; };
 		A576DDA81609FC2B007CBA80 /* md5.m in Sources */ = {isa = PBXBuildFile; fileRef = A576DDA71609FC2B007CBA80 /* md5.m */; };
 		A57E644D1607BC9700BE1BCA /* AirCrackWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */; };
 		A57E644F1607BC9700BE1BCA /* LEAP.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E643B1607BC9700BE1BCA /* LEAP.m */; };
@@ -191,10 +194,10 @@
 		A57E645D1607BC9700BE1BCA /* WaveNetWPACrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64491607BC9700BE1BCA /* WaveNetWPACrack.m */; };
 		A57E645F1607BC9700BE1BCA /* WPA.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E644B1607BC9700BE1BCA /* WPA.m */; };
 		A57E64631607BD0900BE1BCA /* CrashReportController.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64611607BD0900BE1BCA /* CrashReportController.m */; };
-		A57E646A1607BD3200BE1BCA /* DecryptController.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64661607BD3200BE1BCA /* DecryptController.m */; };
 		A57E646B1607BD3200BE1BCA /* DownloadMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64671607BD3200BE1BCA /* DownloadMapController.m */; };
 		A57E646F1607BD6700BE1BCA /* MapDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E646D1607BD6700BE1BCA /* MapDownload.m */; };
 		A57E64731607BD8C00BE1BCA /* WaveWeakContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64711607BD8C00BE1BCA /* WaveWeakContainer.m */; };
+		A581FC2C177B36AC00C05CE9 /* FCS.m in Sources */ = {isa = PBXBuildFile; fileRef = A581FC2B177B36A800C05CE9 /* FCS.m */; };
 		A585F77B1771DB7100045928 /* HTTPStream.m in Sources */ = {isa = PBXBuildFile; fileRef = A585F77A1771DB7100045928 /* HTTPStream.m */; };
 		A597210616109F45007CC31D /* driver.icns in Resources */ = {isa = PBXBuildFile; fileRef = A59720F716109F42007CC31D /* driver.icns */; };
 		A597210716109F45007CC31D /* EnergySaver.icns in Resources */ = {isa = PBXBuildFile; fileRef = A59720F816109F42007CC31D /* EnergySaver.icns */; };
@@ -254,8 +257,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		00122EA406B1A7E5007FA5FE /* FCS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCS.h; sourceTree = "<group>"; };
-		00122EA506B1A7E5007FA5FE /* FCS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCS.m; sourceTree = "<group>"; };
 		002E7DF706A86C6F00C9D931 /* ImportController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ImportController.h; path = Sources/WindowControllers/ImportController.h; sourceTree = SOURCE_ROOT; };
 		002E7DF806A86C6F00C9D931 /* ImportController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ImportController.m; path = Sources/WindowControllers/ImportController.m; sourceTree = SOURCE_ROOT; };
 		0035330406A5DD5700AB4577 /* details-button.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "details-button.tif"; sourceTree = "<group>"; };
@@ -382,8 +383,6 @@
 		00C5F13206DE0EAF001EC02F /* MapViewAreaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewAreaView.h; sourceTree = "<group>"; };
 		00CBA33E06DB8FDE000ACD19 /* MapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapView.h; sourceTree = "<group>"; };
 		00CBA33F06DB8FDE000ACD19 /* MapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapView.m; sourceTree = "<group>"; };
-		00D4228D07C7BA61000499F1 /* WavePacketTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WavePacketTest.m; sourceTree = "<group>"; };
-		00D4229607C7BB1C000499F1 /* WaveHelperTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveHelperTest.m; sourceTree = "<group>"; };
 		00D566B209C74A8200FB787B /* growl-leap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "growl-leap.png"; sourceTree = "<group>"; };
 		00D566B309C74A8200FB787B /* growl-noenc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "growl-noenc.png"; sourceTree = "<group>"; };
 		00D566B409C74A8200FB787B /* growl-probe.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "growl-probe.png"; sourceTree = "<group>"; };
@@ -456,7 +455,6 @@
 		69BFC5F00F078532008DB1AF /* WavePluginBeaconFlood.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WavePluginBeaconFlood.h; sourceTree = "<group>"; };
 		69BFC5F10F078532008DB1AF /* WavePluginBeaconFlood.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WavePluginBeaconFlood.m; sourceTree = "<group>"; };
 		69C981FB0FB02B3A00799FE0 /* dmgBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dmgBackground.png; sourceTree = "<group>"; };
-		69C981FC0FB02B3A00799FE0 /* KisMac Install Picture.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = "KisMac Install Picture.psd"; sourceTree = "<group>"; };
 		69C987460E5023F000B0E6A8 /* greengem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greengem.png; sourceTree = "<group>"; };
 		69C987470E5023F000B0E6A8 /* orangegem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = orangegem.png; sourceTree = "<group>"; };
 		69C987480E5023F000B0E6A8 /* redgem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redgem.png; sourceTree = "<group>"; };
@@ -502,6 +500,15 @@
 		A5282F801608CFB000F56AE3 /* BIToolbar.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = BIToolbar.jpg; sourceTree = "<group>"; };
 		A5295C321653C38D00A0B5D9 /* BIGL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BIGL.xcodeproj; path = BIGL/BIGL.xcodeproj; sourceTree = "<group>"; };
 		A5295C3B1653C39700A0B5D9 /* BIGeneric.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BIGeneric.xcodeproj; path = BIGeneric/BIGeneric.xcodeproj; sourceTree = "<group>"; };
+		A57698101796AA7400B88B4E /* KisMac2_Test.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KisMac2_Test.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A57698111796AA7400B88B4E /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		A57698131796AA7400B88B4E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		A57698151796AA7400B88B4E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		A57698181796AA7400B88B4E /* KisMac2_Test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KisMac2_Test-Info.plist"; sourceTree = "<group>"; };
+		A576981A1796AA7400B88B4E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A576981C1796AA7400B88B4E /* KisMac2_Test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KisMac2_Test.h; sourceTree = "<group>"; };
+		A576981D1796AA7400B88B4E /* KisMac2_Test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KisMac2_Test.m; sourceTree = "<group>"; };
+		A576981F1796AA7400B88B4E /* KisMac2_Test-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KisMac2_Test-Prefix.pch"; sourceTree = "<group>"; };
 		A576DDA61609FC2B007CBA80 /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md5.h; sourceTree = "<group>"; };
 		A576DDA71609FC2B007CBA80 /* md5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = md5.m; sourceTree = "<group>"; };
 		A57E64381607BC9700BE1BCA /* AirCrackWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AirCrackWrapper.h; sourceTree = "<group>"; };
@@ -524,14 +531,15 @@
 		A57E644B1607BC9700BE1BCA /* WPA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPA.m; sourceTree = "<group>"; };
 		A57E64601607BD0900BE1BCA /* CrashReportController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReportController.h; sourceTree = "<group>"; };
 		A57E64611607BD0900BE1BCA /* CrashReportController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrashReportController.m; sourceTree = "<group>"; };
-		A57E64641607BD3200BE1BCA /* DecryptController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DecryptController.h; sourceTree = "<group>"; };
 		A57E64651607BD3200BE1BCA /* DownloadMapController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadMapController.h; sourceTree = "<group>"; };
-		A57E64661607BD3200BE1BCA /* DecryptController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DecryptController.m; sourceTree = "<group>"; };
 		A57E64671607BD3200BE1BCA /* DownloadMapController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadMapController.m; sourceTree = "<group>"; };
 		A57E646C1607BD6700BE1BCA /* MapDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapDownload.h; sourceTree = "<group>"; };
 		A57E646D1607BD6700BE1BCA /* MapDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapDownload.m; sourceTree = "<group>"; };
 		A57E64701607BD8B00BE1BCA /* WaveWeakContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveWeakContainer.h; sourceTree = "<group>"; };
 		A57E64711607BD8C00BE1BCA /* WaveWeakContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveWeakContainer.m; sourceTree = "<group>"; };
+		A581FC27177B2B6700C05CE9 /* Apple80211.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Apple80211.h; sourceTree = "<group>"; };
+		A581FC2A177B36A800C05CE9 /* FCS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCS.h; sourceTree = "<group>"; };
+		A581FC2B177B36A800C05CE9 /* FCS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCS.m; sourceTree = "<group>"; };
 		A585F7791771DB7100045928 /* HTTPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPStream.h; sourceTree = "<group>"; };
 		A585F77A1771DB7100045928 /* HTTPStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPStream.m; sourceTree = "<group>"; };
 		A59720CF161072A8007CC31D /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -551,6 +559,7 @@
 		A597212A1610A306007CC31D /* toolbar-save.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "toolbar-save.icns"; sourceTree = "<group>"; };
 		A59721401610CB38007CC31D /* md4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md4.h; sourceTree = "<group>"; };
 		A59721411610CB39007CC31D /* md4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md4.c; sourceTree = "<group>"; };
+		A59E42D71796ADBF00B1139F /* updateHelpIndex.command */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = updateHelpIndex.command; sourceTree = SOURCE_ROOT; };
 		A5A1974D17730CE2000A62E9 /* icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; path = icon.iconset; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -572,6 +581,15 @@
 				6CA3BCCB09B2A58F00DCB407 /* Accelerate.framework in Frameworks */,
 				6CF938C410A7DFDF00B32F94 /* CoreWLAN.framework in Frameworks */,
 				6C32713412CFC4070033A649 /* CoreLocation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A576980C1796AA7400B88B4E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A57698121796AA7400B88B4E /* SenTestingKit.framework in Frameworks */,
+				A57698141796AA7400B88B4E /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -660,6 +678,7 @@
 		0035334206A5DD5700AB4577 /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
+				A59E42D71796ADBF00B1139F /* updateHelpIndex.command */,
 				0035334F06A5DD5700AB4577 /* usbprism2_prep.sh */,
 				0035335006A5DD5700AB4577 /* usbprism2_unprep.sh */,
 			);
@@ -670,10 +689,11 @@
 		003533A006A5DD8500AB4577 /* 3rd Party */ = {
 			isa = PBXGroup;
 			children = (
+				A581FC2A177B36A800C05CE9 /* FCS.h */,
+				A581FC2B177B36A800C05CE9 /* FCS.m */,
+				A581FC27177B2B6700C05CE9 /* Apple80211.h */,
 				003533A206A5DD8500AB4577 /* quicksort.h */,
 				003533A306A5DD8500AB4577 /* quicksort.m */,
-				00122EA406B1A7E5007FA5FE /* FCS.h */,
-				00122EA506B1A7E5007FA5FE /* FCS.m */,
 			);
 			name = "3rd Party";
 			path = "Sources/3rd Party";
@@ -867,9 +887,7 @@
 		0035341F06A5DD8500AB4577 /* WindowControllers */ = {
 			isa = PBXGroup;
 			children = (
-				A57E64641607BD3200BE1BCA /* DecryptController.h */,
 				A57E64651607BD3200BE1BCA /* DownloadMapController.h */,
-				A57E64661607BD3200BE1BCA /* DecryptController.m */,
 				A57E64671607BD3200BE1BCA /* DownloadMapController.m */,
 				A57E64601607BD0900BE1BCA /* CrashReportController.h */,
 				A57E64611607BD0900BE1BCA /* CrashReportController.m */,
@@ -898,16 +916,6 @@
 			);
 			path = BIViews;
 			sourceTree = "<group>";
-		};
-		00D4228C07C7BA21000499F1 /* Tests */ = {
-			isa = PBXGroup;
-			children = (
-				00D4229607C7BB1C000499F1 /* WaveHelperTest.m */,
-				00D4228D07C7BA61000499F1 /* WavePacketTest.m */,
-			);
-			name = Tests;
-			path = Sources/Tests;
-			sourceTree = SOURCE_ROOT;
 		};
 		00F57C1606A886350035AE2F /* Nibs */ = {
 			isa = PBXGroup;
@@ -957,7 +965,6 @@
 				003533FE06A5DD8500AB4577 /* Views */,
 				0035340E06A5DD8500AB4577 /* WaveDrivers */,
 				0035341F06A5DD8500AB4577 /* WindowControllers */,
-				00D4228C07C7BA21000499F1 /* Tests */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -986,6 +993,7 @@
 			children = (
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				A57698151796AA7400B88B4E /* CoreData.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -994,6 +1002,7 @@
 			isa = PBXGroup;
 			children = (
 				8D1107320486CEB800E47090 /* KisMac2.app */,
+				A57698101796AA7400B88B4E /* KisMac2_Test.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1006,6 +1015,7 @@
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
+				A57698161796AA7400B88B4E /* Test */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
@@ -1042,6 +1052,8 @@
 			isa = PBXGroup;
 			children = (
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				A57698111796AA7400B88B4E /* SenTestingKit.framework */,
+				A57698131796AA7400B88B4E /* Cocoa.framework */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -1083,7 +1095,6 @@
 			isa = PBXGroup;
 			children = (
 				69C981FB0FB02B3A00799FE0 /* dmgBackground.png */,
-				69C981FC0FB02B3A00799FE0 /* KisMac Install Picture.psd */,
 			);
 			path = "DMG Artwork";
 			sourceTree = "<group>";
@@ -1159,6 +1170,27 @@
 				A5295C441653C39800A0B5D9 /* BIGeneric.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A57698161796AA7400B88B4E /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				A576981C1796AA7400B88B4E /* KisMac2_Test.h */,
+				A576981D1796AA7400B88B4E /* KisMac2_Test.m */,
+				A57698171796AA7400B88B4E /* Supporting Files */,
+			);
+			name = Test;
+			path = KisMac2_Test;
+			sourceTree = "<group>";
+		};
+		A57698171796AA7400B88B4E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A57698181796AA7400B88B4E /* KisMac2_Test-Info.plist */,
+				A57698191796AA7400B88B4E /* InfoPlist.strings */,
+				A576981F1796AA7400B88B4E /* KisMac2_Test-Prefix.pch */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		A57E64371607BC9700BE1BCA /* Crypto */ = {
@@ -1242,6 +1274,24 @@
 			productReference = 8D1107320486CEB800E47090 /* KisMac2.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A576980F1796AA7400B88B4E /* KisMac2_Test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A57698201796AA7400B88B4E /* Build configuration list for PBXNativeTarget "KisMac2_Test" */;
+			buildPhases = (
+				A576980B1796AA7400B88B4E /* Sources */,
+				A576980C1796AA7400B88B4E /* Frameworks */,
+				A576980D1796AA7400B88B4E /* Resources */,
+				A576980E1796AA7400B88B4E /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KisMac2_Test;
+			productName = KisMac2_Test;
+			productReference = A57698101796AA7400B88B4E /* KisMac2_Test.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1279,6 +1329,7 @@
 			targets = (
 				8D1107260486CEB800E47090 /* KisMac2 */,
 				6910302C0F9E313700C4E466 /* Kismac.dmg */,
+				A576980F1796AA7400B88B4E /* KisMac2_Test */,
 			);
 		};
 /* End PBXProject section */
@@ -1388,6 +1439,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A576980D1796AA7400B88B4E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A576981B1796AA7400B88B4E /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -1431,7 +1490,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /usr/bin/osascript;
-			shellScript = "\non run\n\tset diskname to system attribute \"PROJECT_NAME\"\n\tset build_dir to system attribute \"BUILT_PRODUCTS_DIR\"\n\tset diskpath to build_dir & \"/\" & diskname & \".dmg\"\n\tset source_root to system attribute \"SRCROOT\"\n\ttell application \"Finder\"\n\t\tif (exists the disk diskname) then\n\t\t\teject diskname\n\t\tend if\n\t\tdo shell script (\"hdiutil attach \" & diskpath & \" -readwrite -mount required\")\n\t\trepeat until name of every disk contains diskname\n\t\t\tdelay 1\n\t\tend repeat\n\t\ttell disk diskname\n\t\t\topen\n\t\t\tset theXOrigin to 10\n\t\t\tset theYOrigin to 60\n\t\t\tset theWidth to 600\n\t\t\tset theHeight to 386\n\t\t\tset theBottomRightX to (theXOrigin + theWidth)\n\t\t\tset theBottomRightY to (theYOrigin + theHeight)\n\t\t\tset dsStore to \"\\\"/Volumes/\" & diskname & \"/\" & \".DS_Store\\\"\"\n\t\t\ttell container window\n\t\t\t\tset current view to icon view\n\t\t\t\tset toolbar visible to false\n\t\t\t\tset statusbar visible to false\n\t\t\t\tset the bounds to {theXOrigin, theYOrigin, theBottomRightX, theBottomRightY}\n\t\t\t\tset statusbar visible to false\n\t\t\tend tell\n\t\t\tset opts to the icon view options of container window\n\t\t\ttell opts\n\t\t\t\tset icon size to 120\n\t\t\t\tset arrangement to not arranged\n\t\t\tend tell\n\t\t\tset background picture of opts to file \".background:dmgBackground.png\"\n\t\t\tset position of item \"KisMAC.app\" to {197, 229}\n\t\t\tset position of item \"Applications\" to {405, 229}\n\t\t\ttell container window\n\t\t\t\tset statusbar visible to false\n\t\t\t\tset the bounds to {theXOrigin + 1, theYOrigin, theBottomRightX, theBottomRightY}\n\t\t\t\tset the bounds to {theXOrigin, theYOrigin, theBottomRightX, theBottomRightY}\n\t\t\tend tell\n\t\t\tupdate without registering applications\n\t\tend tell\n\t\t--give the finder some time to write the .DS_Store file\n\t\tset waitTime to 0\n\t\tset ejectMe to false\n\t\trepeat while ejectMe is false\n\t\t\tdelay 1\n\t\t\tset waitTime to waitTime + 1\n\t\t\tif (do shell script \"[ -f \" & dsStore & \" ]; echo $?\") = \"0\" then set ejectMe to true\n\t\tend repeat\n\t\tlog \"waited \" & waitTime & \" seconds for .DS_STORE to be created.\"\n\teject diskname\n\tdo shell script \"mv \" & diskpath & \" \" & diskpath & \".old\"\n\tdo shell script \"hdiutil convert \" & diskpath & \".old -format UDZO -imagekey zlib-level=9 -o \" & diskpath\n\tdo shell script \"rm \" & diskpath & \".old\"\n\tend tell\nend run\n\n";
+			shellScript = "\non run\n\tset diskname to system attribute \"PROJECT_NAME\"\n\tset build_dir to system attribute \"BUILT_PRODUCTS_DIR\"\n\tset diskpath to build_dir & \"/\" & diskname & \".dmg\"\n\tset source_root to system attribute \"SRCROOT\"\n\ttell application \"Finder\"\n\t\tif (exists the disk diskname) then\n\t\t\teject diskname\n\t\tend if\n\t\tdo shell script (\"hdiutil attach \" & diskpath & \" -readwrite -mount required\")\n\t\trepeat until name of every disk contains diskname\n\t\t\tdelay 1\n\t\tend repeat\n\t\ttell disk diskname\n\t\t\topen\n\t\t\tset theXOrigin to 10\n\t\t\tset theYOrigin to 60\n\t\t\tset theWidth to 600\n\t\t\tset theHeight to 386\n\t\t\tset theBottomRightX to (theXOrigin + theWidth)\n\t\t\tset theBottomRightY to (theYOrigin + theHeight)\n\t\t\tset dsStore to \"\\\"/Volumes/\" & diskname & \"/\" & \".DS_Store\\\"\"\n\t\t\ttell container window\n\t\t\t\tset current view to icon view\n\t\t\t\tset toolbar visible to false\n\t\t\t\tset statusbar visible to false\n\t\t\t\tset the bounds to {theXOrigin, theYOrigin, theBottomRightX, theBottomRightY}\n\t\t\t\tset statusbar visible to false\n\t\t\tend tell\n\t\t\tset opts to the icon view options of container window\n\t\t\ttell opts\n\t\t\t\tset icon size to 120\n\t\t\t\tset arrangement to not arranged\n\t\t\tend tell\n\t\t\tset background picture of opts to file \".background:dmgBackground.png\"\n\t\t\tset position of item \"KisMac2.app\" to {197, 229}\n\t\t\tset position of item \"Applications\" to {405, 229}\n\t\t\ttell container window\n\t\t\t\tset statusbar visible to false\n\t\t\t\tset the bounds to {theXOrigin + 1, theYOrigin, theBottomRightX, theBottomRightY}\n\t\t\t\tset the bounds to {theXOrigin, theYOrigin, theBottomRightX, theBottomRightY}\n\t\t\tend tell\n\t\t\tupdate without registering applications\n\t\tend tell\n\t\t--give the finder some time to write the .DS_Store file\n\t\tset waitTime to 0\n\t\tset ejectMe to false\n\t\trepeat while ejectMe is false\n\t\t\tdelay 1\n\t\t\tset waitTime to waitTime + 1\n\t\t\tif (do shell script \"[ -f \" & dsStore & \" ]; echo $?\") = \"0\" then set ejectMe to true\n\t\tend repeat\n\t\tlog \"waited \" & waitTime & \" seconds for .DS_STORE to be created.\"\n\teject diskname\n\tdo shell script \"mv \" & diskpath & \" \" & diskpath & \".old\"\n\tdo shell script \"hdiutil convert \" & diskpath & \".old -format UDZO -imagekey zlib-level=9 -o \" & diskpath\n\tdo shell script \"rm \" & diskpath & \".old\"\n\tend tell\nend run\n\n";
+		};
+		A576980E1796AA7400B88B4E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1444,6 +1516,7 @@
 				0035342806A5DD8500AB4577 /* quicksort.m in Sources */,
 				0035342C06A5DD8500AB4577 /* InfoController.mm in Sources */,
 				0035342E06A5DD8500AB4577 /* ScanController.m in Sources */,
+				A581FC2C177B36AC00C05CE9 /* FCS.m in Sources */,
 				0035342F06A5DD8500AB4577 /* ScanControllerMenus.m in Sources */,
 				0035343106A5DD8500AB4577 /* ScanControllerPrivate.m in Sources */,
 				0035343306A5DD8500AB4577 /* ScanControllerScriptable.m in Sources */,
@@ -1473,7 +1546,6 @@
 				0035349406A5DD8500AB4577 /* WaveDriverUSBIntersil.mm in Sources */,
 				0035349C06A5DD8500AB4577 /* WayPoint.m in Sources */,
 				002E7DFC06A86C6F00C9D931 /* ImportController.m in Sources */,
-				00122EA706B1A7E5007FA5FE /* FCS.m in Sources */,
 				00CBA34106DB8FDE000ACD19 /* MapView.m in Sources */,
 				00C5F12D06DE0C98001EC02F /* MapViewPrivate.m in Sources */,
 				00ED80A906E32C9600455A05 /* NetView.m in Sources */,
@@ -1526,13 +1598,20 @@
 				A57E645D1607BC9700BE1BCA /* WaveNetWPACrack.m in Sources */,
 				A57E645F1607BC9700BE1BCA /* WPA.m in Sources */,
 				A57E64631607BD0900BE1BCA /* CrashReportController.m in Sources */,
-				A57E646A1607BD3200BE1BCA /* DecryptController.m in Sources */,
 				A57E646B1607BD3200BE1BCA /* DownloadMapController.m in Sources */,
 				A57E646F1607BD6700BE1BCA /* MapDownload.m in Sources */,
 				A57E64731607BD8C00BE1BCA /* WaveWeakContainer.m in Sources */,
 				A576DDA81609FC2B007CBA80 /* md5.m in Sources */,
 				A59721421610CB39007CC31D /* md4.c in Sources */,
 				A585F77B1771DB7100045928 /* HTTPStream.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A576980B1796AA7400B88B4E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A576981E1796AA7400B88B4E /* KisMac2_Test.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1651,6 +1730,14 @@
 			name = WayPointDialog.xib;
 			sourceTree = "<group>";
 		};
+		A57698191796AA7400B88B4E /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A576981A1796AA7400B88B4E /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -1660,7 +1747,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "IGR Software";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1683,7 +1769,6 @@
 					"-lpcap",
 				);
 				PRODUCT_NAME = KisMac2;
-				PROVISIONING_PROFILE = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -1724,7 +1809,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "IGR Software";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1747,7 +1831,6 @@
 					"-lpcap",
 				);
 				PRODUCT_NAME = KisMac2;
-				PROVISIONING_PROFILE = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -1780,6 +1863,78 @@
 			};
 			name = Release;
 		};
+		A57698211796AA7400B88B4E /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "KisMac2_Test/KisMac2_Test-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "KisMac2_Test/KisMac2_Test-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Development;
+		};
+		A57698221796AA7400B88B4E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "KisMac2_Test/KisMac2_Test-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "KisMac2_Test/KisMac2_Test-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1806,6 +1961,15 @@
 			buildConfigurations = (
 				6910302E0F9E313700C4E466 /* Development */,
 				691030300F9E313700C4E466 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		A57698201796AA7400B88B4E /* Build configuration list for PBXNativeTarget "KisMac2_Test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A57698211796AA7400B88B4E /* Development */,
+				A57698221796AA7400B88B4E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;

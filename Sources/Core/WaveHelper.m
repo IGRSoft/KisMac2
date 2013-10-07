@@ -128,8 +128,9 @@ static GPSInfoController *_gc;
     NSString *aVendor;
     
     // The dictionary is cached for speed, but it needs to be loaded the first time
-    if (_vendors == nil) { 
-        _vendors = [NSDictionary dictionaryWithContentsOfFile:[[[NSBundle bundleForClass:[WaveHelper class]] resourcePath] stringByAppendingString:@"/vendor.db"]];
+    if (_vendors == nil) {
+		NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"vendor.db"];
+        _vendors = [NSDictionary dictionaryWithContentsOfFile:path];
 		if (!_vendors) {
 			DBNSLog(@"No vendors Database found!");
 			return @"error";

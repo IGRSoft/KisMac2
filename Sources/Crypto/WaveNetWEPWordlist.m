@@ -42,8 +42,8 @@
 		FILE* fptr;
 		char wrd[1000];
 		unsigned int i, words, foundCRC, counter, length = 0;
-		unsigned char key[16], currentGuess[16], skeletonStateArray[256], currentStateArray[256];
-		unsigned char y, z, tmp, xov;
+		UInt8 key[16], currentGuess[16], skeletonStateArray[256], currentStateArray[256];
+		UInt8 y, z, tmp, xov;
 		const char *data = nil;
 		BOOL isInit;
 		ImportController *controller;
@@ -72,8 +72,12 @@
 			++words;
 			
 			//Null terminate
-			wrd[i-1] = 0;
-			WirelessEncrypt((__bridge CFStringRef)@(wrd),(WirelessKey*)(key+3),0);
+			CFStringRef ref = CFStringCreateWithCString(kCFAllocatorDefault, wrd, kCFStringEncodingUTF8);
+			if (ref)
+			{
+				WirelessEncrypt(ref,(WirelessKey*)(key+3),0);
+				CFRelease(ref);
+			}
 			
 			for(i=0;i<[_packetsLog count];++i) {
 				if (!isInit) {
@@ -146,8 +150,8 @@
 		FILE* fptr;
 		char wrd[1000];
 		unsigned int i, words, foundCRC, counter, length = 0;
-		unsigned char key[16], currentGuess[16], skeletonStateArray[256], currentStateArray[256];
-		unsigned char y, z, tmp, xov;
+		UInt8 key[16], currentGuess[16], skeletonStateArray[256], currentStateArray[256];
+		UInt8 y, z, tmp, xov;
 		const char *data = nil;
 		BOOL isInit;
 		ImportController *controller;
@@ -177,7 +181,12 @@
 			
 			//NULL terminate
 			wrd[i-1] = 0;
-			WirelessEncrypt((__bridge CFStringRef)@(wrd),(WirelessKey*)(key+3),1);
+			CFStringRef ref = CFStringCreateWithCString(kCFAllocatorDefault, wrd, kCFStringEncodingUTF8);
+			if (ref)
+			{
+				WirelessEncrypt(ref,(WirelessKey*)(key+3),1);
+				CFRelease(ref);
+			}
 			
 			for(i=0; i<[_packetsLog count]; ++i) {
 				if (!isInit) {

@@ -27,7 +27,6 @@
 #import "ScanControllerScriptable.h"
 #import "WaveScanner.h"
 #import "KisMACNotifications.h"
-#import "DecryptController.h"
 #import "GPSInfoController.h"
 #import "HTTPStream.h"
 #import "../Core/KismetXMLImporter.h"
@@ -349,16 +348,6 @@
         _asyncFailure = YES;
     NS_ENDHANDLER
 	[[WaveHelper scanController] changeSearchValue:self];
-}
-    
-#pragma mark -
-
-- (IBAction)decryptPCAPFile:(id)sender 
-{
-    DecryptController* d;
-    
-    d = [[DecryptController alloc] initWithWindowNibName:@"DecryptDialog"];
-    [d showWindow:sender];
 }
 
 #pragma mark -
