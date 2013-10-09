@@ -456,16 +456,17 @@
 //returns the next frame in a pcap file
 -(KFrame*) nextFrame:(bool*)corrupted
 {
-    UInt8 *b = NULL;
     struct pcap_pkthdr h;
     int offset;
 
     *corrupted = NO;
     
-    b=(UInt8*)pcap_next(_pcapP,&h);	//get frame from current pcap file
+    UInt8 *b = (UInt8*)pcap_next(_pcapP,&h);	//get frame from current pcap file
 
-    if(b == NULL) return NULL;
-
+    if (b == NULL)
+	{
+		return NULL;
+	}
     *corrupted = YES;
     
     aWF->ctrl.channel = 0;

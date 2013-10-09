@@ -246,7 +246,8 @@ bool IntersilJack::sendKFrame(KFrame *frame) {
     frameDescriptor = (WLFrame*)aData;
 	kmrate = frame->ctrl.tx_rate;
     descriptorLength = WriteTxDescriptor(frameDescriptor, kmrate);
-    
+    DBNSLog(@"descriptorLength = %d", descriptorLength);
+	
     // Copy header
     memcpy(aData + sizeof(WLPrismHeader), data, headerLength);
     

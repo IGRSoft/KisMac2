@@ -1528,7 +1528,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
             {
 				if(!isascii(ascii[i]))
                 {
-					asciiKey = [NSString stringWithFormat:@"%s", "Key cannot be converted"];
+					//asciiKey = [NSString stringWithFormat:@"%s", "Key cannot be converted"];
                     break;
 				}
 			}//for
@@ -1850,7 +1850,7 @@ int ipSort(WaveClient* w1, WaveClient* w2, int ascend) {
     return ascend * i;
 }
 
-typedef int (*SORTFUNC)(id, id, void *);
+typedef int (*SORTFUNC)(id, id, int);
 
 - (void) sortByColumn:(NSString*)ident order:(bool)ascend {
     bool sorted = YES;
@@ -1858,14 +1858,14 @@ typedef int (*SORTFUNC)(id, id, void *);
     int ret;
     unsigned int w, x, y, _sortedCount, a;
     
-    if      ([ident isEqualToString:@"id"])     sf = (SORTFUNC)idSort;
-    else if ([ident isEqualToString:@"client"]) sf = (SORTFUNC)clientSort;
-    else if ([ident isEqualToString:@"vendor"]) sf = (SORTFUNC)vendorSort;
-    else if ([ident isEqualToString:@"signal"]) sf = (SORTFUNC)signalSort;
-    else if ([ident isEqualToString:@"received"]) sf=(SORTFUNC)receivedSort;
-    else if ([ident isEqualToString:@"sent"])   sf = (SORTFUNC)sentSort;
-    else if ([ident isEqualToString:@"lastseen"]) sf=(SORTFUNC)dateSort;
-    else if ([ident isEqualToString:@"ipa"])      sf=(SORTFUNC)ipSort;
+    if      ([ident isEqualToString:@"id"])			sf = (SORTFUNC)idSort;
+    else if ([ident isEqualToString:@"client"])		sf = (SORTFUNC)clientSort;
+    else if ([ident isEqualToString:@"vendor"])		sf = (SORTFUNC)vendorSort;
+    else if ([ident isEqualToString:@"signal"])		sf = (SORTFUNC)signalSort;
+    else if ([ident isEqualToString:@"received"])	sf = (SORTFUNC)receivedSort;
+    else if ([ident isEqualToString:@"sent"])		sf = (SORTFUNC)sentSort;
+    else if ([ident isEqualToString:@"lastseen"])	sf = (SORTFUNC)dateSort;
+    else if ([ident isEqualToString:@"ipa"])		sf = (SORTFUNC)ipSort;
     else {
         DBNSLog(@"Unknown sorting column. This is a bug and should never happen.");
         return;
@@ -1880,7 +1880,7 @@ typedef int (*SORTFUNC)(id, id, void *);
     for (y = 1; y <= _sortedCount; ++y) {
         for (x = y - 1; x < (_sortedCount - y); ++x) {
             w = x + 1;
-            ret = (*sf)(aClients[aClientKeys[x]], aClients[aClientKeys[w]], (void*)a);
+            ret = (*sf)(aClients[aClientKeys[x]], aClients[aClientKeys[w]], a);
             if (ret == NSOrderedDescending) {
                 sorted = NO;
                 
@@ -1896,7 +1896,7 @@ typedef int (*SORTFUNC)(id, id, void *);
         
         for (x = (_sortedCount - y); x >= y; x--) {
             w = x - 1;
-            ret = (*sf)(aClients[aClientKeys[w]], aClients[aClientKeys[x]], (void*)a);
+            ret = (*sf)(aClients[aClientKeys[w]], aClients[aClientKeys[x]], a);
             if (ret == NSOrderedDescending) {
                 sorted = NO;
                 

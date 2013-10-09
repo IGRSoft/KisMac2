@@ -281,6 +281,7 @@ struct termios ttyset;
     if (abs(ns)>=0 && abs(ns)<=90 && abs(ew)>=0 && abs(ew)<=180) {
         w._long = ew;
         w._lat  = ns;
+		w._elevation = 0;
         [[WaveHelper trace] addPoint:w];
     }
 }
@@ -352,7 +353,7 @@ int ss(char* inp, char* outp) {
     static char gpsin[MAX_GPSBUF_LEN];
     char gpsbuf[MAX_GPSBUF_LEN];
     int ewh, nsh;
-	int veldir,numsat;
+	int veldir = 0 ,numsat;
 	float velkt,hdop;
 	float timeinterval=-1;
 	float displacement;
@@ -538,6 +539,7 @@ int ss(char* inp, char* outp) {
                 waypoint w;
                 w._lat  = _ns.coordinates * ((_ns.dir=='N') ? 1.0 : -1.0);
                 w._long = _ew.coordinates * ((_ew.dir=='E') ? 1.0 : -1.0);
+				w._elevation = 0;
                 if ([[WaveHelper trace] addPoint:w]) _lastAdd = date;
             }
         } else {

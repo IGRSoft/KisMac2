@@ -138,7 +138,7 @@ IOReturn RalinkJack::_init() {
             ret = RTUSBReadBBPRegister(BBP_Version, &Value);
             if (Value == 0) {
                 DBNSLog(@"This is probably an rt73 chipset, please report your vendor and product id to http://trac.kismac-ng.org");
-                return kIOReturnNoDevice;
+                return ret;
             }
             DBNSLog(@"Read BBP_Version Value = %d\n", Value);
             ++i;
@@ -702,7 +702,7 @@ void RalinkJack::NICInitAsicFromEEPROM()
 			//USHORT	ID;
 			//ID = ((value & 0xff00) >> 8);
 			{
-				unsigned short	temp;
+				unsigned short	temp = 0;
 				unsigned int	j = 0;
 				do
 				{

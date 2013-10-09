@@ -86,9 +86,9 @@
 
 - (id)downloadMap:(NSScriptCommand*)command {
     NSDictionary *args = [command arguments];
-    NSSize size;
+    NSSize size = NSZeroSize;
     waypoint w;
-    int zoom;
+    int zoom = 0;
     NSString *server;
     
     server = [command directParameter];
@@ -96,6 +96,7 @@
     size.height = [args[@"Height"] doubleValue];
     w._lat  = [args[@"Latitude"] doubleValue];
     w._long = [args[@"Longitude"] doubleValue];
+	w._elevation = 0;
     zoom = [args[@"Zoom"] intValue];
     
     BOOL ret = [(ScanController*)[NSApp delegate] downloadMapFrom:server forPoint:w resolution:size zoomLevel:zoom];
@@ -200,7 +201,7 @@
     p.y = [args[@"Y"] doubleValue];
     coord._lat  = [args[@"Latitude"] doubleValue];
     coord._long = [args[@"Longitude"] doubleValue];
-    
+    coord._elevation = 0;
     BOOL ret = [[WaveHelper mapView] setWaypoint:which toPoint:p atCoordinate:coord];
     return @(ret);
 }

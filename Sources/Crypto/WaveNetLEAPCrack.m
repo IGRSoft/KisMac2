@@ -55,36 +55,48 @@ struct leapClientData {
 	}
 }
 
-- (BOOL)crackLEAPWithWordlist:(NSString*)wordlist andImportController:(ImportController*)im {
-    char wrd[100];
+- (BOOL)crackLEAPWithWordlist:(NSString*)wordlist andImportController:(ImportController*)im
+{
+    char wrd[100] = "";
     FILE* fptr = nil;
-    unsigned int i, words, curKey;
-	int keys;
+    unsigned int i, words, curKey = 0;
+	int keys = 0;
     struct leapClientData *c = NULL;
-    WaveClient *wc;
-    unsigned char pwhash[MD4_DIGEST_LENGTH];
+    WaveClient *wc = nil;
+    unsigned char pwhash[MD4_DIGEST_LENGTH] = "";
     
     //open wordlist
     fptr = fopen([wordlist UTF8String], "r");
-    if (!fptr) return NO;
+    if (!fptr)
+	{
+		return NO;
+	}
     
     //initialize all the data structures
-    keys = 0;
-    for (i = 0; i < [aClientKeys count]; ++i) {
-        if ([aClients[aClientKeys[i]] leapDataAvailable]) ++keys;
+	uint aClientKeysCount = [aClientKeys count];
+    for (i = 0; i < aClientKeysCount; ++i)
+	{
+        if ([aClients[aClientKeys[i]] leapDataAvailable])
+		{
+			++keys;
+		}
     }
     
-	if (keys>0)
+	if (keys > 0)
 	{
-		curKey = 0;
 		c = malloc(keys * sizeof(struct leapClientData));
 	
-		for (i = 0; i < [aClientKeys count]; ++i) {
+		for (i = 0; i < aClientKeysCount; ++i)
+		{
 			wc = aClients[aClientKeys[i]];
-			if ([wc leapDataAvailable]) {
-				if ([[wc ID] isEqualToString:_BSSID]) {
+			if ([wc leapDataAvailable])
+			{
+				if ([[wc ID] isEqualToString:_BSSID])
+				{
 					keys--;
-				} else {
+				}
+				else
+				{
 					c[curKey].username  = [wc leapUsername];
 					c[curKey].challenge = [[wc leapChallenge] bytes];
 					c[curKey].response  = [[wc leapResponse]  bytes];
@@ -125,19 +137,24 @@ struct leapClientData {
         
         NtPasswordHash(wrd, i+1, pwhash);
 
-        for (curKey = 0; curKey < keys; ++curKey) {
-            if (c[curKey].hashend[0] != pwhash[14] || c[curKey].hashend[1] != pwhash[15]) continue;
-            if (testChallenge(c[curKey].challenge, c[curKey].response, pwhash)) continue;
-            
-            _password = [NSString stringWithFormat:@"%s for username %@", wrd, c[curKey].username];
-            fclose(fptr);
-            DBNSLog(@"Cracking was successful. Password is <%s> for username %@, client %@", wrd, c[curKey].username, c[curKey].clientID);
-			free(c);
-            return YES;
-        }
+		if (c && pwhash) {
+			for (curKey = 0; curKey < keys; ++curKey) {
+				if (c[curKey].hashend[0] != pwhash[14] || c[curKey].hashend[1] != pwhash[15]) continue;
+				if (testChallenge(c[curKey].challenge, c[curKey].response, pwhash)) continue;
+				
+				_password = [NSString stringWithFormat:@"%s for username %@", wrd, c[curKey].username];
+				fclose(fptr);
+				DBNSLog(@"Cracking was successful. Password is <%s> for username %@, client %@", wrd, c[curKey].username, c[curKey].clientID);
+				free(c);
+				return YES;
+			}
+		}
     }
     
-    free(c);
+	if (c) {
+		free(c);
+	}
+    
     fclose(fptr);
     
     _crackErrorString = NSLocalizedString(@"The key was none of the tested passwords.", @"Error description for WPA crack.");

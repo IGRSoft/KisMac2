@@ -531,12 +531,10 @@ UInt32 hashForMAC(const UInt8* val) {
         if (_netCount == MAXNETS)
 		{
             NSLog(@"Loaded more networks, but could not add them since you reached MAXNETS. Please recompile with a higher value");
-			CFRetain((__bridge CFTypeRef)(n));
             return YES;
         }
         
         net = [self netForKey:[n rawID]];
-        CFRetain((__bridge CFTypeRef)(n));
         
         if (!net) 
         {

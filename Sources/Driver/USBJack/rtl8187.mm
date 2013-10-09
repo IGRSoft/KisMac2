@@ -371,7 +371,6 @@ UInt32 rtl818x_ioread32(struct rtl8187_priv *priv, UInt16 addr) {
     {
         DBNSLog(@"%s addr %x %x", __func__, addr, ret);
     }
-//    DBNSLog(@"<<< 32 addr %x data %x (%x)", addr, val, CFSwapInt32LittleToHost(val));
 	return CFSwapInt32LittleToHost(val);
 }
 
@@ -384,8 +383,11 @@ void rtl818x_iowrite8(struct rtl8187_priv *priv, UInt16 addr, UInt8 val) {
     theRequest.wIndex = 0; 
     theRequest.pData = &val;
     theRequest.wLength = sizeof(val);
-//    DBNSLog(@">>> 8 addr %x data %x", addr, val);
     ret = (*(priv->_interface))->ControlRequest(priv->_interface, 0, &theRequest);
+	if (ret != kIOReturnSuccess)
+    {
+        DBNSLog(@"%s addr %x %x", __func__, addr, ret);
+    }
     return;
 }
 void rtl818x_iowrite16(struct rtl8187_priv *priv, UInt16 addr, UInt16 val) {
@@ -400,7 +402,10 @@ void rtl818x_iowrite16(struct rtl8187_priv *priv, UInt16 addr, UInt16 val) {
     theRequest.pData = &buf;
     theRequest.wLength = sizeof(val);
     ret = (*(priv->_interface))->ControlRequest(priv->_interface, 0, &theRequest);
-//    DBNSLog(@">>> 16 addr %x data %x", addr, val);
+	if (ret != kIOReturnSuccess)
+    {
+        DBNSLog(@"%s addr %x %x", __func__, addr, ret);
+    }
     return;
 }
 void rtl818x_iowrite32(struct rtl8187_priv *priv, UInt16 addr, UInt32 val) {
@@ -415,7 +420,10 @@ void rtl818x_iowrite32(struct rtl8187_priv *priv, UInt16 addr, UInt32 val) {
     theRequest.pData = &buf;
     theRequest.wLength = sizeof(val);
     ret = (*(priv->_interface))->ControlRequest(priv->_interface, 0, &theRequest);
-//    DBNSLog(@">>> 32 addr %x data %x", addr, val);
+	if (ret != kIOReturnSuccess)
+    {
+        DBNSLog(@"%s addr %x %x", __func__, addr, ret);
+    }
     return;
 }
 
@@ -584,7 +592,11 @@ static void rtl8225_write_8051(struct rtl8187_priv *priv, UInt8 addr, UInt16 dat
     theRequest.pData = &data;
     theRequest.wLength = sizeof(data);
     ret = (*(priv->_interface))->ControlRequest(priv->_interface, 0, &theRequest);
-//    DBNSLog(@">>>> 16 addr %x data %x", addr, data);
+
+	if (ret != kIOReturnSuccess)
+    {
+        DBNSLog(@"%s addr %x %x", __func__, addr, ret);
+    }
 
 	rtl818x_iowrite16(priv, RTL818X_ADDR_RFPinsOutput, reg80 | (1 << 2));
 	usleep(10);
