@@ -180,14 +180,14 @@
 		A5295C481653C3BD00A0B5D9 /* BIGL.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A5295C3A1653C38E00A0B5D9 /* BIGL.framework */; };
 		A5353826180ABCE1008BB6A1 /* md4.c in Sources */ = {isa = PBXBuildFile; fileRef = A53536B4180ABCE0008BB6A1 /* md4.c */; };
 		A5353827180ABCE1008BB6A1 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = A53536B5180ABCE0008BB6A1 /* md5.c */; };
-		A535396A180B0602008BB6A1 /* Kernel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5353969180B0602008BB6A1 /* Kernel.framework */; };
+		A535396C180B073D008BB6A1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A535396B180B073D008BB6A1 /* Cocoa.framework */; };
+		A5353972180B15B9008BB6A1 /* DESSupport.c in Sources */ = {isa = PBXBuildFile; fileRef = A5353970180B15B9008BB6A1 /* DESSupport.c */; };
+		A5353975180B1C99008BB6A1 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = A5353974180B1C99008BB6A1 /* sha1.c */; };
 		A57698121796AA7400B88B4E /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A57698111796AA7400B88B4E /* SenTestingKit.framework */; };
-		A57698141796AA7400B88B4E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A57698131796AA7400B88B4E /* Cocoa.framework */; };
 		A576981B1796AA7400B88B4E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A57698191796AA7400B88B4E /* InfoPlist.strings */; };
 		A576981E1796AA7400B88B4E /* KisMac2_Test.m in Sources */ = {isa = PBXBuildFile; fileRef = A576981D1796AA7400B88B4E /* KisMac2_Test.m */; };
 		A57E644D1607BC9700BE1BCA /* AirCrackWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */; };
 		A57E644F1607BC9700BE1BCA /* LEAP.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E643B1607BC9700BE1BCA /* LEAP.m */; };
-		A57E64531607BC9700BE1BCA /* RC4.mm in Sources */ = {isa = PBXBuildFile; fileRef = A57E643F1607BC9700BE1BCA /* RC4.mm */; };
 		A57E64551607BC9700BE1BCA /* WaveNetLEAPCrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64411607BC9700BE1BCA /* WaveNetLEAPCrack.m */; };
 		A57E64571607BC9700BE1BCA /* WaveNetWEPCrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64431607BC9700BE1BCA /* WaveNetWEPCrack.m */; };
 		A57E64591607BC9700BE1BCA /* WaveNetWEPWeakCrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64451607BC9700BE1BCA /* WaveNetWEPWeakCrack.m */; };
@@ -503,11 +503,13 @@
 		A53536B4180ABCE0008BB6A1 /* md4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md4.c; sourceTree = "<group>"; };
 		A53536B5180ABCE0008BB6A1 /* md5.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md5.c; sourceTree = "<group>"; };
 		A5353966180ABFE6008BB6A1 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		A5353969180B0602008BB6A1 /* Kernel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kernel.framework; path = System/Library/Frameworks/Kernel.framework; sourceTree = SDKROOT; };
+		A535396B180B073D008BB6A1 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		A5353970180B15B9008BB6A1 /* DESSupport.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DESSupport.c; sourceTree = "<group>"; };
+		A5353971180B15B9008BB6A1 /* DESSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DESSupport.h; sourceTree = "<group>"; };
+		A5353973180B1C8D008BB6A1 /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
+		A5353974180B1C99008BB6A1 /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha1.c; sourceTree = "<group>"; };
 		A57698101796AA7400B88B4E /* KisMac2_Test.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KisMac2_Test.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A57698111796AA7400B88B4E /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		A57698131796AA7400B88B4E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = ../../../../../Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		A57698151796AA7400B88B4E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		A57698181796AA7400B88B4E /* KisMac2_Test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KisMac2_Test-Info.plist"; sourceTree = "<group>"; };
 		A576981A1796AA7400B88B4E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		A576981C1796AA7400B88B4E /* KisMac2_Test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KisMac2_Test.h; sourceTree = "<group>"; };
@@ -517,8 +519,6 @@
 		A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AirCrackWrapper.m; sourceTree = "<group>"; };
 		A57E643A1607BC9700BE1BCA /* LEAP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEAP.h; sourceTree = "<group>"; };
 		A57E643B1607BC9700BE1BCA /* LEAP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEAP.m; sourceTree = "<group>"; };
-		A57E643E1607BC9700BE1BCA /* RC4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RC4.h; sourceTree = "<group>"; };
-		A57E643F1607BC9700BE1BCA /* RC4.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RC4.mm; sourceTree = "<group>"; };
 		A57E64401607BC9700BE1BCA /* WaveNetLEAPCrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveNetLEAPCrack.h; sourceTree = "<group>"; };
 		A57E64411607BC9700BE1BCA /* WaveNetLEAPCrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveNetLEAPCrack.m; sourceTree = "<group>"; };
 		A57E64421607BC9700BE1BCA /* WaveNetWEPCrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveNetWEPCrack.h; sourceTree = "<group>"; };
@@ -568,7 +568,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A535396A180B0602008BB6A1 /* Kernel.framework in Frameworks */,
 				A5295C451653C3A600A0B5D9 /* BIGeneric.framework in Frameworks */,
 				A5295C461653C3A600A0B5D9 /* BIGL.framework in Frameworks */,
 				6C03D77009B547F2005B2316 /* Growl.framework in Frameworks */,
@@ -589,8 +588,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A535396C180B073D008BB6A1 /* Cocoa.framework in Frameworks */,
 				A57698121796AA7400B88B4E /* SenTestingKit.framework in Frameworks */,
-				A57698141796AA7400B88B4E /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -690,6 +689,8 @@
 		003533A006A5DD8500AB4577 /* 3rd Party */ = {
 			isa = PBXGroup;
 			children = (
+				A5353970180B15B9008BB6A1 /* DESSupport.c */,
+				A5353971180B15B9008BB6A1 /* DESSupport.h */,
 				A581FC2A177B36A800C05CE9 /* FCS.h */,
 				A581FC2B177B36A800C05CE9 /* FCS.m */,
 				A581FC27177B2B6700C05CE9 /* Apple80211.h */,
@@ -992,7 +993,7 @@
 			children = (
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
-				A57698151796AA7400B88B4E /* CoreData.framework */,
+				A535396B180B073D008BB6A1 /* Cocoa.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -1050,10 +1051,8 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A5353969180B0602008BB6A1 /* Kernel.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				A57698111796AA7400B88B4E /* SenTestingKit.framework */,
-				A57698131796AA7400B88B4E /* Cocoa.framework */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -1193,6 +1192,7 @@
 		A535366B180ABCDF008BB6A1 /* polarssl */ = {
 			isa = PBXGroup;
 			children = (
+				A5353973180B1C8D008BB6A1 /* sha1.h */,
 				A5353966180ABFE6008BB6A1 /* config.h */,
 				A5353684180ABCE0008BB6A1 /* md4.h */,
 				A5353685180ABCE0008BB6A1 /* md5.h */,
@@ -1203,6 +1203,7 @@
 		A535369A180ABCE0008BB6A1 /* library */ = {
 			isa = PBXGroup;
 			children = (
+				A5353974180B1C99008BB6A1 /* sha1.c */,
 				A53536B4180ABCE0008BB6A1 /* md4.c */,
 				A53536B5180ABCE0008BB6A1 /* md5.c */,
 			);
@@ -1237,8 +1238,6 @@
 				A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */,
 				A57E643A1607BC9700BE1BCA /* LEAP.h */,
 				A57E643B1607BC9700BE1BCA /* LEAP.m */,
-				A57E643E1607BC9700BE1BCA /* RC4.h */,
-				A57E643F1607BC9700BE1BCA /* RC4.mm */,
 				A57E64401607BC9700BE1BCA /* WaveNetLEAPCrack.h */,
 				A57E64411607BC9700BE1BCA /* WaveNetLEAPCrack.m */,
 				A57E64421607BC9700BE1BCA /* WaveNetWEPCrack.h */,
@@ -1333,6 +1332,11 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = NO;
 				LastUpgradeCheck = 0450;
+				TargetAttributes = {
+					A576980F1796AA7400B88B4E = {
+						TestTargetID = 8D1107260486CEB800E47090;
+					};
+				};
 			};
 			buildConfigurationList = 00A915960858D6410093943F /* Build configuration list for PBXProject "KisMac2" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1609,6 +1613,7 @@
 				69AF11840E4B292800B1D770 /* rtl8187.mm in Sources */,
 				69AF11910E4B29C500B1D770 /* WaveDriverUSB.mm in Sources */,
 				69AF11930E4B29C500B1D770 /* WaveDriverUSBRalinkRT73.mm in Sources */,
+				A5353975180B1C99008BB6A1 /* sha1.c in Sources */,
 				69AF11950E4B29C500B1D770 /* WaveDriverUSBRalinkRT2570.mm in Sources */,
 				69AF11970E4B29C500B1D770 /* WaveDriverUSBRealtekRTL8187.mm in Sources */,
 				69A9B31F0F04D7C700D1E817 /* WavePlugin.m in Sources */,
@@ -1624,7 +1629,6 @@
 				6C461C6F12CEC58100156CBF /* WavePluginMidi.m in Sources */,
 				A57E644D1607BC9700BE1BCA /* AirCrackWrapper.m in Sources */,
 				A57E644F1607BC9700BE1BCA /* LEAP.m in Sources */,
-				A57E64531607BC9700BE1BCA /* RC4.mm in Sources */,
 				A57E64551607BC9700BE1BCA /* WaveNetLEAPCrack.m in Sources */,
 				A57E64571607BC9700BE1BCA /* WaveNetWEPCrack.m in Sources */,
 				A57E64591607BC9700BE1BCA /* WaveNetWEPWeakCrack.m in Sources */,
@@ -1635,6 +1639,7 @@
 				A57E646B1607BD3200BE1BCA /* DownloadMapController.m in Sources */,
 				A57E646F1607BD6700BE1BCA /* MapDownload.m in Sources */,
 				A57E64731607BD8C00BE1BCA /* WaveWeakContainer.m in Sources */,
+				A5353972180B15B9008BB6A1 /* DESSupport.c in Sources */,
 				A585F77B1771DB7100045928 /* HTTPStream.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1789,17 +1794,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = KisMac_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/Subprojects/polarssl/include",
-				);
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/Subprojects/polarssl/include";
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = /Applications;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = (
-					"-lssl",
 					"-lcrypto",
 					"-lpcap",
 				);
@@ -1852,17 +1853,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = KisMac_Prefix.pch;
 				GCC_UNROLL_LOOPS = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/Subprojects/polarssl/include",
-				);
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/Subprojects/polarssl/include";
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = /Applications;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = (
-					"-lssl",
 					"-lcrypto",
 					"-lpcap",
 				);
@@ -1903,6 +1900,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/KisMac2.app/Contents/MacOS/KisMac2";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1933,6 +1931,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Development;
@@ -1941,6 +1940,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/KisMac2.app/Contents/MacOS/KisMac2";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1964,6 +1964,7 @@
 				INFOPLIST_FILE = "KisMac2_Test/KisMac2_Test-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
