@@ -179,11 +179,12 @@
 		A5295C461653C3A600A0B5D9 /* BIGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5295C3A1653C38E00A0B5D9 /* BIGL.framework */; };
 		A5295C471653C3BD00A0B5D9 /* BIGeneric.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A5295C441653C39800A0B5D9 /* BIGeneric.framework */; };
 		A5295C481653C3BD00A0B5D9 /* BIGL.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A5295C3A1653C38E00A0B5D9 /* BIGL.framework */; };
+		A5353826180ABCE1008BB6A1 /* md4.c in Sources */ = {isa = PBXBuildFile; fileRef = A53536B4180ABCE0008BB6A1 /* md4.c */; };
+		A5353827180ABCE1008BB6A1 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = A53536B5180ABCE0008BB6A1 /* md5.c */; };
 		A57698121796AA7400B88B4E /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A57698111796AA7400B88B4E /* SenTestingKit.framework */; };
 		A57698141796AA7400B88B4E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A57698131796AA7400B88B4E /* Cocoa.framework */; };
 		A576981B1796AA7400B88B4E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A57698191796AA7400B88B4E /* InfoPlist.strings */; };
 		A576981E1796AA7400B88B4E /* KisMac2_Test.m in Sources */ = {isa = PBXBuildFile; fileRef = A576981D1796AA7400B88B4E /* KisMac2_Test.m */; };
-		A576DDA81609FC2B007CBA80 /* md5.m in Sources */ = {isa = PBXBuildFile; fileRef = A576DDA71609FC2B007CBA80 /* md5.m */; };
 		A57E644D1607BC9700BE1BCA /* AirCrackWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */; };
 		A57E644F1607BC9700BE1BCA /* LEAP.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E643B1607BC9700BE1BCA /* LEAP.m */; };
 		A57E64531607BC9700BE1BCA /* RC4.mm in Sources */ = {isa = PBXBuildFile; fileRef = A57E643F1607BC9700BE1BCA /* RC4.mm */; };
@@ -213,7 +214,6 @@
 		A597212F1610A306007CC31D /* toolbar-open.icns in Resources */ = {isa = PBXBuildFile; fileRef = A59721281610A306007CC31D /* toolbar-open.icns */; };
 		A59721301610A306007CC31D /* toolbar-preferences.icns in Resources */ = {isa = PBXBuildFile; fileRef = A59721291610A306007CC31D /* toolbar-preferences.icns */; };
 		A59721311610A306007CC31D /* toolbar-save.icns in Resources */ = {isa = PBXBuildFile; fileRef = A597212A1610A306007CC31D /* toolbar-save.icns */; };
-		A59721421610CB39007CC31D /* md4.c in Sources */ = {isa = PBXBuildFile; fileRef = A59721411610CB39007CC31D /* md4.c */; };
 		A5A1974E17730CE2000A62E9 /* icon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = A5A1974D17730CE2000A62E9 /* icon.iconset */; };
 /* End PBXBuildFile section */
 
@@ -500,6 +500,11 @@
 		A5282F801608CFB000F56AE3 /* BIToolbar.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = BIToolbar.jpg; sourceTree = "<group>"; };
 		A5295C321653C38D00A0B5D9 /* BIGL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BIGL.xcodeproj; path = BIGL/BIGL.xcodeproj; sourceTree = "<group>"; };
 		A5295C3B1653C39700A0B5D9 /* BIGeneric.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BIGeneric.xcodeproj; path = BIGeneric/BIGeneric.xcodeproj; sourceTree = "<group>"; };
+		A5353684180ABCE0008BB6A1 /* md4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md4.h; sourceTree = "<group>"; };
+		A5353685180ABCE0008BB6A1 /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md5.h; sourceTree = "<group>"; };
+		A53536B4180ABCE0008BB6A1 /* md4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md4.c; sourceTree = "<group>"; };
+		A53536B5180ABCE0008BB6A1 /* md5.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md5.c; sourceTree = "<group>"; };
+		A5353966180ABFE6008BB6A1 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		A57698101796AA7400B88B4E /* KisMac2_Test.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KisMac2_Test.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A57698111796AA7400B88B4E /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		A57698131796AA7400B88B4E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
@@ -509,8 +514,6 @@
 		A576981C1796AA7400B88B4E /* KisMac2_Test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KisMac2_Test.h; sourceTree = "<group>"; };
 		A576981D1796AA7400B88B4E /* KisMac2_Test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KisMac2_Test.m; sourceTree = "<group>"; };
 		A576981F1796AA7400B88B4E /* KisMac2_Test-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KisMac2_Test-Prefix.pch"; sourceTree = "<group>"; };
-		A576DDA61609FC2B007CBA80 /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md5.h; sourceTree = "<group>"; };
-		A576DDA71609FC2B007CBA80 /* md5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = md5.m; sourceTree = "<group>"; };
 		A57E64381607BC9700BE1BCA /* AirCrackWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AirCrackWrapper.h; sourceTree = "<group>"; };
 		A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AirCrackWrapper.m; sourceTree = "<group>"; };
 		A57E643A1607BC9700BE1BCA /* LEAP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEAP.h; sourceTree = "<group>"; };
@@ -557,8 +560,6 @@
 		A59721281610A306007CC31D /* toolbar-open.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "toolbar-open.icns"; sourceTree = "<group>"; };
 		A59721291610A306007CC31D /* toolbar-preferences.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "toolbar-preferences.icns"; sourceTree = "<group>"; };
 		A597212A1610A306007CC31D /* toolbar-save.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "toolbar-save.icns"; sourceTree = "<group>"; };
-		A59721401610CB38007CC31D /* md4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md4.h; sourceTree = "<group>"; };
-		A59721411610CB39007CC31D /* md4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md4.c; sourceTree = "<group>"; };
 		A59E42D71796ADBF00B1139F /* updateHelpIndex.command */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = updateHelpIndex.command; sourceTree = SOURCE_ROOT; };
 		A5A1974D17730CE2000A62E9 /* icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; path = icon.iconset; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1085,6 +1086,7 @@
 		69719DAF0F7E928900949310 /* Subprojects */ = {
 			isa = PBXGroup;
 			children = (
+				A5353659180ABCDD008BB6A1 /* polarssl */,
 				A5295C3B1653C39700A0B5D9 /* BIGeneric.xcodeproj */,
 				A5295C321653C38D00A0B5D9 /* BIGL.xcodeproj */,
 			);
@@ -1172,6 +1174,42 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		A5353659180ABCDD008BB6A1 /* polarssl */ = {
+			isa = PBXGroup;
+			children = (
+				A5353668180ABCDF008BB6A1 /* include */,
+				A535369A180ABCE0008BB6A1 /* library */,
+			);
+			path = polarssl;
+			sourceTree = "<group>";
+		};
+		A5353668180ABCDF008BB6A1 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				A535366B180ABCDF008BB6A1 /* polarssl */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		A535366B180ABCDF008BB6A1 /* polarssl */ = {
+			isa = PBXGroup;
+			children = (
+				A5353966180ABFE6008BB6A1 /* config.h */,
+				A5353684180ABCE0008BB6A1 /* md4.h */,
+				A5353685180ABCE0008BB6A1 /* md5.h */,
+			);
+			path = polarssl;
+			sourceTree = "<group>";
+		};
+		A535369A180ABCE0008BB6A1 /* library */ = {
+			isa = PBXGroup;
+			children = (
+				A53536B4180ABCE0008BB6A1 /* md4.c */,
+				A53536B5180ABCE0008BB6A1 /* md5.c */,
+			);
+			path = library;
+			sourceTree = "<group>";
+		};
 		A57698161796AA7400B88B4E /* Test */ = {
 			isa = PBXGroup;
 			children = (
@@ -1196,10 +1234,6 @@
 		A57E64371607BC9700BE1BCA /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
-				A59721401610CB38007CC31D /* md4.h */,
-				A59721411610CB39007CC31D /* md4.c */,
-				A576DDA61609FC2B007CBA80 /* md5.h */,
-				A576DDA71609FC2B007CBA80 /* md5.m */,
 				A57E64381607BC9700BE1BCA /* AirCrackWrapper.h */,
 				A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */,
 				A57E643A1607BC9700BE1BCA /* LEAP.h */,
@@ -1518,6 +1552,7 @@
 				0035342E06A5DD8500AB4577 /* ScanController.m in Sources */,
 				A581FC2C177B36AC00C05CE9 /* FCS.m in Sources */,
 				0035342F06A5DD8500AB4577 /* ScanControllerMenus.m in Sources */,
+				A5353827180ABCE1008BB6A1 /* md5.c in Sources */,
 				0035343106A5DD8500AB4577 /* ScanControllerPrivate.m in Sources */,
 				0035343306A5DD8500AB4577 /* ScanControllerScriptable.m in Sources */,
 				0035343506A5DD8500AB4577 /* TrafficController.mm in Sources */,
@@ -1584,6 +1619,7 @@
 				69B54B300F0698C600AB7E6E /* WavePluginInjecting.m in Sources */,
 				69BFC5770F077867008DB1AF /* WavePluginAuthenticationFlood.m in Sources */,
 				69BFC5F30F078532008DB1AF /* WavePluginBeaconFlood.m in Sources */,
+				A5353826180ABCE1008BB6A1 /* md4.c in Sources */,
 				69DF1ABE0F0D0F93000E9B94 /* KMCommon.m in Sources */,
 				694A888D0F3CD87E006B819C /* WavePcapDump.m in Sources */,
 				69359CB30FB05DD2008B8722 /* WaveSpectrumDriver.m in Sources */,
@@ -1601,8 +1637,6 @@
 				A57E646B1607BD3200BE1BCA /* DownloadMapController.m in Sources */,
 				A57E646F1607BD6700BE1BCA /* MapDownload.m in Sources */,
 				A57E64731607BD8C00BE1BCA /* WaveWeakContainer.m in Sources */,
-				A576DDA81609FC2B007CBA80 /* md5.m in Sources */,
-				A59721421610CB39007CC31D /* md4.c in Sources */,
 				A585F77B1771DB7100045928 /* HTTPStream.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1757,6 +1791,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = KisMac_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/Subprojects/polarssl/include",
+				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = /Applications;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
@@ -1816,6 +1854,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = KisMac_Prefix.pch;
 				GCC_UNROLL_LOOPS = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/Subprojects/polarssl/include",
+				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = /Applications;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;

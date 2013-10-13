@@ -28,7 +28,7 @@
 
 #include "LEAP.h"
 #include <unistd.h>
-#include "md4.h"
+#include "polarssl/md4.h"
 
 #ifndef USE_CRYPT
 #define DES_CBLOCK_SIZE		8

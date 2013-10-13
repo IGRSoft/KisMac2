@@ -27,7 +27,7 @@
 #import "../WaveDrivers/WaveDriverAirport.h"
 #import "../WaveDrivers/WaveDriver.h"
 
-#include "md5.h"
+#include "polarssl/md5.h"
 #include <unistd.h>
 #import <CoreFoundation/CoreFoundation.h>
 #import <IOKit/IOKitLib.h>
@@ -47,7 +47,7 @@
 void WirelessCryptMD5(char const *str, unsigned char *key) {
     int i, j;
     u_char md5_buf[64];
-    MD5_CTX ctx;
+    md5_context ctx;
 
     j = 0;
     for(i = 0; i < 64; ++i) {
@@ -55,9 +55,9 @@ void WirelessCryptMD5(char const *str, unsigned char *key) {
         md5_buf[i] = str[j++];
     }
 
-    MD5Init(&ctx);
-    MD5Update(&ctx, md5_buf, 64);
-    MD5Final(md5_buf, &ctx);
+    md5_starts(&ctx);
+    md5_update(&ctx, md5_buf, 64);
+    md5_finish(&ctx, md5_buf);
     
     memcpy(key, md5_buf, 13);
 }

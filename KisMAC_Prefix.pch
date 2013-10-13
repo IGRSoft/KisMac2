@@ -16,3 +16,6 @@
 #else
 #define DBNSLog( s, ... )
 #endif
+
+#define POLARSSL_MD4_C
+#define POLARSSL_MD5_C
