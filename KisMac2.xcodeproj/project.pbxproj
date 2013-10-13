@@ -56,7 +56,6 @@
 		0035338706A5DD5700AB4577 /* KisMACTrans.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0035333C06A5DD5700AB4577 /* KisMACTrans.icns */; };
 		0035339906A5DD5700AB4577 /* usbprism2_prep.sh in Resources */ = {isa = PBXBuildFile; fileRef = 0035334F06A5DD5700AB4577 /* usbprism2_prep.sh */; };
 		0035339A06A5DD5700AB4577 /* usbprism2_unprep.sh in Resources */ = {isa = PBXBuildFile; fileRef = 0035335006A5DD5700AB4577 /* usbprism2_unprep.sh */; };
-		0035342806A5DD8500AB4577 /* quicksort.m in Sources */ = {isa = PBXBuildFile; fileRef = 003533A306A5DD8500AB4577 /* quicksort.m */; };
 		0035342C06A5DD8500AB4577 /* InfoController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 003533A806A5DD8500AB4577 /* InfoController.mm */; };
 		0035342E06A5DD8500AB4577 /* ScanController.m in Sources */ = {isa = PBXBuildFile; fileRef = 003533AA06A5DD8500AB4577 /* ScanController.m */; };
 		0035342F06A5DD8500AB4577 /* ScanControllerMenus.m in Sources */ = {isa = PBXBuildFile; fileRef = 003533AB06A5DD8500AB4577 /* ScanControllerMenus.m */; };
@@ -181,6 +180,7 @@
 		A5295C481653C3BD00A0B5D9 /* BIGL.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A5295C3A1653C38E00A0B5D9 /* BIGL.framework */; };
 		A5353826180ABCE1008BB6A1 /* md4.c in Sources */ = {isa = PBXBuildFile; fileRef = A53536B4180ABCE0008BB6A1 /* md4.c */; };
 		A5353827180ABCE1008BB6A1 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = A53536B5180ABCE0008BB6A1 /* md5.c */; };
+		A535396A180B0602008BB6A1 /* Kernel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5353969180B0602008BB6A1 /* Kernel.framework */; };
 		A57698121796AA7400B88B4E /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A57698111796AA7400B88B4E /* SenTestingKit.framework */; };
 		A57698141796AA7400B88B4E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A57698131796AA7400B88B4E /* Cocoa.framework */; };
 		A576981B1796AA7400B88B4E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A57698191796AA7400B88B4E /* InfoPlist.strings */; };
@@ -291,8 +291,6 @@
 		0035334106A5DD5700AB4577 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		0035334F06A5DD5700AB4577 /* usbprism2_prep.sh */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.sh; path = usbprism2_prep.sh; sourceTree = "<group>"; };
 		0035335006A5DD5700AB4577 /* usbprism2_unprep.sh */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.sh; path = usbprism2_unprep.sh; sourceTree = "<group>"; };
-		003533A206A5DD8500AB4577 /* quicksort.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = quicksort.h; sourceTree = "<group>"; };
-		003533A306A5DD8500AB4577 /* quicksort.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = quicksort.m; sourceTree = "<group>"; };
 		003533A706A5DD8500AB4577 /* InfoController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = InfoController.h; sourceTree = "<group>"; };
 		003533A806A5DD8500AB4577 /* InfoController.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = InfoController.mm; sourceTree = "<group>"; };
 		003533A906A5DD8500AB4577 /* ScanController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ScanController.h; sourceTree = "<group>"; };
@@ -505,9 +503,10 @@
 		A53536B4180ABCE0008BB6A1 /* md4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md4.c; sourceTree = "<group>"; };
 		A53536B5180ABCE0008BB6A1 /* md5.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md5.c; sourceTree = "<group>"; };
 		A5353966180ABFE6008BB6A1 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		A5353969180B0602008BB6A1 /* Kernel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kernel.framework; path = System/Library/Frameworks/Kernel.framework; sourceTree = SDKROOT; };
 		A57698101796AA7400B88B4E /* KisMac2_Test.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KisMac2_Test.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A57698111796AA7400B88B4E /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		A57698131796AA7400B88B4E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		A57698131796AA7400B88B4E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = ../../../../../Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		A57698151796AA7400B88B4E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		A57698181796AA7400B88B4E /* KisMac2_Test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KisMac2_Test-Info.plist"; sourceTree = "<group>"; };
 		A576981A1796AA7400B88B4E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -569,6 +568,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A535396A180B0602008BB6A1 /* Kernel.framework in Frameworks */,
 				A5295C451653C3A600A0B5D9 /* BIGeneric.framework in Frameworks */,
 				A5295C461653C3A600A0B5D9 /* BIGL.framework in Frameworks */,
 				6C03D77009B547F2005B2316 /* Growl.framework in Frameworks */,
@@ -693,8 +693,6 @@
 				A581FC2A177B36A800C05CE9 /* FCS.h */,
 				A581FC2B177B36A800C05CE9 /* FCS.m */,
 				A581FC27177B2B6700C05CE9 /* Apple80211.h */,
-				003533A206A5DD8500AB4577 /* quicksort.h */,
-				003533A306A5DD8500AB4577 /* quicksort.m */,
 			);
 			name = "3rd Party";
 			path = "Sources/3rd Party";
@@ -1012,7 +1010,6 @@
 			isa = PBXGroup;
 			children = (
 				69719DAF0F7E928900949310 /* Subprojects */,
-				698665B80FAF61CA002D1A84 /* DMG Artwork */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -1035,6 +1032,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				698665B80FAF61CA002D1A84 /* DMG Artwork */,
 				691CF1A00E4CC3C00042B146 /* UsbDevicesPlist */,
 				0042E7A209C0C8B600183F90 /* world.kismap */,
 				0035330306A5DD5700AB4577 /* Buttons */,
@@ -1052,6 +1050,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A5353969180B0602008BB6A1 /* Kernel.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				A57698111796AA7400B88B4E /* SenTestingKit.framework */,
 				A57698131796AA7400B88B4E /* Cocoa.framework */,
@@ -1547,7 +1546,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
-				0035342806A5DD8500AB4577 /* quicksort.m in Sources */,
 				0035342C06A5DD8500AB4577 /* InfoController.mm in Sources */,
 				0035342E06A5DD8500AB4577 /* ScanController.m in Sources */,
 				A581FC2C177B36AC00C05CE9 /* FCS.m in Sources */,

@@ -27,9 +27,8 @@
 #import "WaveClient.h"
 #import "WPA.h"
 #import "ImportController.h"
-#import <openssl/sha.h>
-#import <openssl/md5.h>
 #import "80211b.h"
+#import "polarssl/sha1.h"
 
 struct clientData {
     UInt8 ptkInput[WPA_NONCE_LENGTH+WPA_NONCE_LENGTH+12];
@@ -40,131 +39,36 @@ struct clientData {
     int wpaKeyCipher;
 };
 
-
-#define SHA1_MAC_LEN 20
-
-typedef struct {
-    UInt32 state[5];
-} SHA1_CTX;
-
 #pragma mark-
 #pragma mark Macros for SHA1
 #pragma mark-
 
-#define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
-
-/* blk0() and blk() perform the initial expand. */
-/* I got the idea of expanding during the round function from SSLeay */
-#if BYTE_ORDER == BIG_ENDIAN
-#define blk0(i) buffer[i]
-#else
-#define blk0(i) (buffer[i] = (rol(buffer[i], 24) & 0xFF00FF00) | \
-       (rol(buffer[i], 8) & 0x00FF00FF))
-#endif
-
-#define blk(i) (buffer[i & 15] = rol(buffer[(i + 13) & 15] ^ \
-	buffer[(i + 8) & 15] ^ buffer[(i + 2) & 15] ^ buffer[i & 15], 1))
-
-/* (R0+R1), R2, R3, R4 are the different operations used in SHA1 */
-//there are some intel asm versions of these we should use from cowpatty
-#define R0(v,w,x,y,z,i) \
-	z += ((w & (x ^ y)) ^ y) + blk0(i) + 0x5A827999 + rol(v, 5); \
-	w = rol(w, 30);
-#define R1(v,w,x,y,z,i) \
-	z += ((w & (x ^ y)) ^ y) + blk(i) + 0x5A827999 + rol(v, 5); \
-	w = rol(w, 30);
-#define R2(v,w,x,y,z,i) \
-	z += (w ^ x ^ y) + blk(i) + 0x6ED9EBA1 + rol(v, 5); w = rol(w, 30);
-#define R3(v,w,x,y,z,i) \
-	z += (((w | x) & y) | (w & x)) + blk(i) + 0x8F1BBCDC + rol(v, 5); \
-	w = rol(w, 30);
-#define R4(v,w,x,y,z,i) \
-	z += (w ^ x ^ y) + blk(i) + 0xCA62C1D6 + rol(v, 5); \
-	w=rol(w, 30);
-
-
-#pragma mark-
-#pragma mark SHA1 functions
-#pragma mark-
-
-/* Hash a single 512-bit block. This is the core of the algorithm. */
-
-void SHA1Transform(UInt32 state[5], unsigned long buffer[16]) {
-	UInt32 a, b, c, d, e;
-	/*typedef union {
-		unsigned char c[64];
-		UInt32 l[16];
-	} CHAR64LONG16;
-	CHAR64LONG16* block;
-	block = (CHAR64LONG16 *) buffer;*/
-
-	/* Copy context->state[] to working vars */
-	a = state[0];
-	b = state[1];
-	c = state[2];
-	d = state[3];
-	e = state[4];
-        
-	/* 4 rounds of 20 operations each. Loop unrolled. */
-	R0(a,b,c,d,e, 0); R0(e,a,b,c,d, 1); R0(d,e,a,b,c, 2); R0(c,d,e,a,b, 3);
-	R0(b,c,d,e,a, 4); R0(a,b,c,d,e, 5); R0(e,a,b,c,d, 6); R0(d,e,a,b,c, 7);
-	R0(c,d,e,a,b, 8); R0(b,c,d,e,a, 9); R0(a,b,c,d,e,10); R0(e,a,b,c,d,11);
-	R0(d,e,a,b,c,12); R0(c,d,e,a,b,13); R0(b,c,d,e,a,14); R0(a,b,c,d,e,15);
-	R1(e,a,b,c,d,16); R1(d,e,a,b,c,17); R1(c,d,e,a,b,18); R1(b,c,d,e,a,19);
-	R2(a,b,c,d,e,20); R2(e,a,b,c,d,21); R2(d,e,a,b,c,22); R2(c,d,e,a,b,23);
-	R2(b,c,d,e,a,24); R2(a,b,c,d,e,25); R2(e,a,b,c,d,26); R2(d,e,a,b,c,27);
-	R2(c,d,e,a,b,28); R2(b,c,d,e,a,29); R2(a,b,c,d,e,30); R2(e,a,b,c,d,31);
-	R2(d,e,a,b,c,32); R2(c,d,e,a,b,33); R2(b,c,d,e,a,34); R2(a,b,c,d,e,35);
-	R2(e,a,b,c,d,36); R2(d,e,a,b,c,37); R2(c,d,e,a,b,38); R2(b,c,d,e,a,39);
-	R3(a,b,c,d,e,40); R3(e,a,b,c,d,41); R3(d,e,a,b,c,42); R3(c,d,e,a,b,43);
-	R3(b,c,d,e,a,44); R3(a,b,c,d,e,45); R3(e,a,b,c,d,46); R3(d,e,a,b,c,47);
-	R3(c,d,e,a,b,48); R3(b,c,d,e,a,49); R3(a,b,c,d,e,50); R3(e,a,b,c,d,51);
-	R3(d,e,a,b,c,52); R3(c,d,e,a,b,53); R3(b,c,d,e,a,54); R3(a,b,c,d,e,55);
-	R3(e,a,b,c,d,56); R3(d,e,a,b,c,57); R3(c,d,e,a,b,58); R3(b,c,d,e,a,59);
-	R4(a,b,c,d,e,60); R4(e,a,b,c,d,61); R4(d,e,a,b,c,62); R4(c,d,e,a,b,63);
-	R4(b,c,d,e,a,64); R4(a,b,c,d,e,65); R4(e,a,b,c,d,66); R4(d,e,a,b,c,67);
-	R4(c,d,e,a,b,68); R4(b,c,d,e,a,69); R4(a,b,c,d,e,70); R4(e,a,b,c,d,71);
-	R4(d,e,a,b,c,72); R4(c,d,e,a,b,73); R4(b,c,d,e,a,74); R4(a,b,c,d,e,75);
-	R4(e,a,b,c,d,76); R4(d,e,a,b,c,77); R4(c,d,e,a,b,78); R4(b,c,d,e,a,79);
-	/* Add the working vars back into context.state[] */
-	state[0] += a;
-	state[1] += b;
-	state[2] += c;
-	state[3] += d;
-	state[4] += e;
-}
-
-
 /* SHA1InitAndUpdateFistSmall64 - Initialize new context And fillup 64*/
-void SHA1InitWithStatic64(SHA1_CTX* context, unsigned char* staticT) {
-	context->state[0] = 0x67452301;
-	context->state[1] = 0xEFCDAB89;
-	context->state[2] = 0x98BADCFE;
-	context->state[3] = 0x10325476;
-	context->state[4] = 0xC3D2E1F0;
-        SHA1Transform(context->state,  (unsigned long *)staticT);
+void SHA1InitWithStatic64(sha1_context* context, unsigned char* staticT) {
+	
+	sha1_starts(context);
+	sha1_process(context, staticT);
 }
 
 /* Add padding and return the message digest. */
-void SHA1FinalFastWith20ByteData(unsigned char digest[20], SHA1_CTX* context,unsigned char data[64]) {
+void SHA1FinalFastWith20ByteData(unsigned char digest[20], sha1_context* context,unsigned char data[64]) {
 	UInt32 i;
 
         //memcpy(buffer, data, 20);
 	memset(&data[21], 0, 41);
-        data[20] = 128;
-        data[62] = 2;
-        data[63] = 160;
+	data[20] = 128;
+	data[62] = 2;
+	data[63] = 160;
 
-        SHA1Transform(context->state,  (unsigned long *)data);
+	sha1_process(context, data);
 
 	for (i = 0; i < 20; ++i) {
-		digest[i] = (unsigned char)
-			((context->state[i >> 2] >> ((3 - (i & 3)) * 8)) & 255);
+		digest[i] = (unsigned char)((context->state[i >> 2] >> ((3 - (i & 3)) * 8)) & 255);
 	}
 }
 
-void prepared_hmac_sha1(const SHA1_CTX *k_ipad, const SHA1_CTX *k_opad, unsigned char digest[64]) {
-    SHA1_CTX ipad, opad; 
+void prepared_hmac_sha1(const sha1_context *k_ipad, const sha1_context *k_opad, unsigned char digest[64]) {
+    sha1_context ipad, opad;
 
     memcpy(&ipad, k_ipad, sizeof(ipad));
     memcpy(&opad, k_opad, sizeof(opad));
@@ -180,9 +84,9 @@ void prepared_hmac_sha1(const SHA1_CTX *k_ipad, const SHA1_CTX *k_opad, unsigned
 #pragma mark optimized WPA password -> PMK mapping
 #pragma mark -
 
-void fastF(unsigned char *password, int pwdLen, const unsigned char *ssid, int ssidlength, const SHA1_CTX *ipadContext, const SHA1_CTX *opadContext, int count, unsigned char output[40]) {
+void fastF(unsigned char *password, int pwdLen, const unsigned char *ssid, int ssidlength, const sha1_context *ipadContext, const sha1_context *opadContext, int count, unsigned char output[40]) {
     unsigned char digest[64], digest1[64];
-    int i, j; 
+    int i, j;
     
     /* U1 = PRF(P, S || int(i)) */ 
     memcpy(digest1, ssid, ssidlength);
@@ -214,7 +118,7 @@ void fastF(unsigned char *password, int pwdLen, const unsigned char *ssid, int s
 void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidlength, unsigned char output[40]) { 
     unsigned char k_ipad[65]; /* inner padding - key XORd with ipad */ 
     unsigned char k_opad[65]; /* outer padding - key XORd with opad */
-    SHA1_CTX ipadContext, opadContext;
+    sha1_context ipadContext, opadContext;
     int i, pwdLen = strlen(password);
     
     /* XOR key with ipad and opad values */ 
@@ -370,13 +274,12 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
     @autoreleasepool {
         BOOL successful = NO;
 	
-	NSParameterAssert((_isWep == encryptionTypeWPA) || (_isWep == encryptionTypeWPA2));
+		NSParameterAssert((_isWep == encryptionTypeWPA) || (_isWep == encryptionTypeWPA2));
         NSParameterAssert(_SSID);
-	NSParameterAssert([_SSID length] <= 32);
-	NSParameterAssert([self capturedEAPOLKeys] > 0);
-	NSParameterAssert(_password == nil);
-	NSParameterAssert(wordlist);
-	
+		NSParameterAssert([_SSID length] <= 32);
+		NSParameterAssert([self capturedEAPOLKeys] > 0);
+		NSParameterAssert(_password == nil);
+		NSParameterAssert(wordlist);
 
         if ([self crackWPAWithWordlist:[wordlist stringByExpandingTildeInPath] 
                    andImportController:[WaveHelper importController]]) successful = YES;

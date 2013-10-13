@@ -35,7 +35,8 @@
 #define RET { [[WaveHelper importController] terminateWithCode: -1]; return; }
 #define CHECK { if (_password != nil) RET; if (_isWep != encryptionTypeWEP && _isWep != encryptionTypeWEP40) RET; if ([_packetsLog count] < 8) RET; }
 
-- (void)performBruteforce40bitLow:(NSObject*)obj {
+- (void)performBruteforce40bitLow:(NSObject*)obj
+{
 	@autoreleasepool {
 		unsigned int i, foundCRC, counter, length = 0;
 		unsigned char key[16], currentGuess[16], skeletonStateArray[256], currentStateArray[256];
@@ -55,10 +56,12 @@
 		for (counter = 0; counter < 256; ++counter)
 			skeletonStateArray[counter] = counter;
 		
-		while(YES) {
-			for(i=0;i<[_packetsLog count];++i) {
+		while(YES)
+		{
+			for(i = 0; i < [_packetsLog count]; ++i) {
 				
-				if (!isInit) {
+				if (!isInit)
+				{
 					data = [_packetsLog[i] bytes];
 					length = [(NSData*)_packetsLog[i] length];
 					
@@ -70,7 +73,8 @@
 				memcpy(currentStateArray, skeletonStateArray, 256);
 				y = z = 0;
 				
-				for (counter = 0; counter < 256; ++counter) {
+				for (counter = 0; counter < 256; ++counter)
+				{
 					z = (key[y] + currentStateArray[counter] + z);
 					
 					tmp = currentStateArray[counter];
@@ -83,7 +87,8 @@
 				foundCRC = 0xFFFFFFFF;
 				y = z = 0;
 				
-				for (counter = 4; counter < length; ++counter) {
+				for (counter = 4; counter < length; ++counter)
+				{
 					++y;
 					z = currentStateArray[y] + z;
 					
@@ -96,7 +101,8 @@
 					foundCRC = UPDC32((data[counter] ^ currentStateArray[xov]), foundCRC);
 				}
 				
-				if (foundCRC == 0xdebb20e3) {
+				if (foundCRC == 0xdebb20e3)
+				{
 					memcpy(&currentGuess, &key, 16);
 					isInit = NO;
 				}

@@ -30,10 +30,6 @@
 - (BOOL)killProcess:(NSString *)commandFromPS;
 @end
 
-// strings for notification center
-extern NSString* BLAuthenticatedNotification;
-extern NSString* BLDeauthenticatedNotification;
-
 
 
 

@@ -2,9 +2,9 @@
         
         File:			WaveNetLEAPCrack.m
         Program:		KisMAC
-	Author:			Michael Rossberg
-				mick@binaervarianz.de
-	Description:		KisMAC is a wireless stumbler for MacOS X.
+		Author:			Michael Rossberg
+						mick@binaervarianz.de
+		Description:		KisMAC is a wireless stumbler for MacOS X.
                 
         This file is part of KisMAC.
 
@@ -26,10 +26,10 @@
 #import "LEAP.h"
 #import "WaveClient.h"
 #import "WaveHelper.h"
-#import <openssl/md4.h>
 #import "ImportController.h"
 
-struct leapClientData {
+struct leapClientData
+{
     const UInt8 *response;
     const UInt8 *challenge;
     UInt8    hashend[2];
@@ -39,17 +39,21 @@ struct leapClientData {
 
 @implementation WaveNet(LEAPCrackExtension)
 
-- (void)performWordlistLEAP:(NSString*)wordlist {
+- (void)performWordlistLEAP:(NSString*)wordlist
+{
     @autoreleasepool {
         BOOL successful = NO;
 	
-	NSParameterAssert(_isWep == encryptionTypeLEAP);    
-	NSParameterAssert([self capturedLEAPKeys] > 0);
-	NSParameterAssert(_password == nil);
-	NSParameterAssert(wordlist);
+		NSParameterAssert(_isWep == encryptionTypeLEAP);
+		NSParameterAssert([self capturedLEAPKeys] > 0);
+		NSParameterAssert(_password == nil);
+		NSParameterAssert(wordlist);
 	
 	
-	if ([self crackLEAPWithWordlist:[wordlist stringByExpandingTildeInPath] andImportController:[WaveHelper importController]]) successful = YES;
+		if ([self crackLEAPWithWordlist:[wordlist stringByExpandingTildeInPath] andImportController:[WaveHelper importController]])
+		{
+			successful = YES;
+		}
 	
         [[WaveHelper importController] terminateWithCode: (successful) ? 1 : -1];
 	}
@@ -112,7 +116,8 @@ struct leapClientData {
 		}
 	}
 
-    if (keys<=0) {
+    if (keys<=0)
+	{
 		_crackErrorString = NSLocalizedString(@"The captured challenge response packets are not sufficient to perform this attack", @"Error description for LEAP crack.");
 		if (c) free(c);
 		return NO;
@@ -121,7 +126,8 @@ struct leapClientData {
     words = 0;
     wrd[90]=0;
 
-    while(![im canceled] && !feof(fptr)) {
+    while(![im canceled] && !feof(fptr))
+	{
         fgets(wrd, 90, fptr);
         i = strlen(wrd) - 1;
         wrd[i--] = 0;
@@ -129,16 +135,22 @@ struct leapClientData {
         
         ++words;
 
-        if (words % 100000 == 0) {
+        if (words % 100000 == 0)
+		{
             [im setStatusField:[NSString stringWithFormat:@"%d words tested", words]];
         }
 
-        if (i > 31) continue; //dont support large passwords
+        if (i > 31)
+		{
+			continue; //dont support large passwords
+		}
         
         NtPasswordHash(wrd, i+1, pwhash);
 
-		if (c && pwhash) {
-			for (curKey = 0; curKey < keys; ++curKey) {
+		if (c && pwhash)
+		{
+			for (curKey = 0; curKey < keys; ++curKey)
+			{
 				if (c[curKey].hashend[0] != pwhash[14] || c[curKey].hashend[1] != pwhash[15]) continue;
 				if (testChallenge(c[curKey].challenge, c[curKey].response, pwhash)) continue;
 				

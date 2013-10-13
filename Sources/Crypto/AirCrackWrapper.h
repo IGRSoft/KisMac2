@@ -1,10 +1,11 @@
 /*
         
-        File:			AirCrackWrapper.h
-        Program:		KisMAC
-	Author:			Michael Rossberg
-				mick@binaervarianz.de
-	Description:		KisMAC is a wireless stumbler for MacOS X.
+		File:			AirCrackWrapper.h
+		Program:		KisMAC
+		Author:			Michael Rossberg
+						mick@binaervarianz.de
+		
+		Description:	KisMAC is a wireless stumbler for MacOS X.
                 
         This file is part of KisMAC.
 
@@ -23,6 +24,7 @@
     along with KisMAC; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+
 #import <Cocoa/Cocoa.h>
 
 #define SWAP(x,y) { unsigned char tmp = x; x = y; y = tmp; }

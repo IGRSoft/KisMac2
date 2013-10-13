@@ -111,7 +111,6 @@
     if(authorizationRef) {
         AuthorizationFree(authorizationRef, kAuthorizationFlagDestroyRights);
         authorizationRef = NULL;
-        [[NSNotificationCenter defaultCenter]postNotificationName:BLDeauthenticatedNotification object:self];
     }
 }
 
@@ -165,7 +164,6 @@
 	
 	if(authorized) {
 		AuthorizationFreeItemSet(authorizedRights);
-		[[NSNotificationCenter defaultCenter] postNotificationName:BLAuthenticatedNotification object:self];
 	}                                                    
 
 	free(items);
@@ -327,23 +325,6 @@
 	}
 }	
 @end
-
-// BLAuthentication sends these notifications are sent when the user  
-// becomes authenticated or deauthenticated.
-NSString* BLAuthenticatedNotification = @"BLAuthenticatedNotification";
-NSString* BLDeauthenticatedNotification = @"BLDeauthenticatedNotification";
-
-// Sample notification observer:
-/*
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                        selector:@selector(userAuthenticated:)
-                                        name:BLAuthenticatedNotification
-                                        object:[BLAuthentication sharedInstance]];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                        selector:@selector(userDeauthenticated:)
-                                        name:BLDeauthenticatedNotification
-                                        object:[BLAuthentication sharedInstance]];
-*/
 
 
 

@@ -871,55 +871,57 @@ int ss(char* inp, char* outp) {
 
             sets = [NSUserDefaults standardUserDefaults];
             
-		while(_gpsdReconnect) {
-			sockd  = socket(AF_INET, SOCK_STREAM, 0);
-			if (sockd == -1) {
-				DBNSLog(@"Socket creation failed!");
-				[self setStatus:NSLocalizedString(@"Could not create GPSd socket.", @"GPS status")];
-				goto err;
-			}
-			
-			hostname = [[sets objectForKey:@"GPSDaemonHost"] UTF8String];
-			
-			if (inet_addr(hostname) != INADDR_NONE) {
-				ip = inet_addr(hostname);
-			} else {
-				hp = gethostbyname(hostname);
-				if (hp == NULL) {
-					DBNSLog(@"Could not resolve %s", hostname);
-					[self setStatus:NSLocalizedString(@"Could not resolve GPSd server.", @"GPS status")];
-					goto err;
+			while(_gpsdReconnect)
+			{
+				sockd  = socket(AF_INET, SOCK_STREAM, 0);
+				if (sockd == -1) {
+					DBNSLog(@"Socket creation failed!");
+					[self setStatus:NSLocalizedString(@"Could not create GPSd socket.", @"GPS status")];
+					break;
 				}
-				ip = *(int *)hp->h_addr_list[0];
+				
+				hostname = [[sets objectForKey:@"GPSDaemonHost"] UTF8String];
+				
+				if (inet_addr(hostname) != INADDR_NONE) {
+					ip = inet_addr(hostname);
+				} else {
+					hp = gethostbyname(hostname);
+					if (hp == NULL) {
+						DBNSLog(@"Could not resolve %s", hostname);
+						[self setStatus:NSLocalizedString(@"Could not resolve GPSd server.", @"GPS status")];
+						break;
+					}
+					ip = *(int *)hp->h_addr_list[0];
+				}
+				
+				/* server address */
+				serv_name.sin_addr.s_addr = ip;
+				serv_name.sin_family = AF_INET;
+				serv_name.sin_port = htons([sets integerForKey:@"GPSDaemonPort"]);
+
+				DBNSLog(@"Connecting to gpsd (%s)",inet_ntoa(serv_name.sin_addr));
+
+				/* connect to the server */
+				status = connect(sockd, (struct sockaddr*)&serv_name, sizeof(serv_name));
+				
+				if (status == -1) {
+					DBNSLog(@"Could not connect to %s port %d", hostname, (int)[sets integerForKey:@"GPSDaemonPort"]);
+					[self setStatus:NSLocalizedString(@"Could not connect to GPSd.", @"GPS status")];
+					break;
+				}
+
+				DBNSLog(@"GPS started successfully in GPSd mode.\n");
+				[self setStatus:NSLocalizedString(@"GPS started in GPSd mode.", @"GPS status")];
+
+				[self continousParseGPSd: sockd];
+				close(sockd);
+
+				[self setStatus:NSLocalizedString(@"GPSd connection terminated - reconnecting...", @"GPS status")];
 			}
-			
-			/* server address */
-			serv_name.sin_addr.s_addr = ip;
-			serv_name.sin_family = AF_INET;
-			serv_name.sin_port = htons([sets integerForKey:@"GPSDaemonPort"]);
 
-			DBNSLog(@"Connecting to gpsd (%s)",inet_ntoa(serv_name.sin_addr));
-
-			/* connect to the server */
-			status = connect(sockd, (struct sockaddr*)&serv_name, sizeof(serv_name));
-			
-			if (status == -1) {
-				DBNSLog(@"Could not connect to %s port %d", hostname, (int)[sets integerForKey:@"GPSDaemonPort"]);
-				[self setStatus:NSLocalizedString(@"Could not connect to GPSd.", @"GPS status")];
-				goto err;
-			}
-
-			DBNSLog(@"GPS started successfully in GPSd mode.\n");
-			[self setStatus:NSLocalizedString(@"GPS started in GPSd mode.", @"GPS status")];
-
-			[self continousParseGPSd: sockd];
-			close(sockd);
-
-			[self setStatus:NSLocalizedString(@"GPSd connection terminated - reconnecting...", @"GPS status")];
-		}
-        err:
-            [_gpsLock unlock];
+			[_gpsLock unlock];
             _gpsThreadUp = NO;
+            
         } else {
             DBNSLog(@"GPS LOCKING FAILURE!");
         }

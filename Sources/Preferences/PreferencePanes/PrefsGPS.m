@@ -94,35 +94,31 @@
     [_tripmateMode setState: [[controller objectForKey:@"GPSTripmate"] boolValue] ? NSOnState : NSOffState];
     
     kernResult = IOMasterPort(0, &masterPort);
-    if (KERN_SUCCESS != kernResult)
+    if (KERN_SUCCESS == kernResult)
     {
-        goto err; // REV/FIX: throw.
-    }
-    classesToMatch = IOServiceMatching (kIOSerialBSDServiceValue);
-    if (0 == classesToMatch)
-    {
-        goto err; // REV/FIX: throw.
-    }
-    CFDictionarySetValue (
-        classesToMatch,
-        CFSTR (kIOSerialBSDTypeKey),
-        CFSTR (kIOSerialBSDRS232Type));
-    kernResult = IOServiceGetMatchingServices (
-        masterPort, classesToMatch, &serialIterator);
-    if (KERN_SUCCESS != kernResult)
-    {
-        goto err; // REV/FIX: throw.
-    }
-    while ((sdev = IOIteratorNext (serialIterator)))
-    {
-        NSString *tty = [self getRegistryString: sdev name:kIODialinDeviceKey];
-		if (tty) {
-			[a addObject: tty];
+        classesToMatch = IOServiceMatching (kIOSerialBSDServiceValue);
+		if (classesToMatch != 0)
+		{
+			CFDictionarySetValue (
+								  classesToMatch,
+								  CFSTR (kIOSerialBSDTypeKey),
+								  CFSTR (kIOSerialBSDRS232Type));
+			kernResult = IOServiceGetMatchingServices (
+													   masterPort, classesToMatch, &serialIterator);
+			if (KERN_SUCCESS == kernResult)
+			{
+				while ((sdev = IOIteratorNext (serialIterator)))
+				{
+					NSString *tty = [self getRegistryString: sdev name:kIODialinDeviceKey];
+					if (tty) {
+						[a addObject: tty];
+					}
+				}
+				IOObjectRelease (serialIterator);
+			}
 		}
     }
-    IOObjectRelease (serialIterator);
-    
-err:
+
     [_noFix selectItemAtIndex:[[controller objectForKey:@"GPSNoFix"] intValue]];
     [_traceOp selectItemAtIndex:[[controller objectForKey:@"GPSTrace"] intValue]];
     [_gpsdPort setIntValue:[[controller objectForKey:@"GPSDaemonPort"] intValue]];

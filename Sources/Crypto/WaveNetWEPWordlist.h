@@ -2,9 +2,10 @@
         
         File:			WaveNetWEPWordlist.h
         Program:		KisMAC
-	Author:			Michael Roßberg
-				mick@binaervarianz.de
-	Description:		KisMAC is a wireless stumbler for MacOS X.
+		Author:			Michael Roßberg
+						mick@binaervarianz.de
+ 
+		Description:		KisMAC is a wireless stumbler for MacOS X.
                 
         This file is part of KisMAC.
 
@@ -26,7 +27,9 @@
 #import "WaveNet.h"
 
 @interface WaveNet(WEPWorlistCrackExtension)
+
 - (void)performWordlist40bitApple:(NSString*)wordlist;
 - (void)performWordlist104bitApple:(NSString*)wordlist;
 - (void)performWordlist104bitMD5:(NSString*)wordlist;
+
 @end

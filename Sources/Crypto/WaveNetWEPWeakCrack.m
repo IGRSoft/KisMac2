@@ -72,7 +72,7 @@
 		
 		keyID = temp & 0xFF;
 		NSParameterAssert(keyID <= 3 && keyID >= 0);
-		len   = (temp >> 8) & 0xFFFFFF;
+		len   = (temp >> 8) & keyLenAll;
 		NSParameterAssert(len == keyLen104bit || len == keyLen40bit || len == keyLenAll);
 		
 		if (!_ivData[keyID]) RET;

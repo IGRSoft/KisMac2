@@ -121,7 +121,7 @@ struct WirelessNetworkInfo
 	UInt16					signal; /* Signal strength of the network. 0 for Adhoc. */
 	UInt8					macAddress[6]; /* MAC address of the wireless access point. */
 	UInt16					beaconInterval; /* beacon interval in milliseconds */
-	WINetworkInfoFlags			flags; /* Flags for the network. */
+	WINetworkInfoFlags		flags; /* Flags for the network. */
 	UInt16					nameLen;
 	SInt8					name[32];
 };

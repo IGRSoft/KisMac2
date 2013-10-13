@@ -108,35 +108,39 @@ ReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType type, void *c
     CFRelease(request);
 
     // Make sure it succeeded.
+	bool wasError = false;
     if (!_stream) {
         errstr = NSLocalizedString(@"Creating the stream failed.", "Error for Crashreporter");
-        goto error;
+        wasError = true;
     }
     
     // Set the client
-    if (!CFReadStreamSetClient(_stream, kNetworkEvents, ReadStreamClientCallBack, &ctxt)) {
+    if (!wasError && !CFReadStreamSetClient(_stream, kNetworkEvents, ReadStreamClientCallBack, &ctxt)) {
         CFRelease(_stream);
         _stream = NULL;
         errstr = NSLocalizedString(@"Setting the stream's client failed.", "Error for Crashreporter");
-        goto error;
+        wasError = true;
     }
     
+	if (!wasError) {
+		CFReadStreamScheduleWithRunLoop(_stream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
+		
+		// Start the HTTP connection
+		if (!CFReadStreamOpen(_stream)) {
+			CFReadStreamSetClient(_stream, 0, NULL, NULL);
+			CFReadStreamUnscheduleFromRunLoop(_stream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
+			CFRelease(_stream);
+			_stream = NULL;
+			errstr = NSLocalizedString(@"Opening the stream failed.", "Error for Crashreporter");
+			wasError = true;
+		}
+	}
     // Schedule the stream
-    CFReadStreamScheduleWithRunLoop(_stream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
     
-    // Start the HTTP connection
-    if (!CFReadStreamOpen(_stream)) {
-        CFReadStreamSetClient(_stream, 0, NULL, NULL);
-        CFReadStreamUnscheduleFromRunLoop(_stream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
-        CFRelease(_stream);
-        _stream = NULL;
-        errstr = NSLocalizedString(@"Opening the stream failed.", "Error for Crashreporter");
-        goto error;
-    }
-
-    return;
+	if (!wasError) {
+		return;
+	}
     
-error:
     NSBeginCriticalAlertSheet(
         NSLocalizedString(@"Transmittion failed.", "Title for Crashreporter"),
         OK, NULL, NULL, [self window], self, NULL, NULL, NULL,

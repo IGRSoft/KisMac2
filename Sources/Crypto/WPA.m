@@ -27,14 +27,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#define COMMON_DIGEST_FOR_OPENSSL
-#include <CommonCrypto/CommonDigest.h>
-#define SHA1 CC_SHA1
-
-#include <CommonCrypto/CommonHMAC.h>
-#define HMAC CCHmac
 #include "80211b.h"
-
+#include "polarssl/md5.h"
+#include "polarssl/sha1.h"
 /*
  * Function: hmac_md5 from rfc2104; uses an MD5 library 
  */ 
@@ -44,7 +39,7 @@ void fast_hmac_md5 (
     unsigned char *key, int key_len,
     void * digest) 
 { 
-    MD5_CTX context;
+    md5_context context;
     unsigned char k_ipad[65]; /* inner padding - key XORd with ipad */
     unsigned char k_opad[65]; /* outer padding - key XORd with opad */
     int i;
@@ -70,16 +65,16 @@ void fast_hmac_md5 (
     memset(&k_opad[key_len], 0x5c, sizeof k_opad - key_len); 
     
     /* perform inner MD5 */
-    MD5_Init(&context); /* init context for 1st pass */ 
-    MD5_Update(&context, k_ipad, 64);  /* start with inner pad*/
-    MD5_Update(&context, text, text_len); /* then text of datagram */ 
-    MD5_Final(digest, &context); /* finish up 1st pass */
+    md5_starts(&context); /* init context for 1st pass */
+    md5_update(&context, k_ipad, 64);  /* start with inner pad*/
+    md5_update(&context, text, text_len); /* then text of datagram */
+    md5_finish(&context, digest); /* finish up 1st pass */
     
     /* perform outer MD5 */
-    MD5_Init(&context); /* init context for 2nd pass */
-    MD5_Update(&context, (const unsigned char*)k_opad, 64);  /* start with outer pad */
-    MD5_Update(&context, (const unsigned char*)digest, 16); /* then results of 1st hash */
-    MD5_Final(digest, &context); /* finish up 2nd pass */ 
+    md5_starts(&context); /* init context for 2nd pass */
+    md5_update(&context, (const unsigned char*)k_opad, 64);  /* start with outer pad */
+    md5_update(&context, (const unsigned char*)digest, 16); /* then results of 1st hash */
+	md5_finish(&context, digest); /* finish up 2nd pass */
 } 
 
 void hmac_md5 (
@@ -87,18 +82,18 @@ void hmac_md5 (
     unsigned char *key, int key_len,
     void * digest) 
 { 
-    MD5_CTX context;
+    md5_context context;
     unsigned char k_ipad[65]; /* inner padding - key XORd with ipad */
     unsigned char k_opad[65]; /* outer padding - key XORd with opad */
     int i;
     
     /* if key is longer than 64 bytes reset it to key=MD5(key) */ 
     if (key_len > 64) { 
-        MD5_CTX tctx;
+        md5_context tctx;
         
-        MD5_Init(&tctx);
-        MD5_Update(&tctx, key, key_len);
-        MD5_Final(key, &tctx);
+        md5_starts(&tctx);
+        md5_update(&tctx, key, key_len);
+        md5_finish(&tctx, key);
         
         //key = tctx.digest; 
         key_len = 16;
@@ -128,22 +123,22 @@ void hmac_md5 (
     } 
     
     /* perform inner MD5 */
-    MD5_Init(&context); /* init context for 1st pass */ 
-    MD5_Update(&context, k_ipad, 64);  /* start with inner pad*/
-    MD5_Update(&context, text, text_len); /* then text of datagram */ 
-    MD5_Final(digest, &context); /* finish up 1st pass */
+    md5_starts(&context); /* init context for 1st pass */
+    md5_update(&context, k_ipad, 64);  /* start with inner pad*/
+    md5_update(&context, text, text_len); /* then text of datagram */
+    md5_finish(&context, digest); /* finish up 1st pass */
     //memcpy(digest, context.digest, 16); 
     
     /* perform outer MD5 */
-    MD5_Init(&context); /* init context for 2nd pass */
-    MD5_Update(&context, (const unsigned char*)k_opad, 64);  /* start with outer pad */
-    MD5_Update(&context, (const unsigned char*)digest, 16); /* then results of 1st hash */
-    MD5_Final(digest, &context); /* finish up 2nd pass */ 
+    md5_starts(&context); /* init context for 2nd pass */
+    md5_update(&context, (const unsigned char*)k_opad, 64);  /* start with outer pad */
+    md5_update(&context, (const unsigned char*)digest, 16); /* then results of 1st hash */
+    md5_finish(&context, digest); /* finish up 2nd pass */
     //memcpy(digest, context.digest, 16);
 } 
 
 void fast_hmac_sha1( unsigned char *text, int text_len, unsigned char *key, int key_len, unsigned char *digest) {
-    SHA_CTX context; 
+    sha1_context context;
     unsigned char k_ipad[65]; /* inner padding - key XORd with ipad */ 
     unsigned char k_opad[65]; /* outer padding - key XORd with opad */
     int i; 
@@ -168,16 +163,16 @@ void fast_hmac_sha1( unsigned char *text, int text_len, unsigned char *key, int 
     memset(&k_opad[key_len], 0x5c, sizeof k_opad - key_len); 
     
     /* perform inner SHA1*/
-    SHA1_Init(&context); /* init context for 1st pass */ 
-    SHA1_Update(&context, k_ipad, 64); /* start with inner pad */ 
-    SHA1_Update(&context, text, text_len); /* then text of datagram */
-    SHA1_Final(digest, &context); /* finish up 1st pass */ 
+    sha1_starts(&context); /* init context for 1st pass */
+    sha1_update(&context, k_ipad, 64); /* start with inner pad */
+    sha1_update(&context, text, text_len); /* then text of datagram */
+    sha1_finish(&context, digest); /* finish up 1st pass */
     
     /* perform outer SHA1 */ 
-    SHA1_Init(&context); /* init context for 2nd pass */ 
-    SHA1_Update(&context, k_opad, 64); /* start with outer pad */ 
-    SHA1_Update(&context, digest, 20); /* then results of 1st hash */ 
-    SHA1_Final(digest, &context); /* finish up 2nd pass */
+    sha1_starts(&context); /* init context for 2nd pass */
+    sha1_update(&context, k_opad, 64); /* start with outer pad */
+    sha1_update(&context, digest, 20); /* then results of 1st hash */
+    sha1_finish(&context, digest); /* finish up 2nd pass */
 }
 
 
@@ -185,18 +180,18 @@ void hmac_sha1( unsigned char *text, int text_len,
     unsigned char *key, int key_len,
     unsigned char *digest) 
 {
-    SHA_CTX context; 
+    sha1_context context;
     unsigned char k_ipad[65]; /* inner padding - key XORd with ipad */ 
     unsigned char k_opad[65]; /* outer padding - key XORd with opad */
     int i; 
     
     /* if key is longer than 64 bytes reset it to key=SHA1(key) */
     if (key_len > 64) { 
-        SHA_CTX      tctx; 
+        sha1_context      tctx;
         
-        SHA1_Init(&tctx);
-        SHA1_Update(&tctx, key, key_len); 
-        SHA1_Final(key, &tctx); 
+        sha1_starts(&tctx);
+        sha1_update(&tctx, key, key_len);
+        sha1_finish(&tctx, key);
         
         key_len = 20;
     }
@@ -225,16 +220,16 @@ void hmac_sha1( unsigned char *text, int text_len,
     } 
     
     /* perform inner SHA1*/
-    SHA1_Init(&context); /* init context for 1st pass */ 
-    SHA1_Update(&context, k_ipad, 64); /* start with inner pad */ 
-    SHA1_Update(&context, text, text_len); /* then text of datagram */
-    SHA1_Final(digest, &context); /* finish up 1st pass */ 
+    sha1_starts(&context); /* init context for 1st pass */
+    sha1_update(&context, k_ipad, 64); /* start with inner pad */
+    sha1_update(&context, text, text_len); /* then text of datagram */
+    sha1_finish(&context, digest); /* finish up 1st pass */
     
     /* perform outer SHA1 */ 
-    SHA1_Init(&context); /* init context for 2nd pass */ 
-    SHA1_Update(&context, k_opad, 64); /* start with outer pad */ 
-    SHA1_Update(&context, digest, 20); /* then results of 1st hash */ 
-    SHA1_Final(digest, &context); /* finish up 2nd pass */
+    sha1_starts(&context); /* init context for 2nd pass */
+    sha1_update(&context, k_opad, 64); /* start with outer pad */
+    sha1_update(&context, digest, 20); /* then results of 1st hash */
+    sha1_finish(&context, digest); /* finish up 2nd pass */
 }
 
 #pragma mark -

@@ -100,13 +100,17 @@ in Safari.");
     sockd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockd == -1) {
         error = @"Socket creation failed!";
-        goto err;
+		DBNSLog(@"%@",error);
+        close(sockd);
+		return nil;
     }
     
     hp = gethostbyname([server UTF8String]);
     if (hp == NULL) {
-        error = NSLocalizedString(@"Could not resolve expedia server", "Download Map Error");;
-        goto err;
+        error = NSLocalizedString(@"Could not resolve expedia server", "Download Map Error");
+		DBNSLog(@"%@",error);
+        close(sockd);
+		return nil;
     }
     ip = *(int *)hp->h_addr_list[0];
 
@@ -120,8 +124,10 @@ in Safari.");
     /* connect to the server */
     status = connect(sockd, (struct sockaddr*)&serv_name, sizeof(serv_name));
     if (status == -1) {
-        error = NSLocalizedString(@"Could not connect to www.expedia.com", "Download Map Error");;
-        goto err;
+        error = NSLocalizedString(@"Could not connect to www.expedia.com", "Download Map Error");
+		DBNSLog(@"%@",error);
+        close(sockd);
+		return nil;
     }
         
     s = [NSString stringWithFormat:@"GET /pub/agent.dll?qscr=mrdt&CenP=%f,%f&Lang=%@&Alti=%d&MapS=0&Size=%d,%d&Offs=0.000000,0 HTTP/1.0\nHost: %@\nCookie: jscript=1\nConnection: close\n\n", 
@@ -134,12 +140,15 @@ in Safari.");
     DBNSLog(@"Reading response from expedia");
     
     bytesread = read(sockd, buf, 2024);
+	
+	bool wasError = false;
     while ((bytesread != -1) && ([s length] < 1100)) {
         if (bytesread==0) {
             ++errcount;
             if (errcount == 60) {
                 error = NSLocalizedString(@"Got no response from expedia. Mapsize too big?", "Download Map Error");
-                goto err;
+                wasError = true;
+				break;
             }
             [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
         } else 
@@ -151,24 +160,30 @@ in Safari.");
         }
         bytesread = read(sockd, buf, 2024);
     }
+	
     close(sockd);
-
-    //DBNSLog(@"Response from expedia %@",s);
+	
+	if (wasError)
+	{
+		DBNSLog(@"%@",error);
+		return nil;
+	}
     
     myMessage = CFHTTPMessageCreateEmpty(kCFAllocatorDefault, FALSE);
     if (!CFHTTPMessageAppendBytes(myMessage, (UInt8*)[s UTF8String], [s length]))
     {
         CFRelease(myMessage);
         error = @"CFTTPResponse Parsing error";
-        close(sockd);
-        goto err;
+        DBNSLog(@"%@",error);
+		return nil;
     }
     
     if (!CFHTTPMessageIsHeaderComplete(myMessage)) 
     {
         CFRelease(myMessage);
         error = @"Incomplete Headers!";
-        goto err;
+		DBNSLog(@"%@",error);
+		return nil;
     }
     
     req = (NSString*)CFBridgingRelease(CFHTTPMessageCopyHeaderFieldValue(myMessage, CFSTR("Location")));
@@ -217,11 +232,6 @@ in Safari.");
     
     CFRelease(myMessage);
     return req;
-    
-err:
-    DBNSLog(@"%@",error);
-    close(sockd);
-    return nil;
 }
 
 - (BOOL)downloadMapFrom:(NSString*)server forPoint:(waypoint)w resolution:(NSSize)size zoomLevel:(int)zoom {

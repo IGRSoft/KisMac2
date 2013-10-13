@@ -76,7 +76,11 @@
         im = [WaveHelper importController];
 
         networkCount = [networks count];
-        if (networkCount==0) goto exitNoCleanUp;
+        if (networkCount==0)
+		{
+			[im terminateWithCode:[im canceled] ? -1 : 0];
+			return;
+		}
  
         good = [WaveHelper intToColor:[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaColorGood"]];
         bad  = [WaveHelper intToColor:[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaColorBad"]];
@@ -156,9 +160,9 @@
         }
         
 	orgSize = [_mapImage size];
-        rec.size = NSMakeSize(orgSize.width / width, orgSize.height / height);
-        
-        [_mapImage lockFocus];
+	rec.size = NSMakeSize(orgSize.width / width, orgSize.height / height);
+	
+	[_mapImage lockFocus];
 	NS_DURING
 		for (x = 0; x< width; ++x)
 			for (y = 0; y< height; ++y) {
@@ -194,7 +198,6 @@ exit:
             delete [] cache[x];
         delete [] cache;
 
-exitNoCleanUp:
         [im terminateWithCode:[im canceled] ? -1 : 0];
     }
 }

@@ -18,4 +18,6 @@
 #endif
 
 #define POLARSSL_MD4_C
-#define POLARSSL_MD5_C
+
+#define MD4_DIGEST_LENGTH 16
+#define SHA_DIGEST_LENGTH 20
