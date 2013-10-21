@@ -21,3 +21,11 @@
 
 #define MD4_DIGEST_LENGTH 16
 #define SHA_DIGEST_LENGTH 20
+
+#define BAD_ADDRESS			0xFFFFFFFF
+#define ERROR_FREE_ADDRESS	0xDEBB20E3
+#define LAST_BIT			256
+
+#define SRET { [[WaveHelper importController] terminateWithCode: 1]; return; }
+#define RET { [[WaveHelper importController] terminateWithCode: -1]; return; }
+#define CHECK { if (_password != nil) RET; if (_isWep != encryptionTypeWEP && _isWep != encryptionTypeWEP40) RET; if ([_packetsLog count] < 8) RET; }

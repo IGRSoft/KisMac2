@@ -473,7 +473,7 @@
     aWF->ctrl.len = h.caplen;
     
     //corrupted frame
-    if ( h.caplen > 2364 ) return NULL;
+    if ( h.caplen > MAX_FRAME_BYTES ) return NULL;
     
     switch (pcap_datalink(_pcapP))
     {

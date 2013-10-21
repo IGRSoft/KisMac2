@@ -199,7 +199,7 @@ IOReturn IntersilJack::_reset() {
 bool IntersilJack::sendKFrame(KFrame *frame) {
     WLFrame *frameDescriptor;
 	UInt8 kmrate;
-    UInt8 aData[2364];
+    UInt8 aData[MAX_FRAME_BYTES];
     IOByteCount pktsize;
     int descriptorLength;
     UInt8 *data = frame->data;

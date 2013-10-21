@@ -484,7 +484,7 @@
     
 	_crackType = 2;
     [self startCrackDialogWithTitle:NSLocalizedString(@"Bruteforce attack against WEP-40...", "busy dialog")];
-    [_importController setMax:256];
+    [_importController setMax:LAST_BIT];
     
     [NSThread detachNewThreadSelector:@selector(performBruteforce40bitAll:) toTarget:_curNet withObject:nil];
     

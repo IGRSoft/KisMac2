@@ -1050,7 +1050,7 @@ bool RalinkJack::stopCapture()
 bool RalinkJack::sendKFrame(KFrame *frame) {
     UInt8 *data = frame->data;
     int size = frame->ctrl.len;
-    UInt8 aData[2364];
+    UInt8 aData[MAX_FRAME_BYTES];
     unsigned int descriptorLength;
     descriptorLength = WriteTxDescriptor(aData, size);
     memcpy(aData+descriptorLength, data, size);
@@ -1130,8 +1130,8 @@ int RalinkJack::WriteTxDescriptor(void* theFrame, UInt16 length) {
                 }
             }
         }
-        pTxD->PlcpLengthHigh = length / 256; // 256;
-        pTxD->PlcpLengthLow = length % 256;
+        pTxD->PlcpLengthHigh = length / LAST_BIT; // 256;
+        pTxD->PlcpLengthLow = length % LAST_BIT;
     } else {
         // OFDM - RATE_6, RATE_9, RATE_12, RATE_18, RATE_24, RATE_36, RATE_48, RATE_54
         pTxD->PlcpLengthHigh = length / 64; // 64;      // high 6-bit of total byte count

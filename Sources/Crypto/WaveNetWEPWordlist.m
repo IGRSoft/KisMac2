@@ -31,19 +31,15 @@
 #import <BIGeneric/BINSExtensions.h>
 #import "ImportController.h"
 
-#define SRET { [[WaveHelper importController] terminateWithCode: 1]; return; }
-#define RET { [[WaveHelper importController] terminateWithCode: -1]; return; }
-#define CHECK {  if (_password != nil) RET; if (_isWep != encryptionTypeWEP && _isWep != encryptionTypeWEP40) RET; if ([_packetsLog count] < 8) RET; }
-
 @implementation WaveNet(WEPWorlistCrackExtension)
 
-- (void)performWordlist40bitApple:(NSString*)wordlist {
-
+- (void)performWordlist40bitApple:(NSString*)wordlist
+{
 	@autoreleasepool {
-		FILE* fptr;
+		FILE* fptr = NULL;
 		char wrd[1000];
 		unsigned int i, words, foundCRC, counter, length = 0;
-		UInt8 key[16], currentGuess[16], skeletonStateArray[256], currentStateArray[256];
+		UInt8 key[16], currentGuess[16], skeletonStateArray[LAST_BIT], currentStateArray[LAST_BIT];
 		UInt8 y, z, tmp, xov;
 		const char *data = nil;
 		BOOL isInit;
@@ -55,20 +51,28 @@
 		isInit = NO;
 		
 		fptr = fopen([wordlist UTF8String], "r");
-		if (!fptr) RET;
+		if (!fptr)
+		{
+			RET;
+		}
 		
 		//select the right increment function for each character set
-		for (counter = 0; counter < 256; ++counter)
+		for (counter = 0; counter < LAST_BIT; ++counter)
+		{
 			skeletonStateArray[counter] = counter;
-		
+		}
 		words = 0;
 		wrd[990]=0;
 		
-		while(![controller canceled] && !feof(fptr)) {
+		while(![controller canceled] && !feof(fptr))
+		{
 			fgets(wrd, 990, fptr);
 			i = strlen(wrd) - 1;
 			wrd[i] = 0;
-			if (wrd[i - 1]=='\r') wrd[--i] = 0;
+			if (wrd[i - 1]=='\r')
+			{
+				wrd[--i] = 0;
+			}
 			
 			++words;
 			
@@ -90,10 +94,11 @@
 					if (i==0) isInit = YES;
 				}
 				
-				memcpy(currentStateArray, skeletonStateArray, 256);
+				memcpy(currentStateArray, skeletonStateArray, LAST_BIT);
 				y = z = 0;
 				
-				for (counter = 0; counter < 256; ++counter) {
+				for (counter = 0; counter < LAST_BIT; ++counter)
+				{
 					z = (key[y] + currentStateArray[counter] + z);
 					
 					tmp = currentStateArray[counter];
@@ -103,10 +108,11 @@
 					y = (y + 1) % 8;
 				}
 				
-				foundCRC = 0xFFFFFFFF;
+				foundCRC = BAD_ADDRESS;
 				y = z = 0;
 				
-				for (counter = 4; counter < length; ++counter) {
+				for (counter = 4; counter < length; ++counter)
+				{
 					++y;
 					z = currentStateArray[y] + z;
 					
@@ -119,7 +125,8 @@
 					foundCRC = UPDC32((data[counter] ^ currentStateArray[xov]), foundCRC);
 				}
 				
-				if (foundCRC == 0xdebb20e3) {
+				if (foundCRC == ERROR_FREE_ADDRESS)
+				{
 					memcpy(&currentGuess, &key, 16);
 					isInit=NO;
 				}
@@ -129,13 +136,18 @@
 			
 			if (i >= 8) {
 				_password=[NSMutableString stringWithFormat:@"%.2X", currentGuess[3]];
-				for (i=4;i<(8);++i)
+				for (i = 4 ; i < 8 ; ++i)
+				{
 					[(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", currentGuess[i]]];
+				}
+				
 				fclose(fptr);
 				DBNSLog(@"Cracking was successful. Password is <%s>", wrd);
+				
 				SRET;
 			}
-			if (words % 10000 == 0) {
+			if (words % 10000 == 0)
+			{
 				[controller setStatusField:[NSString stringWithFormat:@"%d words tested", words]];
 			}
 		}
@@ -146,37 +158,46 @@
     
 }
 
-- (void)performWordlist104bitApple:(NSString*)wordlist {
+- (void)performWordlist104bitApple:(NSString*)wordlist
+{
 	@autoreleasepool {
-		FILE* fptr;
+		FILE* fptr = NULL;
 		char wrd[1000];
 		unsigned int i, words, foundCRC, counter, length = 0;
-		UInt8 key[16], currentGuess[16], skeletonStateArray[256], currentStateArray[256];
+		UInt8 key[16], currentGuess[16], skeletonStateArray[LAST_BIT], currentStateArray[LAST_BIT];
 		UInt8 y, z, tmp, xov;
 		const char *data = nil;
 		BOOL isInit;
-		ImportController *controller;
 		
 		CHECK;
 		
-		controller = [WaveHelper importController];
+		ImportController *controller = [WaveHelper importController];
 		isInit = NO;
 		
 		fptr = fopen([wordlist UTF8String], "r");
-		if (!fptr) RET;
+		if (!fptr)
+		{
+			RET;
+		}
 		
 		//select the right increment function for each character set
-		for (counter = 0; counter < 256; ++counter)
+		for (counter = 0; counter < LAST_BIT; ++counter)
+		{
 			skeletonStateArray[counter] = counter;
+		}
 		
 		words = 0;
 		wrd[990]=0;
 		
-		while(![controller canceled] && !feof(fptr)) {
+		while(![controller canceled] && !feof(fptr))
+		{
 			fgets(wrd, 990, fptr);
 			i = strlen(wrd) - 1;
 			wrd[i] = 0;
-			if (wrd[i - 1]=='\r') wrd[--i] = 0;
+			if (wrd[i - 1]=='\r')
+			{
+				wrd[--i] = 0;
+			}
 			
 			++words;
 			
@@ -189,20 +210,26 @@
 				CFRelease(ref);
 			}
 			
-			for(i=0; i<[_packetsLog count]; ++i) {
-				if (!isInit) {
+			for(i = 0; i < [_packetsLog count]; ++i)
+			{
+				if (!isInit)
+				{
 					data = [_packetsLog[i] bytes];
 					length=[(NSData*)_packetsLog[i] length];
 					
 					memcpy(key, data, 3);
 					
-					if (i==0) isInit = YES;
+					if (i==0)
+					{
+						isInit = YES;
+					}
 				}
 				
-				memcpy(currentStateArray, skeletonStateArray, 256);
+				memcpy(currentStateArray, skeletonStateArray, LAST_BIT);
 				y = z = 0;
 				
-				for (counter = 0; counter < 256; ++counter) {
+				for (counter = 0; counter < LAST_BIT; ++counter)
+				{
 					z = (key[y] + currentStateArray[counter] + z);
 					
 					tmp = currentStateArray[counter];
@@ -212,10 +239,11 @@
 					y = (y + 1) % 16;
 				}
 				
-				foundCRC = 0xFFFFFFFF;
+				foundCRC = BAD_ADDRESS;
 				y = z = 0;
 				
-				for (counter = 4; counter < length; ++counter) {
+				for (counter = 4; counter < length; ++counter)
+				{
 					++y;
 					z = currentStateArray[y] + z;
 					
@@ -228,9 +256,10 @@
 					foundCRC = UPDC32((data[counter] ^ currentStateArray[xov]), foundCRC);
 				}
 				
-				if (foundCRC == 0xdebb20e3) {
+				if (foundCRC == ERROR_FREE_ADDRESS)
+				{
 					memcpy(&currentGuess, &key, 16);
-					isInit=NO;
+					isInit = NO;
 				}
 				else
 					break;
@@ -238,13 +267,18 @@
 			
 			if (i >= 8) {
 				_password=[NSMutableString stringWithFormat:@"%.2X", currentGuess[3]];
-				for (i=4;i<(16);++i)
+				for (i = 4 ; i < 16 ; ++i)
+				{
 					[(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", currentGuess[i]]];
+				}
+				
 				fclose(fptr);
 				DBNSLog(@"Cracking was successful. Password is <%s>", wrd);
+				
 				SRET;
 			}
-			if (words % 10000 == 0) {
+			if (words % 10000 == 0)
+			{
 				[controller setStatusField:[NSString stringWithFormat:@"%d words tested", words]];
 			}
 		}
@@ -254,57 +288,71 @@
 	}
 }
 
-- (void)performWordlist104bitMD5:(NSString*)wordlist {
-	
-	@autoreleasepool {
-		FILE* fptr;
+- (void)performWordlist104bitMD5:(NSString*)wordlist
+{
+	@autoreleasepool
+	{
+		FILE* fptr = NULL;
 		char wrd[1000];
 		unsigned int i, words, foundCRC, counter, length = 0;
-		unsigned char key[16], currentGuess[16], skeletonStateArray[256], currentStateArray[256];
+		unsigned char key[16], currentGuess[16], skeletonStateArray[LAST_BIT], currentStateArray[LAST_BIT];
 		unsigned char y, z, tmp, xov;
 		const char *data = nil;
 		BOOL isInit;
-		ImportController *controller;
 		
 		CHECK;
 		
-		controller = [WaveHelper importController];
+		ImportController *controller = [WaveHelper importController];
 		isInit = NO;
 		
 		fptr = fopen([wordlist UTF8String], "r");
-		if (!fptr) RET;
+		if (!fptr)
+		{
+			RET;
+		}
 		
 		//select the right increment function for each character set
-		for (counter = 0; counter < 256; ++counter)
+		for (counter = 0; counter < LAST_BIT; ++counter)
+		{
 			skeletonStateArray[counter] = counter;
+		}
 		
 		words = 0;
 		wrd[990]=0;
 		
-		while(![controller canceled] && !feof(fptr)) {
+		while(![controller canceled] && !feof(fptr))
+		{
 			fgets(wrd, 990, fptr);
 			i = strlen(wrd) - 1;
 			wrd[i--] = 0;
-			if (wrd[i]=='\r') wrd[i] = 0;
+			if (wrd[i]=='\r')
+			{
+				wrd[i] = 0;
+			}
 			
 			++words;
 			
 			WirelessCryptMD5(wrd, key+3);
 			
-			for(i=0; i<[_packetsLog count]; ++i) {
+			for(i = 0 ; i < [_packetsLog count] ; ++i)
+			{
 				if (!isInit) {
 					data = [_packetsLog[i] bytes];
 					length=[(NSData*)_packetsLog[i] length];
 					
 					memcpy(key, data, 3);
 					
-					if (i==0) isInit = YES;
+					if (i==0)
+					{
+						isInit = YES;
+					}
 				}
 				
-				memcpy(currentStateArray, skeletonStateArray, 256);
+				memcpy(currentStateArray, skeletonStateArray, LAST_BIT);
 				y = z = 0;
 				
-				for (counter = 0; counter < 256; ++counter) {
+				for (counter = 0; counter < LAST_BIT; ++counter)
+				{
 					z = (key[y] + currentStateArray[counter] + z);
 					
 					tmp = currentStateArray[counter];
@@ -314,10 +362,11 @@
 					y = (y + 1) % 16;
 				}
 				
-				foundCRC = 0xFFFFFFFF;
+				foundCRC = BAD_ADDRESS;
 				y = z = 0;
 				
-				for (counter = 4; counter < length; ++counter) {
+				for (counter = 4; counter < length; ++counter)
+				{
 					++y;
 					z = currentStateArray[y] + z;
 					
@@ -330,24 +379,33 @@
 					foundCRC = UPDC32((data[counter] ^ currentStateArray[xov]), foundCRC);
 				}
 				
-				if (foundCRC == 0xdebb20e3) {
+				if (foundCRC == ERROR_FREE_ADDRESS)
+				{
 					memcpy(&currentGuess, &key, 16);
-					isInit=NO;
+					isInit = NO;
 				}
 				else
+				{
 					break;
+				}
 			}
 			
-			if (i >= 8) {
+			if (i >= 8)
+			{
 				_password=[NSMutableString stringWithFormat:@"%.2X", currentGuess[3]];
-				for (i=4;i<(16);++i)
+				for ( i = 4 ; i <  16 ; ++i)
+				{
 					[(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", currentGuess[i]]];
+				}
+				
 				fclose(fptr);
 				DBNSLog(@"Cracking was successful. Password is <%s>", wrd);
+				
 				SRET;
 			}
 			
-			if (words % 10000 == 0) {
+			if (words % 10000 == 0)
+			{
 				[controller setStatusField:[NSString stringWithFormat:@"%d words tested", words]];
 			}
 		}

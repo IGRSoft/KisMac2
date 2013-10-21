@@ -29,7 +29,6 @@
 #import <pcap.h>
 
 #define AMOD(x, y) ((x) % (y) < 0 ? ((x) % (y)) + (y) : (x) % (y))
-#define N 256
 
 bool is8021xPacket(const UInt8* fileData) {
     if (fileData[0] == 0xAA &&
@@ -52,7 +51,7 @@ bool is8021xPacket(const UInt8* fileData) {
 -(void) parseTaggedData:(unsigned char*) packet length:(int) length {
     int len;
 	UInt32 *vendorID;
-    char ssid[256];
+    char ssid[LAST_BIT];
 	
     _primaryChannel = 0;
     
@@ -716,17 +715,17 @@ bool is8021xPacket(const UInt8* fileData) {
         return _revelsKeyByte;
     }
         
-    int a = (_payload[0] + _payload[1]) % N;
-    int b = AMOD((_payload[0] + _payload[1]) - _payload[2], N);
+    int a = (_payload[0] + _payload[1]) % LAST_BIT;
+    int b = AMOD((_payload[0] + _payload[1]) - _payload[2], LAST_BIT);
 
     for(UInt8 B = 0; B < 13; ++B) {
       if((((0 <= a && a < B) ||
          (a == B && b == (B + 1) * 2)) &&
          (B % 2 ? a != (B + 1) / 2 : 1)) ||
          (a == B + 1 && (B == 0 ? b == (B + 1) * 2 : 1)) ||
-         (_payload[0] == B + 3 && _payload[1] == N - 1) ||
+         (_payload[0] == B + 3 && _payload[1] == LAST_BIT - 1) ||
          (B != 0 && !(B % 2) ? (_payload[0] == 1 && _payload[1] == (B / 2) + 1) ||
-         (_payload[0] == (B / 2) + 2 && _payload[1] == (N - 1) - _payload[0]) : 0)) {
+         (_payload[0] == (B / 2) + 2 && _payload[1] == (LAST_BIT - 1) - _payload[0]) : 0)) {
             //DBNSLog(@"We got a weak packet reveling byte: %u",B);
             _revelsKeyByte = B;
             return _revelsKeyByte;

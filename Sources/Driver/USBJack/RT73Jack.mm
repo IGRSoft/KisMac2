@@ -660,7 +660,7 @@ void	RT73Jack::NICReadEEPROMParameters()
 	// if E2PROM version mismatch with driver's expectation, then skip
 	// all subsequent E2RPOM retieval and set a system error bit to notify GUI
 	RTUSBReadEEPROM(EEPROM_VERSION_OFFSET, (unsigned char *)&Version.word, 2);
-	EepromVersion = Version.field.Version + Version.field.FaeReleaseNumber * 256;
+	EepromVersion = Version.field.Version + Version.field.FaeReleaseNumber * LAST_BIT;
 	DBNSLog(@"E2PROM: Version = %d, FAE release #%d\n", Version.field.Version, Version.field.FaeReleaseNumber);
 
 	// Read BBP default value from EEPROM and store to array(EEPROMDefaultValue) in pAd
@@ -1748,7 +1748,7 @@ bool RT73Jack::stopCapture(){
 //		DBNSLog(@"Done.\n");
 		RTMPSetLED(LED_LNK_OFF);
 		RTUSBWriteMACRegister(TXRX_CSR0, 0x025FB032);
-		// RTUSBWriteMACRegister(TXRX_CSR2, 0xffffffff); //disable rx
+		// RTUSBWriteMACRegister(TXRX_CSR2, BAD_ADDRESS); //disable rx
 		return true;
 	}
 	else {
@@ -1901,7 +1901,7 @@ void    RT73Jack::RTUSBWriteTxDescriptor(
             }
         }
         pTxD->PlcpLengthHigh = Length >> 8; // 256;
-        pTxD->PlcpLengthLow = Length % 256;
+        pTxD->PlcpLengthLow = Length % LAST_BIT;
     } else {
         // OFDM - RATE_6, RATE_9, RATE_12, RATE_18, RATE_24, RATE_36, RATE_48, RATE_54
         pTxD->PlcpLengthHigh = Length >> 6; // 64;      // high 6-bit of total byte count
@@ -1939,7 +1939,7 @@ int RT73Jack::WriteTxDescriptor(void* theFrame, UInt16 length, UInt8 rate){
 bool RT73Jack::sendKFrame(KFrame *frame) {
     UInt8 *data = frame->data;
     int size = frame->ctrl.len;
-    UInt8 aData[2364];
+    UInt8 aData[MAX_FRAME_BYTES];
     unsigned int descriptorLength;
 //    DBNSLog(@"sendFrame %d", size);
 //    dumpFrame(data, size);

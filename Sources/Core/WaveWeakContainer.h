@@ -25,7 +25,7 @@
 
 
 @interface WaveWeakContainer : NSObject {
-    UInt8 **_data[256];
+    UInt8 **_data[LAST_BIT];
     UInt32 _count;
 }
 

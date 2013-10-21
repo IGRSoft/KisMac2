@@ -30,37 +30,39 @@
 #import <BIGeneric/BINSExtensions.h>
 #import "ImportController.h"
 
-#define SRET { [[WaveHelper importController] terminateWithCode: 1]; return; }
-#define RET { [[WaveHelper importController] terminateWithCode: -1]; return; }
-#define CHECK { if (_password != nil) RET; if (_isWep != encryptionTypeWEP && _isWep != encryptionTypeWEP40) RET; }
-
 @implementation WaveNet(WEPWeakCrackExtension)
 
-- (BOOL)doWeakCrackForLen:(int)len andKeyID:(int)keyID {
+- (BOOL)doWeakCrackForLen:(int)len andKeyID:(int)keyID
+{
 	AirCrackWrapper *a = [[AirCrackWrapper alloc] init];
     
     [a setKeyLen:len];
     [a setKeyID:keyID];
     
-    @synchronized (_ivData[keyID]) {
+    @synchronized (_ivData[keyID])
+	{
         [a setIVs:[_ivData[keyID] data]];
     }
     
-    if ([a attack]) {
+    if ([a attack])
+	{
         NSData *d = [a key];
         const UInt8 *k = [d bytes];
-        int i;
         
         _password = [NSMutableString stringWithFormat:@"%.2X", k[0]];
-        for (i=1; i<len;++i)
+        for (int i = 1 ; i < len ; ++i)
+		{
             [(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", k[i]]];
+		}
 		
 		return TRUE;
     }
     
 	return FALSE;
-} 
-- (void)performCrackWEPWeakforKeyIDAndLen:(NSNumber*)keyidAndLen {
+}
+
+- (void)performCrackWEPWeakforKeyIDAndLen:(NSNumber*)keyidAndLen
+{
     
 	@autoreleasepool {
 		int temp, keyID;
@@ -75,14 +77,30 @@
 		len   = (temp >> 8) & keyLenAll;
 		NSParameterAssert(len == keyLen104bit || len == keyLen40bit || len == keyLenAll);
 		
-		if (!_ivData[keyID]) RET;
-		if ([_ivData[keyID] count] <= 8) RET; //need at least 8 IVs
+		if (!_ivData[keyID])
+		{
+			RET;
+		}
+		if ([_ivData[keyID] count] <= 8)
+		{
+			RET; //need at least 8 IVs
+		}
 		
-		if(len == keyLenAll) {
-			if([self doWeakCrackForLen:keyLen40bit andKeyID:keyID]) SRET;
-			if([self doWeakCrackForLen:keyLen104bit andKeyID:keyID]) SRET;
+		if(len == keyLenAll)
+		{
+			if([self doWeakCrackForLen:keyLen40bit andKeyID:keyID])
+			{
+				SRET;
+			}
+			if([self doWeakCrackForLen:keyLen40bit andKeyID:keyID])
+			{
+				SRET;
+			}
 		} else {
-			if([self doWeakCrackForLen:len andKeyID:keyID]) SRET;
+			if([self doWeakCrackForLen:keyLen40bit andKeyID:keyID])
+			{
+				SRET;
+			}
 		}
 		
 		RET;

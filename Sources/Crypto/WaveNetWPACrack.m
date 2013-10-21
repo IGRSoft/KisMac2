@@ -51,9 +51,8 @@ void SHA1InitWithStatic64(sha1_context* context, unsigned char* staticT) {
 }
 
 /* Add padding and return the message digest. */
-void SHA1FinalFastWith20ByteData(unsigned char digest[20], sha1_context* context,unsigned char data[64]) {
-	UInt32 i;
-
+void SHA1FinalFastWith20ByteData(unsigned char digest[20], sha1_context* context,unsigned char data[64])
+{
         //memcpy(buffer, data, 20);
 	memset(&data[21], 0, 41);
 	data[20] = 128;
@@ -62,12 +61,14 @@ void SHA1FinalFastWith20ByteData(unsigned char digest[20], sha1_context* context
 
 	sha1_process(context, data);
 
-	for (i = 0; i < 20; ++i) {
+	for (UInt32 i = 0; i < 20; ++i)
+	{
 		digest[i] = (unsigned char)((context->state[i >> 2] >> ((3 - (i & 3)) * 8)) & 255);
 	}
 }
 
-void prepared_hmac_sha1(const sha1_context *k_ipad, const sha1_context *k_opad, unsigned char digest[64]) {
+void prepared_hmac_sha1(const sha1_context *k_ipad, const sha1_context *k_opad, unsigned char digest[64])
+{
     sha1_context ipad, opad;
 
     memcpy(&ipad, k_ipad, sizeof(ipad));
@@ -84,9 +85,9 @@ void prepared_hmac_sha1(const sha1_context *k_ipad, const sha1_context *k_opad, 
 #pragma mark optimized WPA password -> PMK mapping
 #pragma mark -
 
-void fastF(unsigned char *password, int pwdLen, const unsigned char *ssid, int ssidlength, const sha1_context *ipadContext, const sha1_context *opadContext, int count, unsigned char output[40]) {
+void fastF(unsigned char *password, int pwdLen, const unsigned char *ssid, int ssidlength, const sha1_context *ipadContext, const sha1_context *opadContext, int count, unsigned char output[40])
+{
     unsigned char digest[64], digest1[64];
-    int i, j;
     
     /* U1 = PRF(P, S || int(i)) */ 
     memcpy(digest1, ssid, ssidlength);
@@ -100,7 +101,8 @@ void fastF(unsigned char *password, int pwdLen, const unsigned char *ssid, int s
     /* output = U1 */ 
     memcpy(output, digest, SHA_DIGEST_LENGTH);
 
-    for (i = 1; i < 4096; ++i) {
+	int j;
+    for (int i = 1; i < 4096; ++i) {
         /* Un = PRF(P, Un-1) */ 
         prepared_hmac_sha1(ipadContext, opadContext, digest); 
     
@@ -115,14 +117,15 @@ void fastF(unsigned char *password, int pwdLen, const unsigned char *ssid, int s
 } 
 
 
-void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidlength, unsigned char output[40]) { 
+void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidlength, unsigned char output[40])
+{
     unsigned char k_ipad[65]; /* inner padding - key XORd with ipad */ 
     unsigned char k_opad[65]; /* outer padding - key XORd with opad */
     sha1_context ipadContext, opadContext;
-    int i, pwdLen = strlen(password);
+    int pwdLen = strlen(password);
     
     /* XOR key with ipad and opad values */ 
-    for (i = 0; i < pwdLen; ++i) {
+    for (int i = 0; i < pwdLen; ++i) {
         k_ipad[i] = password[i] ^ 0x36; 
         k_opad[i] = password[i] ^ 0x5c;
     } 
@@ -141,10 +144,11 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
 
 @implementation WaveNet(WPACrackExtension)
 
-- (BOOL)crackWPAWithWordlist:(NSString*)wordlist andImportController:(ImportController*)im {
+- (BOOL)crackWPAWithWordlist:(NSString*)wordlist andImportController:(ImportController*)im
+{
     char wrd[100];
-    const char *ssid;
-    FILE* fptr;
+    const char *ssid = 0;
+    FILE* fptr = NULL;
     unsigned int i, j, words, ssidLength, keys, curKey;
     UInt8 pmk[40], ptk[64], digest[16];
     struct clientData *c;
@@ -153,10 +157,14 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
     UInt8 prefix[] = "Pairwise key expansion";
 
     fptr = fopen([wordlist UTF8String], "r");
-    if (!fptr) return NO;
+    if (!fptr)
+	{
+		return NO;
+	}
     
     keys = 0;
-    for (i = 0; i < [aClientKeys count]; ++i) {
+    for (i = 0; i < [aClientKeys count]; ++i)
+	{
         if ([aClients[aClientKeys[i]] eapolDataAvailable])
             ++keys;
     }
@@ -166,26 +174,38 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
     curKey = 0;
     c = malloc(keys * sizeof(struct clientData));
     
-    for (i = 0; i < [aClientKeys count]; ++i) {
+    for (i = 0; i < [aClientKeys count]; ++i)
+	{
         wc = aClients[aClientKeys[i]];
-        if ([wc eapolDataAvailable]) {
-            if ([[wc ID] isEqualToString: _BSSID]) {
+        if ([wc eapolDataAvailable])
+		{
+            if ([[wc ID] isEqualToString: _BSSID])
+			{
                 keys--;
-            } else {
-                if (memcmp(_rawBSSID, [[wc rawID] bytes], 6)>0) {
+            }
+			else
+			{
+                if (memcmp(_rawBSSID, [[wc rawID] bytes], 6) > 0)
+				{
                     memcpy(&c[curKey].ptkInput[0], [[wc rawID] bytes] , 6);
                     memcpy(&c[curKey].ptkInput[6], _rawBSSID, 6);
-                } else {
+                }
+				else
+				{
                     memcpy(&c[curKey].ptkInput[0], _rawBSSID, 6);
                     memcpy(&c[curKey].ptkInput[6], [[wc rawID] bytes] , 6);
                 }
                 
                 anonce = [[wc aNonce] bytes]; 
                 snonce = [[wc sNonce] bytes];
-                if (memcmp(anonce, snonce, WPA_NONCE_LENGTH)>0) {
+                
+				if (memcmp(anonce, snonce, WPA_NONCE_LENGTH) > 0)
+				{
                     memcpy(&c[curKey].ptkInput[12],                     snonce, WPA_NONCE_LENGTH);
                     memcpy(&c[curKey].ptkInput[12 + WPA_NONCE_LENGTH],  anonce, WPA_NONCE_LENGTH);
-                } else {
+                }
+				else
+				{
                     memcpy(&c[curKey].ptkInput[12],                     anonce, WPA_NONCE_LENGTH);
                     memcpy(&c[curKey].ptkInput[12 + WPA_NONCE_LENGTH],  snonce, WPA_NONCE_LENGTH);
                 }
@@ -201,12 +221,13 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
     }
 
     words = 0;
-    wrd[90]=0;
+    wrd[90] = 0;
 
     ssid = [_SSID UTF8String];
     ssidLength = [_SSID lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
   
     float theTime, prevTime = clock() / (float)CLK_TCK;
+	
     while(![im canceled] && !feof(fptr))
     {
         //get the line from the file
@@ -240,25 +261,39 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
         }
         
         for(j = 0; j < i; ++j)
-            if ((wrd[j] < 32) || (wrd[j] > 126)) break;
-        if (j!=i) continue;
+		{
+            if ((wrd[j] < 32) || (wrd[j] > 126))
+			{
+				break;
+			}
+		}
+		
+        if ( j!=i ) continue;
         
         fastWP_passwordHash(wrd, (const UInt8*)ssid, ssidLength, pmk);
     
-        for (curKey = 0; curKey < keys; ++curKey) {
+        for (curKey = 0; curKey < keys; ++curKey)
+		{
             PRF(pmk, 32, prefix, strlen((char *)prefix), c[curKey].ptkInput, WPA_NONCE_LENGTH*2 + 12, ptk, 16);
             
             if (c[curKey].wpaKeyCipher == 1)
+			{
                 fast_hmac_md5(c[curKey].data, c[curKey].dataLen, ptk, 16, digest);
+			}
             else
+			{
                 fast_hmac_sha1((unsigned char*)c[curKey].data, c[curKey].dataLen, ptk, 16, digest);
-            
-            if (memcmp(digest, c[curKey].mic, 16) == 0) {
+            }
+			
+            if (memcmp(digest, c[curKey].mic, 16) == 0)
+			{
                 _password = [NSString stringWithFormat:@"%s for Client %@", wrd, c[curKey].clientID];
                 fclose(fptr);
                 free(c);
-                DBNSLog(@"Cracking was successful. Password is <%s> for Client %@", wrd, c[curKey].clientID);
-                return YES;
+                
+				DBNSLog(@"Cracking was successful. Password is <%s> for Client %@", wrd, c[curKey].clientID);
+                
+				return YES;
             }
         }
     }
@@ -267,10 +302,12 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
     fclose(fptr);
     
     _crackErrorString = NSLocalizedString(@"The key was none of the tested passwords.", @"Error description for WPA crack.");
+	
     return NO;
 }
 
-- (void)performWordlistWPA:(NSString*)wordlist {
+- (void)performWordlistWPA:(NSString*)wordlist
+{
     @autoreleasepool {
         BOOL successful = NO;
 	
@@ -281,10 +318,13 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
 		NSParameterAssert(_password == nil);
 		NSParameterAssert(wordlist);
 
-        if ([self crackWPAWithWordlist:[wordlist stringByExpandingTildeInPath] 
-                   andImportController:[WaveHelper importController]]) successful = YES;
+        if ([self crackWPAWithWordlist:[wordlist stringByExpandingTildeInPath] andImportController:[WaveHelper importController]])
+		{
+			successful = YES;
+		}
         
         [[WaveHelper importController] terminateWithCode: (successful) ? 1 : -1];
 	}
 }
+
 @end

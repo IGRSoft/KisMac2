@@ -215,12 +215,13 @@
     if ([packet type] != IEEE80211_TYPE_DATA)
         return WavePluginPacketResponseContinue;
     
+	bool isBrokenData = false;
     if (aPacketType == 0) {        //do rst handling here
         if ((payloadLength == TCPRST_SIZE) && 
             IS_EQUAL_MACADDR([packet addr1], _addr1) && 
             IS_EQUAL_MACADDR([packet addr2], _addr2) &&
             IS_EQUAL_MACADDR([packet addr3], _addr3)) {
-            goto got;
+            isBrokenData = true;
         }
     } else if (payloadLength == ARP_SIZE || payloadLength == ARP_SIZE_PADDING || payloadLength == ARP_SIZE + 4) {
 
@@ -235,10 +236,12 @@
 			if (IS_BCAST_MACADDR([packet addr1]) || IS_BCAST_MACADDR([packet addr3]))
                 return WavePluginPacketResponseContinue;
 		}		
-		goto got;
+		isBrokenData = true;
     }
-    return WavePluginPacketResponseContinue;
-got:
+	if (!isBrokenData) {
+		return WavePluginPacketResponseContinue;
+	}
+
     ++_injReplies;
     [responses setIntValue:_injReplies];
     [progIndicator setDoubleValue:(double)_injReplies];

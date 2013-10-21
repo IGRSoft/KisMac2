@@ -147,7 +147,7 @@ typedef struct _special_set {
     UInt16	wi_port;
     UInt16	wi_beaconint;
     UInt16	wi_ssidlen;
-    char	wi_ssid[256];
+    char	wi_ssid[LAST_BIT];
     char	wi_mac[6];
 } special_set;    
 

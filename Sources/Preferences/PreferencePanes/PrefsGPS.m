@@ -34,7 +34,7 @@
 @implementation PrefsGPS
 
 -(NSString*) getRegistryString:(io_object_t) sObj name:(char *)propName {
-    static char resultStr[256];
+    static char resultStr[LAST_BIT];
     CFTypeRef nameCFstring;
     CFTypeRef propNameString;
 

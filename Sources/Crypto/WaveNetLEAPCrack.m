@@ -61,8 +61,8 @@ struct leapClientData
 
 - (BOOL)crackLEAPWithWordlist:(NSString*)wordlist andImportController:(ImportController*)im
 {
-    char wrd[100] = "";
-    FILE* fptr = nil;
+    char wrd[100];
+    FILE* fptr = NULL;
     unsigned int i, words, curKey = 0;
 	int keys = 0;
     struct leapClientData *c = NULL;
@@ -119,12 +119,16 @@ struct leapClientData
     if (keys<=0)
 	{
 		_crackErrorString = NSLocalizedString(@"The captured challenge response packets are not sufficient to perform this attack", @"Error description for LEAP crack.");
-		if (c) free(c);
+		if (c)
+		{
+			free(c);
+		}
+		
 		return NO;
 	}
     
     words = 0;
-    wrd[90]=0;
+    wrd[90] = 0;
 
     while(![im canceled] && !feof(fptr))
 	{
@@ -170,6 +174,7 @@ struct leapClientData
     fclose(fptr);
     
     _crackErrorString = NSLocalizedString(@"The key was none of the tested passwords.", @"Error description for WPA crack.");
+	
     return NO;
 }
 

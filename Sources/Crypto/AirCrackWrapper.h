@@ -73,11 +73,11 @@ enum KoreK_attacks
     unsigned char *ivbuf;           /* buffer for the unique IVs    */
     unsigned long nb_ivs;           /* number of elements in ivbuf  */
     unsigned long tried;            /* total # of keys tried so far */
-    int mc_pipe[256][2];            /* master->child control pipe   */ 
-    int cm_pipe[256][2];            /* child->master results pipe   */
+    int mc_pipe[LAST_BIT][2];            /* master->child control pipe   */
+    int cm_pipe[LAST_BIT][2];            /* child->master results pipe   */
     int fudge[13];                  /* bruteforce level (1 to 256)  */
     int depth[13];                  /* how deep we are in the fudge */
-    int _votes[13][N_ATTACKS][256];
+    int _votes[13][N_ATTACKS][LAST_BIT];
 
     ImportController *_im;
     
@@ -85,7 +85,7 @@ enum KoreK_attacks
     {
         int index;
         int votes;
-    }   wpoll[13][256];             /* FMS + Korek attacks: stats.  */
+    }   wpoll[13][LAST_BIT];             /* FMS + Korek attacks: stats.  */
 }
 
 - (void)setKeyID:(int)keyID;

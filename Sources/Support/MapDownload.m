@@ -375,7 +375,7 @@ in Safari.");
 			   e = sqrt(1 - pow(b_WGS84,2)/pow(a_WGS84,2));
 			   eprimesqd = pow(e,2)/(1-pow(e,2));
 
-			   S = a_WGS84 * ((1 - pow(e,2)/4 - 3*pow(e,4)/64 - 5*pow(e,6)/256)*rlat - (3*pow(e,2)/8 + 3*pow(e,4)/32 + 45*pow(e,6)/1024)*sin(2*rlat) + (15*pow(e,4)/256 + 45*pow(e,6)/1024)*sin(4*rlat) - (35*pow(e,6)/3072)*sin(6*rlat));
+			   S = a_WGS84 * ((1 - pow(e,2)/4 - 3*pow(e,4)/64 - 5*pow(e,6)/LAST_BIT)*rlat - (3*pow(e,2)/8 + 3*pow(e,4)/32 + 45*pow(e,6)/1024)*sin(2*rlat) + (15*pow(e,4)/LAST_BIT + 45*pow(e,6)/1024)*sin(4*rlat) - (35*pow(e,6)/3072)*sin(6*rlat));
 			   k0 = 0.9996;
 			   K1 = S * k0;
 			   p = (w._long - lon0)*3600/10000;

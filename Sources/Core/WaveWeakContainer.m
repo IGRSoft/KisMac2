@@ -102,11 +102,11 @@
     d = malloc(_count * 5);
     m = d;
     
-    for(x = 0; x < 256; ++x) {
+    for(x = 0; x < LAST_BIT; ++x) {
         if (_data[x] != nil) {
-            for (y = 0; y < 256; ++y) {
+            for (y = 0; y < LAST_BIT; ++y) {
                 if ((_data[x])[y] != nil) {
-                    for (z = 0; z < (256 * 3); z+=3) {
+                    for (z = 0; z < (LAST_BIT * 3); z+=3) {
                         if (((_data[x])[y])[z] != 0) {
                             m[0] = (z / 3) & 0xFF;
                             m[1] = y & 0xFF;
@@ -133,9 +133,9 @@
 - (void) dealloc {
     int x, y;
     
-    for(x = 0; x < 256; ++x) {
+    for(x = 0; x < LAST_BIT; ++x) {
         if (_data[x] != nil) {
-            for (y = 0; y < 256; ++y) {
+            for (y = 0; y < LAST_BIT; ++y) {
                 if ((_data[x])[y] != nil) {
                     free((_data[x])[y]);
                 }

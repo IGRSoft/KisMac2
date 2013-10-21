@@ -287,74 +287,87 @@ void USBJack::_interruptReceived(void *refCon, IOReturn result, unsigned int len
 
 //    DBNSLog(@"Interrupt Received %d", len);
     KFrame *frame;
+	bool needBreakProcess = false;
+	
     if (kIOReturnSuccess != result) {
-        if (result == (IOReturn)0xe00002ed) {
+        if (result == (IOReturn)0xe00002ed)
+		{
             me->_devicePresent = false;
             
             //tell the receive function that we are gone
             me->insertFrameIntoQueue(NULL, 0, 0);
+			
             return;
-        } else {
+        }
+		else
+		{
             DBNSLog(@"error from async interruptReceived (%08x)\n", result);
-            if (me->_devicePresent) goto readon;
+            if (me->_devicePresent)
+			{
+				needBreakProcess = true;
+			}
         }
     }
     
-    type = NSSwapLittleShortToHost(me->_receiveBuffer.type);
-    if (_USB_ISRXFRM(type)) {
-        if (len > sizeof(KFrame)) {
-            goto readon;
-        }
-            
-        // Get raw data pointer
-        frame = (KFrame*)&(me->_receiveBuffer.rxfrm);
-        
-        // Here we insert raw data frame into queue because we need to do things
-        // as fast as possible. Remember that we are servicing an interrupt.
-        // Custom conversion will be done on dequeuing
-        
-        // Lock for copying frame
-        me->insertFrameIntoQueue(frame, len, me->_channel);
-
-    } else {
-        switch (type) {
-        case _USB_INFOFRM:
-            /*if (action == ABORT)
-                    goto exit;
-            if (action == HANDLE)
-                    _usbin_info(wlandev, usbin);*/
-            break;
-        case _USB_CMDRESP:
-        case _USB_WRIDRESP:
-        case _USB_RRIDRESP:
-        case _USB_WMEMRESP:
-        case _USB_RMEMRESP:
-                pthread_mutex_lock(&me->_wait_mutex);
-                memcpy(&me->_inputBuffer, &me->_receiveBuffer, len);
-                pthread_cond_signal(&me->_wait_cond);
-                pthread_mutex_unlock(&me->_wait_mutex);
-                break;
-        case _USB_BUFAVAIL:
-                DBNSLog(@"Received BUFAVAIL packet, frmlen=%d\n", me->_receiveBuffer.bufavail.frmlen);
-                break;
-        case _USB_ERROR:
-                DBNSLog(@"Received USB_ERROR packet, errortype=%d\n", me->_receiveBuffer.usberror.errortype);
-                break;
+	if (!needBreakProcess)
+	{
+		type = NSSwapLittleShortToHost(me->_receiveBuffer.type);
+		if (_USB_ISRXFRM(type))
+		{
+			if (len <= sizeof(KFrame))
+			{
+				// Get raw data pointer
+				frame = (KFrame*)&(me->_receiveBuffer.rxfrm);
+				
+				// Here we insert raw data frame into queue because we need to do things
+				// as fast as possible. Remember that we are servicing an interrupt.
+				// Custom conversion will be done on dequeuing
+				
+				// Lock for copying frame
+				me->insertFrameIntoQueue(frame, len, me->_channel);
+			}
+		}
+		else
+		{
+			switch (type)
+			{
+				case _USB_CMDRESP:
+				case _USB_WRIDRESP:
+				case _USB_RRIDRESP:
+				case _USB_WMEMRESP:
+				case _USB_RMEMRESP:
+					pthread_mutex_lock(&me->_wait_mutex);
+					memcpy(&me->_inputBuffer, &me->_receiveBuffer, len);
+					pthread_cond_signal(&me->_wait_cond);
+					pthread_mutex_unlock(&me->_wait_mutex);
+					break;
+				case _USB_BUFAVAIL:
+					DBNSLog(@"Received BUFAVAIL packet, frmlen=%d\n", me->_receiveBuffer.bufavail.frmlen);
+					break;
+				case _USB_ERROR:
+					DBNSLog(@"Received USB_ERROR packet, errortype=%d\n", me->_receiveBuffer.usberror.errortype);
+					break;
+				case _USB_INFOFRM:
+				default:
+					break;
+			}
+		}
+	}
     
-        default:
-                break;
-        }
-    }
-    
-readon:
     bzero(&me->_receiveBuffer, sizeof(me->_receiveBuffer));
     kr = (*me->_interface)->ReadPipeAsync((me->_interface), (me->kInPipe), &me->_receiveBuffer, sizeof(me->_receiveBuffer), (IOAsyncCallback1)_interruptReceived, refCon);
-    if (kIOReturnSuccess != kr) {
+	
+    if (kIOReturnSuccess != kr)
+	{
         DBNSLog(@"unable to do async interrupt read (%08x). this means the card is stopped!\n", kr);
 		// I haven't been able to reproduce the error that caused it to hit this point in the code again since adding the following lines
 		// however, when it hit this point previously, the only solution was to kill and relaunch KisMAC, so at least this won't make anything worse
 		DBNSLog(@"Attempting to re-initialise adapter...");
-		if (me->_init() != kIOReturnSuccess) DBNSLog(@"USBJack::_interruptReceived: _init() failed\n");
+		
+		if (me->_init() != kIOReturnSuccess)
+		{
+			DBNSLog(@"USBJack::_interruptReceived: _init() failed\n");
+		}
     }
         
 }

@@ -59,7 +59,7 @@
     double aFreq;
     int  _driver;
     
-    unsigned char aFrameBuf[2364];	//for reading in pcaps (still messy)
+    unsigned char aFrameBuf[MAX_FRAME_BYTES];	//for reading in pcaps (still messy)
     KFrame* aWF;
     pcap_t*  _pcapP;
 

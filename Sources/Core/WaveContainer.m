@@ -800,13 +800,13 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 - (unsigned int) findNetwork:(const unsigned char*)ID
 {
     unsigned int i, lentry;
-    unsigned int entry = 0xFFFFFFFF;
+    unsigned int entry = BAD_ADDRESS;
     unsigned int l = 0;
     
     
     //see if it is filtered
     if ([self IDFiltered:ID])
-		return 0xFFFFFFFF;
+		return BAD_ADDRESS;
 
     
     //lookup the net in the hashtable
@@ -824,14 +824,14 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
         i=_lookup[l];
     }
             
-    if (entry==0xFFFFFFFF)
+    if (entry == BAD_ADDRESS)
 	{
         //the net does not exist - add it
         
         if (_netCount == MAXNETS)
 		{
             DBNSLog(@"Found network, but could not add it since you reached MAXNETS. Please recompile with a higher value");
-            return 0xFFFFFFFF;
+            return BAD_ADDRESS;
         }
         
         ++_netCount;
@@ -877,7 +877,7 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 		return YES;
     
     entry = [self findNetwork:ID];
-    if (entry == 0xFFFFFFFF)
+    if (entry == BAD_ADDRESS)
 		return NO;                          //the object is filtered...
     
     @synchronized(_idList[entry].net) {
@@ -915,7 +915,7 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 	}
 	
     entry = [self findNetwork: macData];
-    if (entry == 0xFFFFFFFF) return NO;                          //the object is filtered...
+    if (entry == BAD_ADDRESS) return NO;                          //the object is filtered...
     
 	@synchronized(_idList[entry].net)
     {
@@ -1009,7 +1009,7 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 {
     unsigned int nxt;
     
-    if (lastRow==0xFFFFFFFF)
+    if (lastRow == BAD_ADDRESS)
 		nxt=0;
     else
 		nxt = lastRow + 1;
@@ -1025,7 +1025,7 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
         ++nxt;
     }
 
-    return 0xFFFFFFFF;
+    return BAD_ADDRESS;
 }
 #pragma mark -
 

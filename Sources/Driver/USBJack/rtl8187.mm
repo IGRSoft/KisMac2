@@ -1506,7 +1506,7 @@ int RTL8187Jack::WriteTxDescriptor(void* theFrame, UInt16 length, UInt8 rate) {
 }
 
 bool RTL8187Jack::sendKFrame(KFrame* frame) {
-    UInt8 aData[2364];
+    UInt8 aData[MAX_FRAME_BYTES];
     unsigned int descriptorLength;
     //    DBNSLog(@"sendKFrame %d", size);
     //    dumpFrame(data, size);

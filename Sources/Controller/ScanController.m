@@ -301,8 +301,8 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 				}
 			}
 			else {
-				row = [_container nextChangedRow:0xFFFFFFFF];
-				while (row != 0xFFFFFFFF) {
+				row = [_container nextChangedRow:BAD_ADDRESS];
+				while (row != BAD_ADDRESS) {
 					net = [_container netAtIndex:row];
 
 					if ([net isCorrectSSID] && net == _curNet)
@@ -341,8 +341,8 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 					}
 				}
 			} else {
-				row = [_container nextChangedRow:0xFFFFFFFF];
-				while (row != 0xFFFFFFFF) {
+				row = [_container nextChangedRow:BAD_ADDRESS];
+				while (row != BAD_ADDRESS) {
 					net = [_container netAtIndex:row];
 					if ([net isCorrectSSID] && net == _curNet)
 					{

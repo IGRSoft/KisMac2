@@ -44,7 +44,6 @@
 #define WEP_GEM_GREEN_LEVEL   130000
 
 #define AMOD(x, y) ((x) % (y) < 0 ? ((x) % (y)) + (y) : (x) % (y))
-#define N 256
 
 #define min(a, b)	(a) < (b) ? a : b
 

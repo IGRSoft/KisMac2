@@ -31,22 +31,25 @@
 #include "polarssl/md4.h"
 
 //calulate the last two bytes
-int gethashlast2(const unsigned char *challenge, const unsigned char *response, unsigned char* endofhash) {
-    int i;
+int gethashlast2(const unsigned char *challenge, const unsigned char *response, unsigned char* endofhash)
+{
     unsigned char zpwhash[7] = { 0, 0, 0, 0, 0, 0, 0 };
-    unsigned char cipher[8];
+    unsigned char cipher[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-    for (i = 0; i <= 0xffff; ++i) {
+    for (int i = 0; i <= 0xffff; ++i)
+	{
         zpwhash[0] = i >> 8;
         zpwhash[1] = i & 0xff;
 
         DesEncrypt(challenge, zpwhash, cipher);
-        if (memcmp(cipher, response + 16, 8) == 0) {
+        if (memcmp(cipher, response + 16, 8) == 0)
+		{
             /* Success in calculating the last 2 of the hash */
             /* debug - printf("%2x%2x\n", zpwhash[0], zpwhash[1]); */
             endofhash[0] = zpwhash[0];
             endofhash[1] = zpwhash[1];
-            return 0;
+           
+			return 0;
         }
     }
 
@@ -57,14 +60,13 @@ int gethashlast2(const unsigned char *challenge, const unsigned char *response, 
 
 void NtPasswordHash(char *secret, int secret_len, unsigned char *hash)
 {
-    int i;
     unsigned char unicodePassword[64];
 
     /* Initialize the Unicode version of the secret (== password). */
     /* This implicitly supports 8-bit ISO8859/1 characters. */
     memset(unicodePassword, 0, sizeof(unicodePassword));
 
-    for (i = 0; i < secret_len; ++i)
+    for (int i = 0; i < secret_len; ++i)
         unicodePassword[i * 2] = (unsigned char) secret[i];
 
     /* Unicode is 2 bytes per char */
@@ -73,16 +75,20 @@ void NtPasswordHash(char *secret, int secret_len, unsigned char *hash)
 
 int testChallenge(const unsigned char* challenge, const unsigned char* response, unsigned char *zpwhash) 
 {
-    unsigned char cipher[8];
+    unsigned char cipher[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
     DesEncrypt(challenge, zpwhash, cipher);
     if (memcmp(cipher, response, 8) != 0)
+	{
         return 1;
-
+	}
+	
     DesEncrypt(challenge, zpwhash + 7, cipher);
     if (memcmp(cipher, response + 8, 8) != 0)
+	{
         return 1;
-
+	}
+	
     /* else - we have a match */
     return 0;
 }

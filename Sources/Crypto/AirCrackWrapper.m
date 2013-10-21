@@ -110,7 +110,7 @@ int safe_write( int fd, void *buf, size_t len )
     }
       
     nb_ivs = 0;
-    if (! ( ivbuf = (unsigned char *) malloc( 5 * 256 * 256 * 256 ) ) ) {
+    if (! ( ivbuf = (unsigned char *) malloc( 5 * LAST_BIT * LAST_BIT * LAST_BIT ) ) ) {
         return nil;
     }
     
@@ -147,8 +147,8 @@ int safe_write( int fd, void *buf, size_t len )
 - (void)calc_votes:(NSNumber*)c
 {
     unsigned long xv, min, max;
-    unsigned char R[256], jj[256];
-    unsigned char S[256], Si[256];
+    unsigned char R[LAST_BIT], jj[LAST_BIT];
+    unsigned char S[LAST_BIT], Si[LAST_BIT];
     unsigned char K[16];
 
     unsigned char io1, o1, io2, o2;
@@ -162,10 +162,13 @@ int safe_write( int fd, void *buf, size_t len )
     min = 5 * ( ( (     child ) * nb_ivs ) / nfork );
     max = 5 * ( ( ( 1 + child ) * nb_ivs ) / nfork );
 
-    for( i = 0; i < 256; ++i )
-        R[i] = i;
+    for( i = 0; i < LAST_BIT; ++i )
+	{
+		R[i] = i;
+	}
 
-	while (true) {
+	while (true)
+	{
 		if( safe_read( mc_pipe[child][0], buf, 14 ) != 14 )
 		{
 			//perror( "in calc_votes: read()" );
@@ -185,8 +188,8 @@ int safe_write( int fd, void *buf, size_t len )
 		for( xv = min; xv < max; xv += 5 )
 		{
 			memcpy( K, &ivbuf[xv], 3 );
-			memcpy( S,  R, 256 );
-			memcpy( Si, R, 256 );
+			memcpy( S,  R, LAST_BIT );
+			memcpy( Si, R, LAST_BIT );
 			
 			/*
 			 *      `Twas brillig, and the slithy toves
@@ -418,29 +421,30 @@ int safe_write( int fd, void *buf, size_t len )
 }
 
 /* routine that tests if a potential key is valid */
--(BOOL) check_wepkey {
+- (BOOL) check_wepkey
+{
     unsigned char K[16];
-    unsigned char S[256];
-    unsigned char R[256];
+    unsigned char S[LAST_BIT];
+    unsigned char R[LAST_BIT];
     unsigned char x1, x2;
-    unsigned long xv;
-    int i, j, n, match;
-
-    match = 0;
+    unsigned long xv = 0;
+    int i, j, n, match = 0;
 
     memcpy( K + 3, wepkey, weplen );
 
-    for( i = 0; i < 256; ++i )
+    for( i = 0; i < LAST_BIT; ++i )
+	{
         R[i] = i;
+	}
 
     for( n = 0; n < 16; ++n )
     {
         xv = 5 * ( rand() % nb_ivs );
 
         memcpy( K, &ivbuf[xv], 3 );
-        memcpy( S, R, 256 );
+        memcpy( S, R, LAST_BIT );
 
-        for( i = j = 0; i < 256; ++i )
+        for( i = j = 0; i < LAST_BIT; ++i )
         {
             j = ( j + S[i] + K[i & (2 + weplen)]) & 0xFF;
             SWAP( S[i], S[j] );
@@ -480,11 +484,11 @@ int cmp_votes( const void *bs1, const void *bs2 )
 
 /* this routine computes the average votes and recurses */
 
-#define VOTESIZE (N_ATTACKS * 256)
-- (BOOL)do_wep_crack:(int) B {
+- (BOOL)do_wep_crack:(int) B
+{
     int child, i, n, *vi;
 
-    for( i = 0; i < 256; ++i )
+    for( i = 0; i < LAST_BIT; ++i )
     {
         wpoll[B][i].index = i;
         wpoll[B][i].votes = 0;
@@ -520,13 +524,13 @@ int cmp_votes( const void *bs1, const void *bs2 )
         vi = (int *) buffer;
 
         for( n = 0; n < N_ATTACKS; ++n )
-            for( i = 0; i < 256; ++i, ++vi )
+            for( i = 0; i < LAST_BIT; ++i, ++vi )
                 _votes[B][n][i] += *vi;
     }
 
     /* compute the average vote and reject the unlikely keybytes */
 
-    for( i = 0; i < 256; ++i )
+    for( i = 0; i < LAST_BIT; ++i )
     {
         for( n = 0; n < N_ATTACKS; ++n )
         {
@@ -544,11 +548,11 @@ int cmp_votes( const void *bs1, const void *bs2 )
 
     /* sort the votes, highest ones first */
 
-    qsort( wpoll[B], 256, sizeof( struct byte_stat ), cmp_votes );
+    qsort( wpoll[B], LAST_BIT, sizeof( struct byte_stat ), cmp_votes );
 
     /* see how far we should go based on the number of votes */
 
-    for( fudge[B] = 1; fudge[B] < 256; fudge[B]++ )
+    for( fudge[B] = 1; fudge[B] < LAST_BIT; fudge[B]++ )
         if( wpoll[B][fudge[B]].votes < wpoll[B][0].votes / ffact )
             break;
 
@@ -594,7 +598,8 @@ int cmp_votes( const void *bs1, const void *bs2 )
     return NO;
 }
 
-- (BOOL)attack {
+- (BOOL)attack
+{
     int i;
     
     _im = [WaveHelper importController];
@@ -611,7 +616,8 @@ int cmp_votes( const void *bs1, const void *bs2 )
 
     BOOL ret = [self do_wep_crack:0];
     
-    for( i = 0; i < nfork; ++i) {
+    for( i = 0; i < nfork; ++i)
+	{
         close( mc_pipe[i][1] );
         close( mc_pipe[i][0] );
         close( cm_pipe[i][1] );
@@ -621,7 +627,8 @@ int cmp_votes( const void *bs1, const void *bs2 )
     return ret;
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
     free(ivbuf);
     ivbuf = NULL;
 }
