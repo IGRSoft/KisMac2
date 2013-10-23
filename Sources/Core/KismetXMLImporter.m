@@ -45,17 +45,14 @@
     
 }
 
-- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-	//printf("current chars = %s\n", [string UTF8String]);
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string{
+
     if (!currentStringValue) {
         currentStringValue = [[NSMutableString alloc] initWithCapacity:50];
     }
     if ([string characterAtIndex: 0] != '\n') {
         [currentStringValue appendString:string];
-    }/*else {
-        printf("Found Newline!\n");
-    }*/
-    
+    }
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName

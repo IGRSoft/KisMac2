@@ -11,15 +11,16 @@
 #include <IOKit/IOKitLib.h>
 #include <IOKit/usb/IOUSBLib.h>
 
-@interface WaveSpectrumDriver : NSObject {
+@interface WaveSpectrumDriver : NSObject
+{
     bool _initialized;
     bool _calibrated;
     
     bool _loopRun;
 
     IONotificationPortRef   _notifyPort;
-    io_iterator_t    _gRawAddedIter;
-    IOUSBDeviceInterface        **_dev;
+    io_iterator_t			_gRawAddedIter;
+    IOUSBDeviceInterface	**_dev;
 }
 
 - (void) wispy_init;

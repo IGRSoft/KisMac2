@@ -14,38 +14,48 @@
 
 @implementation WavePluginInjecting
 
-- (id) initWithDriver:(WaveDriver *)driver {
-    
+- (id) initWithDriver:(WaveDriver *)driver
+{
     self = [super initWithDriver:driver];
     
     if (!self)
+	{
         return nil;
-    
+    }
+	
     _checkInjectedPackets = NO;
     
     return self;
 }
 
-- (BOOL) startTest: (WaveNet *)net {
+- (BOOL) startTest: (WaveNet *)net
+{
     // No vaild network, return
     if (!net)
+	{
         return NO;
+    }
     
-    // A test is already running, return
+	// A test is already running, return
     if (_status == WavePluginRunning)
+	{
         return NO;
-    
+    }
+	
     // Only test managed networks
 //    if ([net type] != networkTypeManaged)
 //        return NO;
     
     // Only test WEP
     if (([net wep] != encryptionTypeWEP) && ([net wep] == encryptionTypeWEP40))
+	{
         return NO;
-    
+    }
+	
     // Load nib file, probeSheet will be assigned by File's Owner (see xib file) method
     if (!probeSheet) {
-        if(![NSBundle loadNibNamed:@"wepInjection" owner:self]) {
+        if(![NSBundle loadNibNamed:@"wepInjection" owner:self])
+		{
             DBNSLog(@"wepInjection.nib failed to load!");
             return NO;
         }
@@ -71,10 +81,12 @@
     _stopFlag = NO;
     
     [self stepPerformInjection:nil];
+	
     return YES;
 }
 
-- (void) stepPerformInjection: (NSTimer *)timer {
+- (void) stepPerformInjection: (NSTimer *)timer
+{
     int q;
     NSMutableArray *p;
     NSData *f;
@@ -93,7 +105,8 @@
     p = [_networkInTest arpPacketsLog];
 
     // if we haven't... Wait a little more
-    if ([p count] <= 0) {
+    if ([p count] <= 0)
+	{
         [operation setStringValue:@"Waiting for interesting packets..."];
         [progIndicator setIndeterminate:YES];
         [progIndicator startAnimation:self];
@@ -121,7 +134,8 @@
     _injReplies = 0;
     [responses setIntValue:_injReplies];
             
-    if (frame->frame_ctl & IEEE80211_DIR_TODS) {
+    if (frame->frame_ctl & IEEE80211_DIR_TODS)
+	{
         memcpy(_addr1, frame->addr1, 6); //this is the BSSID
         memcpy(_addr2, frame->addr2, 6); //this is the source
         if (memcmp(frame->addr3, "\xff\xff\xff\xff\xff\xff", 6) != 0) {

@@ -11,9 +11,10 @@
 
 @class WaveContainer;
 
-@interface WavePluginDeauthentication : WavePlugin {
-    WaveContainer *_container;
-    bool _deauthing;
+@interface WavePluginDeauthentication : WavePlugin
+{
+    WaveContainer	*_container;
+    bool			_deauthing;
 }
 
 - (id) initWithDriver:(WaveDriver *)driver andContainer:(WaveContainer *)container;

@@ -12,7 +12,8 @@
 @class WaveNet;
 @class WavePacket;
 
-typedef enum _WavePluginStatus {
+typedef enum _WavePluginStatus
+{
     WavePluginIdle            = 0,
     WavePluginRunning         = 1,
 } WavePluginStatus;
@@ -22,12 +23,13 @@ typedef enum _WavePluginPacketResponse {
     WavePluginPacketResponseCatched  = 2,
 } WavePluginPacketResponse;
 
-@interface WavePlugin : NSObject {
-    WavePluginStatus  _status;
-    WaveDriver *    _driver;
-    bool            _stopFlag;
+@interface WavePlugin : NSObject
+{
+    WavePluginStatus	_status;
+    WaveDriver			*_driver;
+    bool				_stopFlag;
     
-    WaveNet *_networkInTest;
+    WaveNet				*_networkInTest;
 }
 
 - (id) initWithDriver:(WaveDriver *)driver;

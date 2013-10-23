@@ -12,13 +12,15 @@
 
 @interface WavePluginInjecting : WavePlugin {
     int  _injReplies;
-    UInt8 _addr1[ETH_ALEN];
+    
+	UInt8 _addr1[ETH_ALEN];
     UInt8 _addr2[ETH_ALEN];
     UInt8 _addr3[ETH_ALEN];
-    int aPacketType;
-    NSTimer *_timer;
-    KFrame _kframe;
-    BOOL _checkInjectedPackets;
+	
+    int			aPacketType;
+    NSTimer		*_timer;
+    KFrame		_kframe;
+    BOOL	_checkInjectedPackets;
     
     IBOutlet NSWindow *probeSheet;
     IBOutlet NSButton *cancelButton;

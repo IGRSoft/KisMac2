@@ -10,24 +10,30 @@
 #include <mach/mach.h>
 #include <IOKit/IOCFPlugIn.h>
 
-static void RawDeviceAdded(void* refcon, io_iterator_t iterator) {
+static void RawDeviceAdded(void* refcon, io_iterator_t iterator)
+{
     [(__bridge WaveSpectrumDriver*)refcon rawDeviceAdded:iterator];
 }
 
 @implementation WaveSpectrumDriver
 
-- (id) init {
+- (id) init
+{
     self = [super init];
     if (!self)
+	{
         return nil;
+	}
+	
     [self wispy_init];
     return self;
 }
 
-- (void) wispy_init {
-    mach_port_t             masterPort;
-    CFRunLoopSourceRef      runLoopSource;
-    kern_return_t           kr;
+- (void) wispy_init
+{
+    mach_port_t             masterPort = KERN_SUCCESS;
+    CFRunLoopSourceRef      runLoopSource = NULL;
+    kern_return_t           kr = kIOReturnSuccess;
 
 
     NSNumber* usbVendor = @0x1781;
@@ -43,28 +49,35 @@ static void RawDeviceAdded(void* refcon, io_iterator_t iterator) {
     {
         CFRelease((__bridge CFTypeRef)(matchingDict));
         DBNSLog(@"ERR: Couldn’t create a master I/O Kit port(%08x)\n", kr);
+		
         return;
     }
     _notifyPort = IONotificationPortCreate(masterPort);
     runLoopSource = IONotificationPortGetRunLoopSource (_notifyPort);
     CFRunLoopAddSource([[NSRunLoop currentRunLoop] getCFRunLoop], runLoopSource, kCFRunLoopDefaultMode);
     kr = IOServiceAddMatchingNotification(_notifyPort, kIOFirstMatchNotification, (__bridge CFDictionaryRef)matchingDict, RawDeviceAdded, (__bridge void *)self, &_gRawAddedIter);
-    if (kr) {
+    
+	if (kr)
+	{
         return;
     }
     [self rawDeviceAdded:_gRawAddedIter];
-    mach_port_deallocate (mach_task_self(), masterPort);
+    
+	mach_port_deallocate (mach_task_self(), masterPort);
 }
-- (void) rawDeviceAdded:(io_iterator_t) iterator {
-    kern_return_t               kr;
-    io_service_t                usbDevice;
+
+- (void) rawDeviceAdded:(io_iterator_t) iterator
+{
+    kern_return_t               kr = kIOReturnSuccess;
+    io_service_t                usbDevice = NULL;
     IOCFPlugInInterface         **plugInInterface = NULL;
-    HRESULT                     result;
-    SInt32                      score;
-    UInt16                      vendor;
-    UInt16                      product;
-    UInt16                      release;
+    HRESULT                     result = 0;
+    SInt32                      score = 0;
+    UInt16                      vendor = 0;
+    UInt16                      product = 0;
+    UInt16                      release = 0;
     DBNSLog(@"DEVICE ADDED");
+	
     while ((usbDevice = IOIteratorNext(iterator)))
     {
         DBNSLog(@"OOO");
@@ -72,16 +85,17 @@ static void RawDeviceAdded(void* refcon, io_iterator_t iterator) {
         kr = IOCreatePlugInInterfaceForService(usbDevice,
                                                kIOUSBDeviceUserClientTypeID, kIOCFPlugInInterfaceID,
                                                &plugInInterface, &score);
+		
         if ((kIOReturnSuccess != kr) || !plugInInterface)
         {
-            printf("Unable to create a plug-in (%08x)\n", kr);
+            DBNSLog(@"Unable to create a plug-in (%08x)\n", kr);
             continue;
         }
         //Don’t need the device object after intermediate plug-in is created
         kr = IOObjectRelease(usbDevice);
         if ((kIOReturnSuccess != kr) || !plugInInterface)
         {
-            printf("Unable to create a plug-in (%08x)\n", kr);
+            DBNSLog(@"Unable to create a plug-in (%08x)\n", kr);
             continue;
         }
         //Now create the device interface
@@ -94,7 +108,7 @@ static void RawDeviceAdded(void* refcon, io_iterator_t iterator) {
         
         if (result || !_dev)
         {
-            printf("Couldn’t create a device interface (%08x)\n",
+            DBNSLog(@"Couldn’t create a device interface (%08x)\n",
                    (int) result);
             continue;
         }
@@ -103,7 +117,7 @@ static void RawDeviceAdded(void* refcon, io_iterator_t iterator) {
         kr = (*_dev)->GetDeviceVendor(_dev, &vendor);
         if (kr != kIOReturnSuccess)
         {
-            printf("Unable to open device: %08x\n", kr);
+            DBNSLog(@"Unable to open device: %08x\n", kr);
             (void) (*_dev)->Release(_dev);
             continue;
         }
@@ -111,7 +125,7 @@ static void RawDeviceAdded(void* refcon, io_iterator_t iterator) {
         kr = (*_dev)->GetDeviceProduct(_dev, &product);
         if (kr != kIOReturnSuccess)
         {
-            printf("Unable to open device: %08x\n", kr);
+            DBNSLog(@"Unable to open device: %08x\n", kr);
             (void) (*_dev)->Release(_dev);
             continue;
         }
@@ -119,14 +133,14 @@ static void RawDeviceAdded(void* refcon, io_iterator_t iterator) {
         kr = (*_dev)->GetDeviceReleaseNumber(_dev, &release);
         if (kr != kIOReturnSuccess)
         {
-            printf("Unable to open device: %08x\n", kr);
+            DBNSLog(@"Unable to open device: %08x\n", kr);
             (void) (*_dev)->Release(_dev);
             continue;
         }
 
         if ((vendor != 0x1781) || (product != 0x083e))
         {
-            printf("Found unwanted device (vendor = %d, product = %d)\n",
+            DBNSLog(@"Found unwanted device (vendor = %d, product = %d)\n",
                    vendor, product);
             (void) (*_dev)->Release(_dev);
             continue;
@@ -136,7 +150,7 @@ static void RawDeviceAdded(void* refcon, io_iterator_t iterator) {
         kr = (*_dev)->USBDeviceOpen(_dev);
         if (kr != kIOReturnSuccess)
         {
-            printf("Unable to open device: %08x\n", kr);
+            DBNSLog(@"Unable to open device: %08x\n", kr);
             (void) (*_dev)->Release(_dev);
             continue;
         }
@@ -144,11 +158,13 @@ static void RawDeviceAdded(void* refcon, io_iterator_t iterator) {
         [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(getData:) userInfo:nil repeats:YES];
     }
 }
-- (void) getData: (NSTimer *)timer {
-    kern_return_t               kr;
-    char buf[8];
-    char samples[84];
+- (void) getData: (NSTimer *)timer
+{
+    kern_return_t		kr = kIOReturnSuccess;
+    char				buf[8];
+    char				samples[84];
     IOUSBDevRequest     request;
+	
     request.bmRequestType = USBmakebmRequestType(kUSBIn, kUSBClass, kUSBInterface);
     request.bRequest = kUSBRqClearFeature;
     request.wValue = 0x3 << 8;
@@ -157,16 +173,18 @@ static void RawDeviceAdded(void* refcon, io_iterator_t iterator) {
     request.wLength = 8;
     
     int i;
-    while(1) {
+    while(1)
+	{
         kr = (*_dev)->DeviceRequest(_dev, &request);
         if (kr != kIOReturnSuccess) {
-            printf("nooooooo\n");
+            DBNSLog(@"nooooooo\n");
             break;
         }
         memcpy(samples+buf[0], buf+1, 7);
         if (buf[0] == 77) {
-            for (i=0;i<84;++i) {
-                printf("%.2d ", samples[i]);
+            for (i = 0 ; i < 84 ; ++i)
+			{
+                DBNSLog(@"%.2d ", samples[i]);
             }
             printf("\n");
             break;
@@ -175,19 +193,21 @@ static void RawDeviceAdded(void* refcon, io_iterator_t iterator) {
     
 }
 
-- (void) closeDevice {
-    kern_return_t kr;
+- (void) closeDevice
+{
+    kern_return_t kr = kIOReturnSuccess;
+	
     //Close this device and release object
     kr = (*_dev)->USBDeviceClose(_dev);
     if (kr != kIOReturnSuccess)
     {
-        printf("Unable to close device: %08x\n", kr);
+        DBNSLog(@"Unable to close device: %08x\n", kr);
     }
 
     kr = (*_dev)->Release(_dev);
     if (kr != kIOReturnSuccess)
     {
-        printf("Unable to release device: %08x\n", kr);
+        DBNSLog(@"Unable to release device: %08x\n", kr);
     }
 
     (*_dev) = NULL;

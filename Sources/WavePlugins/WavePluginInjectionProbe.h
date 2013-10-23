@@ -37,20 +37,21 @@
     NSImage *statusNOK;
     NSImage *statusSPIN;
     
-    NSEnumerator *_currentRateEnumerator;
-    NSNumber *_currentRate;
-    NSTimer *_timer;
-    bool _catchedPacket;
+    NSEnumerator	*_currentRateEnumerator;
+    NSNumber		*_currentRate;
+    NSTimer			*_timer;
+    bool			_catchedPacket;
     
     UInt8 _randomSourceMAC[6];
     UInt8 _checks;
 
 }
 
-- (bool) startTest: (WaveNet *)net withClient:(WaveClient *)client ;
+- (bool) startTest: (WaveNet *)net withClient:(WaveClient *)client;
 - (void) stepTestProbeRequest;
 - (void) stepTestRTS;
 - (void) checkResponse;
 - (IBAction) endProbeSheet: (id) sender;
 - (id) imageCellForRate: (NSNumber*) rate;
+
 @end

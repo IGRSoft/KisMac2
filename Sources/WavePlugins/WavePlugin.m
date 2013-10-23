@@ -12,16 +12,19 @@
 
 #pragma mark -
 
-- (id) initWithDriver:(WaveDriver *)driver {
-    
+- (id) initWithDriver:(WaveDriver *)driver
+{
     if (!driver)
+	{
         return nil;
-    
+    }
+	
     self = [super init];
     
     if (!self)
+	{
         return nil;
-    
+    }
     _driver = driver;
     
     _status = WavePluginIdle;
@@ -29,7 +32,9 @@
     
     return self;
 }
-- (void) dealloc {
+
+- (void) dealloc
+{
     
     _driver = nil;
 }
@@ -38,29 +43,41 @@
 #pragma mark Test control
 #pragma mark -
 
-- (bool) startTest {
+- (bool) startTest
+{
     // Checks if test is idle, otherwise return a problem
     if (_status != WavePluginIdle)
+	{
         return NO;
+    }
     
-    _status = WavePluginRunning;
+	_status = WavePluginRunning;
     // Perform test
-    return YES;
-}
-- (bool) stopTest {
-    // Checks if test is running, otherwise ignore
-    if (_status != WavePluginRunning)
-        return NO;
-    _stopFlag = YES;
-    return YES;
+    
+	return YES;
 }
 
-- (WavePluginPacketResponse) gotPacket:(WavePacket *)packet fromDriver:(WaveDriver *)driver {
+- (bool) stopTest
+{
+    // Checks if test is running, otherwise ignore
+    if (_status != WavePluginRunning)
+	{
+        return NO;
+	}
     
+	_stopFlag = YES;
+    
+	return YES;
+}
+
+- (WavePluginPacketResponse) gotPacket:(WavePacket *)packet fromDriver:(WaveDriver *)driver
+{
     // Override in subclasses
     return WavePluginPacketResponseContinue;
 }
-- (WavePluginStatus) status {
+
+- (WavePluginStatus) status
+{
     return _status;
 }
 
