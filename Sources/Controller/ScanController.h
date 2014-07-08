@@ -87,6 +87,7 @@ io_connect_t  root_port;    // a reference to the Root Power Domain IOService
 	NSString *_lastError;
     NSString *_activeAttackNetID;
 	NSOperationQueue *queue;
+    NSOperationQueue *mainQueue;
     
     IBOutlet WaveContainer      *_container;
     IBOutlet WaveScanner        *scanner;

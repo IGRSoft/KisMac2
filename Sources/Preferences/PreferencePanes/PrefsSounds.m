@@ -13,7 +13,8 @@
 @implementation PrefsSounds
 
 
--(void)updateUI {
+- (void)updateUI
+{
     short numOfVoices;
     long voiceIndex;
     VoiceDescription theVoiceDesc;
@@ -25,7 +26,8 @@
     id object;
 
     CountVoices(&numOfVoices);
-    for (voiceIndex = 1; voiceIndex <= numOfVoices; ++voiceIndex) {
+    for (voiceIndex = 1; voiceIndex <= numOfVoices; ++voiceIndex)
+    {
         GetIndVoice(voiceIndex, &theVoiceSpec);
         GetVoiceDescription(&theVoiceSpec, &theVoiceDesc, sizeof(theVoiceDesc));
         voiceName = @((char*)&(theVoiceDesc.name[1]));
@@ -33,7 +35,10 @@
     }
 
     [aGeigerSensity setIntValue:[[controller objectForKey:@"GeigerSensity"] intValue]];
-    if ([aGeigerSensity intValue]<1) [aGeigerSensity setIntValue:1];
+    if ([aGeigerSensity intValue] < 1)
+    {
+        [aGeigerSensity setIntValue:1];
+    }
 
     [aGeigerSounds removeAllItems];
     [aWEPSounds removeAllItems];
@@ -50,19 +55,22 @@
     [[aWEPSounds menu] addItem:[NSMenuItem separatorItem]];
     [[aNOWEPSounds menu] addItem:[NSMenuItem separatorItem]];
 
-    while ((object = [sounds nextObject]) != nil) {
+    while ((object = [sounds nextObject]) != nil)
+    {
         [aGeigerSounds addItemWithTitle:[object stringByDeletingPathExtension]];
         [aWEPSounds addItemWithTitle:[object stringByDeletingPathExtension]];
         [aNOWEPSounds addItemWithTitle:[object stringByDeletingPathExtension]];
     }
 
     if([controller objectForKey:@"GeigerSound"] == nil || [controller objectForKey:@"WEPSound"] == nil ||
-       [controller objectForKey:@"noWEPSound"] == nil) {
+       [controller objectForKey:@"noWEPSound"] == nil)
+    {
         [controller setObject:@"None" forKey:@"WEPSound"];
         [controller setObject:@"None" forKey:@"noWEPSound"];
         [controller setObject:@"None" forKey:@"GeigerSound"];
 		[controller setObject:[NSNumber numberWithBool:TRUE] forKey:@"playCrackSounds"];
     }
+    
     [aGeigerSounds selectItemWithTitle:[controller objectForKey:@"GeigerSound"]];
     [aWEPSounds selectItemWithTitle:[controller objectForKey:@"WEPSound"]];
     [aNOWEPSounds selectItemWithTitle:[controller objectForKey:@"noWEPSound"]];
@@ -71,53 +79,64 @@
     [aVoices selectItemAtIndex:[[controller objectForKey:@"Voice"] intValue]];
 }
 
--(BOOL)updateDictionary {
-    
+- (BOOL)updateDictionary
+{
     [aGeigerSensity validateEditing];
     [controller setObject:@([aGeigerSensity intValue]) forKey:@"GeigerSensity"];
 
     return YES;
 }
 
--(IBAction)setValueForSender:(id)sender {
-    if(sender == aVoices) {
+- (IBAction)setValueForSender:(id)sender
+{
+    if(sender == aVoices)
+    {
         [self playVoice:sender];
         [controller setObject:[NSNumber numberWithInt:[sender indexOfSelectedItem]] forKey:@"Voice"];
     }
-    else if(sender == aWEPSounds) {
+    else if(sender == aWEPSounds)
+    {
         [self playSound:sender];
         [controller setObject:[sender titleOfSelectedItem] forKey:@"WEPSound"];
     }
-    else if(sender == aNOWEPSounds) {
+    else if(sender == aNOWEPSounds)
+    {
         [self playSound:sender];
         [controller setObject:[sender titleOfSelectedItem] forKey:@"noWEPSound"];
     }
-    else if(sender == aGeigerSounds) {
+    else if(sender == aGeigerSounds)
+    {
         [self playSound:sender];
         [controller setObject:[sender titleOfSelectedItem] forKey:@"GeigerSound"];
     }
-    else if (sender == aGeigerSensity) {
+    else if (sender == aGeigerSensity)
+    {
         [controller setObject:@([sender intValue]) forKey:@"GeigerSensity"];
     }
-    else if (sender == useSounds) {
+    else if (sender == useSounds)
+    {
         [controller setObject:[NSNumber numberWithBool:[sender state]] forKey:@"playCrackSounds"];
     }
-    else {
+    else
+    {
         DBNSLog(@"Error: Invalid sender(%@) in setValueForSender:",sender);
     }
 }
 
 #pragma mark -
 
-- (IBAction)playSound:(id)sender {
+- (IBAction)playSound:(id)sender
+{
     [[NSSound soundNamed:[sender titleOfSelectedItem]] play];
 }
 
 - (IBAction) playVoice:(id)sender
 {
-    char cSentence[]= "Found network. SSID is TEST.";
-    if ([sender indexOfSelectedItem]>0)
-        [WaveHelper speakSentence:cSentence withVoice:[sender indexOfSelectedItem]];
+    NSString *cSentence = @"Found network. SSID is TEST.";
+    if ([sender indexOfSelectedItem] > 0)
+    {
+        [WaveHelper speakSentence:(__bridge CFStringRef)(cSentence) withVoice:[sender indexOfSelectedItem]];
+    }
 }
 
 @end

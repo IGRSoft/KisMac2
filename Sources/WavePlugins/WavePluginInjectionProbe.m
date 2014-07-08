@@ -40,8 +40,10 @@
     // Load nib file
     if (!probeSheet)
 	{
-        if(![NSBundle loadNibNamed:@"injectionProbe" owner:self]) {
-            DBNSLog(@"injectionProbe.nib failed to load!");
+        if(![[NSBundle mainBundle] loadNibNamed:@"injectionProbe" owner:self topLevelObjects:nil])
+        {
+            DBNSLog(@"injectionProbe.xib failed to load!");
+            
             return NO;
         }
     }

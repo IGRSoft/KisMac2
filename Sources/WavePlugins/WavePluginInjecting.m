@@ -53,10 +53,12 @@
     }
 	
     // Load nib file, probeSheet will be assigned by File's Owner (see xib file) method
-    if (!probeSheet) {
-        if(![NSBundle loadNibNamed:@"wepInjection" owner:self])
+    if (!probeSheet)
+    {
+        if(![[NSBundle mainBundle] loadNibNamed:@"wepInjection" owner:self topLevelObjects:nil])
 		{
-            DBNSLog(@"wepInjection.nib failed to load!");
+            DBNSLog(@"wepInjection.xib failed to load!");
+            
             return NO;
         }
     }

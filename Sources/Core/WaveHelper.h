@@ -66,7 +66,7 @@ void WirelessCryptMD5(char const *str, unsigned char *key);
 + (NSString*) hexEncode:(UInt8*)data length:(int)len;
 + (NSString *) macToString:(UInt8*)m;
 
-+ (void)speakSentence:(const char*)cSentence withVoice:(int)voice;
++ (void)speakSentence:(CFStringRef)cSentence withVoice:(int)voice;
 + (bool)isServiceAvailable:(char*)service;
 
 + (int)chan2freq:(int)channel;

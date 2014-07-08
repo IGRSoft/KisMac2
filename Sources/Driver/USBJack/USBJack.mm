@@ -78,20 +78,28 @@ USBJack::~USBJack() {
     pthread_cond_destroy(&_wait_cond);
 }
 
-bool USBJack::loadPropertyList() {
-    CFDataRef data;
+bool USBJack::loadPropertyList()
+{
     CFStringRef ref;
     CFStringRef plistFile = CFStringCreateWithCString(kCFAllocatorDefault, getPlistFile(), kCFStringEncodingASCII);
     CFURLRef url = CFBundleCopyResourceURL(CFBundleGetMainBundle(), plistFile, CFSTR("plist"), NULL);
 	CFRelease(plistFile);
     if (url == NULL)
+    {
         return false;
-    CFURLCreateDataAndPropertiesFromResource(kCFAllocatorDefault, url, &data, nil, nil, nil);
+    }
+    
+    NSData *data = [NSData dataWithContentsOfURL:(__bridge NSURL *)url
+                                          options:NSMappedRead
+                                            error:nil];
+    
 	CFRelease(url);
-    _vendorsPlist = CFPropertyListCreateFromXMLData(kCFAllocatorDefault, data, kCFPropertyListImmutable, &ref);
+    _vendorsPlist = CFPropertyListCreateFromXMLData(kCFAllocatorDefault, (__bridge CFDataRef)(data), kCFPropertyListImmutable, &ref);
     if (CFDictionaryGetTypeID() != CFGetTypeID(_vendorsPlist))
+    {
         return false;
-    CFRelease(data);
+    }
+
 	return true;
 }
 IOReturn USBJack::_init() {

@@ -145,6 +145,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     _zoomToRect = NSZeroRect;
     _importOpen = 0;
 	queue = [[NSOperationQueue alloc] init];
+    mainQueue = [NSOperationQueue mainQueue];
     
     return self;
 }
@@ -260,38 +261,52 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 	__block bool _complete = complete;
 	
 	[queue addOperationWithBlock:^{
-		int row;
-		__block int i;
+		int row = 0;
+		__block int i = 0;
 		__block WaveNet *net = nil;
 		
 		if ([_container count] != [_networkTable numberOfRows])
+        {
 			_complete = YES;
-		
+		}
+        
 		[_channelProg setChannel:[[WaveHelper driverWithName:_whichDriver] getChannel]];
 		
-		if (_visibleTab == tabTraffic) {
-			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+		if (_visibleTab == tabTraffic)
+        {
+			[mainQueue addOperationWithBlock:^{
 				[_trafficController updateGraph];
 			}];
-		} else if (_visibleTab == tabNetworks) {
+		}
+        else if (_visibleTab == tabNetworks)
+        {
 			if (_lastSorted)
+            {
 				[_container sortWithShakerByColumn:_lastSorted order:_ascending];
-			
-			if (_complete) {
-				[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+			}
+            
+			if (_complete)
+            {
+				[mainQueue addOperationWithBlock:^{
 					[_networkTable reloadData];
 				}];
+                
 				if (_detailsPaneVisibile)
+                {
 					[aInfoController reloadData];
+                }
+                
 				net = [_container netAtIndex:_selectedRow];
-				if ([net isCorrectSSID] && net != _curNet) { //we lost our selected network
-					for (i = [_container count]; i>=0; i--)
+				
+                if ([net isCorrectSSID] && net != _curNet)
+                { //we lost our selected network
+					for (i = [_container count]; i >= 0; --i)
 					{
 						net = [_container netAtIndex:i];
 						if ([net isCorrectSSID] && net == _curNet)
 						{
 							_selectedRow = i;
-							[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+							[mainQueue addOperationWithBlock:^{
 								[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
 										   byExtendingSelection: NO];
 							}];
@@ -300,39 +315,51 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 					}
 				}
 			}
-			else {
+			else
+            {
 				row = [_container nextChangedRow:BAD_ADDRESS];
-				while (row != BAD_ADDRESS) {
+				while (row != BAD_ADDRESS)
+                {
 					net = [_container netAtIndex:row];
 
 					if ([net isCorrectSSID] && net == _curNet)
 					{
-						[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-							if (_detailsPaneVisibile) [aInfoController reloadData];
+                        _selectedRow = row;
+						[mainQueue addOperationWithBlock:^{
+							if (_detailsPaneVisibile)
+                            {
+                                [aInfoController reloadData];
+                                
+                                [_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
+                                           byExtendingSelection: NO];
+                            }
 						}];
-						
-						_selectedRow = row;
-						[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
-								   byExtendingSelection: NO];
 					}
+                    
 					[_networkTable displayRect:[_networkTable rectOfRow:row]];
 					row = [_container nextChangedRow:row];
 				}
 			}
-		} else if (_visibleTab == tabDetails) {
-			if (_complete) {
-				[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+		}
+        else if (_visibleTab == tabDetails)
+        {
+			if (_complete)
+            {
+				[mainQueue addOperationWithBlock:^{
 					[aInfoController reloadData];
 				}];
+                
 				net = [_container netAtIndex:_selectedRow];
-				if ([net isCorrectSSID] && net != _curNet) { //we lost our selected network
-					for (i = [_container count]; i>=0; i--)
+                
+				if ([net isCorrectSSID] && net != _curNet)
+                { //we lost our selected network
+					for (i = [_container count]; i >= 0; --i)
 					{
 						net = [_container netAtIndex:i];
 						if ([net isCorrectSSID] && net == _curNet)
 						{
 							_selectedRow = i;
-							[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+							[mainQueue addOperationWithBlock:^{
 								[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
 										   byExtendingSelection: NO];
 							}];
@@ -340,22 +367,26 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 						}
 					}
 				}
-			} else {
+			}
+            else
+            {
 				row = [_container nextChangedRow:BAD_ADDRESS];
-				while (row != BAD_ADDRESS) {
+                
+				while (row != BAD_ADDRESS)
+                {
 					net = [_container netAtIndex:row];
 					if ([net isCorrectSSID] && net == _curNet)
 					{
-						[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                        _selectedRow = row;
+                        
+						[mainQueue addOperationWithBlock:^{
 							[aInfoController reloadData];
-						}];
-						
-						_selectedRow = row;
-						[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-							[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
+                            
+                            [_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
 									   byExtendingSelection: NO];
 						}];
 					}
+                    
 					row = [_container nextChangedRow:row];
 				}
 			}

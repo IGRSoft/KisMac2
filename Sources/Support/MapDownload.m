@@ -380,7 +380,7 @@ in Safari.");
 			   K1 = S * k0;
 			   p = (w._long - lon0)*3600/10000;
 
-			   sin1sec = pi/(180*60*60);
+			   sin1sec = M_PI/(180*60*60);
 			   nu = a_WGS84/sqrt(1 - pow(e,2) * pow(sin(rlat),2));
 			   K2 = k0 * pow(sin1sec,2) * nu * sin(rlat) * cos(rlat)*100000000/2;
 			   K3 = k0 * pow(sin1sec,4) * nu * sin(rlat) * pow(cos(rlat),3)/24 * (5 - pow(tan(rlat),2) + 9*eprimesqd*pow(cos(rlat),2) + 4*pow(eprimesqd,2)*pow(cos(rlat),4))*10000000000000000;
@@ -399,7 +399,7 @@ in Safari.");
 	   // scalef now equals number of km in approx 68?? (using numpx) px, and we should have a 1200x1200 map image request ready to go
 	   // distance to edge of map = scalef*600/numpx km north AND east
 		// at the moment, mperdeglon is not used, but it still makes sense to calculate it since - in theory - it *should* be used
-		mperdeglon = pi / 180 * (a_WGS84 - (21384*fabs(w._lat)/90)) * cos(rlat);
+		mperdeglon = M_PI / 180 * (a_WGS84 - (21384*fabs(w._lat)/90)) * cos(rlat);
 		mperdeglat = 111132;
 	   // degrees to north/south edge from centre = 1000 * scalef * size.height / 2 / numpx / mperdeglat
 	   // trying my own conversion... may or may not work well

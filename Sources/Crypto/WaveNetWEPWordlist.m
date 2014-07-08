@@ -80,7 +80,7 @@
 			CFStringRef ref = CFStringCreateWithCString(kCFAllocatorDefault, wrd, kCFStringEncodingUTF8);
 			if (ref)
 			{
-				WirelessEncrypt(ref,(WirelessKey*)(key+3),0);
+				//WirelessEncrypt(ref,(WirelessKey*)(key+3),0);
 				CFRelease(ref);
 			}
 			
@@ -206,7 +206,7 @@
 			CFStringRef ref = CFStringCreateWithCString(kCFAllocatorDefault, wrd, kCFStringEncodingUTF8);
 			if (ref)
 			{
-				WirelessEncrypt(ref,(WirelessKey*)(key+3),1);
+				//WirelessEncrypt(ref,(WirelessKey*)(key+3),1);
 				CFRelease(ref);
 			}
 			

@@ -128,6 +128,7 @@
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* BIGeneric.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BIGeneric.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5282F081608B0A800F56AE3 /* BIGL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BIGL.xcodeproj; path = ../BIGL/BIGL.xcodeproj; sourceTree = "<group>"; };
+		A52A0E26196C0E9200800C1B /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +170,7 @@
 		0867D691FE84028FC02AAC07 /* BIGeneric */ = {
 			isa = PBXGroup;
 			children = (
+				A52A0E26196C0E9200800C1B /* ApplicationServices.framework */,
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				089C1665FE841158C02AAC07 /* Resources */,
@@ -316,7 +318,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 			};
 			buildConfigurationList = 00B4DCCE086C6B8F009A8F23 /* Build configuration list for PBXProject "BIGeneric" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -449,16 +451,12 @@
 		00B4DCCF086C6B8F009A8F23 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				SDKROOT = macosx;
 			};
 			name = Development;
 		};
 		69DFB5E60F8B1681000E5AF7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				SDKROOT = macosx;
 			};
 			name = Release;
 		};

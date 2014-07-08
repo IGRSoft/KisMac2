@@ -161,8 +161,12 @@ static GPSInfoController *_gc;
 #pragma mark -
 
 //tries to speak something. if it does not work => put it to the queue
-+ (void)speakSentence:(const char*)cSentence withVoice:(int)voice {
-    if (!_speechController) _speechController = [[BISpeechController alloc] init];
++ (void)speakSentence:(CFStringRef)cSentence withVoice:(int)voice
+{
+    if (!_speechController)
+    {
+        _speechController = [[BISpeechController alloc] init];
+    }
     [_speechController speakSentence:cSentence withVoice:voice];
 }
 
@@ -307,13 +311,16 @@ static GPSInfoController *_gc;
                 [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.4]];
             }
             
-            if (w) {
+            if (w)
+            {
                 [w setConfiguration: driverProps];
                 _waveDrivers[name] = w;
-            } else {
+            }
+            else
+            {
                 NSRunCriticalAlertPanel(NSLocalizedString(@"Could not instantiate Driver.", "Driver init failed"),
-                [NSString stringWithFormat: NSLocalizedString (@"Instantiation Failure Description", @"LONG description of what might have gone wrong"),
-                name],
+                NSLocalizedString (@"Instantiation Failure Description", @"LONG description of what might have gone wrong"),
+                name,
                 OK, nil, nil);
             
                 DBNSLog(@"Error could not instantiate driver %@", interfaceName);
@@ -494,7 +501,7 @@ static GPSInfoController *_gc;
 }
 
 + (int)showCouldNotInstaniciateDialog:(NSString*)driverName {
-    NSString *warning = [NSString stringWithFormat: NSLocalizedString(@"Could not instanciate Driver description", "LONG description"), driverName];
+    NSString *warning = NSLocalizedString(@"Could not instanciate Driver description", "LONG description");
     /*@"KisMAC has been able to load the driver (%@). Reasons for this failure could be:\n\n"
         "\t1. You selecteted the wrong driver.\n"
         "\t2. You did not insert your PCMCIA card (only if you selected such a driver).\n"
@@ -504,7 +511,7 @@ static GPSInfoController *_gc;
         
     return NSRunCriticalAlertPanel(
         NSLocalizedString(@"Could not instaniciate Driver.", "Error title"), 
-        warning, 
+        warning, driverName,
         NSLocalizedString(@"Retry", "Retry button"),
         NSLocalizedString(@"Abort", "Abort button"),
         nil);

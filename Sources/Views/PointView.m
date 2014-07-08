@@ -60,28 +60,28 @@
 
     _way1=[NSBezierPath bezierPath];
     
-    x1=cos(30.0/180.0*pi)*r1;
-    y1=sin(30.0/180.0*pi)*r1;
+    x1=cos(30.0/180.0*M_PI)*r1;
+    y1=sin(30.0/180.0*M_PI)*r1;
     
     [_way1 moveToPoint:NSMakePoint(x1,y1)];
-    [_way1 lineToPoint:NSMakePoint(x1+cos(60.0/180.0*pi)*r2,y1+sin(60.0/180.0*pi)*r2)];
-    [_way1 lineToPoint:NSMakePoint(x1+cos(0.0/180.0*pi)*r2 ,y1+sin(0.0/180.0*pi)*r2) ];
+    [_way1 lineToPoint:NSMakePoint(x1+cos(60.0/180.0*M_PI)*r2,y1+sin(60.0/180.0*M_PI)*r2)];
+    [_way1 lineToPoint:NSMakePoint(x1+cos(0.0/180.0*M_PI)*r2 ,y1+sin(0.0/180.0*M_PI)*r2) ];
     [_way1 closePath];
     
-    x1=cos(150.0/180.0*pi)*r1;
-    y1=sin(150.0/180.0*pi)*r1;
+    x1=cos(150.0/180.0*M_PI)*r1;
+    y1=sin(150.0/180.0*M_PI)*r1;
     
     [_way1 moveToPoint:NSMakePoint(x1,y1)];
-    [_way1 lineToPoint:NSMakePoint(x1+cos(120.0/180.0*pi)*r2,y1+sin(120.0/180.0*pi)*r2)];
-    [_way1 lineToPoint:NSMakePoint(x1+cos(180.0/180.0*pi)*r2,y1+sin(180.0/180.0*pi)*r2) ];
+    [_way1 lineToPoint:NSMakePoint(x1+cos(120.0/180.0*M_PI)*r2,y1+sin(120.0/180.0*M_PI)*r2)];
+    [_way1 lineToPoint:NSMakePoint(x1+cos(180.0/180.0*M_PI)*r2,y1+sin(180.0/180.0*M_PI)*r2) ];
     [_way1 closePath];
     
-    x1=cos(270.0/180.0*pi)*r1;
-    y1=sin(270.0/180.0*pi)*r1;
+    x1=cos(270.0/180.0*M_PI)*r1;
+    y1=sin(270.0/180.0*M_PI)*r1;
     
     [_way1 moveToPoint:NSMakePoint(x1,y1)];
-    [_way1 lineToPoint:NSMakePoint(x1+cos(240.0/180.0*pi)*r2,y1+sin(240.0/180.0*pi)*r2)];
-    [_way1 lineToPoint:NSMakePoint(x1+cos(300.0/180.0*pi)*r2,y1+sin(300.0/180.0*pi)*r2) ];
+    [_way1 lineToPoint:NSMakePoint(x1+cos(240.0/180.0*M_PI)*r2,y1+sin(240.0/180.0*M_PI)*r2)];
+    [_way1 lineToPoint:NSMakePoint(x1+cos(300.0/180.0*M_PI)*r2,y1+sin(300.0/180.0*M_PI)*r2) ];
     [_way1 closePath];
     
     t = [NSAffineTransform transform];

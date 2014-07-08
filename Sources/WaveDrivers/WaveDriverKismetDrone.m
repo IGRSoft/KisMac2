@@ -176,9 +176,10 @@
 	
 	if ((drone_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 	{
+        NSString *msg = [NSString stringWithFormat:@"%s",strerror(errno)];
         DBNSLog(@"socket() failed %d (%s)\n", errno, strerror(errno));
 		NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-								[NSString stringWithFormat:@"%s",strerror(errno)],
+								msg,
 								OK, nil, nil);
 		return nil;
     }

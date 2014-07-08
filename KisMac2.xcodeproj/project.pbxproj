@@ -917,7 +917,7 @@
 			path = BIViews;
 			sourceTree = "<group>";
 		};
-		00F57C1606A886350035AE2F /* Nibs */ = {
+		00F57C1606A886350035AE2F /* XIB */ = {
 			isa = PBXGroup;
 			children = (
 				A5282F771608C9AA00F56AE3 /* WayPointDialog.xib */,
@@ -935,8 +935,8 @@
 				69DF19560F0CBF6A000E9B94 /* injectionProbe.xib */,
 				6902662D0F25C0B500CEE671 /* wepInjection.xib */,
 			);
-			name = Nibs;
-			path = Resources/Nibs;
+			name = XIB;
+			path = Resources/XIBs;
 			sourceTree = "<group>";
 		};
 		00F57C4A06A886630035AE2F /* Strings */ = {
@@ -1040,7 +1040,7 @@
 				0035331206A5DD5700AB4577 /* CachedViews */,
 				0035332D06A5DD5700AB4577 /* Generic */,
 				0035333206A5DD5700AB4577 /* Icons */,
-				00F57C1606A886350035AE2F /* Nibs */,
+				00F57C1606A886350035AE2F /* XIB */,
 				0035334206A5DD5700AB4577 /* Scripts */,
 				00F57C4A06A886630035AE2F /* Strings */,
 				0035334106A5DD5700AB4577 /* Info.plist */,
@@ -1295,6 +1295,7 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				00F57BA306A87EAE0035AE2F /* CopyFiles */,
+				A52A0E2D196C1ADF00800C1B /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1331,7 +1332,8 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = NO;
-				LastUpgradeCheck = 0450;
+				LastTestingUpgradeCheck = 0510;
+				LastUpgradeCheck = 0510;
 				TargetAttributes = {
 					A576980F1796AA7400B88B4E = {
 						TestTargetID = 8D1107260486CEB800E47090;
@@ -1528,6 +1530,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /usr/bin/osascript;
 			shellScript = "\non run\n\tset diskname to system attribute \"PROJECT_NAME\"\n\tset build_dir to system attribute \"BUILT_PRODUCTS_DIR\"\n\tset diskpath to build_dir & \"/\" & diskname & \".dmg\"\n\tset source_root to system attribute \"SRCROOT\"\n\ttell application \"Finder\"\n\t\tif (exists the disk diskname) then\n\t\t\teject diskname\n\t\tend if\n\t\tdo shell script (\"hdiutil attach \" & diskpath & \" -readwrite -mount required\")\n\t\trepeat until name of every disk contains diskname\n\t\t\tdelay 1\n\t\tend repeat\n\t\ttell disk diskname\n\t\t\topen\n\t\t\tset theXOrigin to 10\n\t\t\tset theYOrigin to 60\n\t\t\tset theWidth to 600\n\t\t\tset theHeight to 386\n\t\t\tset theBottomRightX to (theXOrigin + theWidth)\n\t\t\tset theBottomRightY to (theYOrigin + theHeight)\n\t\t\tset dsStore to \"\\\"/Volumes/\" & diskname & \"/\" & \".DS_Store\\\"\"\n\t\t\ttell container window\n\t\t\t\tset current view to icon view\n\t\t\t\tset toolbar visible to false\n\t\t\t\tset statusbar visible to false\n\t\t\t\tset the bounds to {theXOrigin, theYOrigin, theBottomRightX, theBottomRightY}\n\t\t\t\tset statusbar visible to false\n\t\t\tend tell\n\t\t\tset opts to the icon view options of container window\n\t\t\ttell opts\n\t\t\t\tset icon size to 120\n\t\t\t\tset arrangement to not arranged\n\t\t\tend tell\n\t\t\tset background picture of opts to file \".background:dmgBackground.png\"\n\t\t\tset position of item \"KisMac2.app\" to {197, 229}\n\t\t\tset position of item \"Applications\" to {405, 229}\n\t\t\ttell container window\n\t\t\t\tset statusbar visible to false\n\t\t\t\tset the bounds to {theXOrigin + 1, theYOrigin, theBottomRightX, theBottomRightY}\n\t\t\t\tset the bounds to {theXOrigin, theYOrigin, theBottomRightX, theBottomRightY}\n\t\t\tend tell\n\t\t\tupdate without registering applications\n\t\tend tell\n\t\t--give the finder some time to write the .DS_Store file\n\t\tset waitTime to 0\n\t\tset ejectMe to false\n\t\trepeat while ejectMe is false\n\t\t\tdelay 1\n\t\t\tset waitTime to waitTime + 1\n\t\t\tif (do shell script \"[ -f \" & dsStore & \" ]; echo $?\") = \"0\" then set ejectMe to true\n\t\tend repeat\n\t\tlog \"waited \" & waitTime & \" seconds for .DS_STORE to be created.\"\n\teject diskname\n\tdo shell script \"mv \" & diskpath & \" \" & diskpath & \".old\"\n\tdo shell script \"hdiutil convert \" & diskpath & \".old -format UDZO -imagekey zlib-level=9 -o \" & diskpath\n\tdo shell script \"rm \" & diskpath & \".old\"\n\tend tell\nend run\n\n";
+		};
+		A52A0E2D196C1ADF00800C1B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${FRAMEWORKS_FOLDER_PATH}\"\nIDENTITY=\"IGR Software\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/Growl.framework/Versions/A\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/BIGeneric.framework/Versions/A\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/BIGL.framework/Versions/A\"";
 		};
 		A576980E1796AA7400B88B4E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1783,6 +1798,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "IGR Software";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1797,7 +1813,6 @@
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/Subprojects/polarssl/include";
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = /Applications;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = (
@@ -1820,7 +1835,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				INFOPLIST_FILE = Info.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				SDKROOT = macosx;
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -1831,7 +1846,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				INFOPLIST_FILE = "Info-Release.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				SDKROOT = macosx;
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -1842,6 +1857,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "IGR Software";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1856,7 +1872,6 @@
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/Subprojects/polarssl/include";
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = /Applications;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = (

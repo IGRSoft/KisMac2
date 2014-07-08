@@ -232,7 +232,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
     currentClient = [[[[NSBundle mainBundle] classNamed:className] alloc] init];
     [currentClient setController:defaults];
     
-    [NSBundle loadNibNamed:nibName owner:currentClient];
+    [[NSBundle mainBundle] loadNibNamed:nibName owner:currentClient topLevelObjects:nil];
 
     controlBox = [currentClient controlBox];
     controlBoxFrame = controlBox != nil ? [controlBox frame] : NSZeroRect;

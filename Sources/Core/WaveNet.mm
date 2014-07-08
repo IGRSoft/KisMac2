@@ -677,7 +677,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 			lSentence=[NSString stringWithFormat: NSLocalizedString(@"found %@ network. SSID is %@", "this is for speech output"),
 				oc, isHidden ? NSLocalizedString(@"hidden", "for speech"): [_SSID uppercaseString]];
 			NS_DURING
-				[WaveHelper speakSentence:[lSentence UTF8String] withVoice:lVoice];
+				[WaveHelper speakSentence:(__bridge CFStringRef)(lSentence) withVoice:lVoice];
 			NS_HANDLER
 			NS_ENDHANDLER
 		}
@@ -727,7 +727,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
                     NSString * lSentence = [NSString stringWithFormat: NSLocalizedString(@"Reencountered network. SSID is %@", "this is for speech output"),
                         [_SSID length] == 0 ? NSLocalizedString(@"hidden", "for speech"): [_SSID uppercaseString]];
                     NS_DURING
-                        [WaveHelper speakSentence:[lSentence UTF8String] withVoice:lVoice];
+                        [WaveHelper speakSentence:(__bridge CFStringRef)(lSentence) withVoice:lVoice];
                     NS_HANDLER
                     NS_ENDHANDLER
                 }

@@ -137,7 +137,7 @@ static int KismetInstances = 0;
 		DBNSLog(@"Could not connect to %s port %d", hostname, port);
 		NSRunCriticalAlertPanel(
             NSLocalizedString(@"Could not connect to the Kismet server", "Error dialog title"),
-            [NSString stringWithFormat:@"KisMac could not connect to the Kismet server at %s port %d. Check the IP address and port.",hostname,port],
+            [NSString stringWithFormat:@"KisMac could not connect to the Kismet server at %s port %@. Check the IP address and port.",hostname, @(port)],
             OK, nil, nil);
 		return nil;
 	}

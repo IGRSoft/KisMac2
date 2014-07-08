@@ -177,9 +177,11 @@
         _ID=[w stringReceiverID];
 		if ([_ID isEqualToString:@"00:0F:F7:C8:7A:60"] || [_ID isEqualToString:@"00:11:20:EE:CE:48"] || 
 			[_ID isEqualToString:@"00:12:D9:B3:16:C0"] || [_ID isEqualToString:@"00:12:D9:B3:18:90"] ||
-			[_ID isEqualToString:@"00:12:D9:B3:1D:40"]) {
+			[_ID isEqualToString:@"00:12:D9:B3:1D:40"])
+        {
+            NSString *speachText = [NSString stringWithFormat:@"Found desired Access Point: %@", _ID];
 			DBNSLog(@"Found desired Access Point: %@", _ID);
-			[WaveHelper speakSentence:[[NSString stringWithFormat:@"Found desired Access Point: %@", _ID] UTF8String] withVoice:[[NSUserDefaults standardUserDefaults] integerForKey:@"Voice"]];
+			[WaveHelper speakSentence:(__bridge CFStringRef)(speachText) withVoice:[[NSUserDefaults standardUserDefaults] integerForKey:@"Voice"]];
 			NSBeep(); NSBeep(); NSBeep();
 		}
 	}
@@ -201,9 +203,11 @@
         _ID=[w stringSenderID];
 		if ([_ID isEqualToString:@"00:0F:F7:C8:7A:60"] || [_ID isEqualToString:@"00:11:20:EE:CE:48"] || 
 			[_ID isEqualToString:@"00:12:D9:B3:16:C0"] || [_ID isEqualToString:@"00:12:D9:B3:18:90"] ||
-			[_ID isEqualToString:@"00:12:D9:B3:1D:40"]) {
+			[_ID isEqualToString:@"00:12:D9:B3:1D:40"])
+        {
+            NSString *speachText = [NSString stringWithFormat:@"Found desired Access Point: %@", _ID];
 			DBNSLog(@"Found desired Access Point: %@", _ID);
-			[WaveHelper speakSentence:[[NSString stringWithFormat:@"Found desired Access Point: %@", _ID] UTF8String] withVoice:[[NSUserDefaults standardUserDefaults] integerForKey:@"Voice"]];
+			[WaveHelper speakSentence:(__bridge CFStringRef)(speachText) withVoice:[[NSUserDefaults standardUserDefaults] integerForKey:@"Voice"]];
 			NSBeep(); NSBeep(); NSBeep();
 		}
     }

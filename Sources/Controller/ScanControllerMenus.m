@@ -56,17 +56,25 @@
 
 - (IBAction)showPrefs:(id)sender
 {
-    if(!prefsWindow) {
-        if(![NSBundle loadNibNamed:@"Preferences" owner:self]) {
-            DBNSLog(@"Preferences.nib failed to load!");
+    if(!prefsWindow)
+    {
+        if(![[NSBundle mainBundle] loadNibNamed:@"Preferences" owner:self topLevelObjects:nil])
+        {
+            DBNSLog(@"Preferences.xib failed to load!");
+            
             return;
         }
-    } else
+    }
+    else
+    {
         [prefsController refreshUI:self];
+    }
     
     if(![[NSUserDefaults standardUserDefaults] objectForKey:@"NSWindow Frame prefsWindow"])
+    {
         [prefsWindow center];
-
+    }
+    
     [prefsWindow makeKeyAndOrderFront:nil];
 }
 
