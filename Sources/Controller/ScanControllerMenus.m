@@ -109,7 +109,11 @@
 			 }
 			 _refreshGUI = YES;
 			 
-			 [self updateNetworkTable:self complete:YES];
+			 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                 
+                 [self updateNetworkTable:self complete:YES];
+             });
+             
 			 [self refreshScanHierarch];
 			 [_window setDocumentEdited:YES];
 			 
@@ -164,9 +168,13 @@
     [WaveStorageController importFromNetstumbler:filename withContainer:_container andImportController:_importController];
     _refreshGUI = YES;
 
-    [self updateNetworkTable:self complete:YES];
     [self refreshScanHierarch];
     [_window setDocumentEdited:YES];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        
+        [self updateNetworkTable:self complete:YES];
+    });
 }
 
 #pragma mark -
@@ -506,7 +514,11 @@
     _curNet = nil;
     
     [self refreshScanHierarch];
-    [self updateNetworkTable:self complete:YES];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        
+        [self updateNetworkTable:self complete:YES];
+    });
 }
 
 - (void)reallyWantToDelete:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -515,7 +527,8 @@
     NSMutableArray *temp;
     NSString *mac;
     
-    switch (returnCode) {
+    switch (returnCode)
+    {
     case NSAlertDefaultReturn:
         [self clearNetwork:self];
     case NSAlertOtherReturn:

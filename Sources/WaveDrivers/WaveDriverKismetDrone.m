@@ -176,11 +176,10 @@
 	
 	if ((drone_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 	{
-        NSString *msg = [NSString stringWithFormat:@"%s",strerror(errno)];
         DBNSLog(@"socket() failed %d (%s)\n", errno, strerror(errno));
 		NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-								msg,
-								OK, nil, nil);
+								@"%s",
+								OK, nil, nil, strerror(errno));
 		return nil;
     }
 
@@ -193,8 +192,8 @@
 		DBNSLog(@"bind() failed %d (%s)\n", errno, strerror(errno));
 		NSRunCriticalAlertPanel(
 		NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-								[NSString stringWithFormat:@"%s",strerror(errno)],
-								OK, nil, nil);
+								@"%s",
+								OK, nil, nil, strerror(errno));
         return NULL;
     }
 
@@ -203,8 +202,8 @@
 	{
 		DBNSLog(@"connect() failed %d (%s)\n", errno, strerror(errno));
 		NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-								[NSString stringWithFormat:@"%s",strerror(errno)],
-								OK, nil, nil);
+								@"%s",
+								OK, nil, nil, strerror(errno));
 		return nil;
     }
 
@@ -321,8 +320,8 @@
 				DBNSLog(@"version mismatch:  Drone sending version %d, "
 						 "expected %d.", ntohs(vpkt.drone_version), STREAM_DRONE_VERSION);
 				NSRunCriticalAlertPanel( NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-										[NSString stringWithFormat:@"version mismatch:  Drone sending version %d, expected %d.", ntohs(vpkt.drone_version), STREAM_DRONE_VERSION],
-										OK, nil, nil);
+										@"version mismatch:  Drone sending version %d, expected %d.",
+										OK, nil, nil, ntohs(vpkt.drone_version), STREAM_DRONE_VERSION);
 				return NULL;
 			}
 
@@ -338,8 +337,8 @@
 			{
 				DBNSLog(@"frame too small to hold a packet.");
 				NSRunCriticalAlertPanel( NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-										[NSString stringWithFormat:@"Frame too small to hold a packet", ntohs(vpkt.drone_version), STREAM_DRONE_VERSION],
-										OK, nil, nil);
+										@"Frame too small to hold a packet",
+										OK, nil, nil, ntohs(vpkt.drone_version), STREAM_DRONE_VERSION);
 				return NULL;
 			}
 
@@ -348,8 +347,8 @@
 				DBNSLog(@"drone read() error getting packet header %d:%s", errno, strerror(errno));
 				
 				NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-										[NSString stringWithFormat:@"drone read() error getting packet header %d:%s", errno, strerror(errno)],
-										OK, nil, nil);
+										@"drone read() error getting packet header %d:%s",
+										OK, nil, nil, errno, strerror(errno));
 				return NULL;
 			}
 			stream_recv_bytes += ret;
@@ -365,8 +364,8 @@
 			{
 				DBNSLog(@"version mismatch:  Drone sending version %d, expected %d.", ntohs(phdr.drone_version), STREAM_DRONE_VERSION);
 				NSRunCriticalAlertPanel(@"The connection to the Kismet drone failed",
-										[NSString stringWithFormat:@"version mismatch:  Drone sending version %d, expected %d.", ntohs(phdr.drone_version), STREAM_DRONE_VERSION],
-										OK, nil, nil);
+										@"version mismatch:  Drone sending version %d, expected %d.",
+										OK, nil, nil, ntohs(phdr.drone_version), STREAM_DRONE_VERSION);
 				return NULL;
 			}
 
@@ -413,8 +412,8 @@
 				DBNSLog(@"drone read() error getting packet header %d:%s", errno, strerror(errno));
 				
 				NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-										[NSString stringWithFormat:@"drone read() error getting packet header %d:%s", errno, strerror(errno)],
-										OK, nil, nil);
+										@"drone read() error getting packet header %d:%s",
+										OK, nil, nil, errno, strerror(errno));
 				return NULL;
 			}
 			

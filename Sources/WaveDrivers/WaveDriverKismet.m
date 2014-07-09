@@ -133,12 +133,14 @@ static int KismetInstances = 0;
 	
 	status = connect(sockd, (struct sockaddr*)&serv_name, sizeof(serv_name));
 		
-	if (status == -1) {
+	if (status == -1)
+    {
 		DBNSLog(@"Could not connect to %s port %d", hostname, port);
-		NSRunCriticalAlertPanel(
-            NSLocalizedString(@"Could not connect to the Kismet server", "Error dialog title"),
-            [NSString stringWithFormat:@"KisMac could not connect to the Kismet server at %s port %@. Check the IP address and port.",hostname, @(port)],
-            OK, nil, nil);
+        
+        NSRunCriticalAlertPanel(NSLocalizedString(@"Could not connect to the Kismet server", "Error dialog title"),
+                                @"KisMac could not connect to the Kismet server at %s port %@. Check the IP address and port.",
+                                OK, nil, nil, hostname, @(port));
+
 		return nil;
 	}
 		

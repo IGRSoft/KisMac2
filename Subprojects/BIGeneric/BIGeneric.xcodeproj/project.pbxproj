@@ -407,7 +407,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		00B4DCCB086C6B8F009A8F23 /* Development */ = {
+		00B4DCCB086C6B8F009A8F23 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -446,13 +446,13 @@
 				);
 				WRAPPER_EXTENSION = framework;
 			};
-			name = Development;
+			name = Debug;
 		};
-		00B4DCCF086C6B8F009A8F23 /* Development */ = {
+		00B4DCCF086C6B8F009A8F23 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
-			name = Development;
+			name = Debug;
 		};
 		69DFB5E60F8B1681000E5AF7 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -506,20 +506,20 @@
 		00B4DCCA086C6B8F009A8F23 /* Build configuration list for PBXNativeTarget "BIGeneric" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				00B4DCCB086C6B8F009A8F23 /* Development */,
+				00B4DCCB086C6B8F009A8F23 /* Debug */,
 				69DFB5E70F8B1681000E5AF7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Debug;
 		};
 		00B4DCCE086C6B8F009A8F23 /* Build configuration list for PBXProject "BIGeneric" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				00B4DCCF086C6B8F009A8F23 /* Development */,
+				00B4DCCF086C6B8F009A8F23 /* Debug */,
 				69DFB5E60F8B1681000E5AF7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

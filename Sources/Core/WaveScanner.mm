@@ -87,20 +87,27 @@
 #define mToS(m) [NSString stringWithFormat:@"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X", m[0], m[1], m[2], m[3], m[4], m[5], m[6]]
 
 #pragma mark -
--(void)performScan:(NSTimer*)timer {
+-(void)performScan:(NSTimer*)timer
+{
     [_container scanUpdate:_graphLength];
     
     if(_graphLength < MAX_YIELD_SIZE)
+    {
         ++_graphLength;
-
-    [aController updateNetworkTable:self complete:NO];
+    }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        
+        [aController updateNetworkTable:self complete:NO];
+    });
     
     [_container ackChanges];
 }
 
 
 //does the active scanning (extra thread)
-- (void)doActiveScan:(WaveDriver*)wd {
+- (void)doActiveScan:(WaveDriver*)wd
+{
     NSArray *nets;
     //float interval;
     //NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];

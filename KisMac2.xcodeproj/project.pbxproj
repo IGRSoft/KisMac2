@@ -110,7 +110,6 @@
 		00DF456408B1E969003F3C7E /* WaveDriverAirportExtreme.m in Sources */ = {isa = PBXBuildFile; fileRef = 00DF456208B1E969003F3C7E /* WaveDriverAirportExtreme.m */; };
 		00E1426E06E62A44009DC179 /* PointView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E1426C06E62A44009DC179 /* PointView.m */; };
 		00ED80A906E32C9600455A05 /* NetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00ED80A706E32C9600455A05 /* NetView.m */; };
-		00F57B9F06A87D910035AE2F /* Apple80211.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00F57B9E06A87D910035AE2F /* Apple80211.framework */; };
 		00F57BD306A881210035AE2F /* AppleScriptKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00F57BD206A881210035AE2F /* AppleScriptKit.framework */; };
 		00F9C64006DB378F00E357F0 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00F9C63F06DB378F00E357F0 /* Security.framework */; };
 		00F9C65006DB37E200E357F0 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00F9C64E06DB37E200E357F0 /* Carbon.framework */; };
@@ -392,7 +391,6 @@
 		00E1426C06E62A44009DC179 /* PointView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointView.m; sourceTree = "<group>"; };
 		00ED80A606E32C9600455A05 /* NetView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = NetView.h; sourceTree = "<group>"; };
 		00ED80A706E32C9600455A05 /* NetView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = NetView.m; sourceTree = "<group>"; };
-		00F57B9E06A87D910035AE2F /* Apple80211.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Apple80211.framework; path = /System/Library/PrivateFrameworks/Apple80211.framework; sourceTree = "<absolute>"; };
 		00F57BD206A881210035AE2F /* AppleScriptKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppleScriptKit.framework; path = /System/Library/Frameworks/AppleScriptKit.framework; sourceTree = "<absolute>"; };
 		00F57C4C06A886630035AE2F /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		00F9C63F06DB378F00E357F0 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
@@ -572,7 +570,6 @@
 				A5295C461653C3A600A0B5D9 /* BIGL.framework in Frameworks */,
 				6C03D77009B547F2005B2316 /* Growl.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
-				00F57B9F06A87D910035AE2F /* Apple80211.framework in Frameworks */,
 				00F57BD306A881210035AE2F /* AppleScriptKit.framework in Frameworks */,
 				0093E65506B2A1F300B3357A /* AddressBook.framework in Frameworks */,
 				00F9C64006DB378F00E357F0 /* Security.framework in Frameworks */,
@@ -981,7 +978,6 @@
 				00F9C64F06DB37E200E357F0 /* IOKit.framework */,
 				00F9C63F06DB378F00E357F0 /* Security.framework */,
 				0093E65306B2A1F300B3357A /* AddressBook.framework */,
-				00F57B9E06A87D910035AE2F /* Apple80211.framework */,
 				00F57BD206A881210035AE2F /* AppleScriptKit.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 			);
@@ -1793,7 +1789,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		00A9158F0858D6410093943F /* Development */ = {
+		00A9158F0858D6410093943F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1810,7 +1806,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = KisMac_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/Subprojects/polarssl/include";
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Subprojects/polarssl/include",
+					"$(SRCROOT)/Subprojects/BIGeneric",
+				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = /Applications;
 				OTHER_CFLAGS = "";
@@ -1818,6 +1817,8 @@
 				OTHER_LDFLAGS = (
 					"-lcrypto",
 					"-lpcap",
+					"-framework",
+					Apple80211,
 				);
 				PRODUCT_NAME = KisMac2;
 				WARNING_CFLAGS = (
@@ -1828,9 +1829,9 @@
 				);
 				WRAPPER_EXTENSION = app;
 			};
-			name = Development;
+			name = Debug;
 		};
-		00A915970858D6410093943F /* Development */ = {
+		00A915970858D6410093943F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
@@ -1839,7 +1840,7 @@
 				SDKROOT = macosx;
 				WARNING_CFLAGS = "-Wall";
 			};
-			name = Development;
+			name = Debug;
 		};
 		6903779F0F8B1D8F00627C6D /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1869,7 +1870,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = KisMac_Prefix.pch;
 				GCC_UNROLL_LOOPS = YES;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/Subprojects/polarssl/include";
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Subprojects/polarssl/include",
+					"$(SRCROOT)/Subprojects/BIGeneric",
+				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = /Applications;
 				OTHER_CFLAGS = "";
@@ -1877,6 +1881,8 @@
 				OTHER_LDFLAGS = (
 					"-lcrypto",
 					"-lpcap",
+					"-framework",
+					Apple80211,
 				);
 				PRODUCT_NAME = KisMac2;
 				WARNING_CFLAGS = (
@@ -1889,7 +1895,7 @@
 			};
 			name = Release;
 		};
-		6910302E0F9E313700C4E466 /* Development */ = {
+		6910302E0F9E313700C4E466 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -1898,7 +1904,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				PRODUCT_NAME = Kismac.dmg;
 			};
-			name = Development;
+			name = Debug;
 		};
 		691030300F9E313700C4E466 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1911,7 +1917,7 @@
 			};
 			name = Release;
 		};
-		A57698211796AA7400B88B4E /* Development */ = {
+		A57698211796AA7400B88B4E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1949,7 +1955,7 @@
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
-			name = Development;
+			name = Debug;
 		};
 		A57698221796AA7400B88B4E /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1990,38 +1996,38 @@
 		00A9158E0858D6410093943F /* Build configuration list for PBXNativeTarget "KisMac2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				00A9158F0858D6410093943F /* Development */,
+				00A9158F0858D6410093943F /* Debug */,
 				690377A00F8B1D8F00627C6D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Debug;
 		};
 		00A915960858D6410093943F /* Build configuration list for PBXProject "KisMac2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				00A915970858D6410093943F /* Development */,
+				00A915970858D6410093943F /* Debug */,
 				6903779F0F8B1D8F00627C6D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Debug;
 		};
 		691030320F9E313700C4E466 /* Build configuration list for PBXAggregateTarget "Kismac.dmg" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6910302E0F9E313700C4E466 /* Development */,
+				6910302E0F9E313700C4E466 /* Debug */,
 				691030300F9E313700C4E466 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Debug;
 		};
 		A57698201796AA7400B88B4E /* Build configuration list for PBXNativeTarget "KisMac2_Test" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A57698211796AA7400B88B4E /* Development */,
+				A57698211796AA7400B88B4E /* Debug */,
 				A57698221796AA7400B88B4E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

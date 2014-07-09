@@ -231,8 +231,12 @@
     
     _visibleTab = tab;
     
-    if(tab == tabNetworks) {
-        [self updateNetworkTable:self complete:YES];
+    if(tab == tabNetworks)
+    {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            
+            [self updateNetworkTable:self complete:YES];
+        });
     }
 
     [_showNetworks      setState: tab == tabNetworks ? NSOnState : NSOffState];
@@ -483,7 +487,10 @@
 
 - (void)networkAdded:(NSNotification*)note
 {
-    [self updateNetworkTable:self complete:YES];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        
+        [self updateNetworkTable:self complete:YES];
+    });
 }
 
 #pragma mark -
@@ -491,7 +498,9 @@
 - (void)refreshScanHierarch
 {
     if (!_refreshGUI)
+    {
 		return;
+    }
     
     [ScanHierarch clearAllItems];
     [ScanHierarch updateTree];

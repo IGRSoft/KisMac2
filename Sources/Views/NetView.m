@@ -176,7 +176,8 @@ static NSImage* _networkStrange;
     img = [[NSImage alloc] initWithSize:NSMakeSize(size.width + r + 10, height)];
     [img lockFocus];
     
-    if ([name length]) {
+    if ([name length])
+    {
         [legendPath appendBezierPathWithRect:NSMakeRect(r+5, (height - size.height)/2, size.width, size.height)];
         [[[NSColor blackColor] colorWithAlphaComponent:0.75] set];
         [legendPath fill];

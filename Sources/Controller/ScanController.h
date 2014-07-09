@@ -143,13 +143,12 @@ io_connect_t  root_port;    // a reference to the Root Power Domain IOService
     IBOutlet NSPopUpButton      *_trafficTimePopUp;
     IBOutlet NSPopUpButton      *_trafficModePopUp;
     IBOutlet NSDrawer           *_netHierarchDrawer;
-    IBOutlet SpinChannel        *_channelProg;
 	GPSInfoController* _g;
 	NSWindow *borderlessWindow;
     DownloadMapController* dmc;
 }
 
-- (IBAction)updateNetworkTable:(id)sender complete:(bool)complete;
+- (IBAction)updateNetworkTable:(id)sender complete:(BOOL)complete;
 
 - (IBAction)showInfo:(id)sender;
 - (IBAction)showNetHierarch:(id)sender;

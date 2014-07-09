@@ -30,7 +30,8 @@ static BOOL _alertDone;
 
 @implementation NSString(BIExtension) 
 
-- (NSString*)standardPath {
+- (NSString*)standardPath
+{
     NSMutableString *path;
     
     if ([self length] > 2 && [[self substringToIndex:2] isEqualToString:@"/:"]) {

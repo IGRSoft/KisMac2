@@ -806,22 +806,25 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
     
     //see if it is filtered
     if ([self IDFiltered:ID])
+    {
 		return BAD_ADDRESS;
-
+    }
     
     //lookup the net in the hashtable
     l = hashForMAC(ID);
     lentry = l;
     
-    i=_lookup[l];
+    i = _lookup[l];
     while (i!=LOOKUPSIZE)
 	{
-        if (memcmp(ID, _idList[i].ID, 6)==0) {
+        if (memcmp(ID, _idList[i].ID, 6) == 0)
+        {
             entry = i;
             break;
         }
+        
         l = (l + 1) % LOOKUPSIZE;
-        i=_lookup[l];
+        i = _lookup[l];
     }
             
     if (entry == BAD_ADDRESS)
@@ -877,10 +880,14 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 		return YES;
     
     entry = [self findNetwork:ID];
-    if (entry == BAD_ADDRESS)
-		return NO;                          //the object is filtered...
     
-    @synchronized(_idList[entry].net) {
+    if (entry == BAD_ADDRESS)
+    {
+		return NO;                          //the object is filtered...
+    }
+    
+    @synchronized(_idList[entry].net)
+    {
 		[_idList[entry].net parsePacket:p withSound:live];		//add the packet to the network
 		_idList[entry].changed = YES;
     }
@@ -987,11 +994,13 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 {
     unsigned int i;
 
-	for(i = 0 ; i < _netCount ; ++i) {
+	for(i = 0 ; i < _netCount ; ++i)
+    {
 		WaveNet *w = _idList[i].net;
 		@synchronized(w)
 		{
-			if ([w noteFinishedSweep:graphLength]) {
+			if ([w noteFinishedSweep:graphLength])
+            {
 				//make sure this is going to be updated
 				_idList[i].changed = YES;
 			}

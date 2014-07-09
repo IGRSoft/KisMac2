@@ -28,12 +28,6 @@
     return self;
 }
 
-// deauthenticates the user and deallocates memory
-- (void)dealloc {
-    [self deauthenticate];
-    
-}
-
 //============================================================================
 //	- (BOOL)isAuthenticated:(NSArray *)forCommands
 //============================================================================
@@ -43,222 +37,153 @@
 // is authorized, since the AuthorizationRef can be invalidated elsewhere, or
 // may expire after a short period of time.
 //
-- (BOOL)isAuthenticated:(NSArray *)forCommands {
-	AuthorizationRights rights;
-	AuthorizationRights *authorizedRights;
-	AuthorizationFlags flags;
-	
-	int numItems = [forCommands count];
-	AuthorizationItem *items = malloc( sizeof(AuthorizationItem) * numItems );
-	char paths[20][128]; // only handles upto 20 commands with paths upto 128 characters in length
-	
-	OSStatus err = 0;
-	BOOL authorized = NO;
-	int i = 0;
 
-	if(authorizationRef==NULL) {
-		rights.count=0;
-		rights.items = NULL;
+static OSStatus su_AuthorizationExecuteWithPrivileges(AuthorizationRef authorization, const char *pathToTool, AuthorizationFlags flags, char *const *arguments)
+{
+	// flags are currently reserved
+	if (flags != 0)
+		return errAuthorizationInvalidFlags;
+	
+	char **(^argVector)(const char *, const char *, const char *, char *const *) = ^char **(const char *bTrampoline, const char *bPath,
+																							const char *bMboxFdText, char *const *bArguments){
+		int length = 0;
+		if (bArguments) {
+			for (char *const *p = bArguments; *p; p++)
+				length++;
+		}
 		
-		flags = kAuthorizationFlagDefaults;
-		
-		err = AuthorizationCreate(&rights, kAuthorizationEmptyEnvironment, flags, &authorizationRef);
+		const char **args = (const char **)malloc(sizeof(const char *) * (length + 4));
+		if (args) {
+			args[0] = bTrampoline;
+			args[1] = bPath;
+			args[2] = bMboxFdText;
+			if (bArguments)
+				for (int n = 0; bArguments[n]; n++)
+					args[n + 3] = bArguments[n];
+			args[length + 3] = NULL;
+			return (char **)args;
+		}
+		return NULL;
+	};
+	
+	// externalize the authorization
+	AuthorizationExternalForm extForm;
+	OSStatus err;
+	if ((err = AuthorizationMakeExternalForm(authorization, &extForm)))
+		return err;
+	
+    // create the mailbox file
+    FILE *mbox = tmpfile();
+    if (!mbox)
+        return errAuthorizationInternal;
+    if (fwrite(&extForm, sizeof(extForm), 1, mbox) != 1) {
+        fclose(mbox);
+        return errAuthorizationInternal;
+    }
+    fflush(mbox);
+    
+    // make text representation of the temp-file descriptor
+    char mboxFdText[20];
+    snprintf(mboxFdText, sizeof(mboxFdText), "auth %d", fileno(mbox));
+    
+	// make a notifier pipe
+	int notify[2];
+	if (pipe(notify)) {
+        fclose(mbox);
+		return errAuthorizationToolExecuteFailure;
+    }
+	
+	// do the standard forking tango...
+	int delay = 1;
+	for (int n = 5;; n--, delay *= 2) {
+		switch (fork()) {
+			case -1: { // error
+				if (errno == EAGAIN) {
+					// potentially recoverable resource shortage
+					if (n > 0) {
+						sleep(delay);
+						continue;
+					}
+				}
+				close(notify[0]); close(notify[1]);
+				return errAuthorizationToolExecuteFailure;
+			}
+				
+			default: {	// parent
+				// close foreign side of pipes
+				close(notify[1]);
+                
+				// close mailbox file (child has it open now)
+				fclose(mbox);
+				
+				// get status notification from child
+				OSStatus status;
+				ssize_t rc = read(notify[0], &status, sizeof(status));
+				status = ntohl(status);
+				switch (rc) {
+					default:				// weird result of read: post error
+						status = errAuthorizationToolEnvironmentError;
+						// fall through
+					case sizeof(status):	// read succeeded: child reported an error
+						close(notify[0]);
+						return status;
+					case 0:					// end of file: exec succeeded
+						close(notify[0]);
+						return noErr;
+				}
+			}
+				
+			case 0: { // child
+				// close foreign side of pipes
+				close(notify[0]);
+				
+				// fd 1 (stdout) holds the notify write end
+				dup2(notify[1], 1);
+				close(notify[1]);
+				
+				// fd 0 (stdin) holds either the comm-link write-end or /dev/null
+				close(0);
+				open("/dev/null", O_RDWR);
+				
+				// where is the trampoline?
+				const char *trampoline = "/usr/libexec/security_authtrampoline";
+				char **argv = argVector(trampoline, pathToTool, mboxFdText, arguments);
+				if (argv) {
+					execv(trampoline, argv);
+					free(argv);
+				}
+				
+				// execute failed - tell the parent
+				OSStatus error = errAuthorizationToolExecuteFailure;
+				error = htonl(error);
+				write(1, &error, sizeof(error));
+				_exit(1);
+			}
+		}
 	}
-    	
-    if(!err)
-    {
-            
-        if( numItems < 1 ) {
-			free(items);
-            return authorized;
-        }
-
-        while( i < numItems && i < 20 ) {
-             [forCommands[i] getCString:paths[i]];
-            
-            items[i].name = kAuthorizationRightExecute;
-            items[i].value = paths[i];
-            items[i].valueLength = [forCommands[i] cStringLength];
-            items[i].flags = 0;
-            
-            ++i;
-        }
-        
-        rights.count = numItems;
-        rights.items = items;
-        
-        flags = kAuthorizationFlagExtendRights;
-        
-        err = AuthorizationCopyRights(authorizationRef, &rights, kAuthorizationEmptyEnvironment, flags, &authorizedRights);
-
-        authorized = (errAuthorizationSuccess==err);
-
-    }
-	if(authorized)
-		AuthorizationFreeItemSet(authorizedRights);
-	
-	free(items);
-	
-    return authorized;
 }
 
-//============================================================================
-//	- (void)deauthenticate
-//============================================================================
-// Deauthenticates the user by freeing their authorization.
-//
-- (void)deauthenticate {
-    if(authorizationRef) {
-        AuthorizationFree(authorizationRef, kAuthorizationFlagDestroyRights);
-        authorizationRef = NULL;
-    }
-}
-
-//============================================================================
-//	- (BOOL)fetchPassword:(NSArray *)forCommands
-//============================================================================
-// Adds rights for commands specified in (NSArray *)forCommands.
-// Commands should be passed as a NSString comtaining the path to the executable. 
-// Returns YES if rights were gained
-//
-- (BOOL)fetchPassword:(NSArray *)forCommands {
-	AuthorizationRights rights;
-	AuthorizationRights *authorizedRights;
-	AuthorizationFlags flags;
+// Authorization code based on generous contribution from Allan Odgaard. Thanks, Allan!
+static BOOL su_AuthorizationExecuteWithPrivilegesAndWait(AuthorizationRef authorization, const char* executablePath, AuthorizationFlags options, const char* const* arguments)
+{
+	// *** MUST BE SAFE TO CALL ON NON-MAIN THREAD!
 	
-	int numItems = [forCommands count];
-	AuthorizationItem *items = malloc( sizeof(AuthorizationItem) * numItems );
-	char paths[20][128];
+	sig_t oldSigChildHandler = signal(SIGCHLD, SIG_DFL);
+	BOOL returnValue = YES;
 	
-	OSStatus err = 0;
-	BOOL authorized = NO;
-	int i = 0;
-	
-	if( numItems < 1 )
+	if (su_AuthorizationExecuteWithPrivileges(authorization, executablePath, options, (char* const*)arguments) == errAuthorizationSuccess)
 	{
-		free(items);
-		return authorized;
+		int status;
+		pid_t pid = wait(&status);
+		if (pid == -1 || !WIFEXITED(status) || WEXITSTATUS(status) != 0)
+			returnValue = NO;
 	}
+	else
+		returnValue = NO;
 	
-	while( i < numItems && i < 20 )
-    {
-        NSLog(@"%@", forCommands[i]);
-		[forCommands[i] getCString:paths[i]];
-		
-		items[i].name = kAuthorizationRightExecute;
-		items[i].value = paths[i];
-		items[i].valueLength = [forCommands[i] cStringLength];
-		items[i].flags = 0;
-		
-		++i;
-	}
-	
-	rights.count = numItems;
-	rights.items = items;
-	
-	flags = kAuthorizationFlagInteractionAllowed | kAuthorizationFlagExtendRights;
-	
-	err = AuthorizationCopyRights(authorizationRef, &rights, kAuthorizationEmptyEnvironment, flags, &authorizedRights);
-	
-	authorized = (errAuthorizationSuccess == err);
-	
-	if(authorized) {
-		AuthorizationFreeItemSet(authorizedRights);
-	}                                                    
-
-	free(items);
-	
-	return authorized;
+	signal(SIGCHLD, oldSigChildHandler);
+	return returnValue;
 }
-
-//============================================================================
-//	- (BOOL)authenticate:(NSArray *)forCommands
-//============================================================================
-// Authenticates the commands in the array (NSArray *)forCommands by calling 
-// fetchPassword.
-//
-- (BOOL)authenticate:(NSArray *)forCommands {
-	if( ![self isAuthenticated:forCommands] ) {
-        [self fetchPassword:forCommands];
-	}
-	
-	return [self isAuthenticated:forCommands];
-}
-
-
-//============================================================================
-//	- (int)getPID:(NSString *)forProcess
-//============================================================================
-// Retrieves the PID (process ID) for the process specified in 
-// (NSString *)forProcess.
-// The more specific forProcess is the better your accuracy will be, esp. when 
-// multiple versions of the process exist. 
-//
-- (int)getPID:(NSString *)forProcess {
-	FILE* outpipe = NULL;
-	NSMutableData* outputData = [NSMutableData data];
-	NSMutableData* tempData = [[NSMutableData alloc] initWithLength:512];
-	NSString *commandOutput = nil;
-	NSString *scannerOutput = nil;
-	NSString *popenArgs = [[NSString alloc] initWithFormat:@"/bin/ps -axwwopid,command | grep \"%@\"",forProcess];
-	NSScanner *outputScanner = nil;
-	NSScanner *intScanner = nil;
-	int pid = 0;
-	int len = 0;
-    
-    outpipe = popen([popenArgs UTF8String],"r");
-
-
-	if(!outpipe) 
-    {
-        NSLog(@"Error opening pipe: %@",forProcess);
-        NSBeep();
-        return 0;
-    }
-	
-	do {
-        [tempData setLength:512];
-        len = fread([tempData mutableBytes],1,512,outpipe);
-        if( len > 0 ) {
-            [tempData setLength:len];
-            [outputData appendData:tempData];        
-		}
-	} while(len==512);
-    
-
-	pclose(outpipe);
-	
-	commandOutput = [[NSString alloc] initWithData:outputData encoding:NSASCIIStringEncoding];    
-	
-	if( [commandOutput length] > 0 ) {
-		outputScanner = [NSScanner scannerWithString:commandOutput];
-		
-		
-		[outputScanner setCharactersToBeSkipped:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-		
-		[outputScanner scanUpToString:forProcess intoString:&scannerOutput];
-		
-		if( [scannerOutput rangeOfString:@"grep"].length != 0 ) {
-			return 0;
-		}
-		
-		intScanner = [NSScanner scannerWithString:scannerOutput];
-		
-		[intScanner scanInt:&pid];
-		
-		if( pid ) {
-			return pid;
-		}
-		else {
-			return 0;
-		}
-	}
-	else {
-
-		return 0;
-	}
-}
-
 
 //============================================================================
 //	-(void)executeCommand:(NSString *)pathToCommand withArgs:(NSArray *)arguments
@@ -270,60 +195,35 @@
 // a single argument.
 //
 -(BOOL)executeCommand:(NSString *)pathToCommand withArgs:(NSArray *)arguments {
-	unsigned int i = 0;
-	NSDictionary *error = nil;
 	
-	if(![self authenticate:@[pathToCommand]])
-		return NO;
+	static OSStatus authStat = errAuthorizationDenied;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		while (authStat == errAuthorizationDenied) {
+			authStat = AuthorizationCreate(NULL,
+										   kAuthorizationEmptyEnvironment,
+										   kAuthorizationFlagDefaults,
+										   &authorizationRef);
+		}
+	});
 	
-	NSString *script = [NSString stringWithFormat:@"do shell script \"%@", pathToCommand];
-	
-	while( i < [arguments count] && i < 19) {
-		script = [script stringByAppendingFormat:@" %@", arguments[i]];
-		++i;
+	BOOL res = NO;
+	if (authStat == errAuthorizationSuccess) {
+		res = YES;
+		const char** coParams = malloc(sizeof(char*) * [arguments count]);
+		int i = 0;
+		for (NSString *arg in arguments) {
+			coParams[i++] = [arg UTF8String];
+		}
+		
+		su_AuthorizationExecuteWithPrivilegesAndWait(authorizationRef, [pathToCommand UTF8String], kAuthorizationFlagDefaults, coParams);
+		
+		//memmory leak
 	}
 	
-	script = [script stringByAppendingFormat:@"\" with administrator privileges"];
-	
-	NSAppleScript *appleScript = [[NSAppleScript new] initWithSource:script];
-	if ([appleScript executeAndReturnError:&error]) {
-		NSLog(@"success!");
-		return YES;
-	} else {
-		NSLog(@"failure: %@", error);
-		return NO;
-	}
+	return res;
 }
 
-
-//============================================================================
-//	- (void)killProcess:(NSString *)commandFromPS
-//============================================================================
-// Finds and kills the process specified in (NSString *)commandFromPS using ps 
-// and kill. (by pid)
-// The more specific (ie., closer to matching the actual listing in ps) 
-// commandFromPS is the better your accuracy will be, esp. when multiple 
-// versions of the process exist.
-//
-- (BOOL)killProcess:(NSString *)commandFromPS {
-	NSString *pid;
-
-	if( ![self isAuthenticated:@[commandFromPS]] ) {
-		[self authenticate:@[commandFromPS]];
-	}
-	
-	pid = [NSString stringWithFormat:@"%d",[self getPID:commandFromPS]];
-	
-	if( [pid intValue] > 0 ) {
-		[self executeCommand:@"/bin/kill" withArgs:@[pid]];
-		return YES;
-	}
-	else {
-		NSBeep();
-		NSLog(@"Error killing process %@, invalid PID.",pid);
-		return NO;
-	}
-}	
 @end
 
 
