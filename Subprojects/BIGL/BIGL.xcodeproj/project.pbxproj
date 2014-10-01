@@ -238,7 +238,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0600;
 			};
 			buildConfigurationList = 00B4DCBB086C6A35009A8F23 /* Build configuration list for PBXProject "BIGL" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -350,6 +350,7 @@
 		00B4DCBC086C6A35009A8F23 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
 		};

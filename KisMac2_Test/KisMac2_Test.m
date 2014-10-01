@@ -26,7 +26,7 @@
 
 - (void)testExample
 {
-    STFail(@"Unit tests are not implemented yet in KisMac2_Test");
+    XCTFail(@"Unit tests are not implemented yet in KisMac2_Test");
 }
 
 @end

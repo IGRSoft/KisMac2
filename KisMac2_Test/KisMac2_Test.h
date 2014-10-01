@@ -6,8 +6,8 @@
 //
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
-@interface KisMac2_Test : SenTestCase
+@interface KisMac2_Test : XCTestCase
 
 @end
