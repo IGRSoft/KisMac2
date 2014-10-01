@@ -505,7 +505,7 @@
 		A5353971180B15B9008BB6A1 /* DESSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DESSupport.h; sourceTree = "<group>"; };
 		A5353973180B1C8D008BB6A1 /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
 		A5353974180B1C99008BB6A1 /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha1.c; sourceTree = "<group>"; };
-		A57698101796AA7400B88B4E /* KisMac2_Test.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KisMac2_Test.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A57698101796AA7400B88B4E /* KisMac2_Test.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = KisMac2_Test.octest; path = KisMac2_Test.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A57698181796AA7400B88B4E /* KisMac2_Test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KisMac2_Test-Info.plist"; sourceTree = "<group>"; };
 		A576981A1796AA7400B88B4E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		A576981C1796AA7400B88B4E /* KisMac2_Test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KisMac2_Test.h; sourceTree = "<group>"; };
