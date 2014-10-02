@@ -3,6 +3,8 @@
 
 KisMAC is a free, open source wireless stumbling and security tool for Mac OS X. 
 
+<img src="https://raw.githubusercontent.com/IGRSoft/KisMac2/master/Resources/screenshot.png">
+
 Issue tracking:
 -------
 
