@@ -866,7 +866,7 @@
 
 - (IBAction)openWebsiteURL:(id)sender
 {
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://github.com/iKorich/KisMac2"]];
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://github.com/IGRSoft/KisMac2"]];
 }
 
 - (IBAction)openDonateURL:(id)sender

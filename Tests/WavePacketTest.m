@@ -23,6 +23,7 @@
 */
 #import "WavePacket.h"
 #import "WaveHelper.h"
+#import "80211b.h"
 
 @implementation WavePacket(UnitTestExtentsion)
 

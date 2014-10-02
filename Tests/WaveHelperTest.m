@@ -23,11 +23,12 @@
 */
 
 #import "WaveHelper.h"
-
+#import <XCTest/XCTest.h>
 
 @implementation WaveHelper(UnitTestExtension)
 
-- (void) testVendorNames {
+- (void) testVendorNames
+{
 	UKStringContains([WaveHelper vendorForMAC:@"00:30:65:1B:F0:01"], @"Apple");
 	UKStringsEqual(@"Broadcast", [WaveHelper vendorForMAC:@"FF:FF:FF:FF:FF:FF"]);
 	UKStringContains([WaveHelper vendorForMAC:@"02:60:8C:00:00:00"], @"3Com");

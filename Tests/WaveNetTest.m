@@ -24,6 +24,7 @@
 #import "WaveNet.h"
 #import "WaveNetWPACrack.h"
 #import "WPA.h"
+#import "80211b.h"
 
 @implementation WaveNet(UnitTestExtension)
 
@@ -38,7 +39,7 @@
         j = output[i];
         [ms appendFormat:@"%.2x", j];
     }
-	UKStringsEqual(ms, @"f42c6fc52df0ebef9ebb4b90b38a5f902e83fe1b135a70e23aed762e9710a12e");
+	XCTAssert(ms, @"f42c6fc52df0ebef9ebb4b90b38a5f902e83fe1b135a70e23aed762e9710a12e");
 	 
     wpaPasswordHash("ThisIsAPassword",  (const UInt8*)"ThisIsASSID", 11, output);
     ms = [NSMutableString string];
