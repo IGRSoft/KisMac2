@@ -83,7 +83,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @"Scanning Options",
                    self,
                    @selector(setImage:),
-                   [NSImage imageNamed:@"NSApplicationIcon"],
+                   [NSImage imageNamed:@"preferences-scan"],
                    @selector(changeView:),
                    nil);
     defaultToolbarItem = toolbarItems[@"Scanning"];
@@ -97,7 +97,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @"Traffic View Options",
                    self,
                    @selector(setImage:),
-                   [NSImage imageNamed:@"traffic"],
+                   [NSImage imageNamed:@"preferences-graph"],
                    @selector(changeView:),
                    nil);
 
@@ -110,7 +110,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @"Filter Options for Data Capture",
                    self,
                    @selector(setImage:),
-                   [NSImage imageNamed:@"filter"],
+                   [NSImage imageNamed:@"preferences-filter"],
                    @selector(changeView:),
                    nil);
 
@@ -124,7 +124,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @"Sounds and Speech Options",
                    self,
                    @selector(setImage:),
-                   [NSImage imageNamed:@"Sound"],
+                   [NSImage imageNamed:@"preferences-sound"],
                    @selector(changeView:),
                    nil);
 
@@ -137,7 +137,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @"Wireless Card Driver",
                    self,
                    @selector(setImage:),
-                   [NSImage imageNamed:@"driver"],
+                   [NSImage imageNamed:@"preferences-driver"],
                    @selector(changeView:),
                    nil);
 
@@ -150,7 +150,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @"GPS Options",
                    self,
                    @selector(setImage:),
-                   [NSImage imageNamed:@"gps"],
+                   [NSImage imageNamed:@"preferences-gps"],
                    @selector(changeView:),
                    nil);
     nibNamesDict[@"Map"] = @"PrefsMap";
@@ -162,7 +162,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @"Mapping Options",
                    self,
                    @selector(setImage:),
-                   [NSImage imageNamed:@"map"],
+                   [NSImage imageNamed:@"preferences-map"],
                    @selector(changeView:),
                    nil);
 	

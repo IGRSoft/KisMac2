@@ -25,7 +25,6 @@
 #import "ScanControllerScriptable.h"
 #import "ScanControllerPrivate.h"
 #import "WaveScanner.h"
-#import "SpinChannel.h"
 #import "WaveNetWEPCrack.h"
 #import "MapView.h"
 #import "MapDownload.h"
@@ -133,7 +132,7 @@
         
         _scanning=YES;
         [_window setDocumentEdited:YES];
-		[_scanButton setImage:[NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate]];
+		[_scanButton setImage:[NSImage imageNamed:@"toolbar-stop-scan"]];
 		
         [_scanButton setLabel:@"Stop"];
         result=[scanner startScanning];
@@ -151,7 +150,7 @@
     
 	[self stopActiveAttacks];
     result=[scanner stopScanning];
-    [_scanButton setImage:[NSImage imageNamed:NSImageNameSlideshowTemplate]];
+    [_scanButton setImage:[NSImage imageNamed:@"toolbar-start-scan"]];
     [_scanButton setLabel:@"Start"];
     _scanning=NO;
     

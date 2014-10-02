@@ -35,7 +35,6 @@ typedef enum {
 @class TrafficController;
 @class WaveNet;
 @class WaveContainer;
-@class SpinChannel;
 @class BIZoomView;
 @class BIToolbarView;
 @class MapView;

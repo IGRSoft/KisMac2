@@ -49,8 +49,6 @@
 	<string>KisMACHelp</string>
 	<key>CFBundleHelpBookName</key>
 	<string>KisMAC Help</string>
-	<key>CFBundleIconFile</key>
-	<string>icon</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.igrsoft.kismac</string>
 	<key>CFBundleInfoDictionaryVersion</key>

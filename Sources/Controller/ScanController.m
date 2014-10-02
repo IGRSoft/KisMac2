@@ -34,7 +34,6 @@
 #import "WaveContainer.h"
 #import "../WaveDrivers/WaveDriver.h"
 #import "ScriptController.h"
-#import "SpinChannel.h"
 #import "MapView.h"
 #import <sys/sysctl.h>
 #import <BIGeneric/BIGeneric.h>
@@ -170,10 +169,10 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     _visibleTab = tabInvalid;
     [self showNetworks];
     
-    [_showNetworks setImage: [NSImage imageNamed:@"networks-button.tif"]];
-    [_showTraffic  setImage: [NSImage imageNamed:@"traffic-button.tif"]];
-    [_showMap      setImage: [NSImage imageNamed:@"map-button.tif"]];
-    [_showDetails  setImage: [NSImage imageNamed:@"details-button.tif"]];
+    [_showNetworks setImage: [NSImage imageNamed:@"menu-networks"]];
+    [_showTraffic  setImage: [NSImage imageNamed:@"menu-graph"]];
+    [_showMap      setImage: [NSImage imageNamed:@"menu-map"]];
+    [_showDetails  setImage: [NSImage imageNamed:@"menu-details"]];
     
     [_networkTable setDoubleAction:@selector(showDetails:)];
     
@@ -753,7 +752,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     logPath = [@"~/Library/Logs/DiagnosticReports/" stringByExpandingTildeInPath];
     mang = [NSFileManager defaultManager];
     
-    if ([[sets objectForKey:@"SupressCrashReport"] intValue]!=1)
+    if ([[sets objectForKey:@"SupressCrashReport"] intValue] != 1)
     {
         enumerator = [mang enumeratorAtPath: logPath];
         

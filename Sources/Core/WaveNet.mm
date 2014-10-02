@@ -1592,30 +1592,30 @@ NSInteger lengthSort(id string1, id string2, void *context)
 			enc = NSLocalizedString(@"WPA2", "table description");
             if(_challengeResponseStatus == chreResponse)
             {
-                image = [NSImage imageNamed:@"orangegem.png"];
+                image = [NSImage imageNamed:@"orangegem.pdf"];
             }
             else if(_challengeResponseStatus == chreChallenge)
             {
-                image = [NSImage imageNamed:@"orangegem.png"];
+                image = [NSImage imageNamed:@"orangegem.pdf"];
             }
             else if(_challengeResponseStatus == chreComplete)
             {
-                image = [NSImage imageNamed:@"greengem.png"];
+                image = [NSImage imageNamed:@"greengem.pdf"];
             }
 			break;
 		case encryptionTypeWPA:     
 			enc = NSLocalizedString(@"WPA", "table description");
             if(_challengeResponseStatus == chreResponse)
             {
-                image = [NSImage imageNamed:@"orangegem.png"];
+                image = [NSImage imageNamed:@"orangegem.pdf"];
             }
             else if(_challengeResponseStatus == chreChallenge)
             {
-                image = [NSImage imageNamed:@"orangegem.png"];
+                image = [NSImage imageNamed:@"orangegem.pdf"];
             }
             else if(_challengeResponseStatus == chreComplete)
             {
-                image = [NSImage imageNamed:@"greengem.png"];
+                image = [NSImage imageNamed:@"greengem.pdf"];
             }
 			break;
 		case encryptionTypeWEP40:
@@ -1623,11 +1623,11 @@ NSInteger lengthSort(id string1, id string2, void *context)
             if( [self uniqueIVs] > WEP_GEM_ORANGE_LEVEL && 
                 [self uniqueIVs] < WEP_GEM_GREEN_LEVEL)
             {
-                image = [NSImage imageNamed:@"orangegem.png"];
+                image = [NSImage imageNamed:@"orangegem.pdf"];
             }
             else if([self uniqueIVs] > WEP_GEM_GREEN_LEVEL)
             {
-                image = [NSImage imageNamed:@"greengem.png"];
+                image = [NSImage imageNamed:@"greengem.pdf"];
             }
 			break;
 		case encryptionTypeWEP:
@@ -1635,15 +1635,15 @@ NSInteger lengthSort(id string1, id string2, void *context)
             if( [self uniqueIVs] > WEP_GEM_ORANGE_LEVEL && 
                 [self uniqueIVs] < WEP_GEM_GREEN_LEVEL)
             {
-                image = [NSImage imageNamed:@"orangegem.png"];
+                image = [NSImage imageNamed:@"orangegem.pdf"];
             }
             else if([self uniqueIVs] > WEP_GEM_GREEN_LEVEL)
             {
-                image = [NSImage imageNamed:@"greengem.png"];
+                image = [NSImage imageNamed:@"greengem.pdf"];
             }
 			break;
 		case encryptionTypeNone:
-            image = [NSImage imageNamed:@"greengem.png"];
+            image = [NSImage imageNamed:@"greengem.pdf"];
 			enc = NSLocalizedString(@"NO", "table description");
 			break;
 		case encryptionTypeUnknown:
@@ -1682,7 +1682,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     //if we didn't set the Gem yet, set it red here
     if (image == nil)
     {
-        image = [NSImage imageNamed:@"redgem.png"];
+        image = [NSImage imageNamed:@"redgem.pdf"];
     }
 	
 	cache = @{@"id": [NSString stringWithFormat:@"%i", _netID],

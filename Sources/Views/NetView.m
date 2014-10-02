@@ -38,7 +38,8 @@ static NSImage* _networkStrange;
 
 @implementation NetView
 
-- (id)initWithNetwork:(WaveNet*)network {
+- (id)initWithNetwork:(WaveNet*)network
+{
     self = [super init];
     if (self) {
         

@@ -81,8 +81,8 @@
 	}
     [NSApp beginSheet:probeSheet modalForWindow:[WaveHelper mainWindow] modalDelegate:[WaveHelper mainWindow] didEndSelector:nil contextInfo:nil];
     
-    statusOK = [NSImage imageNamed:@"greengem.png"];
-    statusNOK = [NSImage imageNamed:@"redgem.png"];
+    statusOK = [NSImage imageNamed:@"greengem.pdf"];
+    statusNOK = [NSImage imageNamed:@"redgem.pdf"];
     statusSPIN = [NSImage imageNamed:@"spin.gif"];
     DBNSLog(@"%@", statusSPIN);
     _currentRateEnumerator = [[_driver permittedRates] objectEnumerator];

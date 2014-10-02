@@ -278,12 +278,12 @@ UInt32 hashForMAC(const UInt8* val) {
     switch (challengeResponseStatus) {
         case chreResponse:
         case chreChallenge:
-            return @"orangegem.png";
+            return @"orangegem.pdf";
         case chreComplete:
-            return @"greengem.png";
+            return @"greengem.pdf";
         case chreNone:
         default:
-            return @"redgem.png";
+            return @"redgem.pdf";
     }
 }
 

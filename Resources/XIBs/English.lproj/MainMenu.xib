@@ -1,39 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4457.9" systemVersion="13A497d" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment version="1070" defaultVersion="1070" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4457.9"/>
+        <deployment version="1070" identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
             <connections>
-                <action selector="orderFrontStandardAboutPanel:" destination="484" id="529"/>
                 <outlet property="delegate" destination="466" id="499"/>
             </connections>
         </customObject>
-        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder">
-            <connections>
-                <action selector="arrangeInFront:" destination="5" id="39"/>
-                <action selector="checkSpelling:" destination="189" id="190"/>
-                <action selector="copy:" destination="157" id="181"/>
-                <action selector="cut:" destination="160" id="175"/>
-                <action selector="delete:" destination="164" id="195"/>
-                <action selector="hide:" destination="492" id="495"/>
-                <action selector="hideOtherApplications:" destination="489" id="496"/>
-                <action selector="paste:" destination="171" id="176"/>
-                <action selector="performMiniaturize:" destination="23" id="37"/>
-                <action selector="redo:" destination="173" id="178"/>
-                <action selector="selectAll:" destination="172" id="179"/>
-                <action selector="showGuessPanel:" destination="187" id="188"/>
-                <action selector="showHelp:" destination="715" id="716"/>
-                <action selector="terminate:" destination="483" id="494"/>
-                <action selector="toggleContinuousSpellChecking:" destination="191" id="192"/>
-                <action selector="undo:" destination="158" id="180"/>
-                <action selector="unhideAllApplications:" destination="482" id="497"/>
-            </connections>
-        </customObject>
-        <customObject id="-3" userLabel="Application"/>
-        <window title="KisMAC" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" wantsToBeColor="NO" frameAutosaveName="aKisMAC_Main" animationBehavior="default" id="21" userLabel="Window">
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="KisMAC" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" frameAutosaveName="aKisMAC_Main" animationBehavior="default" id="21" userLabel="Window">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="250" y="236" width="757" height="400"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1178"/>
@@ -55,21 +34,17 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </searchFieldCell>
                                 <connections>
+                                    <action selector="changeSearchValue:" target="466" id="1431"/>
                                     <outlet property="nextKeyView" destination="1353" id="1441"/>
                                     <outlet property="searchMenuTemplate" destination="1446" id="1450"/>
                                 </connections>
                             </searchField>
-                            <imageView id="1384">
-                                <rect key="frame" x="5" y="2" width="38" height="38"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="devil" id="2387"/>
-                            </imageView>
                             <popUpButton hidden="YES" verticalHuggingPriority="750" id="1307">
                                 <rect key="frame" x="612" y="5" width="91" height="26"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                                 <popUpButtonCell key="cell" type="push" title="30 sec" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="30" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="1302" id="2386">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
+                                    <font key="font" metaFont="menu"/>
                                     <menu key="menu" title="OtherViews" id="1306">
                                         <items>
                                             <menuItem title="15 sec" tag="15" id="1300"/>
@@ -79,13 +54,16 @@
                                         </items>
                                     </menu>
                                 </popUpButtonCell>
+                                <connections>
+                                    <action selector="setTimeLength:" target="1180" id="1314"/>
+                                </connections>
                             </popUpButton>
                             <popUpButton hidden="YES" verticalHuggingPriority="750" id="1303">
                                 <rect key="frame" x="512" y="5" width="95" height="26"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                                 <popUpButtonCell key="cell" type="push" title="Bytes" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="15" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="1304" id="2385">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
+                                    <font key="font" metaFont="menu"/>
                                     <menu key="menu" title="OtherViews" id="1299">
                                         <items>
                                             <menuItem title="Bytes" state="on" tag="15" id="1304"/>
@@ -94,6 +72,9 @@
                                         </items>
                                     </menu>
                                 </popUpButtonCell>
+                                <connections>
+                                    <action selector="setCurrentMode:" target="1180" id="1315"/>
+                                </connections>
                             </popUpButton>
                             <button horizontalHuggingPriority="750" verticalHuggingPriority="750" id="1298">
                                 <rect key="frame" x="711" y="6" width="25" height="24"/>
@@ -103,6 +84,7 @@
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
+                                    <action selector="showContextHelp:" target="466" id="1366"/>
                                     <outlet property="nextKeyView" destination="1297" id="1440"/>
                                 </connections>
                             </button>
@@ -117,6 +99,11 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <imageView id="1384">
+                                <rect key="frame" x="4" y="1" width="38" height="38"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSApplicationIcon" id="2387"/>
+                            </imageView>
                         </subviews>
                     </customView>
                     <box boxType="oldStyle" borderType="none" titlePosition="noTitle" id="1353">
@@ -133,17 +120,49 @@
             </view>
             <toolbar key="toolbar" implicitIdentifier="07DB9808-595C-4BB6-996B-C155F7009739" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="regular" id="2433">
                 <allowedToolbarItems>
-                    <toolbarItem implicitItemIdentifier="19AB281A-B6DC-4516-8628-2EF48FCD4984" label="Open" paletteLabel="Open" image="toolbar-open" id="2448"/>
-                    <toolbarItem implicitItemIdentifier="6B4AA459-568C-4741-89E3-F9F640B50659" label="Save" paletteLabel="Save" tag="1" image="toolbar-save" id="2447"/>
-                    <toolbarItem implicitItemIdentifier="00D698C4-1E2F-46F5-B60F-8ED0106E2B38" label="Networks" paletteLabel="Networks" tag="2" image="toolbar-networks" id="2445"/>
-                    <toolbarItem implicitItemIdentifier="4AA76802-B932-4ABB-9A8F-D6C8D3E2C75E" label="Graph" paletteLabel="Graph" tag="3" image="toolbar-graph" id="2444"/>
-                    <toolbarItem implicitItemIdentifier="3D223B9B-06EC-4149-8677-C7E7414B9538" label="Details" paletteLabel="Details" tag="4" image="toolbar-details" id="2441"/>
-                    <toolbarItem implicitItemIdentifier="B944AB14-5376-4952-8792-42F7C5FF600B" label="Map" paletteLabel="Map" tag="5" image="toolbar-map" id="2442"/>
-                    <toolbarItem implicitItemIdentifier="D451EF2A-E0EB-4F4E-96C9-009F32D0470E" label="Preferences" paletteLabel="Preferences" tag="6" image="toolbar-preferences" id="2443"/>
+                    <toolbarItem implicitItemIdentifier="19AB281A-B6DC-4516-8628-2EF48FCD4984" label="Open" paletteLabel="Open" image="toolbar-open" id="2448">
+                        <connections>
+                            <action selector="openKisMACFile:" target="1397" id="2458"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="6B4AA459-568C-4741-89E3-F9F640B50659" label="Save" paletteLabel="Save" tag="1" image="toolbar-save" id="2447">
+                        <connections>
+                            <action selector="saveKisMACFile:" target="1397" id="2457"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="00D698C4-1E2F-46F5-B60F-8ED0106E2B38" label="Networks" paletteLabel="Networks" tag="2" image="toolbar-networks" id="2445">
+                        <connections>
+                            <action selector="showNetworks:" target="1397" id="2454"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="4AA76802-B932-4ABB-9A8F-D6C8D3E2C75E" label="Graph" paletteLabel="Graph" tag="3" image="toolbar-graph" id="2444">
+                        <connections>
+                            <action selector="showTrafficView:" target="1397" id="2459"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="3D223B9B-06EC-4149-8677-C7E7414B9538" label="Details" paletteLabel="Details" tag="4" image="toolbar-details" id="2441">
+                        <connections>
+                            <action selector="showDetails:" target="1397" id="2456"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="B944AB14-5376-4952-8792-42F7C5FF600B" label="Map" paletteLabel="Map" tag="5" image="toolbar-map" id="2442">
+                        <connections>
+                            <action selector="showMap:" target="1397" id="2455"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="D451EF2A-E0EB-4F4E-96C9-009F32D0470E" label="Preferences" paletteLabel="Preferences" tag="6" image="toolbar-preferences" id="2443">
+                        <connections>
+                            <action selector="showPrefs:" target="466" id="2453"/>
+                        </connections>
+                    </toolbarItem>
                     <toolbarItem implicitItemIdentifier="NSToolbarSeparatorItem" id="2436"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="2438"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="2439"/>
-                    <toolbarItem implicitItemIdentifier="76A58E6E-20F1-4143-B977-678C7DA6D43E" label="Scan" paletteLabel="Scan" tag="7" image="NSSlideshowTemplate" id="2446"/>
+                    <toolbarItem implicitItemIdentifier="76A58E6E-20F1-4143-B977-678C7DA6D43E" label="Scan" paletteLabel="Scan" tag="7" image="toolbar-start-scan" id="2446">
+                        <connections>
+                            <action selector="toggleScan:" target="1397" id="2460"/>
+                        </connections>
+                    </toolbarItem>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
                     <toolbarItem reference="2448"/>
@@ -174,12 +193,20 @@
                 <menuItem title="KisMAC" id="491">
                     <menu key="submenu" title="KisMAC" systemMenu="apple" id="481">
                         <items>
-                            <menuItem title="About KisMAC" id="484"/>
+                            <menuItem title="About KisMAC" id="484">
+                                <connections>
+                                    <action selector="orderFrontStandardAboutPanel:" target="-2" id="529"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Check for Updates..." id="2263">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="2265"/>
-                            <menuItem title="Preferences..." keyEquivalent="," id="486"/>
+                            <menuItem title="Preferences..." keyEquivalent="," id="486">
+                                <connections>
+                                    <action selector="showPrefs:" target="466" id="498"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="490">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -189,68 +216,156 @@
                             <menuItem isSeparatorItem="YES" id="488">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Hide KisMAC" keyEquivalent="h" id="492"/>
+                            <menuItem title="Hide KisMAC" keyEquivalent="h" id="492">
+                                <connections>
+                                    <action selector="hide:" target="-1" id="495"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Hide Others" keyEquivalent="h" id="489">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="hideOtherApplications:" target="-1" id="496"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Show All" id="482">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="unhideAllApplications:" target="-1" id="497"/>
+                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="487">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Quit KisMAC" keyEquivalent="q" id="483"/>
+                            <menuItem title="Quit KisMAC" keyEquivalent="q" id="483">
+                                <connections>
+                                    <action selector="terminate:" target="-1" id="494"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
                 <menuItem title="File" id="886">
                     <menu key="submenu" title="File" id="914">
                         <items>
-                            <menuItem title="New" keyEquivalent="n" id="906"/>
-                            <menuItem title="Open..." keyEquivalent="o" id="920"/>
+                            <menuItem title="New" keyEquivalent="n" id="906">
+                                <connections>
+                                    <action selector="new:" target="1397" id="1429"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Open..." keyEquivalent="o" id="920">
+                                <connections>
+                                    <action selector="openKisMACFile:" target="1397" id="1420"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Open Map" keyEquivalent="o" id="912">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="openKisMAPFile:" target="1397" id="1421"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Import" id="902">
                                 <menu key="submenu" title="Import" id="916">
                                     <items>
                                         <menuItem title="Data from" id="899"/>
-                                        <menuItem title="  KisMAC file" id="1144"/>
-                                        <menuItem title="  Kismet XML" id="1549"/>
-                                        <menuItem title="  Netstumbler Text" id="1154"/>
-                                        <menuItem title="  PCAP Dump" keyEquivalent="O" id="909"/>
+                                        <menuItem title="  KisMAC file" id="1144">
+                                            <connections>
+                                                <action selector="importKisMACFile:" target="1397" id="1485"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="  Kismet XML" id="1549">
+                                            <connections>
+                                                <action selector="importKismetXML:" target="466" id="1550"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="  Netstumbler Text" id="1154">
+                                            <connections>
+                                                <action selector="importNetstumbler:" target="466" id="1155"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="  PCAP Dump" keyEquivalent="O" id="909">
+                                            <connections>
+                                                <action selector="importPCPFile:" target="1397" id="1430"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="903">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
                                         <menuItem title="Map from" id="913"/>
-                                        <menuItem title="  Image" id="917"/>
-                                        <menuItem title="  Server" id="1042"/>
+                                        <menuItem title="  Image" id="917">
+                                            <connections>
+                                                <action selector="importImageForMap:" target="1397" id="1488"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="  Server" id="1042">
+                                            <connections>
+                                                <action selector="importMapFromServer:" target="466" id="1043"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="900">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Save" keyEquivalent="s" id="915"/>
-                            <menuItem title="Save As" keyEquivalent="S" id="907"/>
+                            <menuItem title="Save" keyEquivalent="s" id="915">
+                                <connections>
+                                    <action selector="saveKisMACFile:" target="1397" id="1422"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Save As" keyEquivalent="S" id="907">
+                                <connections>
+                                    <action selector="saveKisMACFileAs:" target="1397" id="1423"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Save Map" keyEquivalent="s" id="911">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="saveKisMAPFile:" target="1397" id="1424"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Export" id="901">
                                 <menu key="submenu" title="Export" id="918">
                                     <items>
                                         <menuItem title="Data to" id="921"/>
-                                        <menuItem title="  Netstumbler Text" id="904"/>
-                                        <menuItem title="  Google Earth KML" id="1503"/>
-                                        <menuItem title="  MacStumbler" id="905"/>
-                                        <menuItem title="  .kismac Webservice file" id="1001"/>
-                                        <menuItem title="  .kismac Server" id="1159"/>
+                                        <menuItem title="  Netstumbler Text" id="904">
+                                            <connections>
+                                                <action selector="exportNS:" target="466" id="931"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="  Google Earth KML" id="1503">
+                                            <connections>
+                                                <action selector="exportKMLFile:" target="466" id="1532"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="  MacStumbler" id="905">
+                                            <connections>
+                                                <action selector="exportMacstumbler:" target="466" id="924"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="  .kismac Webservice file" id="1001">
+                                            <connections>
+                                                <action selector="exportWarD:" target="466" id="1002"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="  .kismac Server" id="1159">
+                                            <connections>
+                                                <action selector="exportToServer:" target="466" id="1160"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="908">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
                                         <menuItem title="Map to" id="919"/>
-                                        <menuItem title="  PDF file" id="910"/>
-                                        <menuItem title="  JPEG file" id="1156"/>
+                                        <menuItem title="  PDF file" id="910">
+                                            <connections>
+                                                <action selector="exportPDF:" target="466" id="926"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="  JPEG file" id="1156">
+                                            <connections>
+                                                <action selector="exportJPEG:" target="466" id="1157"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -260,25 +375,65 @@
                 <menuItem title="Edit" id="163">
                     <menu key="submenu" title="Edit" id="169">
                         <items>
-                            <menuItem title="Undo" keyEquivalent="z" id="158"/>
-                            <menuItem title="Redo" keyEquivalent="Z" id="173"/>
+                            <menuItem title="Undo" keyEquivalent="z" id="158">
+                                <connections>
+                                    <action selector="undo:" target="-1" id="180"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Redo" keyEquivalent="Z" id="173">
+                                <connections>
+                                    <action selector="redo:" target="-1" id="178"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="156">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Cut" keyEquivalent="x" id="160"/>
-                            <menuItem title="Copy" keyEquivalent="c" id="157"/>
-                            <menuItem title="Paste" keyEquivalent="v" id="171"/>
-                            <menuItem title="Delete" id="164"/>
-                            <menuItem title="Select All" keyEquivalent="a" id="172"/>
+                            <menuItem title="Cut" keyEquivalent="x" id="160">
+                                <connections>
+                                    <action selector="cut:" target="-1" id="175"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Copy" keyEquivalent="c" id="157">
+                                <connections>
+                                    <action selector="copy:" target="-1" id="181"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Paste" keyEquivalent="v" id="171">
+                                <connections>
+                                    <action selector="paste:" target="-1" id="176"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Delete" id="164">
+                                <connections>
+                                    <action selector="delete:" target="-1" id="195"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Select All" keyEquivalent="a" id="172">
+                                <connections>
+                                    <action selector="selectAll:" target="-1" id="179"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="174">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Spelling" id="184">
                                 <menu key="submenu" title="Spelling" id="185">
                                     <items>
-                                        <menuItem title="Spelling..." keyEquivalent=":" id="187"/>
-                                        <menuItem title="Check Spelling" keyEquivalent=";" id="189"/>
-                                        <menuItem title="Check Spelling as You Type" id="191"/>
+                                        <menuItem title="Spelling..." keyEquivalent=":" id="187">
+                                            <connections>
+                                                <action selector="showGuessPanel:" target="-1" id="188"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Check Spelling" keyEquivalent=";" id="189">
+                                            <connections>
+                                                <action selector="checkSpelling:" target="-1" id="190"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Check Spelling as You Type" id="191">
+                                            <connections>
+                                                <action selector="toggleContinuousSpellChecking:" target="-1" id="192"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -291,60 +446,112 @@
                             <menuItem isSeparatorItem="YES" id="1141">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Auto Hopper Timing" id="964"/>
+                            <menuItem title="Auto Hopper Timing" id="964">
+                                <connections>
+                                    <action selector="setAutoAdjustTimer:" target="466" id="1000"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="965">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="All FCC/IC Channels (1-11)" keyEquivalent="u" id="966">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selChannelRange:" target="466" id="999"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="All ETSI Channels (1-13)" keyEquivalent="t" id="967">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selChannelRange:" target="466" id="998"/>
+                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="968">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Channel 1" keyEquivalent="1" id="969">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selChannel:" target="466" id="984"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Channel 2" keyEquivalent="2" id="970">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selChannel:" target="466" id="985"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Channel 3" keyEquivalent="3" id="971">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selChannel:" target="466" id="986"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Channel 4" keyEquivalent="4" id="972">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selChannel:" target="466" id="987"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Channel 5" keyEquivalent="5" id="973">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selChannel:" target="466" id="988"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Channel 6" keyEquivalent="6" id="974">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selChannel:" target="466" id="989"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Channel 7" keyEquivalent="7" id="976">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selChannel:" target="466" id="990"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Channel 8" keyEquivalent="8" id="975">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selChannel:" target="466" id="991"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Channel 9" keyEquivalent="9" id="977">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selChannel:" target="466" id="992"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Channel 10" keyEquivalent="a" id="978">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selChannel:" target="466" id="993"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Channel 11" keyEquivalent="b" id="979">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selChannel:" target="466" id="995"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Channel 12" keyEquivalent="c" id="980">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selChannel:" target="466" id="996"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Channel 13" keyEquivalent="d" id="981">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selChannel:" target="466" id="997"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Channel 14" keyEquivalent="e" id="1039">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selChannel:" target="466" id="1040"/>
+                                </connections>
                             </menuItem>
                         </items>
                     </menu>
@@ -356,35 +563,71 @@
                                 <string key="keyEquivalent" base64-UTF8="YES">
 CA
 </string>
+                                <connections>
+                                    <action selector="clearNetwork:" target="466" id="1028"/>
+                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="1170">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Test Injection" keyEquivalent="t" id="2147"/>
+                            <menuItem title="Test Injection" keyEquivalent="t" id="2147">
+                                <connections>
+                                    <action selector="testInjection:" target="466" id="2318"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="2148"/>
                             <menuItem title="Join Network" keyEquivalent="j" id="1169">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="joinNetwork:" target="466" id="1171"/>
+                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="617">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Show Details" keyEquivalent="d" id="621">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showInfo:" target="466" id="659"/>
+                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="680">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Monitor Signal Strength" keyEquivalent="m" id="1533">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="monitorSignal:" target="466" id="1537"/>
+                                </connections>
                             </menuItem>
-                            <menuItem title="Monitor all signals" id="1534"/>
+                            <menuItem title="Monitor all signals" id="1534">
+                                <connections>
+                                    <action selector="monitorAllNetworks:" target="466" id="1538"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="1535">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Deauthenticate" keyEquivalent="D" id="679"/>
-                            <menuItem title="Deauthenticate all Networks" id="1489"/>
-                            <menuItem title="Authentication Flood" id="1046"/>
-                            <menuItem title="Reinject Packets" id="1174"/>
+                            <menuItem title="Deauthenticate" keyEquivalent="D" id="679">
+                                <connections>
+                                    <action selector="deautheticateNetwork:" target="466" id="681"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Deauthenticate all Networks" id="1489">
+                                <connections>
+                                    <action selector="deautheticateAllNetworks:" target="466" id="1490"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Authentication Flood" id="1046">
+                                <connections>
+                                    <action selector="authFloodNetwork:" target="466" id="1049"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Reinject Packets" id="1174">
+                                <connections>
+                                    <action selector="injectPackets:" target="466" id="1175"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="1047">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -394,36 +637,84 @@ CA
                                         <menuItem title="Wordlist Attack" id="1029">
                                             <menu key="submenu" title="Wordlist Attack" id="1030">
                                                 <items>
-                                                    <menuItem title="against LEAP Key" id="1172"/>
-                                                    <menuItem title="against WPA Key" id="1163"/>
+                                                    <menuItem title="against LEAP Key" id="1172">
+                                                        <connections>
+                                                            <action selector="wordlistLEAP:" target="1397" id="1486"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="against WPA Key" id="1163">
+                                                        <connections>
+                                                            <action selector="wordlistWPA:" target="1397" id="1487"/>
+                                                        </connections>
+                                                    </menuItem>
                                                     <menuItem isSeparatorItem="YES" id="1165">
                                                         <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                                     </menuItem>
-                                                    <menuItem title="against 40-bit Apple Key" id="1031"/>
-                                                    <menuItem title="against 104-bit Apple Key" id="1032"/>
-                                                    <menuItem title="against 104-bit MD5 Key" id="1038"/>
+                                                    <menuItem title="against 40-bit Apple Key" id="1031">
+                                                        <connections>
+                                                            <action selector="wordlist40bitApple:" target="1397" id="1453"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="against 104-bit Apple Key" id="1032">
+                                                        <connections>
+                                                            <action selector="wordlist104bitApple:" target="1397" id="1454"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="against 104-bit MD5 Key" id="1038">
+                                                        <connections>
+                                                            <action selector="wordlist104bitMD5:" target="1397" id="1455"/>
+                                                        </connections>
+                                                    </menuItem>
                                                 </items>
                                             </menu>
                                         </menuItem>
                                         <menuItem title="Weak Scheduling Attack" id="623">
                                             <menu key="submenu" title="Weak Scheduling Attack" id="624">
                                                 <items>
-                                                    <menuItem title="against 40-bit" id="625"/>
-                                                    <menuItem title="against 104-bit" id="629"/>
-                                                    <menuItem title="against both" id="630"/>
+                                                    <menuItem title="against 40-bit" id="625">
+                                                        <connections>
+                                                            <action selector="weakSchedulingAttack40bit:" target="1397" id="1474"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="against 104-bit" id="629">
+                                                        <connections>
+                                                            <action selector="weakSchedulingAttack104bit:" target="1397" id="1475"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="against both" id="630">
+                                                        <connections>
+                                                            <action selector="weakSchedulingAttack40And104bit:" target="1397" id="1476"/>
+                                                        </connections>
+                                                    </menuItem>
                                                 </items>
                                             </menu>
                                         </menuItem>
                                         <menuItem title="Bruteforce" id="626">
                                             <menu key="submenu" title="Bruteforce" id="627">
                                                 <items>
-                                                    <menuItem title="all chars against 40-bit" id="628"/>
-                                                    <menuItem title="alphanums against 40-bit" id="665"/>
-                                                    <menuItem title="low case letters against 40-bit" id="676"/>
+                                                    <menuItem title="all chars against 40-bit" id="628">
+                                                        <connections>
+                                                            <action selector="bruteforce40bitAll:" target="1397" id="1451"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="alphanums against 40-bit" id="665">
+                                                        <connections>
+                                                            <action selector="bruteforce40bitAlpha:" target="1397" id="1452"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="low case letters against 40-bit" id="676">
+                                                        <connections>
+                                                            <action selector="bruteforce40bitLow:" target="1397" id="1433"/>
+                                                        </connections>
+                                                    </menuItem>
                                                     <menuItem isSeparatorItem="YES" id="855">
                                                         <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                                     </menuItem>
-                                                    <menuItem title="Newshams 21 bit Attack" id="856"/>
+                                                    <menuItem title="Newshams 21 bit Attack" id="856">
+                                                        <connections>
+                                                            <action selector="bruteforceNewsham:" target="1397" id="1432"/>
+                                                        </connections>
+                                                    </menuItem>
                                                 </items>
                                             </menu>
                                         </menuItem>
@@ -436,38 +727,88 @@ CA
                 <menuItem title="Map" id="831">
                     <menu key="submenu" title="Map" id="936">
                         <items>
-                            <menuItem title="Set Waypoint 1" id="1011"/>
-                            <menuItem title="Set Waypoint 2" id="937"/>
-                            <menuItem title="Set Current Position" id="1007"/>
+                            <menuItem title="Set Waypoint 1" id="1011">
+                                <connections>
+                                    <action selector="setWaypoint1:" target="1461" id="1468"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Set Waypoint 2" id="937">
+                                <connections>
+                                    <action selector="setWaypoint2:" target="1461" id="1467"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Set Current Position" id="1007">
+                                <connections>
+                                    <action selector="setCurrentPosition:" target="1461" id="1466"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="934">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Center Current Position" keyEquivalent="c" id="1480">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="autoCenter:" target="1461" id="1481"/>
+                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="1479">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Show Current Position" state="on" id="939"/>
-                            <menuItem title="Show Networks" state="on" keyEquivalent="E" id="1016"/>
-                            <menuItem title="Show Net Area" keyEquivalent="A" id="1018"/>
+                            <menuItem title="Show Current Position" state="on" id="939">
+                                <connections>
+                                    <action selector="setShowCurrentPosition:" target="1461" id="1465"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Show Networks" state="on" keyEquivalent="E" id="1016">
+                                <connections>
+                                    <action selector="showNetworksInMap:" target="1397" id="1464"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Show Net Area" keyEquivalent="A" id="1018">
+                                <connections>
+                                    <action selector="showCurNetArea:" target="466" id="1019"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Show Area of all Nets" keyEquivalent="A" id="1022">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showAllNetArea:" target="466" id="1023"/>
+                                </connections>
                             </menuItem>
-                            <menuItem title="Show Trace" keyEquivalent="T" id="1003"/>
+                            <menuItem title="Show Trace" keyEquivalent="T" id="1003">
+                                <connections>
+                                    <action selector="showTraceInMap:" target="1397" id="1473"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="1545">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Show GPS Status" keyEquivalent="g" id="1544"/>
+                            <menuItem title="Show GPS Status" keyEquivalent="g" id="1544">
+                                <connections>
+                                    <action selector="displayGPSInfo:" target="466" id="1563"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="1004">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Zoom In" keyEquivalent="+" id="933"/>
-                            <menuItem title="Zoom Out" keyEquivalent="-" id="935"/>
+                            <menuItem title="Zoom In" keyEquivalent="+" id="933">
+                                <connections>
+                                    <action selector="zoomIn:" target="1461" id="1477"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Zoom Out" keyEquivalent="-" id="935">
+                                <connections>
+                                    <action selector="zoomOut:" target="1461" id="1478"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="940">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Reset GPS Subsystem" id="938"/>
+                            <menuItem title="Reset GPS Subsystem" id="938">
+                                <connections>
+                                    <action selector="restartGPS:" target="466" id="949"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Reset Trace" id="1014"/>
                         </items>
                     </menu>
@@ -475,62 +816,133 @@ CA
                 <menuItem title="Window" id="19">
                     <menu key="submenu" title="Window" systemMenu="window" id="24">
                         <items>
-                            <menuItem title="Minimize" keyEquivalent="m" id="23"/>
-                            <menuItem title="Close Active Window" keyEquivalent="w" id="1142"/>
+                            <menuItem title="Minimize" keyEquivalent="m" id="23">
+                                <connections>
+                                    <action selector="performMiniaturize:" target="-1" id="37"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Close Active Window" keyEquivalent="w" id="1142">
+                                <connections>
+                                    <action selector="closeActiveWindow:" target="466" id="1149"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="92">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Show Networks" keyEquivalent="n" id="1371">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showNetworks:" target="1397" id="1972"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Show Traffic" keyEquivalent="t" id="1373">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showTrafficView:" target="1397" id="1425"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Show Map" keyEquivalent="m" id="1375">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showMap:" target="1397" id="1427"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Show Details" keyEquivalent="d" id="1374">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showDetails:" target="1397" id="1428"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Show Hierarchy" keyEquivalent="h" id="1176">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showNetHierarch:" target="466" id="1178"/>
+                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="1559">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Fullscreen Map" keyEquivalent="F" id="1560"/>
+                            <menuItem title="Fullscreen Map" keyEquivalent="F" id="1560">
+                                <connections>
+                                    <action selector="goFullscreen:" target="466" id="1561"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="1177">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Bring All to Front" id="5"/>
+                            <menuItem title="Bring All to Front" id="5">
+                                <connections>
+                                    <action selector="arrangeInFront:" target="-1" id="39"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
                 <menuItem title="Help" id="713">
                     <menu key="submenu" title="Help" id="714">
                         <items>
-                            <menuItem title="KisMAC website" id="859"/>
-                            <menuItem title="Donate to KisMAC" id="860"/>
+                            <menuItem title="KisMAC website" id="859">
+                                <connections>
+                                    <action selector="openWebsiteURL:" target="466" id="862"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Donate to KisMAC" id="860">
+                                <connections>
+                                    <action selector="openDonateURL:" target="466" id="863"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="861">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="KisMAC FAQ" id="1555"/>
-                            <menuItem title="KisMAC Forums" id="1556"/>
+                            <menuItem title="KisMAC FAQ" id="1555">
+                                <connections>
+                                    <action selector="openFAQURL:" target="466" id="1558"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="KisMAC Forums" id="1556">
+                                <connections>
+                                    <action selector="openForumsURL:" target="466" id="1557"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="1554">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="KisMAC Help" keyEquivalent="?" id="715"/>
+                            <menuItem title="KisMAC Help" keyEquivalent="?" id="715">
+                                <connections>
+                                    <action selector="showHelp:" target="-1" id="716"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
                 <menuItem title="Debug" id="1127">
                     <menu key="submenu" title="Debug" id="1126">
                         <items>
-                            <menuItem title="Save Stress Test" id="1131"/>
-                            <menuItem title="GPS serial data debug out" id="1150"/>
-                            <menuItem title="Beacon Flooding" id="1152"/>
-                            <menuItem title="WPA Hash Test" id="1161"/>
-                            <menuItem title="Output Traffic View TIFF" id="1385"/>
+                            <menuItem title="Save Stress Test" id="1131">
+                                <connections>
+                                    <action selector="debugSaveStressTest:" target="466" id="1132"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="GPS serial data debug out" id="1150">
+                                <connections>
+                                    <action selector="gpsDebugToConsole:" target="466" id="1151"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Beacon Flooding" id="1152">
+                                <connections>
+                                    <action selector="debugBeaconFlood:" target="466" id="1153"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="WPA Hash Test" id="1161">
+                                <connections>
+                                    <action selector="debugTestWPAHashingFunction:" target="466" id="1162"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Output Traffic View TIFF" id="1385">
+                                <connections>
+                                    <action selector="debugExportTrafficView:" target="466" id="1386"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
@@ -544,70 +956,6 @@ CA
         </customObject>
         <customObject id="466" userLabel="ScanController" customClass="ScanController">
             <connections>
-                <action selector="authFloodNetwork:" destination="1046" id="1049"/>
-                <action selector="changeSearchType:" destination="1506" id="1514"/>
-                <action selector="changeSearchType:" destination="1507" id="1515"/>
-                <action selector="changeSearchType:" destination="1508" id="1516"/>
-                <action selector="changeSearchType:" destination="1509" id="1517"/>
-                <action selector="changeSearchType:" destination="1518" id="1521"/>
-                <action selector="changeSearchType:" destination="1519" id="1522"/>
-                <action selector="changeSearchType:" destination="1520" id="1523"/>
-                <action selector="changeSearchValue:" destination="1297" id="1431"/>
-                <action selector="clearNetwork:" destination="616" id="1028"/>
-                <action selector="closeActiveWindow:" destination="1142" id="1149"/>
-                <action selector="deautheticateAllNetworks:" destination="1489" id="1490"/>
-                <action selector="deautheticateNetwork:" destination="679" id="681"/>
-                <action selector="debugBeaconFlood:" destination="1152" id="1153"/>
-                <action selector="debugExportTrafficView:" destination="1385" id="1386"/>
-                <action selector="debugSaveStressTest:" destination="1131" id="1132"/>
-                <action selector="debugTestWPAHashingFunction:" destination="1161" id="1162"/>
-                <action selector="displayGPSInfo:" destination="1544" id="1563"/>
-                <action selector="exportJPEG:" destination="1156" id="1157"/>
-                <action selector="exportKMLFile:" destination="1503" id="1532"/>
-                <action selector="exportMacstumbler:" destination="905" id="924"/>
-                <action selector="exportNS:" destination="904" id="931"/>
-                <action selector="exportPDF:" destination="910" id="926"/>
-                <action selector="exportToServer:" destination="1159" id="1160"/>
-                <action selector="exportWarD:" destination="1001" id="1002"/>
-                <action selector="goFullscreen:" destination="1560" id="1561"/>
-                <action selector="gpsDebugToConsole:" destination="1150" id="1151"/>
-                <action selector="importKismetXML:" destination="1549" id="1550"/>
-                <action selector="importMapFromServer:" destination="1042" id="1043"/>
-                <action selector="importNetstumbler:" destination="1154" id="1155"/>
-                <action selector="injectPackets:" destination="1174" id="1175"/>
-                <action selector="joinNetwork:" destination="1169" id="1171"/>
-                <action selector="monitorAllNetworks:" destination="1534" id="1538"/>
-                <action selector="monitorSignal:" destination="1533" id="1537"/>
-                <action selector="openDonateURL:" destination="860" id="863"/>
-                <action selector="openFAQURL:" destination="1555" id="1558"/>
-                <action selector="openForumsURL:" destination="1556" id="1557"/>
-                <action selector="openWebsiteURL:" destination="859" id="862"/>
-                <action selector="restartGPS:" destination="938" id="949"/>
-                <action selector="selChannel:" destination="969" id="984"/>
-                <action selector="selChannel:" destination="970" id="985"/>
-                <action selector="selChannel:" destination="971" id="986"/>
-                <action selector="selChannel:" destination="972" id="987"/>
-                <action selector="selChannel:" destination="973" id="988"/>
-                <action selector="selChannel:" destination="974" id="989"/>
-                <action selector="selChannel:" destination="976" id="990"/>
-                <action selector="selChannel:" destination="975" id="991"/>
-                <action selector="selChannel:" destination="977" id="992"/>
-                <action selector="selChannel:" destination="978" id="993"/>
-                <action selector="selChannel:" destination="979" id="995"/>
-                <action selector="selChannel:" destination="980" id="996"/>
-                <action selector="selChannel:" destination="981" id="997"/>
-                <action selector="selChannel:" destination="1039" id="1040"/>
-                <action selector="selChannelRange:" destination="967" id="998"/>
-                <action selector="selChannelRange:" destination="966" id="999"/>
-                <action selector="setAutoAdjustTimer:" destination="964" id="1000"/>
-                <action selector="showAllNetArea:" destination="1022" id="1023"/>
-                <action selector="showContextHelp:" destination="1298" id="1366"/>
-                <action selector="showCurNetArea:" destination="1018" id="1019"/>
-                <action selector="showInfo:" destination="621" id="659"/>
-                <action selector="showNetHierarch:" destination="1176" id="1178"/>
-                <action selector="showPrefs:" destination="486" id="498"/>
-                <action selector="showPrefs:" destination="2443" id="2453"/>
-                <action selector="testInjection:" destination="2147" id="2318"/>
                 <outlet property="_authFloodMenu" destination="1046" id="1048"/>
                 <outlet property="_container" destination="1137" id="1139"/>
                 <outlet property="_deauthAllMenu" destination="1489" id="1491"/>
@@ -675,8 +1023,8 @@ CA
                         <rect key="frame" x="1" y="1" width="204" height="403"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="508" id="509" customClass="ColoredRowOutlineView">
-                                <rect key="frame" x="0.0" y="0.0" width="204" height="403"/>
+                            <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="508" id="509">
+                                <rect key="frame" x="0.0" y="0.0" width="204" height="16"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -704,11 +1052,11 @@ CA
                         </subviews>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
-                    <scroller key="horizontalScroller" verticalHuggingPriority="750" controlSize="small" id="2421">
+                    <scroller key="horizontalScroller" verticalHuggingPriority="750" controlSize="small" horizontal="YES" id="2421">
                         <rect key="frame" x="1" y="404" width="204" height="11"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" verticalHuggingPriority="750" controlSize="small" id="2420">
+                    <scroller key="verticalScroller" verticalHuggingPriority="750" controlSize="small" horizontal="NO" id="2420">
                         <rect key="frame" x="205" y="1" width="11" height="403"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
@@ -717,7 +1065,6 @@ CA
         </customView>
         <customObject id="531" userLabel="InfoController" customClass="InfoController">
             <connections>
-                <action selector="commentChanged:" destination="1235" id="1342"/>
                 <outlet property="_commentField" destination="1235" id="1336"/>
                 <outlet property="aClientTable" destination="1240" id="1337"/>
                 <outlet property="aShortTable" destination="723" id="724"/>
@@ -735,8 +1082,8 @@ CA
                         <rect key="frame" x="1" y="1" width="276" height="295"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" id="723" customClass="ColoredRowTableView">
-                                <rect key="frame" x="0.0" y="0.0" width="276" height="295"/>
+                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" id="723">
+                                <rect key="frame" x="0.0" y="0.0" width="276" height="16"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -775,11 +1122,11 @@ CA
                         </subviews>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
-                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" id="2423">
+                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="2423">
                         <rect key="frame" x="-100" y="-100" width="261" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" id="2422">
+                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="2422">
                         <rect key="frame" x="-100" y="-100" width="15" height="295"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
@@ -790,8 +1137,6 @@ CA
         <customObject id="1137" userLabel="WaveContainer" customClass="WaveContainer"/>
         <customObject id="1180" userLabel="TrafficController" customClass="TrafficController">
             <connections>
-                <action selector="setCurrentMode:" destination="1303" id="1315"/>
-                <action selector="setTimeLength:" destination="1307" id="1314"/>
                 <outlet property="_container" destination="1137" id="1181"/>
                 <outlet property="_intervalButton" destination="1307" id="1313"/>
                 <outlet property="_modeButton" destination="1303" id="1312"/>
@@ -810,8 +1155,8 @@ CA
                         <rect key="frame" x="1" y="17" width="739" height="374"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" headerView="2426" id="1212" customClass="ColoredRowTableView">
-                                <rect key="frame" x="0.0" y="0.0" width="775" height="374"/>
+                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" headerView="2426" id="1212">
+                                <rect key="frame" x="0.0" y="0.0" width="775" height="16"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1006,11 +1351,11 @@ CA
                         </subviews>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
-                    <scroller key="horizontalScroller" verticalHuggingPriority="750" id="2425">
+                    <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="2425">
                         <rect key="frame" x="1" y="391" width="739" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" verticalHuggingPriority="750" id="2424">
+                    <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="2424">
                         <rect key="frame" x="740" y="17" width="15" height="374"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
@@ -1039,13 +1384,6 @@ CA
                     <rect key="frame" x="0.0" y="0.0" width="711" height="387"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <connections>
-                        <action selector="autoCenter:" destination="1480" id="1481"/>
-                        <action selector="setCurrentPosition:" destination="1007" id="1466"/>
-                        <action selector="setShowCurrentPosition:" destination="939" id="1465"/>
-                        <action selector="setWaypoint1:" destination="1011" id="1468"/>
-                        <action selector="setWaypoint2:" destination="937" id="1467"/>
-                        <action selector="zoomIn:" destination="933" id="1477"/>
-                        <action selector="zoomOut:" destination="935" id="1478"/>
                         <outlet property="_setCurrentPoint" destination="1007" id="1470"/>
                         <outlet property="_setWayPoint1" destination="1011" id="1471"/>
                         <outlet property="_setWayPoint2" destination="937" id="1472"/>
@@ -1078,8 +1416,8 @@ CA
                                             <rect key="frame" x="1" y="17" width="277" height="363"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" headerView="2432" id="1244" customClass="ColoredRowTableView">
-                                                    <rect key="frame" x="0.0" y="0.0" width="292" height="363"/>
+                                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" headerView="2432" id="1244">
+                                                    <rect key="frame" x="0.0" y="0.0" width="292" height="16"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1098,7 +1436,7 @@ CA
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                         </tableColumn>
-                                                        <tableColumn identifier="setting" width="185.14599999999999" minWidth="8" maxWidth="1000" id="1229">
+                                                        <tableColumn identifier="setting" width="170.14599999999999" minWidth="8" maxWidth="1000" id="1229">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Setting">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1120,11 +1458,11 @@ CA
                                             </subviews>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </clipView>
-                                        <scroller key="horizontalScroller" verticalHuggingPriority="750" id="2431">
+                                        <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="2431">
                                             <rect key="frame" x="1" y="380" width="277" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
-                                        <scroller key="verticalScroller" verticalHuggingPriority="750" id="2430">
+                                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="2430">
                                             <rect key="frame" x="278" y="17" width="15" height="363"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
@@ -1152,6 +1490,9 @@ CA
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
+                                        <connections>
+                                            <action selector="commentChanged:" target="531" id="1342"/>
+                                        </connections>
                                     </textField>
                                 </subviews>
                             </view>
@@ -1173,14 +1514,14 @@ CA
                                             <rect key="frame" x="1" y="17" width="426" height="409"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" headerView="2429" id="1240" customClass="ColoredRowTableView">
-                                                    <rect key="frame" x="0.0" y="0.0" width="441" height="409"/>
+                                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" headerView="2429" id="1240">
+                                                    <rect key="frame" x="0.0" y="0.0" width="441" height="16"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                     <tableColumns>
-                                                        <tableColumn identifier="client" editable="NO" width="84.039000000000001" minWidth="39.039000000000001" maxWidth="1000" id="1233">
+                                                        <tableColumn identifier="client" editable="NO" width="81.039000000000001" minWidth="39.039000000000001" maxWidth="1000" id="1233">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Client">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1193,7 +1534,7 @@ CA
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                         </tableColumn>
-                                                        <tableColumn identifier="vendor" editable="NO" width="48" minWidth="10" maxWidth="1000" id="1234">
+                                                        <tableColumn identifier="vendor" editable="NO" width="46" minWidth="10" maxWidth="1000" id="1234">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Vendor">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1206,7 +1547,7 @@ CA
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                         </tableColumn>
-                                                        <tableColumn identifier="signal" editable="NO" width="30" minWidth="10" maxWidth="1000" id="1242">
+                                                        <tableColumn identifier="signal" editable="NO" width="29" minWidth="10" maxWidth="1000" id="1242">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Signal">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1219,7 +1560,7 @@ CA
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                         </tableColumn>
-                                                        <tableColumn identifier="sent" editable="NO" width="48" minWidth="10" maxWidth="1000" id="1230">
+                                                        <tableColumn identifier="sent" editable="NO" width="46" minWidth="10" maxWidth="1000" id="1230">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="sent Bytes">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1232,7 +1573,7 @@ CA
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                         </tableColumn>
-                                                        <tableColumn identifier="received" editable="NO" width="54.607419999999998" minWidth="10" maxWidth="1000" id="1232">
+                                                        <tableColumn identifier="received" editable="NO" width="51.607419999999998" minWidth="10" maxWidth="1000" id="1232">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="recv. Bytes">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1245,7 +1586,7 @@ CA
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                         </tableColumn>
-                                                        <tableColumn identifier="ipa" width="62.009770000000003" minWidth="60.009770000000003" maxWidth="1000" id="1513">
+                                                        <tableColumn identifier="ipa" width="61.009770000000003" minWidth="60.009770000000003" maxWidth="1000" id="1513">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="IP Address">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1258,7 +1599,7 @@ CA
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                         </tableColumn>
-                                                        <tableColumn identifier="lastseen" editable="NO" width="93.149000000000001" minWidth="54.149900000000002" maxWidth="1000" id="1231">
+                                                        <tableColumn identifier="lastseen" editable="NO" width="90.149000000000001" minWidth="54.149900000000002" maxWidth="1000" id="1231">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Last Seen">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1280,11 +1621,11 @@ CA
                                             </subviews>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </clipView>
-                                        <scroller key="horizontalScroller" verticalHuggingPriority="750" id="2428">
+                                        <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="2428">
                                             <rect key="frame" x="1" y="426" width="426" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
-                                        <scroller key="verticalScroller" verticalHuggingPriority="750" id="2427">
+                                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="2427">
                                             <rect key="frame" x="427" y="17" width="15" height="409"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
@@ -1317,57 +1658,48 @@ CA
                 </openGLView>
             </subviews>
         </customView>
-        <customObject id="1397" userLabel="ScriptController" customClass="ScriptController">
-            <connections>
-                <action selector="bruteforce40bitAll:" destination="628" id="1451"/>
-                <action selector="bruteforce40bitAlpha:" destination="665" id="1452"/>
-                <action selector="bruteforce40bitLow:" destination="676" id="1433"/>
-                <action selector="bruteforceNewsham:" destination="856" id="1432"/>
-                <action selector="importImageForMap:" destination="917" id="1488"/>
-                <action selector="importKisMACFile:" destination="1144" id="1485"/>
-                <action selector="importPCPFile:" destination="909" id="1430"/>
-                <action selector="new:" destination="906" id="1429"/>
-                <action selector="openKisMACFile:" destination="920" id="1420"/>
-                <action selector="openKisMACFile:" destination="2448" id="2458"/>
-                <action selector="openKisMAPFile:" destination="912" id="1421"/>
-                <action selector="saveKisMACFile:" destination="915" id="1422"/>
-                <action selector="saveKisMACFile:" destination="2447" id="2457"/>
-                <action selector="saveKisMACFileAs:" destination="907" id="1423"/>
-                <action selector="saveKisMAPFile:" destination="911" id="1424"/>
-                <action selector="showDetails:" destination="1374" id="1428"/>
-                <action selector="showDetails:" destination="2441" id="2456"/>
-                <action selector="showMap:" destination="1375" id="1427"/>
-                <action selector="showMap:" destination="2442" id="2455"/>
-                <action selector="showNetworks:" destination="1371" id="1972"/>
-                <action selector="showNetworks:" destination="2445" id="2454"/>
-                <action selector="showNetworksInMap:" destination="1016" id="1464"/>
-                <action selector="showTraceInMap:" destination="1003" id="1473"/>
-                <action selector="showTrafficView:" destination="1373" id="1425"/>
-                <action selector="showTrafficView:" destination="2444" id="2459"/>
-                <action selector="toggleScan:" destination="2446" id="2460"/>
-                <action selector="weakSchedulingAttack104bit:" destination="629" id="1475"/>
-                <action selector="weakSchedulingAttack40And104bit:" destination="630" id="1476"/>
-                <action selector="weakSchedulingAttack40bit:" destination="625" id="1474"/>
-                <action selector="wordlist104bitApple:" destination="1032" id="1454"/>
-                <action selector="wordlist104bitMD5:" destination="1038" id="1455"/>
-                <action selector="wordlist40bitApple:" destination="1031" id="1453"/>
-                <action selector="wordlistLEAP:" destination="1172" id="1486"/>
-                <action selector="wordlistWPA:" destination="1163" id="1487"/>
-            </connections>
-        </customObject>
+        <customObject id="1397" userLabel="ScriptController" customClass="ScriptController"/>
         <menu title="Menu" id="1446" userLabel="Search Menu">
             <items>
                 <menuItem title="Search Category" id="1525"/>
                 <menuItem isSeparatorItem="YES" id="1524">
                     <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                 </menuItem>
-                <menuItem title="SSID" state="on" tag="1" id="1506"/>
-                <menuItem title="BSSID" tag="1" id="1507"/>
-                <menuItem title="Vendor" tag="1" id="1508"/>
-                <menuItem title="Encryption" tag="1" id="1509"/>
-                <menuItem title="Main Channel" id="1518"/>
-                <menuItem title="Type" id="1519"/>
-                <menuItem title="Comment" id="1520"/>
+                <menuItem title="SSID" state="on" tag="1" id="1506">
+                    <connections>
+                        <action selector="changeSearchType:" target="466" id="1514"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="BSSID" tag="1" id="1507">
+                    <connections>
+                        <action selector="changeSearchType:" target="466" id="1515"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Vendor" tag="1" id="1508">
+                    <connections>
+                        <action selector="changeSearchType:" target="466" id="1516"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Encryption" tag="1" id="1509">
+                    <connections>
+                        <action selector="changeSearchType:" target="466" id="1517"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Main Channel" id="1518">
+                    <connections>
+                        <action selector="changeSearchType:" target="466" id="1521"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Type" id="1519">
+                    <connections>
+                        <action selector="changeSearchType:" target="466" id="1522"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Comment" id="1520">
+                    <connections>
+                        <action selector="changeSearchType:" target="466" id="1523"/>
+                    </connections>
+                </menuItem>
                 <menuItem isSeparatorItem="YES" id="1505">
                     <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                 </menuItem>
@@ -1377,248 +1709,16 @@ CA
             </items>
         </menu>
         <imageCell controlSize="small" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="2093" userLabel="Image Cell"/>
-        <customObject id="2262" userLabel="Updater" customClass="SUUpdater">
-            <connections>
-                <action selector="checkForUpdates:" destination="2263" id="2264"/>
-            </connections>
-        </customObject>
     </objects>
     <resources>
-        <image name="NSSlideshowTemplate" width="17" height="14"/>
-        <image name="devil" width="128" height="128"/>
-        <image name="toolbar-details" width="256" height="256"/>
-        <image name="toolbar-graph" width="256" height="256"/>
-        <image name="toolbar-map" width="256" height="256"/>
-        <image name="toolbar-networks" width="256" height="256"/>
-        <image name="toolbar-open" width="256" height="256"/>
-        <image name="toolbar-preferences" width="256" height="256"/>
-        <image name="toolbar-save" width="256" height="256"/>
+        <image name="NSApplicationIcon" width="128" height="128"/>
+        <image name="toolbar-details" width="32" height="32"/>
+        <image name="toolbar-graph" width="32" height="32"/>
+        <image name="toolbar-map" width="32" height="32"/>
+        <image name="toolbar-networks" width="32" height="32"/>
+        <image name="toolbar-open" width="32" height="32"/>
+        <image name="toolbar-preferences" width="32" height="32"/>
+        <image name="toolbar-save" width="32" height="32"/>
+        <image name="toolbar-start-scan" width="32" height="32"/>
     </resources>
-    <classes>
-        <class className="BIGLView" superclassName="NSOpenGLView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/BIGLView.h"/>
-        </class>
-        <class className="BIToolbarView" superclassName="NSView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/BIToolbarView.h"/>
-        </class>
-        <class className="BIView" superclassName="NSView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/BIView.h"/>
-        </class>
-        <class className="BIZoomView" superclassName="BIGLView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/BIZoomView.h"/>
-        </class>
-        <class className="GrowlController" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/GrowlController.h"/>
-        </class>
-        <class className="InfoController" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/InfoController.h"/>
-            <relationships>
-                <relationship kind="action" name="commentChanged:"/>
-                <relationship kind="action" name="showNet:"/>
-                <relationship kind="outlet" name="_commentField" candidateClass="NSTextField"/>
-                <relationship kind="outlet" name="aClientTable" candidateClass="NSTableView"/>
-                <relationship kind="outlet" name="aShortTable" candidateClass="NSTableView"/>
-                <relationship kind="outlet" name="aTable" candidateClass="NSTableView"/>
-            </relationships>
-        </class>
-        <class className="MapView" superclassName="BIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MapView.h"/>
-            <relationships>
-                <relationship kind="action" name="autoCenter:"/>
-                <relationship kind="action" name="goDown:"/>
-                <relationship kind="action" name="goLeft:"/>
-                <relationship kind="action" name="goRight:"/>
-                <relationship kind="action" name="goUp:"/>
-                <relationship kind="action" name="setCurrentPosition:"/>
-                <relationship kind="action" name="setShowCurrentPosition:"/>
-                <relationship kind="action" name="setWaypoint1:"/>
-                <relationship kind="action" name="setWaypoint2:"/>
-                <relationship kind="action" name="zoomIn:"/>
-                <relationship kind="action" name="zoomOut:"/>
-                <relationship kind="outlet" name="_setCurrentPoint" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_setWayPoint1" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_setWayPoint2" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_showCurrentPoint" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_showNetworks" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_showTrace" candidateClass="NSMenuItem"/>
-            </relationships>
-        </class>
-        <class className="PrefsController" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PrefsController.h"/>
-            <relationships>
-                <relationship kind="action" name="clickCancel:"/>
-                <relationship kind="action" name="clickOk:"/>
-                <relationship kind="action" name="refreshUI:"/>
-                <relationship kind="outlet" name="prefsBox" candidateClass="NSBox"/>
-                <relationship kind="outlet" name="prefsWindow" candidateClass="PrefsWindow"/>
-            </relationships>
-        </class>
-        <class className="PrefsWindow" superclassName="NSWindow">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PrefsWindow.h"/>
-        </class>
-        <class className="ScanController" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ScanController.h"/>
-            <relationships>
-                <relationship kind="action" name="authFloodNetwork:"/>
-                <relationship kind="action" name="changeSearchType:"/>
-                <relationship kind="action" name="changeSearchValue:"/>
-                <relationship kind="action" name="clearNetwork:"/>
-                <relationship kind="action" name="closeActiveWindow:"/>
-                <relationship kind="action" name="deautheticateAllNetworks:"/>
-                <relationship kind="action" name="deautheticateNetwork:"/>
-                <relationship kind="action" name="debugBeaconFlood:"/>
-                <relationship kind="action" name="debugExportTrafficView:"/>
-                <relationship kind="action" name="debugSaveStressTest:"/>
-                <relationship kind="action" name="debugTestWPAHashingFunction:"/>
-                <relationship kind="action" name="decryptPCAPFile:"/>
-                <relationship kind="action" name="displayGPSInfo:"/>
-                <relationship kind="action" name="doDebugSaveStressTest:"/>
-                <relationship kind="action" name="exportJPEG:"/>
-                <relationship kind="action" name="exportKMLFile:"/>
-                <relationship kind="action" name="exportMacstumbler:"/>
-                <relationship kind="action" name="exportNS:"/>
-                <relationship kind="action" name="exportPDF:"/>
-                <relationship kind="action" name="exportWarD:"/>
-                <relationship kind="action" name="goFullscreen:"/>
-                <relationship kind="action" name="gpsDebugToConsole:"/>
-                <relationship kind="action" name="importKismetXML:"/>
-                <relationship kind="action" name="importMapFromServer:"/>
-                <relationship kind="action" name="importNetstumbler:"/>
-                <relationship kind="action" name="injectPackets:"/>
-                <relationship kind="action" name="joinNetwork:"/>
-                <relationship kind="action" name="monitorAllNetworks:"/>
-                <relationship kind="action" name="monitorSignal:"/>
-                <relationship kind="action" name="openDonateURL:"/>
-                <relationship kind="action" name="openFAQURL:"/>
-                <relationship kind="action" name="openForumsURL:"/>
-                <relationship kind="action" name="openWebsiteURL:"/>
-                <relationship kind="action" name="restartGPS:"/>
-                <relationship kind="action" name="selChannel:"/>
-                <relationship kind="action" name="selChannelRange:"/>
-                <relationship kind="action" name="selDriver:"/>
-                <relationship kind="action" name="selRate:"/>
-                <relationship kind="action" name="setAutoAdjustTimer:"/>
-                <relationship kind="action" name="showAllNetArea:"/>
-                <relationship kind="action" name="showContextHelp:"/>
-                <relationship kind="action" name="showCurNetArea:"/>
-                <relationship kind="action" name="showInfo:"/>
-                <relationship kind="action" name="showNetHierarch:"/>
-                <relationship kind="action" name="showPrefs:"/>
-                <relationship kind="action" name="testInjection:"/>
-                <relationship kind="action" name="updateNetworkTable:complete:"/>
-                <relationship kind="outlet" name="_authFloodMenu" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_channelProg" candidateClass="SpinChannel"/>
-                <relationship kind="outlet" name="_container" candidateClass="WaveContainer"/>
-                <relationship kind="outlet" name="_deauthAllMenu" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_deauthMenu" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_debugMenu" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_detailsDrawerMenu" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_detailsView" candidateClass="NSView"/>
-                <relationship kind="outlet" name="_fullscreen" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_headerField" candidateClass="NSTextField"/>
-                <relationship kind="outlet" name="_mainView" candidateClass="NSBox"/>
-                <relationship kind="outlet" name="_mapView" candidateClass="NSView"/>
-                <relationship kind="outlet" name="_mappingView" candidateClass="MapView"/>
-                <relationship kind="outlet" name="_monitorAllMenu" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_monitorMenu" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_netHierarchDrawer" candidateClass="NSDrawer"/>
-                <relationship kind="outlet" name="_networkTable" candidateClass="NSTableView"/>
-                <relationship kind="outlet" name="_networkView" candidateClass="NSView"/>
-                <relationship kind="outlet" name="_scanButton" candidateClass="NSToolbarItem"/>
-                <relationship kind="outlet" name="_searchField" candidateClass="NSSearchField"/>
-                <relationship kind="outlet" name="_searchTypeMenu" candidateClass="NSPopUpButton"/>
-                <relationship kind="outlet" name="_showAllNetsInMap" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_showDetails" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_showGPSDetails" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_showHierarch" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_showMap" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_showNetInMap" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_showNetworks" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_showTraffic" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="_slideView" candidateClass="BIZoomView"/>
-                <relationship kind="outlet" name="_toolBar" candidateClass="BIToolbarView"/>
-                <relationship kind="outlet" name="_trafficController" candidateClass="TrafficController"/>
-                <relationship kind="outlet" name="_trafficModePopUp" candidateClass="NSPopUpButton"/>
-                <relationship kind="outlet" name="_trafficTimePopUp" candidateClass="NSPopUpButton"/>
-                <relationship kind="outlet" name="_trafficView" candidateClass="NSView"/>
-                <relationship kind="outlet" name="_window" candidateClass="NSWindow"/>
-                <relationship kind="outlet" name="_zoomView" candidateClass="NSView"/>
-                <relationship kind="outlet" name="aBruteForceMenu" candidateClass="NSMenu"/>
-                <relationship kind="outlet" name="aChannelMenu" candidateClass="NSMenu"/>
-                <relationship kind="outlet" name="aCrackMenu" candidateClass="NSMenu"/>
-                <relationship kind="outlet" name="aDetailsTable" candidateClass="NSTableView"/>
-                <relationship kind="outlet" name="aGrowlController" candidateClass="GrowlController"/>
-                <relationship kind="outlet" name="aInfoController" candidateClass="InfoController"/>
-                <relationship kind="outlet" name="aInjPacketsMenu" candidateClass="NSMenuItem"/>
-                <relationship kind="outlet" name="aNetworkMenu" candidateClass="NSMenu"/>
-                <relationship kind="outlet" name="aOutView" candidateClass="NSOutlineView"/>
-                <relationship kind="outlet" name="detailsView" candidateClass="NSView"/>
-                <relationship kind="outlet" name="prefsController" candidateClass="PrefsController"/>
-                <relationship kind="outlet" name="prefsWindow" candidateClass="NSWindow"/>
-                <relationship kind="outlet" name="scanner" candidateClass="WaveScanner"/>
-            </relationships>
-        </class>
-        <class className="ScriptController" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ScriptController.h"/>
-            <relationships>
-                <relationship kind="action" name="bruteforce40bitAll:"/>
-                <relationship kind="action" name="bruteforce40bitAlpha:"/>
-                <relationship kind="action" name="bruteforce40bitLow:"/>
-                <relationship kind="action" name="bruteforceNewsham:"/>
-                <relationship kind="action" name="importImageForMap:"/>
-                <relationship kind="action" name="importKisMACFile:"/>
-                <relationship kind="action" name="importPCPFile:"/>
-                <relationship kind="action" name="new:"/>
-                <relationship kind="action" name="openKisMACFile:"/>
-                <relationship kind="action" name="openKisMAPFile:"/>
-                <relationship kind="action" name="saveKisMACFile:"/>
-                <relationship kind="action" name="saveKisMACFileAs:"/>
-                <relationship kind="action" name="saveKisMAPFile:"/>
-                <relationship kind="action" name="showDetails:"/>
-                <relationship kind="action" name="showMap:"/>
-                <relationship kind="action" name="showNetworks:"/>
-                <relationship kind="action" name="showNetworksInMap:"/>
-                <relationship kind="action" name="showTraceInMap:"/>
-                <relationship kind="action" name="showTrafficView:"/>
-                <relationship kind="action" name="toggleScan:"/>
-                <relationship kind="action" name="weakSchedulingAttack104bit:"/>
-                <relationship kind="action" name="weakSchedulingAttack40And104bit:"/>
-                <relationship kind="action" name="weakSchedulingAttack40bit:"/>
-                <relationship kind="action" name="wordlist104bitApple:"/>
-                <relationship kind="action" name="wordlist104bitMD5:"/>
-                <relationship kind="action" name="wordlist40bitApple:"/>
-                <relationship kind="action" name="wordlistLEAP:"/>
-                <relationship kind="action" name="wordlistWPA:"/>
-            </relationships>
-        </class>
-        <class className="SpinChannel" superclassName="NSView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SpinChannel.h"/>
-            <relationships>
-                <relationship kind="action" name="startAnimation:"/>
-                <relationship kind="action" name="stopAnimation:"/>
-            </relationships>
-        </class>
-        <class className="TrafficController" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/TrafficController.h"/>
-            <relationships>
-                <relationship kind="action" name="setCurrentMode:"/>
-                <relationship kind="action" name="setTimeLength:"/>
-                <relationship kind="outlet" name="_container" candidateClass="WaveContainer"/>
-                <relationship kind="outlet" name="_intervalButton" candidateClass="NSPopUpButton"/>
-                <relationship kind="outlet" name="_modeButton" candidateClass="NSPopUpButton"/>
-                <relationship kind="outlet" name="_scanner" candidateClass="WaveScanner"/>
-                <relationship kind="outlet" name="_view" candidateClass="BIGLView"/>
-            </relationships>
-        </class>
-        <class className="WaveContainer" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/WaveContainer.h"/>
-        </class>
-        <class className="WaveScanner" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/WaveScanner.h"/>
-            <relationships>
-                <relationship kind="outlet" name="_container" candidateClass="WaveContainer"/>
-                <relationship kind="outlet" name="aController" candidateClass="ScanController"/>
-            </relationships>
-        </class>
-    </classes>
 </document>

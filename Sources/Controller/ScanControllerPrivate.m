@@ -29,7 +29,6 @@
 #import "ScanControllerScriptable.h"
 #import "WaveHelper.h"
 #import "WaveNetWPACrack.h"
-#import "SpinChannel.h"
 #import "../WaveDrivers/WaveDriver.h"
 #import "MapView.h"
 #import "MapViewAreaView.h"
