@@ -1,4 +1,4 @@
-<img src="https://raw.github.com/iKorich/KisMac2/master/Resources/Icons/devil.png"> KisMac2
+<img src="https://raw.githubusercontent.com/IGRSoft/KisMac2/master/Resources/Images.xcassets/AppIcon.appiconset/icon_128x128.png"> KisMac2
 ======
 
 KisMAC is a free, open source wireless stumbling and security tool for Mac OS X. 
