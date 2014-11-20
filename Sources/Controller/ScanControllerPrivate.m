@@ -387,13 +387,12 @@
     
     _importController = [[ImportController alloc] initWithWindowNibName:@"Crack"];
     [_importController setTitle:title];
+    [_importController setStatusField:@""];
     [WaveHelper setImportController:_importController];
-	
-    [NSApp beginSheet:[_importController window]
-	   modalForWindow:_window
-		modalDelegate:self
-	   didEndSelector:@selector(crackDone:returnCode:contextInfo:)
-		  contextInfo:nil];
+    
+    [_window beginSheet:[_importController window] completionHandler:^(NSModalResponse retCode){
+        [self crackDone:_window returnCode:retCode contextInfo:nil];
+    }];
 }
 
 - (void)startCrackDialogWithTitle:(NSString*)title

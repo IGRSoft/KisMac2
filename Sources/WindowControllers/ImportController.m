@@ -72,7 +72,7 @@
 }
 
 - (void)terminateWithCode:(int)code {
-    [NSApp endSheet:[self window] returnCode:code];
+    [[[self window] sheetParent] endSheet:[self window] returnCode:code];
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)aNotification {
