@@ -123,6 +123,7 @@
 		87FA06BB0BF6C69C00A8F24C /* FSWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 87FA06B90BF6C69B00A8F24C /* FSWindow.m */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		93AC69941A1E3F3A00DB6CDF /* Crack.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93AC69921A1E3F3A00DB6CDF /* Crack.xib */; };
 		A5282F271608B83500F56AE3 /* GPSDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = A5282F251608B83500F56AE3 /* GPSDialog.xib */; };
 		A5282F2A1608B85800F56AE3 /* Import.xib in Resources */ = {isa = PBXBuildFile; fileRef = A5282F281608B85800F56AE3 /* Import.xib */; };
 		A5282F5E1608C7F500F56AE3 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = A5282F5C1608C7F500F56AE3 /* MainMenu.xib */; };
@@ -396,6 +397,7 @@
 		87FA06B80BF6C69B00A8F24C /* FSWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSWindow.h; sourceTree = "<group>"; };
 		87FA06B90BF6C69B00A8F24C /* FSWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSWindow.m; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* KisMac2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KisMac2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		93AC69931A1E3F3A00DB6CDF /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Crack.xib; sourceTree = "<group>"; };
 		A5282F261608B83500F56AE3 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/GPSDialog.xib; sourceTree = "<group>"; };
 		A5282F291608B85800F56AE3 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Import.xib; sourceTree = "<group>"; };
 		A5282F5D1608C7F500F56AE3 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -757,6 +759,7 @@
 		00F57C1606A886350035AE2F /* XIB */ = {
 			isa = PBXGroup;
 			children = (
+				93AC69921A1E3F3A00DB6CDF /* Crack.xib */,
 				A5282F771608C9AA00F56AE3 /* WayPointDialog.xib */,
 				A5282F741608C98600F56AE3 /* PrefsTraffic.xib */,
 				A5282F711608C8E900F56AE3 /* PrefsSounds.xib */,
@@ -1195,6 +1198,7 @@
 				A5A2F5AE19DDA55B0046299A /* NetworkUnkEnc.tif in Resources */,
 				A5A2F5AD19DDA55B0046299A /* NetworkStrange.tif in Resources */,
 				00174DBA06B2AC8F003485E6 /* Localizable.strings in Resources */,
+				93AC69941A1E3F3A00DB6CDF /* Crack.xib in Resources */,
 				00A7F9D306C6D20A00A6BB8F /* devilDocument.icns in Resources */,
 				0042E7A609C0C8B600183F90 /* world.kismap in Resources */,
 				691CF1B00E4CC47C0042B146 /* UsbVendorsIntersil.plist in Resources */,
@@ -1386,6 +1390,14 @@
 				00F57C4C06A886630035AE2F /* English */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		93AC69921A1E3F3A00DB6CDF /* Crack.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				93AC69931A1E3F3A00DB6CDF /* English */,
+			);
+			name = Crack.xib;
 			sourceTree = "<group>";
 		};
 		A5282F251608B83500F56AE3 /* GPSDialog.xib */ = {
