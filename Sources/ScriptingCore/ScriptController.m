@@ -112,14 +112,13 @@
 #pragma mark -
 
 - (IBAction)openKisMACFile:(id)sender {
-    NSOpenPanel *op;
     
     if ((sender!=self) && (![[NSApp delegate] isSaved])) {
         [self showWantToSaveDialog:@selector(openKisMACFile:)];
         return;
     }
-
-    op=[NSOpenPanel openPanel];
+    
+    NSOpenPanel *op=[NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:NO];
     [op setCanChooseFiles:YES];
     [op setCanChooseDirectories:NO];
@@ -128,11 +127,9 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 [ScriptingEngine selfSendEvent:'odoc'
-								  withClass:'aevt'
-						andDefaultArgString:[[op URL] path]];
+             [self performSelector:@selector(openPath:) withObject:[[op URL] path] afterDelay:0.0];
+             [op close];
 		 }
-		 
 	 }];
 }
 
@@ -147,12 +144,18 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 [ScriptingEngine selfSendEvent:'odoc'
-								  withClass:'aevt'
-						andDefaultArgString:[[op URL] path]];
+             [self performSelector:@selector(openPath:) withObject:[[op URL] path] afterDelay:0.0];
+             [op close];
 		 }
 		 
 	 }];
+}
+
+- (void)openPath:(NSString*)path
+{
+    [ScriptingEngine selfSendEvent:'odoc'
+                         withClass:'aevt'
+               andDefaultArgString:path];
 }
 
 #pragma mark -
