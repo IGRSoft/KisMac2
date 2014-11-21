@@ -159,7 +159,7 @@
     CGContextDrawImage (myContext, r, _cgImg);
 #else
     if (!_img) [self _createCache];
-    [_img dissolveToPoint:p fraction:1.0];
+    [_img drawAtPoint:p fromRect:rect operation:NSCompositeSourceOver fraction:1.0];
 #endif
 }
 

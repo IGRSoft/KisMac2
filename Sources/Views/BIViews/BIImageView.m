@@ -27,7 +27,8 @@
 
 @implementation BIImageView
 
-- (void)_createCache {
+- (void)_createCache
+{
 #if USECOREGRAPHICS
     NSBitmapImageRep *bitmap;
     CGDataProviderRef provider;
@@ -45,14 +46,16 @@
 #endif
 }
 
-- (void)_deleteCache {
+- (void)_deleteCache
+{
 #if USECOREGRAPHICS
     if (_cgImg) CGImageRelease(_cgImg);
     _cgImg = NULL;
 #endif
 }
 
-- (id)initWithImage:(NSImage*)img {
+- (id)initWithImage:(NSImage*)img
+{
     NSParameterAssert(img);
 
     self = [super initWithSize:[img size]];
@@ -64,20 +67,23 @@
     return self;
 }
 
-- (void)setImage:(NSImage*)img {
+- (void)setImage:(NSImage*)img
+{
     NSParameterAssert(img);
     _img = img;
     _frame.size = [img size];
     [self _deleteCache];
 }
 
-- (NSImage*)image {
+- (NSImage*)image
+{
    return _img;
 }
 
 #pragma mark -
 
-- (void)drawSubAtPoint:(NSPoint)p inRect:(NSRect)rect {
+- (void)drawSubAtPoint:(NSPoint)p inRect:(NSRect)rect
+{
 #if USECOREGRAPHICS
     CGRect r;
     CGContextRef myContext = [[NSGraphicsContext currentContext] graphicsPort];
@@ -89,13 +95,14 @@
     r.size.height = _frame.size.height;
     CGContextDrawImage (myContext, r, _cgImg); 
 #else
-    [_img dissolveToPoint:p fraction:1.0];
+    [_img drawAtPoint:p fromRect:rect operation:NSCompositeSourceOver fraction:1.0];
 #endif
 }
 
 #pragma mark -
 
-- (void)dealloc {
+- (void)dealloc
+{
     [self _deleteCache];
 }
 

@@ -117,8 +117,9 @@
     }
 }
 
-- (void)drawCocoaSubAtPoint:(NSPoint)p {
-    [_img dissolveToPoint:p fraction:1.0];
+- (void)drawCocoaSubAtPoint:(NSPoint)p
+{
+    [_img drawAtPoint:p fromRect:CGRectZero operation:NSCompositeSourceOver fraction:1.0];
 }
 
 #pragma mark -

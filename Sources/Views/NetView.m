@@ -177,9 +177,11 @@ static NSImage* _networkStrange;
     img = [[NSImage alloc] initWithSize:NSMakeSize(size.width + r + 10, height)];
     [img lockFocus];
     
+    CGRect rect = CGRectZero;
     if ([name length])
     {
-        [legendPath appendBezierPathWithRect:NSMakeRect(r+5, (height - size.height)/2, size.width, size.height)];
+        rect = NSMakeRect(r+5, (height - size.height)/2, size.width, size.height);
+        [legendPath appendBezierPathWithRect:rect];
         [[[NSColor blackColor] colorWithAlphaComponent:0.75] set];
         [legendPath fill];
         [[[NSColor whiteColor] colorWithAlphaComponent:0.3] set];
@@ -190,7 +192,7 @@ static NSImage* _networkStrange;
         [_name drawAtPoint:NSMakePoint(r+10, (height + 5 - size.height)/2) withAttributes:attrs];
     }
    
-    [_netImg dissolveToPoint:NSMakePoint(0, (height - r)/2) fraction:1.0];
+    [_img drawAtPoint:NSMakePoint(0, (height - r)/2) fromRect:rect operation:NSCompositeSourceOver fraction:1.0];
     
     [img unlockFocus];
     

@@ -63,8 +63,9 @@ NSString *const BIGLMainViewResized = @"BIGLMainViewResized";
 
 + (NSOpenGLPixelFormat*)defaultPixelFormat
 {
-    NSOpenGLPixelFormatAttribute attributes [] = {
-        NSOpenGLPFAWindow,
+    NSOpenGLPixelFormatAttribute attributes [] =
+    {
+        //NSOpenGLPFAWindow,
         NSOpenGLPFADoubleBuffer,
         NSOpenGLPFASampleBuffers, 1, 
         NSOpenGLPFASamples, 2,

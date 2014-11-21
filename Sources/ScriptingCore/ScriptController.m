@@ -34,7 +34,8 @@
 
 @implementation ScriptController
 
-- (id)init {
+- (id)init
+{
     self = [super init];
     if (!self) return nil;
     
@@ -46,13 +47,15 @@
     return self;
 }
 
-- (void)tryToSave:(NSNotification*)note {
+- (void)tryToSave:(NSNotification*)note
+{
     [self saveKisMACFile:nil];
 }
 
 #pragma mark -
 
-- (void)showWantToSaveDialog:(SEL)overrideFunction {
+- (void)showWantToSaveDialog:(SEL)overrideFunction
+{
 	NSBeginAlertSheet(
         NSLocalizedString(@"Save Changes?", "Save changes dialog title"),
         NSLocalizedString(@"Save", "Save changes dialog button"),
@@ -62,8 +65,10 @@
         );
 }
 
-- (void)saveDialogDone:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(SEL)overrideFunction {
-    switch (returnCode) {
+- (void)saveDialogDone:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(SEL)overrideFunction
+{
+    switch (returnCode)
+    {
     case NSAlertDefaultReturn:
         [self saveKisMACFileAs:nil];
     case NSAlertOtherReturn:
@@ -82,30 +87,40 @@
 
 #pragma mark -
 
-- (IBAction)showNetworks:(id)sender {
+- (IBAction)showNetworks:(id)sender
+{
     [ScriptingEngine selfSendEvent:'KshN'];
 }
-- (IBAction)showTrafficView:(id)sender {
+- (IBAction)showTrafficView:(id)sender
+{
     [ScriptingEngine selfSendEvent:'KshT'];
 }
-- (IBAction)showMap:(id)sender {
+- (IBAction)showMap:(id)sender
+{
     [ScriptingEngine selfSendEvent:'KshM'];
 }
-- (IBAction)showDetails:(id)sender {
+- (IBAction)showDetails:(id)sender
+{
     [ScriptingEngine selfSendEvent:'KshD'];
 }
 
-- (IBAction)toggleScan:(id)sender {
+- (IBAction)toggleScan:(id)sender
+{
 	[ScriptingEngine selfSendEvent:'KssS'];
 }
 
 #pragma mark -
 
-- (IBAction)new:(id)sender {
-    if ((sender!=self) && (![[NSApp delegate] isSaved])) {
+- (IBAction)new:(id)sender
+{
+    ScanController *controller = [NSApp delegate];
+    
+    if ((sender!=self) && (![controller isSaved]))
+    {
         [self showWantToSaveDialog:@selector(new:)];
         return;
     }
+
    [ScriptingEngine selfSendEvent:'KNew'];
 }
 
@@ -113,12 +128,15 @@
 
 - (IBAction)openKisMACFile:(id)sender {
     
-    if ((sender!=self) && (![[NSApp delegate] isSaved])) {
+    ScanController *controller = [NSApp delegate];
+    
+    if ((sender!=self) && (![controller isSaved]))
+    {
         [self showWantToSaveDialog:@selector(openKisMACFile:)];
         return;
     }
     
-    NSOpenPanel *op=[NSOpenPanel openPanel];
+    NSOpenPanel *op = [NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:NO];
     [op setCanChooseFiles:YES];
     [op setCanChooseDirectories:NO];
@@ -133,9 +151,9 @@
 	 }];
 }
 
-- (IBAction)openKisMAPFile:(id)sender {
-    
-	NSOpenPanel *op=[NSOpenPanel openPanel];
+- (IBAction)openKisMAPFile:(id)sender
+{
+	NSOpenPanel *op = [NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:NO];
     [op setCanChooseFiles:YES];
     [op setCanChooseDirectories:NO];
@@ -160,8 +178,8 @@
 
 #pragma mark -
 
-- (IBAction)importKisMACFile:(id)sender {
-    
+- (IBAction)importKisMACFile:(id)sender
+{
 	NSOpenPanel *op = [NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:YES];
     [op setCanChooseFiles:YES];
@@ -180,7 +198,8 @@
 		 
 	 }];
 }
-- (IBAction)importImageForMap:(id)sender {
+- (IBAction)importImageForMap:(id)sender
+{
     NSOpenPanel *op;
 
     op = [NSOpenPanel openPanel];
@@ -198,7 +217,8 @@
 		 
 	 }];
 }
-- (IBAction)importPCPFile:(id)sender {
+- (IBAction)importPCPFile:(id)sender
+{
     NSOpenPanel *op = [NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:YES];
     [op setCanChooseFiles:YES];
@@ -219,19 +239,24 @@
 
 #pragma mark -
 
-- (IBAction)saveKisMACFile:(id)sender {
-    NSString *filename = [[NSApp delegate] filename];
-    if (!filename) {
+- (IBAction)saveKisMACFile:(id)sender
+{
+    ScanController *controller = [NSApp delegate];
+    
+    NSString *filename = [controller filename];
+    if (!filename)
+    {
         [self saveKisMACFileAs:sender];
-    } else if (![ScriptingEngine selfSendEvent:'save' withClass:'core' andDefaultArgString:filename]) {
-            [[NSApp delegate] showSavingFailureDialog];
+    }
+    else if (![ScriptingEngine selfSendEvent:'save' withClass:'core' andDefaultArgString:filename])
+    {
+        [controller showSavingFailureDialog];
     }
 }
 
-- (IBAction)saveKisMACFileAs:(id)sender {
-    NSSavePanel *sp;
-    
-    sp=[NSSavePanel savePanel];
+- (IBAction)saveKisMACFileAs:(id)sender
+{
+    NSSavePanel *sp = [NSSavePanel savePanel];
     [sp setAllowedFileTypes:@[@"kismac"]];
     [sp setCanSelectHiddenExtension:YES];
     [sp setTreatsFilePackagesAsDirectories:NO];
@@ -241,16 +266,18 @@
 		 {
 			 if (![ScriptingEngine selfSendEvent:'KsaA'
 							withDefaultArgString:[[sp URL] path]])
-				 [[NSApp delegate] showSavingFailureDialog];
+             {
+                 ScanController *controller = [NSApp delegate];
+                 [controller showSavingFailureDialog];
+             }
 		 }
 		 
 	 }];
 }
 
-- (IBAction)saveKisMAPFile:(id)sender {
-    NSSavePanel *sp;
-    
-    sp=[NSSavePanel savePanel];
+- (IBAction)saveKisMAPFile:(id)sender
+{
+    NSSavePanel *sp = [NSSavePanel savePanel];
     [sp setAllowedFileTypes:@[@"kismap"]];
     [sp setCanSelectHiddenExtension:YES];
     [sp setTreatsFilePackagesAsDirectories:NO];
@@ -261,7 +288,10 @@
 			 if (![ScriptingEngine selfSendEvent:'save'
 									   withClass:'core'
 							 andDefaultArgString:[[sp URL] path]])
-				 [[NSApp delegate] showSavingFailureDialog];
+             {
+                 ScanController *controller = [NSApp delegate];
+				 [controller showSavingFailureDialog];
+             }
 		 }
 		 
 	 }];
@@ -269,37 +299,84 @@
 
 #pragma mark -
 
-#define WEPCHECKS {\
-    if (![[NSApp delegate] selectedNetwork]) { NSBeep(); return; }\
-    if ([[[NSApp delegate] selectedNetwork] passwordAvailable]) { [[NSApp delegate] showAlreadyCrackedDialog]; return; } \
-    if ([[[NSApp delegate] selectedNetwork] wep] != encryptionTypeWEP && [[[NSApp delegate] selectedNetwork] wep] != encryptionTypeWEP40) { [[NSApp delegate] showWrongEncryptionType]; return; } \
-    if ([[[[NSApp delegate] selectedNetwork] cryptedPacketsLog] count] < 8) { [[NSApp delegate] showNeedMorePacketsDialog]; return; } \
+- (BOOL) wepCheck
+{
+    BOOL result = YES;
+    ScanController *controller = [NSApp delegate];
+    
+    if (![controller selectedNetwork])
+    {
+        NSBeep();
+        result = NO;
     }
+    if (result && [[controller selectedNetwork] passwordAvailable])
+    {
+        [controller showAlreadyCrackedDialog];
+        result = NO;
+    }
+    if (result && [[controller selectedNetwork] wep] != encryptionTypeWEP && [[controller selectedNetwork] wep] != encryptionTypeWEP40)
+    {
+        [controller showWrongEncryptionType];
+        result = NO;
+    }
+    if (result && [[[controller selectedNetwork] cryptedPacketsLog] count] < 8)
+    {
+        [controller showNeedMorePacketsDialog];
+        result = NO;
+    }
+    
+    return result;
+}
 
-- (IBAction)bruteforceNewsham:(id)sender {
-    WEPCHECKS;
+- (IBAction)bruteforceNewsham:(id)sender
+{
+    if (![self wepCheck])
+    {
+        return;
+    }
+    
     [ScriptingEngine selfSendEvent:'KCBN'];
 }
 
-- (IBAction)bruteforce40bitLow:(id)sender {
-    WEPCHECKS;
+- (IBAction)bruteforce40bitLow:(id)sender
+{
+    if (![self wepCheck])
+    {
+        return;
+    }
+    
     [ScriptingEngine selfSendEvent:'KCBL'];
 }
 
-- (IBAction)bruteforce40bitAlpha:(id)sender {
-    WEPCHECKS;
+- (IBAction)bruteforce40bitAlpha:(id)sender
+{
+    if (![self wepCheck])
+    {
+        return;
+    }
+    
     [ScriptingEngine selfSendEvent:'KCBa'];
 }
 
-- (IBAction)bruteforce40bitAll:(id)sender {
-    WEPCHECKS;
+- (IBAction)bruteforce40bitAll:(id)sender
+{
+    if (![self wepCheck])
+    {
+        return;
+    }
+    
     [ScriptingEngine selfSendEvent:'KCBA'];
 }
 
 #pragma mark -
 
-- (IBAction)wordlist40bitApple:(id)sender {
-    WEPCHECKS;
+- (IBAction)wordlist40bitApple:(id)sender
+{
+    if (![self wepCheck])
+    {
+        return;
+    }
+    
     NSOpenPanel *op = [NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:YES];
     [op setCanChooseFiles:YES];
@@ -316,8 +393,13 @@
 	 }];
 }
 
-- (IBAction)wordlist104bitApple:(id)sender {
-    WEPCHECKS;
+- (IBAction)wordlist104bitApple:(id)sender
+{
+    if (![self wepCheck])
+    {
+        return;
+    }
+    
     NSOpenPanel *op = [NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:YES];
     [op setCanChooseFiles:YES];
@@ -334,8 +416,13 @@
 	 }];
 }
 
-- (IBAction)wordlist104bitMD5:(id)sender {
-    WEPCHECKS;
+- (IBAction)wordlist104bitMD5:(id)sender
+{
+    if (![self wepCheck])
+    {
+        return;
+    }
+    
     NSOpenPanel *op = [NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:YES];
     [op setCanChooseFiles:YES];
@@ -352,13 +439,40 @@
 	 }];
 }
 
-- (IBAction)wordlistWPA:(id)sender {
-    if (![[NSApp delegate] selectedNetwork]) { NSBeep(); return; }
-    if ([[[NSApp delegate] selectedNetwork] passwordAvailable]) { [[NSApp delegate] showAlreadyCrackedDialog]; return; }
-    if (([[[NSApp delegate] selectedNetwork] wep] != encryptionTypeWPA) && ([[[NSApp delegate] selectedNetwork] wep] != encryptionTypeWPA2 )){ [[NSApp delegate] showWrongEncryptionType]; return; }
-	if ([[[NSApp delegate] selectedNetwork] SSID] == nil) { [[NSApp delegate] showNeedToRevealSSID]; return; }
-	if ([[[[NSApp delegate] selectedNetwork] SSID] length] > 32) { [[NSApp delegate] showNeedToRevealSSID]; return; }
-	if ([[[NSApp delegate] selectedNetwork] capturedEAPOLKeys] == 0) { [[NSApp delegate] showNeedMorePacketsDialog]; return; }
+- (IBAction)wordlistWPA:(id)sender
+{
+    ScanController *controller = [NSApp delegate];
+    
+    if (![controller selectedNetwork])
+    {
+        NSBeep();
+        return;
+    }
+    if ([[controller selectedNetwork] passwordAvailable])
+    {
+        [controller showAlreadyCrackedDialog];
+        return;
+    }
+    if (([[controller selectedNetwork] wep] != encryptionTypeWPA) && ([[controller selectedNetwork] wep] != encryptionTypeWPA2 ))
+    {
+        [controller showWrongEncryptionType];
+        return;
+    }
+	if ([[controller selectedNetwork] SSID] == nil)
+    {
+        [controller showNeedToRevealSSID];
+        return;
+    }
+	if ([[[controller selectedNetwork] SSID] length] > 32)
+    {
+        [controller showNeedToRevealSSID];
+        return;
+    }
+	if ([[controller selectedNetwork] capturedEAPOLKeys] == 0)
+    {
+        [controller showNeedMorePacketsDialog];
+        return;
+    }
 
     NSOpenPanel *op = [NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:YES];
@@ -376,11 +490,30 @@
 	 }];
 }
 
-- (IBAction)wordlistLEAP:(id)sender {
-    if (![[NSApp delegate] selectedNetwork]) { NSBeep(); return; }
-    if ([[[NSApp delegate] selectedNetwork] passwordAvailable]) { [[NSApp delegate] showAlreadyCrackedDialog]; return; }
-    if ([[[NSApp delegate] selectedNetwork] wep] != encryptionTypeLEAP) { [[NSApp delegate] showWrongEncryptionType]; return; }
-	if ([[[NSApp delegate] selectedNetwork] capturedLEAPKeys] == 0) { [[NSApp delegate] showNeedMorePacketsDialog]; return; }
+- (IBAction)wordlistLEAP:(id)sender
+{
+    ScanController *controller = [NSApp delegate];
+    
+    if (![controller selectedNetwork])
+    {
+        NSBeep();
+        return;
+    }
+    if ([[controller selectedNetwork] passwordAvailable])
+    {
+        [controller showAlreadyCrackedDialog];
+        return;
+    }
+    if ([[controller selectedNetwork] wep] != encryptionTypeLEAP)
+    {
+        [controller showWrongEncryptionType];
+        return;
+    }
+	if ([[controller selectedNetwork] capturedLEAPKeys] == 0)
+    {
+        [controller showNeedMorePacketsDialog];
+        return;
+    }
    
 	NSOpenPanel * op = [NSOpenPanel openPanel];
     [op setAllowsMultipleSelection:YES];
@@ -400,21 +533,33 @@
 
 #pragma mark -
 
-- (IBAction)weakSchedulingAttack40bit:(id)sender {
-    WEPCHECKS;
+- (IBAction)weakSchedulingAttack40bit:(id)sender
+{
+    if (![self wepCheck])
+    {
+        return;
+    }
     NSAppleEventDescriptor *keyLen = [NSAppleEventDescriptor descriptorWithInt32:5];
     
     NSDictionary *args = @{[NSString stringWithFormat:@"%d", 'KCKl']: keyLen};
     [ScriptingEngine selfSendEvent:'KCSc' withArgs:args];
 }
 
-- (IBAction)weakSchedulingAttack104bit:(id)sender {
-    WEPCHECKS;
+- (IBAction)weakSchedulingAttack104bit:(id)sender
+{
+    if (![self wepCheck])
+    {
+        return;
+    }
     [ScriptingEngine selfSendEvent:'KCSc'];
 }
 
-- (IBAction)weakSchedulingAttack40And104bit:(id)sender {
-    WEPCHECKS;
+- (IBAction)weakSchedulingAttack40And104bit:(id)sender
+{
+    if (![self wepCheck])
+    {
+        return;
+    }
     NSAppleEventDescriptor *keyLen = [NSAppleEventDescriptor descriptorWithInt32:0xFFFFFF];
     
     NSDictionary *args = @{[NSString stringWithFormat:@"%d", 'KCKl']: keyLen};
@@ -423,7 +568,8 @@
 
 #pragma mark -
 
-- (IBAction)showNetworksInMap:(id)sender {
+- (IBAction)showNetworksInMap:(id)sender
+{
     BOOL show = ([sender state] == NSOffState);
     
     [ScriptingEngine selfSendEvent:'KMSN'
@@ -440,7 +586,9 @@
 
 #pragma mark -
 
-- (void)dealloc {
+- (void)dealloc
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
 @end
