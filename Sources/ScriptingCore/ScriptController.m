@@ -145,7 +145,7 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-             [self performSelector:@selector(openPath:) withObject:[[op URL] path] afterDelay:0.0];
+             [self performSelector:@selector(openPath:) withObject:[[op URL] path] afterDelay:0.1];
              [op close];
 		 }
 	 }];
@@ -162,7 +162,7 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-             [self performSelector:@selector(openPath:) withObject:[[op URL] path] afterDelay:0.0];
+             [self performSelector:@selector(openPath:) withObject:[[op URL] path] afterDelay:0.1];
              [op close];
 		 }
 		 
