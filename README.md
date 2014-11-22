@@ -15,9 +15,9 @@ The Trac for the original KisMac is at http://trac.kismac-ng.org
 Whats new:
 -------
 
-* Mac OS 10.7 & 10.8 64-bit only
+* Mac OS 10.7 - 10.10 (64-bit only)
 * ARC (64-bit only)
-* New GUI from http://trac.kismac-ng.org/ticket/345
+* New GUI
 * Modern Objective-c syntax
 * Rewrote most part of deprecated methods
 * Remove debug info from release
