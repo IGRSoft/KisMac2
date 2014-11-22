@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment version="1070" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -25,7 +25,7 @@
                         <rect key="frame" x="0.0" y="361" width="757" height="39"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <subviews>
-                            <searchField verticalHuggingPriority="750" id="1297">
+                            <searchField wantsLayer="YES" verticalHuggingPriority="750" id="1297">
                                 <rect key="frame" x="563" y="8" width="138" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                                 <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" alignment="left" placeholderString="Search For..." bezelStyle="round" recentsAutosaveName="KisMACLastSearchValue" id="2383">
@@ -1417,7 +1417,7 @@ CA
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" headerView="2432" id="1244">
-                                                    <rect key="frame" x="0.0" y="0.0" width="292" height="16"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="277" height="16"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1436,7 +1436,7 @@ CA
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                         </tableColumn>
-                                                        <tableColumn identifier="setting" width="170.14599999999999" minWidth="8" maxWidth="1000" id="1229">
+                                                        <tableColumn identifier="setting" width="185.14599999999999" minWidth="8" maxWidth="1000" id="1229">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Setting">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1462,7 +1462,7 @@ CA
                                             <rect key="frame" x="1" y="380" width="277" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
-                                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="2430">
+                                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="2430">
                                             <rect key="frame" x="278" y="17" width="15" height="363"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
@@ -1515,13 +1515,13 @@ CA
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" headerView="2429" id="1240">
-                                                    <rect key="frame" x="0.0" y="0.0" width="441" height="16"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="426" height="16"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                     <tableColumns>
-                                                        <tableColumn identifier="client" editable="NO" width="81.039000000000001" minWidth="39.039000000000001" maxWidth="1000" id="1233">
+                                                        <tableColumn identifier="client" editable="NO" width="84.039000000000001" minWidth="39.039000000000001" maxWidth="1000" id="1233">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Client">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1534,7 +1534,7 @@ CA
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                         </tableColumn>
-                                                        <tableColumn identifier="vendor" editable="NO" width="46" minWidth="10" maxWidth="1000" id="1234">
+                                                        <tableColumn identifier="vendor" editable="NO" width="49" minWidth="10" maxWidth="1000" id="1234">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Vendor">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1547,7 +1547,7 @@ CA
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                         </tableColumn>
-                                                        <tableColumn identifier="signal" editable="NO" width="29" minWidth="10" maxWidth="1000" id="1242">
+                                                        <tableColumn identifier="signal" editable="NO" width="33" minWidth="10" maxWidth="1000" id="1242">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Signal">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1560,7 +1560,7 @@ CA
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                         </tableColumn>
-                                                        <tableColumn identifier="sent" editable="NO" width="46" minWidth="10" maxWidth="1000" id="1230">
+                                                        <tableColumn identifier="sent" editable="NO" width="48" minWidth="10" maxWidth="1000" id="1230">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="sent Bytes">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1573,7 +1573,7 @@ CA
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                         </tableColumn>
-                                                        <tableColumn identifier="received" editable="NO" width="51.607419999999998" minWidth="10" maxWidth="1000" id="1232">
+                                                        <tableColumn identifier="received" editable="NO" width="52.607419999999998" minWidth="10" maxWidth="1000" id="1232">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="recv. Bytes">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1586,7 +1586,7 @@ CA
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                         </tableColumn>
-                                                        <tableColumn identifier="ipa" width="61.009770000000003" minWidth="60.009770000000003" maxWidth="1000" id="1513">
+                                                        <tableColumn identifier="ipa" width="62.009770000000003" minWidth="60.009770000000003" maxWidth="1000" id="1513">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="IP Address">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1599,7 +1599,7 @@ CA
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                         </tableColumn>
-                                                        <tableColumn identifier="lastseen" editable="NO" width="90.149000000000001" minWidth="54.149900000000002" maxWidth="1000" id="1231">
+                                                        <tableColumn identifier="lastseen" editable="NO" width="91.149000000000001" minWidth="54.149900000000002" maxWidth="1000" id="1231">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Last Seen">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1625,7 +1625,7 @@ CA
                                             <rect key="frame" x="1" y="426" width="426" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
-                                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="2427">
+                                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="2427">
                                             <rect key="frame" x="427" y="17" width="15" height="409"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>

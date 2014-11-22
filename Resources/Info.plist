@@ -62,7 +62,7 @@
 	<key>CFBundleSignature</key>
 	<string>BIKM</string>
 	<key>CFBundleVersion</key>
-	<string>Alpha 3</string>
+	<string>Alpha 4</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>LSMinimumSystemVersion</key>

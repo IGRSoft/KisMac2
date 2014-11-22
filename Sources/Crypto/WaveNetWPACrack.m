@@ -289,9 +289,9 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
 			{
                 _password = [NSString stringWithFormat:@"%s for Client %@", wrd, c[curKey].clientID];
                 fclose(fptr);
-                free(c);
                 
 				DBNSLog(@"Cracking was successful. Password is <%s> for Client %@", wrd, c[curKey].clientID);
+                free(c);
                 
 				return YES;
             }

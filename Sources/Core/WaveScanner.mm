@@ -464,11 +464,11 @@
 -(KFrame*) nextFrame:(bool*)corrupted
 {
     struct pcap_pkthdr h;
-    int offset;
+    int offset = 0;
 
     *corrupted = NO;
     
-    UInt8 *b = (UInt8*)pcap_next(_pcapP,&h);	//get frame from current pcap file
+    UInt8 *b = (UInt8*)pcap_next(_pcapP, &h);	//get frame from current pcap file
 
     if (b == NULL)
 	{

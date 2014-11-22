@@ -116,7 +116,7 @@ struct leapClientData
 		}
 	}
 
-    if (keys<=0)
+    if (keys <= 0)
 	{
 		_crackErrorString = NSLocalizedString(@"The captured challenge response packets are not sufficient to perform this attack", @"Error description for LEAP crack.");
 		if (c)

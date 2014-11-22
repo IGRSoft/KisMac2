@@ -27,7 +27,10 @@
 
 @implementation ScriptingEngine
 
-+ (BOOL)selfSendEvent:(AEEventID)event withClass:(AEEventClass)class andArgs:(NSDictionary*)args {
++ (BOOL)selfSendEvent:(AEEventID)event withClass:(AEEventClass)class andArgs:(NSDictionary*)args
+{
+    BOOL result = NO;
+    
     AppleEvent  reply;
     ProcessSerialNumber	theCurrentProcess = { 0, kCurrentProcess };
     NSEnumerator *enu;
@@ -45,52 +48,70 @@
 																   transactionID:kAnyTransactionID];
     
     enu = [args keyEnumerator];
-    while ((ae = [enu nextObject])) {
+    while ((ae = [enu nextObject]))
+    {
         [e setDescriptor:args[ae] forKeyword:[ae intValue]];
     }
     
 	OSErr err = AESend([e aeDesc], &reply, kAEWaitReply, 0, kAEDefaultTimeout, NULL, NULL);
-    if(noErr != err) return NO;
+    if(noErr == err)
+    {
+        NSAppleEventDescriptor *replyDesc = [[NSAppleEventDescriptor alloc] initWithAEDescNoCopy:&reply];
+        NSAppleEventDescriptor *resultDesc = [replyDesc paramDescriptorForKeyword: keyDirectObject];
     
-    NSAppleEventDescriptor *replyDesc = [[NSAppleEventDescriptor alloc] initWithAEDescNoCopy:&reply];
-    NSAppleEventDescriptor *resultDesc = [replyDesc paramDescriptorForKeyword: keyDirectObject];
+        if (resultDesc)
+        {
+            result = [resultDesc booleanValue];
+        }
+    }
     
-    if (resultDesc) return [resultDesc booleanValue];
-    return YES;    
+    return result;
 }
 
-+ (BOOL)selfSendEvent:(AEEventID)event withArgs:(NSDictionary*)args {
++ (BOOL)selfSendEvent:(AEEventID)event withArgs:(NSDictionary*)args
+{
     return [ScriptingEngine selfSendEvent:event
 								withClass:'BIKM'
 								  andArgs:args];
 }
 
-+ (BOOL)selfSendEvent:(AEEventID)event withClass:(AEEventClass)class andDefaultArg:(NSAppleEventDescriptor*)arg {
-    NSDictionary *args;
-    if (arg) args = @{[NSString stringWithFormat:@"%d", keyDirectObject]: arg};
-    else args = @{};
++ (BOOL)selfSendEvent:(AEEventID)event withClass:(AEEventClass)class andDefaultArg:(NSAppleEventDescriptor*)arg
+{
+    NSDictionary *args = @{};
+    
+    if (arg)
+    {
+        args = @{[NSString stringWithFormat:@"%d", keyDirectObject]: arg};
+    }
     
     return [ScriptingEngine selfSendEvent:event
 								withClass:class
 								  andArgs:args];
 }
 
-+ (BOOL)selfSendEvent:(AEEventID)event withClass:(AEEventClass)class andDefaultArgString:(NSString*)arg {
++ (BOOL)selfSendEvent:(AEEventID)event withClass:(AEEventClass)class andDefaultArgString:(NSString*)arg
+{
     return [ScriptingEngine selfSendEvent:event
 								withClass:class
 							andDefaultArg:[NSAppleEventDescriptor descriptorWithString:arg]];
 }
-+ (BOOL)selfSendEvent:(AEEventID)event withDefaultArgString:(NSString*)arg {
+
++ (BOOL)selfSendEvent:(AEEventID)event withDefaultArgString:(NSString*)arg
+{
     return [ScriptingEngine selfSendEvent:event
 								withClass:'BIKM'
 					  andDefaultArgString:arg];
 }
-+ (BOOL)selfSendEvent:(AEEventID)event withDefaultArg:(NSAppleEventDescriptor*)arg {
+
++ (BOOL)selfSendEvent:(AEEventID)event withDefaultArg:(NSAppleEventDescriptor*)arg
+{
     return [ScriptingEngine selfSendEvent:event
 								withClass:'BIKM'
 							andDefaultArg:arg];
 }
-+ (BOOL)selfSendEvent:(AEEventID)event {
+
++ (BOOL)selfSendEvent:(AEEventID)event
+{
     return [ScriptingEngine selfSendEvent:event
 						   withDefaultArg:nil];
 }

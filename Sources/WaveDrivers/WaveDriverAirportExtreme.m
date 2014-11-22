@@ -95,19 +95,7 @@ static pcap_t *_device;
 + (int) initBackend
 {
 	int ret = -1;
-
-    if (NSAppKitVersionNumber < NSAppKitVersionNumber10_5)
-    {
-        DBNSLog(@"MacOS is not 10.5.1! AppKitVersion: %f < NSAppKitVersionNumber10_5", NSAppKitVersionNumber);
     
-        NSRunCriticalAlertPanel(
-                            NSLocalizedString(@"Could not enable Monitor Mode for Airport Extreme.", "Error dialog title"),
-                            NSLocalizedString(@"Incompatible MacOS version! You will need at least MacOS 10.5.1!. Please ensure that you are running Leopard, and have updated to the latest through Software Update.", "Error dialog description"),
-                            OK, nil, nil);
-
-        ret = 2;
-    }
-
 	if ([WaveDriverAirportExtreme deviceAvailable]) ret = 0;
     
     return ret;
@@ -182,7 +170,8 @@ pcap_dumper_t * dumper;
 		[NSThread sleep:0.5];
 	
         CFShow((__bridge CFTypeRef)([[CWInterface interfaceNames] allObjects]));
-		_device = pcap_open_live([[[CWInterface interfaceNames] allObjects][0] UTF8String], 3000, 1, 2, err);
+        const char * deviceName = [[[CWInterface interfaceNames] allObjects][0] UTF8String];
+		_device = pcap_open_live(deviceName, 3000, 1, 2, err);
         
 		[[BLAuthentication sharedInstance] executeCommand:@"/bin/chmod" withArgs:args];
 

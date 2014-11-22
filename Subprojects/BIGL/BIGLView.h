@@ -27,7 +27,8 @@
 
 @class BIGLSubView;
 
-@interface BIGLView : NSOpenGLView {
+@interface BIGLView : NSOpenGLView
+{
     BOOL            _initialized;
     NSMutableArray  *_subViews;
     GLfloat         _color[4];
@@ -41,4 +42,5 @@
 - (void)setBackgroundColor:(NSColor*)color;
 
 - (NSData *)dataWithTIFFInsideRect:(NSRect)rect;
+
 @end

@@ -466,29 +466,19 @@ static GPSInfoController *_gc;
 + (bool)runScript:(NSString*)script {
     return [self runScript:script withArguments:nil];
 }
-+ (bool)runScript:(NSString*)script withArguments:(NSArray*)args {
-    //int perm;
-    bool ret;
-    //NSTask *t;
+
++ (bool)runScript:(NSString*)script withArguments:(NSArray*)args
+{
+    bool ret = NO;
+
     NSString* s = [NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], script];
-    /*
-    perm = [[[[NSFileManager defaultManager] fileAttributesAtPath:s traverseLink:NO] objectForKey:NSFilePosixPermissions] intValue];
-    if (perm & 04000) {
-        t = [NSTask launchedTaskWithLaunchPath:s arguments:args ? args : [NSArray array]];
-        if (!t) {
-            DBNSLog(@"WARNING!!! User is not a member of admin group for: %@", s);
-            NSRunCriticalAlertPanel(NSLocalizedString(@"Execution failure.", "Execution failure title"),
-                NSLocalizedString(@"Execution failure description", "LONG Description of execution failure. No root privileges?!"),
-                //@"KisMAC could not execute an internal shell script. This is most likely since you have no root privileges."
-                OK ,nil ,nil);
-            return NO;
-        }
-        return YES;
-    } else { */
-        ret = [[BLAuthentication sharedInstance] executeCommand:s withArgs:args];
-        if (!ret) DBNSLog(@"WARNING!!! User canceled password dialog for: %@", s);
-        return ret;
-    //}
+    
+    ret = [[BLAuthentication sharedInstance] executeCommand:s withArgs:args];
+    
+    if (!ret)
+        DBNSLog(@"WARNING!!! User canceled password dialog for: %@", s);
+    
+    return ret;
 }
 
 + (void)addDictionary:(NSDictionary*)s toDictionary:(NSMutableDictionary*)d {

@@ -42,27 +42,37 @@ static OSStatus su_AuthorizationExecuteWithPrivileges(AuthorizationRef authoriza
 {
 	// flags are currently reserved
 	if (flags != 0)
+    {
 		return errAuthorizationInvalidFlags;
-	
+    }
+    
 	char **(^argVector)(const char *, const char *, const char *, char *const *) = ^char **(const char *bTrampoline, const char *bPath,
-																							const char *bMboxFdText, char *const *bArguments){
+																							const char *bMboxFdText, char *const *bArguments)
+    {
 		int length = 0;
-		if (bArguments) {
-			for (char *const *p = bArguments; *p; p++)
-				length++;
+		if (bArguments)
+        {
+            length = sizeof(bArguments);
 		}
 		
 		const char **args = (const char **)malloc(sizeof(const char *) * (length + 4));
-		if (args) {
+		if (args)
+        {
 			args[0] = bTrampoline;
 			args[1] = bPath;
 			args[2] = bMboxFdText;
 			if (bArguments)
+            {
 				for (int n = 0; bArguments[n]; n++)
+                {
 					args[n + 3] = bArguments[n];
+                }
+            }
 			args[length + 3] = NULL;
-			return (char **)args;
+			
+            return (char **)args;
 		}
+        
 		return NULL;
 	};
 	
@@ -76,7 +86,8 @@ static OSStatus su_AuthorizationExecuteWithPrivileges(AuthorizationRef authoriza
     FILE *mbox = tmpfile();
     if (!mbox)
         return errAuthorizationInternal;
-    if (fwrite(&extForm, sizeof(extForm), 1, mbox) != 1) {
+    if (fwrite(&extForm, sizeof(extForm), 1, mbox) != 1)
+    {
         fclose(mbox);
         return errAuthorizationInternal;
     }
@@ -95,10 +106,13 @@ static OSStatus su_AuthorizationExecuteWithPrivileges(AuthorizationRef authoriza
 	
 	// do the standard forking tango...
 	int delay = 1;
-	for (int n = 5;; n--, delay *= 2) {
-		switch (fork()) {
+	for (int n = 5;; n--, delay *= 2)
+    {
+		switch (fork())
+        {
 			case -1: { // error
-				if (errno == EAGAIN) {
+				if (errno == EAGAIN)
+                {
 					// potentially recoverable resource shortage
 					if (n > 0) {
 						sleep(delay);
@@ -108,8 +122,37 @@ static OSStatus su_AuthorizationExecuteWithPrivileges(AuthorizationRef authoriza
 				close(notify[0]); close(notify[1]);
 				return errAuthorizationToolExecuteFailure;
 			}
-				
-			default: {	// parent
+            
+            case 0:
+            { // child
+                // close foreign side of pipes
+                close(notify[0]);
+                
+                // fd 1 (stdout) holds the notify write end
+                dup2(notify[1], 1);
+                close(notify[1]);
+                
+                // fd 0 (stdin) holds either the comm-link write-end or /dev/null
+                close(0);
+                open("/dev/null", O_RDWR);
+                
+                // where is the trampoline?
+                const char *trampoline = "/usr/libexec/security_authtrampoline";
+                char **argv = argVector(trampoline, pathToTool, mboxFdText, arguments);
+                if (argv) {
+                    execv(trampoline, argv);
+                    free(argv);
+                }
+                
+                // execute failed - tell the parent
+                OSStatus error = errAuthorizationToolExecuteFailure;
+                error = htonl(error);
+                write(1, &error, sizeof(error));
+                _exit(1);
+            }
+                
+			default:
+            {	// parent
 				// close foreign side of pipes
 				close(notify[1]);
                 
@@ -132,33 +175,6 @@ static OSStatus su_AuthorizationExecuteWithPrivileges(AuthorizationRef authoriza
 						return noErr;
 				}
 			}
-				
-			case 0: { // child
-				// close foreign side of pipes
-				close(notify[0]);
-				
-				// fd 1 (stdout) holds the notify write end
-				dup2(notify[1], 1);
-				close(notify[1]);
-				
-				// fd 0 (stdin) holds either the comm-link write-end or /dev/null
-				close(0);
-				open("/dev/null", O_RDWR);
-				
-				// where is the trampoline?
-				const char *trampoline = "/usr/libexec/security_authtrampoline";
-				char **argv = argVector(trampoline, pathToTool, mboxFdText, arguments);
-				if (argv) {
-					execv(trampoline, argv);
-					free(argv);
-				}
-				
-				// execute failed - tell the parent
-				OSStatus error = errAuthorizationToolExecuteFailure;
-				error = htonl(error);
-				write(1, &error, sizeof(error));
-				_exit(1);
-			}
 		}
 	}
 }
@@ -176,12 +192,17 @@ static BOOL su_AuthorizationExecuteWithPrivilegesAndWait(AuthorizationRef author
 		int status;
 		pid_t pid = wait(&status);
 		if (pid == -1 || !WIFEXITED(status) || WEXITSTATUS(status) != 0)
+        {
 			returnValue = NO;
+        }
 	}
 	else
+    {
 		returnValue = NO;
-	
+    }
+    
 	signal(SIGCHLD, oldSigChildHandler);
+    
 	return returnValue;
 }
 
@@ -194,12 +215,13 @@ static BOOL su_AuthorizationExecuteWithPrivilegesAndWait(AuthorizationRef author
 // (eg., /usr/bin/more), arguments should be an array of strings each containing
 // a single argument.
 //
--(BOOL)executeCommand:(NSString *)pathToCommand withArgs:(NSArray *)arguments {
-	
+-(BOOL)executeCommand:(NSString *)pathToCommand withArgs:(NSArray *)arguments
+{
 	static OSStatus authStat = errAuthorizationDenied;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		while (authStat == errAuthorizationDenied) {
+		while (authStat == errAuthorizationDenied)
+        {
 			authStat = AuthorizationCreate(NULL,
 										   kAuthorizationEmptyEnvironment,
 										   kAuthorizationFlagDefaults,
@@ -208,17 +230,17 @@ static BOOL su_AuthorizationExecuteWithPrivilegesAndWait(AuthorizationRef author
 	});
 	
 	BOOL res = NO;
-	if (authStat == errAuthorizationSuccess) {
+	if (authStat == errAuthorizationSuccess)
+    {
 		res = YES;
 		const char** coParams = malloc(sizeof(char*) * [arguments count]);
 		int i = 0;
-		for (NSString *arg in arguments) {
+		for (NSString *arg in arguments)
+        {
 			coParams[i++] = [arg UTF8String];
 		}
 		
 		su_AuthorizationExecuteWithPrivilegesAndWait(authorizationRef, [pathToCommand UTF8String], kAuthorizationFlagDefaults, coParams);
-		
-		//memmory leak
 	}
 	
 	return res;

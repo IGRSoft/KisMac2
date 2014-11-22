@@ -158,6 +158,7 @@ static void RawDeviceAdded(void* refcon, io_iterator_t iterator)
         [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(getData:) userInfo:nil repeats:YES];
     }
 }
+
 - (void) getData: (NSTimer *)timer
 {
     kern_return_t		kr = kIOReturnSuccess;
