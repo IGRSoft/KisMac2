@@ -44,26 +44,28 @@
 
 @implementation WaveScanner
 
-- (id)init {
+- (id)init
+{
     self = [super init];
     if (!self) return nil;
     
-    _scanning=NO;
+    _scanning = NO;
     _driver = 0;
     
-    srandom(55445);	//does not have to be to really random
+    //srandom(55445);	//does not have to be to really random
     
     _scanInterval = 0.25;
     _graphLength = 0;
     _soundBusy = NO;
-    
+
     _waveSpectrum = [[WaveSpectrumDriver alloc] init];
     return self;
 }
 
 #pragma mark -
 
-- (WaveDriver*) getInjectionDriver {
+- (WaveDriver*) getInjectionDriver
+{
     unsigned int i;
     NSArray *a;
     WaveDriver *w = nil;
@@ -74,7 +76,8 @@
         if ([w allowsInjection]) break;
     }
     
-    if (![w allowsInjection]) {
+    if (![w allowsInjection])
+    {
         NSRunAlertPanel(NSLocalizedString(@"Invalid Injection Option.", "No injection driver title"),
             NSLocalizedString(@"Invalid Injection Option description", "LONG description of the error"),
             //@"None of the drivers selected are able to send raw frames. Currently only PrismII based device are able to perform this task."
@@ -373,7 +376,7 @@
     
 	_geigerSound = nil;
     
-    if ((newSound==nil)||(newGeigerInt==0)) return;
+    if ((newSound == nil)||(newGeigerInt == 0)) return;
     
     _geigerSound=newSound;
     _geigerInt=newGeigerInt;

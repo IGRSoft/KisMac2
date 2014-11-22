@@ -14,8 +14,9 @@
 {
 	AuthorizationRef authorizationRef; 
 }
+
 // returns a shared instance of the class
-+ sharedInstance;
++ (id) sharedInstance;
 
 - (BOOL)executeCommand:(NSString *)pathToCommand withArgs:(NSArray *)arguments;
 

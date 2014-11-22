@@ -5,6 +5,7 @@
 //  Copyright 2001 Ben Lachman												//
 //																			//
 //	Thanks to Brian R. Hill <http://personalpages.tds.net/~brian_hill/>		//
+//	Updated By Parovishnyk Vitalii aka Korich, 22.11.14						//
 //  ====================================================================== 	//
 
 #import "BLAuthentication.h"
@@ -13,18 +14,27 @@
 @implementation BLAuthentication
 
 // returns an instace of itself, creating one if needed
-+ sharedInstance {
++ (id) sharedInstance
+{
     static id sharedTask = nil;
-    if(sharedTask==nil) {
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
         sharedTask = [[BLAuthentication alloc] init];
-    }
+    });
+    
     return sharedTask;
 }
 
 // initializes the super class and sets authorizationRef to NULL 
-- (id)init {
-    self = [super init];
-    authorizationRef = NULL;
+- (id)init
+{
+    if (self = [super init])
+    {
+        authorizationRef = NULL;
+    }
+    
     return self;
 }
 
@@ -63,7 +73,7 @@ static OSStatus su_AuthorizationExecuteWithPrivileges(AuthorizationRef authoriza
 			args[2] = bMboxFdText;
 			if (bArguments)
             {
-				for (int n = 0; bArguments[n]; n++)
+				for (int n = 0; bArguments[n]; ++n)
                 {
 					args[n + 3] = bArguments[n];
                 }
@@ -80,12 +90,16 @@ static OSStatus su_AuthorizationExecuteWithPrivileges(AuthorizationRef authoriza
 	AuthorizationExternalForm extForm;
 	OSStatus err;
 	if ((err = AuthorizationMakeExternalForm(authorization, &extForm)))
+    {
 		return err;
-	
+    }
+    
     // create the mailbox file
     FILE *mbox = tmpfile();
     if (!mbox)
+    {
         return errAuthorizationInternal;
+    }
     if (fwrite(&extForm, sizeof(extForm), 1, mbox) != 1)
     {
         fclose(mbox);
@@ -94,12 +108,13 @@ static OSStatus su_AuthorizationExecuteWithPrivileges(AuthorizationRef authoriza
     fflush(mbox);
     
     // make text representation of the temp-file descriptor
-    char mboxFdText[20];
+    char mboxFdText[20] = {0};
     snprintf(mboxFdText, sizeof(mboxFdText), "auth %d", fileno(mbox));
     
 	// make a notifier pipe
-	int notify[2];
-	if (pipe(notify)) {
+    int notify[2] = {0};
+	if (pipe(notify))
+    {
         fclose(mbox);
 		return errAuthorizationToolExecuteFailure;
     }
@@ -114,7 +129,8 @@ static OSStatus su_AuthorizationExecuteWithPrivileges(AuthorizationRef authoriza
 				if (errno == EAGAIN)
                 {
 					// potentially recoverable resource shortage
-					if (n > 0) {
+					if (n > 0)
+                    {
 						sleep(delay);
 						continue;
 					}
@@ -139,7 +155,8 @@ static OSStatus su_AuthorizationExecuteWithPrivileges(AuthorizationRef authoriza
                 // where is the trampoline?
                 const char *trampoline = "/usr/libexec/security_authtrampoline";
                 char **argv = argVector(trampoline, pathToTool, mboxFdText, arguments);
-                if (argv) {
+                if (argv)
+                {
                     execv(trampoline, argv);
                     free(argv);
                 }
@@ -163,7 +180,8 @@ static OSStatus su_AuthorizationExecuteWithPrivileges(AuthorizationRef authoriza
 				OSStatus status;
 				ssize_t rc = read(notify[0], &status, sizeof(status));
 				status = ntohl(status);
-				switch (rc) {
+				switch (rc)
+                {
 					default:				// weird result of read: post error
 						status = errAuthorizationToolEnvironmentError;
 						// fall through
@@ -241,13 +259,10 @@ static BOOL su_AuthorizationExecuteWithPrivilegesAndWait(AuthorizationRef author
 		}
 		
 		su_AuthorizationExecuteWithPrivilegesAndWait(authorizationRef, [pathToCommand UTF8String], kAuthorizationFlagDefaults, coParams);
+        free(coParams);
 	}
 	
 	return res;
 }
 
 @end
-
-
-
-

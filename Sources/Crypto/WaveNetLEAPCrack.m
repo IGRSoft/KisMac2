@@ -67,7 +67,7 @@ struct leapClientData
 	int keys = 0;
     struct leapClientData *c = NULL;
     WaveClient *wc = nil;
-    unsigned char pwhash[MD4_DIGEST_LENGTH] = "";
+    UInt8 pwhash[MD4_DIGEST_LENGTH] = "";
     
     //open wordlist
     fptr = fopen([wordlist UTF8String], "r");
@@ -155,7 +155,7 @@ struct leapClientData
 		{
 			for (curKey = 0; curKey < keys; ++curKey)
 			{
-				if (c[curKey].hashend[0] != pwhash[14] || c[curKey].hashend[1] != pwhash[15]) continue;
+				if (c[curKey].hashend[0] != pwhash[MD4_DIGEST_LENGTH-2] || c[curKey].hashend[1] != pwhash[MD4_DIGEST_LENGTH-1]) continue;
 				if (testChallenge(c[curKey].challenge, c[curKey].response, pwhash)) continue;
 				
 				_password = [NSString stringWithFormat:@"%s for username %@", wrd, c[curKey].username];
