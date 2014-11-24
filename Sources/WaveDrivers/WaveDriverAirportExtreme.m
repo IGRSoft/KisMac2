@@ -159,9 +159,16 @@ pcap_dumper_t * dumper;
     CFShow((__bridge CFTypeRef)(airportInterface));
     
     shouldPlayback = [[defs objectForKey: @"playback-rawdump"] boolValue];
-	
-    if(shouldPlayback) _device = pcap_open_offline([[defs objectForKey: @"rawDumpInFile"] UTF8String], err);
-	else if(!_device)  _device = pcap_open_live([[[CWInterface interfaceNames] allObjects][0] UTF8String], 3000, 1, 2, err);
+    const char * deviceName = [[[CWInterface interfaceNames] allObjects][0] UTF8String];
+    
+    if (shouldPlayback)
+    {
+        _device = pcap_open_offline([[defs objectForKey: @"rawDumpInFile"] UTF8String], err);
+    }
+	else if(!_device)
+    {
+        _device = pcap_open_live(deviceName, 3000, 1, 2, err);
+    }
     //todo fixme!! if we are playing back, this will be weird
 	if (!_device && !shouldPlayback)
     {
@@ -170,15 +177,18 @@ pcap_dumper_t * dumper;
 		[NSThread sleep:0.5];
 	
         CFShow((__bridge CFTypeRef)([[CWInterface interfaceNames] allObjects]));
-        const char * deviceName = [[[CWInterface interfaceNames] allObjects][0] UTF8String];
+        
 		_device = pcap_open_live(deviceName, 3000, 1, 2, err);
         
 		[[BLAuthentication sharedInstance] executeCommand:@"/bin/chmod" withArgs:args];
 
-		if (!_device) return nil;
+		if (!_device)
+        {
+            return nil;
+        }
     }
     
-    if(shouldPlayback)
+    if (shouldPlayback)
     {
         DLTType = [[defs objectForKey: @"playback-rawdump-dlt"] intValue];
         DBNSLog(@"err returned from pcap open: %s", err);
