@@ -141,25 +141,24 @@ static pcap_t *_device;
 pcap_dumper_t * dumper;
 - (id)init 
 {
-	NSUserDefaults *defs;
-    NSArray * args;
-    defs = [NSUserDefaults standardUserDefaults];
+	NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
     char err[PCAP_ERRBUF_SIZE];
-    int retErr;
-    BOOL shouldPlayback;
-//    int dataLinks[] = {DLT_PRISM_HEADER, DLT_IEEE802_11, DLT_IEEE802_11_RADIO_AVS, DLT_IEEE802_11_RADIO};
-    int dataLinks[] = {DLT_PRISM_HEADER, DLT_IEEE802_11_RADIO_AVS, DLT_IEEE802_11_RADIO, 0};
-    int i;
+    NSInteger retErr = 0;
+    BOOL shouldPlayback = NO;
+
+    NSInteger dataLinks[] = {DLT_PRISM_HEADER, DLT_IEEE802_11_RADIO_AVS, DLT_IEEE802_11_RADIO, 0};
+    
 	_apeType = APExtTypeBcm;
     
      //get the api based interface for changing channels
-    airportInterface =  [CWInterface interfaceWithName:
-                          [[CWInterface interfaceNames] allObjects][0]];
+    NSString *interfaceName = [[CWInterface interfaceNames] allObjects][0];
+    airportInterface =  [CWInterface interfaceWithName:interfaceName];
     [airportInterface disassociate];
-    CFShow((__bridge CFTypeRef)(airportInterface));
+    
+    DBNSLog(@"Airport Interface: %@", airportInterface);
     
     shouldPlayback = [[defs objectForKey: @"playback-rawdump"] boolValue];
-    const char * deviceName = [[[CWInterface interfaceNames] allObjects][0] UTF8String];
+    const char * deviceName = [interfaceName UTF8String];
     
     if (shouldPlayback)
     {
@@ -169,14 +168,14 @@ pcap_dumper_t * dumper;
     {
         _device = pcap_open_live(deviceName, 3000, 1, 2, err);
     }
-    //todo fixme!! if we are playing back, this will be weird
+    
 	if (!_device && !shouldPlayback)
     {
-        args = @[@"0777", @"/dev/bpf0", @"/dev/bpf1", @"/dev/bpf2", @"/dev/bpf3"]; 
+        NSArray * args = @[@"0777", @"/dev/bpf0", @"/dev/bpf1", @"/dev/bpf2", @"/dev/bpf3"];
 		if (![[BLAuthentication sharedInstance] executeCommand:@"/bin/chmod" withArgs: args]) return nil;
 		[NSThread sleep:0.5];
 	
-        CFShow((__bridge CFTypeRef)([[CWInterface interfaceNames] allObjects]));
+        DBNSLog(@"All Airport Interfaces: %@", [[CWInterface interfaceNames] allObjects]);
         
 		_device = pcap_open_live(deviceName, 3000, 1, 2, err);
         
@@ -196,7 +195,7 @@ pcap_dumper_t * dumper;
     }
     else
     {
-        i = 0;
+        NSInteger i = 0;
         retErr = -1;
         while ((retErr != 0) && (dataLinks[i] != 0)) 
         {
@@ -212,14 +211,17 @@ pcap_dumper_t * dumper;
         else DBNSLog(@"couldn't open dumper");
     }
     
-    if(retErr != 0)
+    if (retErr != 0)
     {
         DBNSLog(@"Error opening airpot device using pcap_set_datalink()");
         return nil;
     }
     
-	self=[super init];
-    if(!self) return nil;
+	self = [super init];
+    if(!self)
+    {
+        return nil;
+    }
 
     return self;
 }
