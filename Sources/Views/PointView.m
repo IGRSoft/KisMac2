@@ -43,7 +43,7 @@
     q.origin.y = (_frame.size.height - size) / 2;
     
     for (z=w; z>=-w; z--) {
-        [[c blendedColorWithFraction:(((float)abs(z))/w) ofColor:[NSColor clearColor]] set];
+        [[c blendedColorWithFraction:(((float)fabsf(z))/w) ofColor:[NSColor clearColor]] set];
         x=[NSBezierPath bezierPathWithOvalInRect:q];
         [x setLineWidth:1.5];
         [x stroke];

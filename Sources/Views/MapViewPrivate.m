@@ -126,7 +126,7 @@
     } else if (_wp[selWaypoint2]._lat == 0 && _wp[selWaypoint2]._long == 0) {
         [_statusView setVisible:YES];
         [self _setStatus:NSLocalizedString(@"Waypoint 2 is not set!", "map view status")]; 
-    } else if (abs(_point[selWaypoint1].x - _point[selWaypoint2].x) < 5 || abs(_point[selWaypoint1].y - _point[selWaypoint2].y) < 5) {
+    } else if (fabs(_point[selWaypoint1].x - _point[selWaypoint2].x) < 5 || fabs(_point[selWaypoint1].y - _point[selWaypoint2].y) < 5) {
         [_statusView setVisible:YES];
         [self _setStatus:NSLocalizedString(@"The waypoints are too close!", "map view status")]; 
     } else if (fabs(_wp[selWaypoint1]._lat - _wp[selWaypoint2]._lat) < 0.001 || fabs(_wp[selWaypoint1]._long - _wp[selWaypoint2]._long) < 0.001) {

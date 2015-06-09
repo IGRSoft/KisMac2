@@ -120,8 +120,10 @@
 		87FA06BB0BF6C69C00A8F24C /* FSWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 87FA06B90BF6C69B00A8F24C /* FSWindow.m */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
-		A5295C451653C3A600A0B5D9 /* BIGeneric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5295C441653C39800A0B5D9 /* BIGeneric.framework */; };
-		A5295C471653C3BD00A0B5D9 /* BIGeneric.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A5295C441653C39800A0B5D9 /* BIGeneric.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A505CE411B271A410095C7A0 /* BIGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A505CE401B271A410095C7A0 /* BIGL.framework */; };
+		A505CE421B271A410095C7A0 /* BIGL.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A505CE401B271A410095C7A0 /* BIGL.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A505CE441B271A410095C7A0 /* BIGeneric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A505CE431B271A410095C7A0 /* BIGeneric.framework */; };
+		A505CE451B271A410095C7A0 /* BIGeneric.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A505CE431B271A410095C7A0 /* BIGeneric.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A529AD771A20A4A100CD8E1E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A529AD751A20A4A100CD8E1E /* Localizable.strings */; };
 		A529AD981A20A4B400CD8E1E /* Crack.xib in Resources */ = {isa = PBXBuildFile; fileRef = A529AD781A20A4B400CD8E1E /* Crack.xib */; };
 		A529AD991A20A4B400CD8E1E /* GPSDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = A529AD7A1A20A4B400CD8E1E /* GPSDialog.xib */; };
@@ -143,8 +145,6 @@
 		A5353827180ABCE1008BB6A1 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = A53536B5180ABCE0008BB6A1 /* md5.c */; };
 		A5353972180B15B9008BB6A1 /* DESSupport.c in Sources */ = {isa = PBXBuildFile; fileRef = A5353970180B15B9008BB6A1 /* DESSupport.c */; };
 		A5353975180B1C99008BB6A1 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = A5353974180B1C99008BB6A1 /* sha1.c */; };
-		A567EDDA1A21F0CE00663A18 /* BIGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A567EDD91A21F0CE00663A18 /* BIGL.framework */; };
-		A567EDDB1A21F0CE00663A18 /* BIGL.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A567EDD91A21F0CE00663A18 /* BIGL.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A57E644D1607BC9700BE1BCA /* AirCrackWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */; };
 		A57E644F1607BC9700BE1BCA /* LEAP.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E643B1607BC9700BE1BCA /* LEAP.m */; };
 		A57E64551607BC9700BE1BCA /* WaveNetLEAPCrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64411607BC9700BE1BCA /* WaveNetLEAPCrack.m */; };
@@ -180,13 +180,6 @@
 			remoteGlobalIDString = 8D1107260486CEB800E47090;
 			remoteInfo = KisMAC;
 		};
-		A5295C431653C39800A0B5D9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A5295C3B1653C39700A0B5D9 /* BIGeneric.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
-			remoteInfo = BIGeneric;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -196,8 +189,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				A5295C471653C3BD00A0B5D9 /* BIGeneric.framework in CopyFiles */,
-				A567EDDB1A21F0CE00663A18 /* BIGL.framework in CopyFiles */,
+				A505CE421B271A410095C7A0 /* BIGL.framework in CopyFiles */,
+				A505CE451B271A410095C7A0 /* BIGeneric.framework in CopyFiles */,
 				6C03D77309B547F6005B2316 /* Growl.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -388,7 +381,8 @@
 		87FA06B80BF6C69B00A8F24C /* FSWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSWindow.h; sourceTree = "<group>"; };
 		87FA06B90BF6C69B00A8F24C /* FSWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSWindow.m; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* KisMac2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KisMac2.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A5295C3B1653C39700A0B5D9 /* BIGeneric.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BIGeneric.xcodeproj; path = BIGeneric/BIGeneric.xcodeproj; sourceTree = "<group>"; };
+		A505CE401B271A410095C7A0 /* BIGL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = BIGL.framework; path = "/Users/Korich/Library/Developer/Xcode/DerivedData/KisMac2-clnvubjkejewnidwtxzaryobsumq/Build/Products/Debug/BIGL.framework"; sourceTree = "<absolute>"; };
+		A505CE431B271A410095C7A0 /* BIGeneric.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = BIGeneric.framework; path = "/Users/Korich/Library/Developer/Xcode/DerivedData/KisMac2-clnvubjkejewnidwtxzaryobsumq/Build/Products/Debug/BIGeneric.framework"; sourceTree = "<absolute>"; };
 		A529AD761A20A4A100CD8E1E /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A529AD791A20A4B400CD8E1E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/Crack.xib; sourceTree = "<group>"; };
 		A529AD7B1A20A4B400CD8E1E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/GPSDialog.xib; sourceTree = "<group>"; };
@@ -469,14 +463,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A567EDDA1A21F0CE00663A18 /* BIGL.framework in Frameworks */,
-				A5295C451653C3A600A0B5D9 /* BIGeneric.framework in Frameworks */,
 				6C03D77009B547F2005B2316 /* Growl.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				00F57BD306A881210035AE2F /* AppleScriptKit.framework in Frameworks */,
 				0093E65506B2A1F300B3357A /* AddressBook.framework in Frameworks */,
+				A505CE411B271A410095C7A0 /* BIGL.framework in Frameworks */,
 				00F9C64006DB378F00E357F0 /* Security.framework in Frameworks */,
 				00F9C65006DB37E200E357F0 /* Carbon.framework in Frameworks */,
+				A505CE441B271A410095C7A0 /* BIGeneric.framework in Frameworks */,
 				00F9C65106DB37E200E357F0 /* IOKit.framework in Frameworks */,
 				6CA3BCCB09B2A58F00DCB407 /* Accelerate.framework in Frameworks */,
 				6CF938C410A7DFDF00B32F94 /* CoreWLAN.framework in Frameworks */,
@@ -844,6 +838,8 @@
 		29B97314FDCFA39411CA2CEA /* KisMAC */ = {
 			isa = PBXGroup;
 			children = (
+				A505CE431B271A410095C7A0 /* BIGeneric.framework */,
+				A505CE401B271A410095C7A0 /* BIGL.framework */,
 				69719DAF0F7E928900949310 /* Subprojects */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
@@ -918,7 +914,6 @@
 			isa = PBXGroup;
 			children = (
 				A5353659180ABCDD008BB6A1 /* polarssl */,
-				A5295C3B1653C39700A0B5D9 /* BIGeneric.xcodeproj */,
 			);
 			path = Subprojects;
 			sourceTree = "<group>";
@@ -986,14 +981,6 @@
 				6C94AA2E0ADF3FBC001BE161 /* GPSSatInfo.m */,
 			);
 			path = GPSSatInfo;
-			sourceTree = "<group>";
-		};
-		A5295C3C1653C39700A0B5D9 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				A5295C441653C39800A0B5D9 /* BIGeneric.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		A5353659180ABCDD008BB6A1 /* polarssl */ = {
@@ -1116,7 +1103,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = NO;
 				LastTestingUpgradeCheck = 0600;
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0700;
 			};
 			buildConfigurationList = 00A915960858D6410093943F /* Build configuration list for PBXProject "KisMac2" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1132,12 +1119,6 @@
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* KisMAC */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = A5295C3C1653C39700A0B5D9 /* Products */;
-					ProjectRef = A5295C3B1653C39700A0B5D9 /* BIGeneric.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				8D1107260486CEB800E47090 /* KisMac2 */,
@@ -1145,16 +1126,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		A5295C441653C39800A0B5D9 /* BIGeneric.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = BIGeneric.framework;
-			remoteRef = A5295C431653C39800A0B5D9 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		8D1107290486CEB800E47090 /* Resources */ = {
@@ -1513,7 +1484,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 					"$(SRCROOT)/Resources",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/KisMac2-gkydvsrajuiruqdyshxmbwunuwbp/Build/Products/Debug",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/KisMac2-clnvubjkejewnidwtxzaryobsumq/Build/Products/Debug",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1534,6 +1505,7 @@
 					"-framework",
 					Apple80211,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.igrsoft.kismac;
 				PRODUCT_NAME = KisMac2;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1549,6 +1521,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
+				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1581,7 +1554,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 					"$(SRCROOT)/Resources",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/KisMac2-gkydvsrajuiruqdyshxmbwunuwbp/Build/Products/Debug",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/KisMac2-clnvubjkejewnidwtxzaryobsumq/Build/Products/Debug",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = KisMAC_Prefix.pch;
@@ -1601,6 +1574,7 @@
 					"-framework",
 					Apple80211,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.igrsoft.kismac;
 				PRODUCT_NAME = KisMac2;
 				WARNING_CFLAGS = (
 					"-Wmost",

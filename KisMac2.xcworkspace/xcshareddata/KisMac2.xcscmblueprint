@@ -1,0 +1,44 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "439570657F80B6F9AB4E4C1DF419BD95E773D1F3",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "3D679A1D13C8459F44D2BD0010941A301CB66DE2" : 0,
+    "439570657F80B6F9AB4E4C1DF419BD95E773D1F3" : 0,
+    "469C902D8E147A8970D902854D3C23257BB971CD" : 0,
+    "0F6396B01FE75871D470785A0E1F9AD4F26F1CC2" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "D4F4B7F3-D0EF-416B-952A-1CBE5D8A1F53",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "3D679A1D13C8459F44D2BD0010941A301CB66DE2" : "KisMac2\/Subprojects\/polarssl\/",
+    "439570657F80B6F9AB4E4C1DF419BD95E773D1F3" : "KisMac2\/",
+    "469C902D8E147A8970D902854D3C23257BB971CD" : "KisMac2\/Subprojects\/BIGeneric\/Submodules\/BIGL\/",
+    "0F6396B01FE75871D470785A0E1F9AD4F26F1CC2" : "KisMac2\/Subprojects\/BIGeneric\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "KisMac2",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 203,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "KisMac2.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/IGRSoft\/BIGeneric.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "0F6396B01FE75871D470785A0E1F9AD4F26F1CC2"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/polarssl\/polarssl.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "3D679A1D13C8459F44D2BD0010941A301CB66DE2"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/iKorich\/KisMac2.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "439570657F80B6F9AB4E4C1DF419BD95E773D1F3"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/IGRSoft\/BIGL.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "469C902D8E147A8970D902854D3C23257BB971CD"
+    }
+  ]
+}
