@@ -1,3 +1,6 @@
 [submodule "Subprojects/polarssl"]
 	path = Subprojects/polarssl
 	url = https://github.com/polarssl/polarssl.git
+[submodule "Subprojects/BIGeneric"]
+	path = Subprojects/BIGeneric
+	url = https://github.com/IGRSoft/BIGeneric.git

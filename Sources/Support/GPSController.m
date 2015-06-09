@@ -278,7 +278,7 @@ struct termios ttyset;
 	_lastUpdate = [NSDate date];
 	_lastAdd = [NSDate date];
     
-    if (abs(ns)>=0 && abs(ns)<=90 && abs(ew)>=0 && abs(ew)<=180) {
+    if (fabs(ns)>=0 && fabs(ns)<=90 && fabs(ew)>=0 && fabs(ew)<=180) {
         w._long = ew;
         w._lat  = ns;
 		w._elevation = 0;
