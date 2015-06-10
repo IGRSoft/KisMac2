@@ -253,6 +253,7 @@
 			[self showExportFailureDialog];
     }
 }
+
 - (void)performExportWarD:(id)filename
 {
 	[[WaveHelper scanController] checkFilter:self];
@@ -267,6 +268,11 @@
 					   error:NULL];
 	
 	[[WaveHelper scanController] changeSearchValue:self];
+}
+
+- (IBAction)exportToServer:(id)sender
+{
+
 }
 
 - (IBAction)exportMacstumbler:(id)sender

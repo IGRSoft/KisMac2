@@ -318,7 +318,20 @@ enum _rowIndexes {
     
     [_n sortByColumn:ident order:_ascending];
 
-    [tableView setIndicatorImage:[NSImage imageNamed:(_ascending) ? @"NSAscendingSortIndicator" : @"NSDescendingSortIndicator"] inTableColumn:tableColumn];
+    GBStorageController *gbStorage = [GBStorageController sharedControllerForNamespace:kGBStorageDefaultNamespace];
+    
+    if (![gbStorage objectForKeyedSubscript:@"NSAscendingSortIndicator"])
+    {
+        NSImage *image = [NSImage imageNamed:@"NSAscendingSortIndicator"];
+        [gbStorage setObject:image forKeyedSubscript:@"NSAscendingSortIndicator"];
+    }
+    if (![gbStorage objectForKeyedSubscript:@"NSDescendingSortIndicator"])
+    {
+        NSImage *image = [NSImage imageNamed:@"NSDescendingSortIndicator"];
+        [gbStorage setObject:image forKeyedSubscript:@"NSDescendingSortIndicator"];
+    }
+    
+    [tableView setIndicatorImage:_ascending ? [gbStorage objectForKeyedSubscript:@"NSAscendingSortIndicator"] : [gbStorage objectForKeyedSubscript:@"NSAscendingSortIndicator"] inTableColumn:tableColumn];
     
     [tableView setHighlightedTableColumn:tableColumn];
     [tableView reloadData];

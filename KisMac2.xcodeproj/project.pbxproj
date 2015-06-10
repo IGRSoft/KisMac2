@@ -160,15 +160,13 @@
 		A585F77B1771DB7100045928 /* HTTPStream.m in Sources */ = {isa = PBXBuildFile; fileRef = A585F77A1771DB7100045928 /* HTTPStream.m */; };
 		A5A2F59619DD74C20046299A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5A2F59519DD74C20046299A /* Images.xcassets */; };
 		A5A2F59A19DD9EB40046299A /* spin@2x.gif in Resources */ = {isa = PBXBuildFile; fileRef = A5A2F59919DD9EB40046299A /* spin@2x.gif */; };
-		A5A2F5A219DDA11A0046299A /* greengem.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A5A2F59F19DDA11A0046299A /* greengem.pdf */; };
-		A5A2F5A319DDA11A0046299A /* orangegem.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A5A2F5A019DDA11A0046299A /* orangegem.pdf */; };
-		A5A2F5A419DDA11A0046299A /* redgem.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A5A2F5A119DDA11A0046299A /* redgem.pdf */; };
 		A5A2F5AB19DDA55B0046299A /* NetworkLEAP.tif in Resources */ = {isa = PBXBuildFile; fileRef = A5A2F5A519DDA55B0046299A /* NetworkLEAP.tif */; };
 		A5A2F5AC19DDA55B0046299A /* NetworkNoEnc.tif in Resources */ = {isa = PBXBuildFile; fileRef = A5A2F5A619DDA55B0046299A /* NetworkNoEnc.tif */; };
 		A5A2F5AD19DDA55B0046299A /* NetworkStrange.tif in Resources */ = {isa = PBXBuildFile; fileRef = A5A2F5A719DDA55B0046299A /* NetworkStrange.tif */; };
 		A5A2F5AE19DDA55B0046299A /* NetworkUnkEnc.tif in Resources */ = {isa = PBXBuildFile; fileRef = A5A2F5A819DDA55B0046299A /* NetworkUnkEnc.tif */; };
 		A5A2F5AF19DDA55B0046299A /* NetworkWEP.tif in Resources */ = {isa = PBXBuildFile; fileRef = A5A2F5A919DDA55B0046299A /* NetworkWEP.tif */; };
 		A5A2F5B019DDA55B0046299A /* NetworkWPA.tif in Resources */ = {isa = PBXBuildFile; fileRef = A5A2F5AA19DDA55B0046299A /* NetworkWPA.tif */; };
+		A5A6FA7E1B289F65006B90E1 /* GBStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = A5A6FA791B289F65006B90E1 /* GBStorage.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -443,15 +441,14 @@
 		A59E42D71796ADBF00B1139F /* updateHelpIndex.command */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = updateHelpIndex.command; sourceTree = SOURCE_ROOT; };
 		A5A2F59519DD74C20046299A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Resources/Images.xcassets; sourceTree = "<group>"; };
 		A5A2F59919DD9EB40046299A /* spin@2x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "spin@2x.gif"; sourceTree = "<group>"; };
-		A5A2F59F19DDA11A0046299A /* greengem.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = greengem.pdf; sourceTree = "<group>"; };
-		A5A2F5A019DDA11A0046299A /* orangegem.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = orangegem.pdf; sourceTree = "<group>"; };
-		A5A2F5A119DDA11A0046299A /* redgem.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = redgem.pdf; sourceTree = "<group>"; };
 		A5A2F5A519DDA55B0046299A /* NetworkLEAP.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = NetworkLEAP.tif; sourceTree = "<group>"; };
 		A5A2F5A619DDA55B0046299A /* NetworkNoEnc.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = NetworkNoEnc.tif; sourceTree = "<group>"; };
 		A5A2F5A719DDA55B0046299A /* NetworkStrange.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = NetworkStrange.tif; sourceTree = "<group>"; };
 		A5A2F5A819DDA55B0046299A /* NetworkUnkEnc.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = NetworkUnkEnc.tif; sourceTree = "<group>"; };
 		A5A2F5A919DDA55B0046299A /* NetworkWEP.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = NetworkWEP.tif; sourceTree = "<group>"; };
 		A5A2F5AA19DDA55B0046299A /* NetworkWPA.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = NetworkWPA.tif; sourceTree = "<group>"; };
+		A5A6FA781B289F65006B90E1 /* GBStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBStorage.h; sourceTree = "<group>"; };
+		A5A6FA791B289F65006B90E1 /* GBStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBStorage.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -906,6 +903,7 @@
 		69719DAF0F7E928900949310 /* Subprojects */ = {
 			isa = PBXGroup;
 			children = (
+				A5A6FA761B289F65006B90E1 /* GBStorage */,
 				A5353659180ABCDD008BB6A1 /* polarssl */,
 			);
 			path = Subprojects;
@@ -1057,12 +1055,18 @@
 				A5A2F5A819DDA55B0046299A /* NetworkUnkEnc.tif */,
 				A5A2F5A919DDA55B0046299A /* NetworkWEP.tif */,
 				A5A2F5AA19DDA55B0046299A /* NetworkWPA.tif */,
-				A5A2F59F19DDA11A0046299A /* greengem.pdf */,
-				A5A2F5A019DDA11A0046299A /* orangegem.pdf */,
-				A5A2F5A119DDA11A0046299A /* redgem.pdf */,
 			);
 			name = Indicators;
 			path = Resources/Indicators;
+			sourceTree = "<group>";
+		};
+		A5A6FA761B289F65006B90E1 /* GBStorage */ = {
+			isa = PBXGroup;
+			children = (
+				A5A6FA781B289F65006B90E1 /* GBStorage.h */,
+				A5A6FA791B289F65006B90E1 /* GBStorage.m */,
+			);
+			path = GBStorage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1125,8 +1129,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A5A2F5A419DDA11A0046299A /* redgem.pdf in Resources */,
-				A5A2F5A319DDA11A0046299A /* orangegem.pdf in Resources */,
 				0035337A06A5DD5700AB4577 /* example.dump in Resources */,
 				A529ADA21A20A4B400CD8E1E /* PrefsMap.xib in Resources */,
 				A5A2F5B019DDA55B0046299A /* NetworkWPA.tif in Resources */,
@@ -1137,7 +1139,6 @@
 				A529AD981A20A4B400CD8E1E /* Crack.xib in Resources */,
 				A529ADA41A20A4B400CD8E1E /* PrefsSounds.xib in Resources */,
 				0035339A06A5DD5700AB4577 /* usbprism2_unprep.sh in Resources */,
-				A5A2F5A219DDA11A0046299A /* greengem.pdf in Resources */,
 				A529AD9C1A20A4B400CD8E1E /* MainMenu.xib in Resources */,
 				A529ADA61A20A4B400CD8E1E /* WayPointDialog.xib in Resources */,
 				A529AD771A20A4A100CD8E1E /* Localizable.strings in Resources */,
@@ -1260,6 +1261,7 @@
 				00971F3F06E4FA6F004307EA /* BIView.m in Sources */,
 				00971F5706E4FFBF004307EA /* BISubView.m in Sources */,
 				0097241506E51844004307EA /* BIImageView.m in Sources */,
+				A5A6FA7E1B289F65006B90E1 /* GBStorage.m in Sources */,
 				0097243A06E51A99004307EA /* BITextView.m in Sources */,
 				0090AC8606E5E3250096C5FC /* MapControlPanel.m in Sources */,
 				00E1426E06E62A44009DC179 /* PointView.m in Sources */,

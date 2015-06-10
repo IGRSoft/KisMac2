@@ -174,10 +174,33 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     _visibleTab = tabInvalid;
     [self showNetworks];
     
-    [_showNetworks setImage: [NSImage imageNamed:@"menu-networks"]];
-    [_showTraffic  setImage: [NSImage imageNamed:@"menu-graph"]];
-    [_showMap      setImage: [NSImage imageNamed:@"menu-map"]];
-    [_showDetails  setImage: [NSImage imageNamed:@"menu-details"]];
+    GBStorageController *gbStorage = [GBStorageController sharedControllerForNamespace:kGBStorageDefaultNamespace];
+    
+    if (![gbStorage objectForKeyedSubscript:@"menu-networks"])
+    {
+        NSImage *image = [NSImage imageNamed:@"menu-networks"];
+        [gbStorage setObject:image forKeyedSubscript:@"menu-networks"];
+    }
+    if (![gbStorage objectForKeyedSubscript:@"menu-graph"])
+    {
+        NSImage *image = [NSImage imageNamed:@"menu-graph"];
+        [gbStorage setObject:image forKeyedSubscript:@"menu-graph"];
+    }
+    if (![gbStorage objectForKeyedSubscript:@"menu-networks"])
+    {
+        NSImage *image = [NSImage imageNamed:@"menu-map"];
+        [gbStorage setObject:image forKeyedSubscript:@"menu-map"];
+    }
+    if (![gbStorage objectForKeyedSubscript:@"menu-details"])
+    {
+        NSImage *image = [NSImage imageNamed:@"menu-details"];
+        [gbStorage setObject:image forKeyedSubscript:@"menu-details"];
+    }
+    
+    [_showNetworks setImage: [gbStorage objectForKeyedSubscript:@"menu-networks"]];
+    [_showTraffic  setImage: [gbStorage objectForKeyedSubscript:@"menu-graph"]];
+    [_showMap      setImage: [gbStorage objectForKeyedSubscript:@"menu-map"]];
+    [_showDetails  setImage: [gbStorage objectForKeyedSubscript:@"menu-details"]];
     
     [_networkTable setDoubleAction:@selector(showDetails:)];
     
@@ -507,12 +530,20 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
         _lastSorted=ident;
     }
     
-    if (_ascending)
-        [tableView setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"]
-					   inTableColumn:tableColumn];
-    else
-        [tableView setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"]
-					   inTableColumn:tableColumn];
+    GBStorageController *gbStorage = [GBStorageController sharedControllerForNamespace:kGBStorageDefaultNamespace];
+    
+    if (![gbStorage objectForKeyedSubscript:@"NSAscendingSortIndicator"])
+    {
+        NSImage *image = [NSImage imageNamed:@"NSAscendingSortIndicator"];
+        [gbStorage setObject:image forKeyedSubscript:@"NSAscendingSortIndicator"];
+    }
+    if (![gbStorage objectForKeyedSubscript:@"NSDescendingSortIndicator"])
+    {
+        NSImage *image = [NSImage imageNamed:@"NSDescendingSortIndicator"];
+        [gbStorage setObject:image forKeyedSubscript:@"NSDescendingSortIndicator"];
+    }
+    
+    [tableView setIndicatorImage:_ascending ? [gbStorage objectForKeyedSubscript:@"NSAscendingSortIndicator"] : [gbStorage objectForKeyedSubscript:@"NSDescendingSortIndicator"] inTableColumn:tableColumn];
     
 	//speedy sort (quick sort is faster than shaker sort, but not stable)
 	[_container sortByColumn:_lastSorted order:_ascending];

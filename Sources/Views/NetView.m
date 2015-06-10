@@ -47,12 +47,40 @@ static NSImage* _networkStrange;
     self = [super init];
     if (self) {
         
-		if (!_networkUnkEnc) _networkUnkEnc = [NSImage imageNamed:@"NetworkUnkEnc.tif"];
-		if (!_networkNoEnc)  _networkNoEnc  = [NSImage imageNamed:@"NetworkNoEnc.tif"];
-		if (!_networkWEP)    _networkWEP    = [NSImage imageNamed:@"NetworkWEP.tif"];
-		if (!_networkWPA)    _networkWPA    = [NSImage imageNamed:@"NetworkWPA.tif"];
-		if (!_networkLEAP)   _networkLEAP   = [NSImage imageNamed:@"NetworkLEAP.tif"];
-		if (!_networkStrange)_networkStrange= [NSImage imageNamed:@"NetworkStrange.tif"];
+        GBStorageController *gbStorage = [GBStorageController sharedControllerForNamespace:kGBStorageDefaultNamespace];
+        
+        if (![gbStorage objectForKeyedSubscript:@"NetworkUnkEnc.tif"])
+        {
+            NSImage *image = [NSImage imageNamed:@"NetworkUnkEnc.tif"];
+            [gbStorage setObject:image forKeyedSubscript:@"NetworkUnkEnc.tif"];
+        }
+        if (![gbStorage objectForKeyedSubscript:@"NetworkNoEnc.tif"])
+        {
+            NSImage *image = [NSImage imageNamed:@"NetworkNoEnc.tif"];
+            [gbStorage setObject:image forKeyedSubscript:@"NetworkNoEnc.tif"];
+        }
+        if (![gbStorage objectForKeyedSubscript:@"NetworkWEP.tif"])
+        {
+            NSImage *image = [NSImage imageNamed:@"NetworkWEP.tif"];
+            [gbStorage setObject:image forKeyedSubscript:@"NetworkWEP.tif"];
+        }
+        if (![gbStorage objectForKeyedSubscript:@"NetworkLEAP.tif"])
+        {
+            NSImage *image = [NSImage imageNamed:@"NetworkLEAP.tif"];
+            [gbStorage setObject:image forKeyedSubscript:@"NetworkLEAP.tif"];
+        }
+        if (![gbStorage objectForKeyedSubscript:@"NetworkStrange.tif"])
+        {
+            NSImage *image = [NSImage imageNamed:@"NetworkStrange.tif"];
+            [gbStorage setObject:image forKeyedSubscript:@"NetworkStrange.tif"];
+        }
+        
+		if (!_networkUnkEnc) _networkUnkEnc = [gbStorage objectForKeyedSubscript:@"NetworkUnkEnc.tif"];
+		if (!_networkNoEnc)  _networkNoEnc  = [gbStorage objectForKeyedSubscript:@"NetworkNoEnc.tif"];
+		if (!_networkWEP)    _networkWEP    = [gbStorage objectForKeyedSubscript:@"NetworkWEP.tif"];
+		if (!_networkWPA)    _networkWPA    = [gbStorage objectForKeyedSubscript:@"NetworkWPA.tif"];
+		if (!_networkLEAP)   _networkLEAP   = [gbStorage objectForKeyedSubscript:@"NetworkLEAP.tif"];
+		if (!_networkStrange)_networkStrange= [gbStorage objectForKeyedSubscript:@"NetworkStrange.tif"];
 		
 		_name = @"<no ssid>";
         

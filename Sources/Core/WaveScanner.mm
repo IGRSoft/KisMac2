@@ -204,55 +204,58 @@
         {				
             @try
             {
-                frame = [wd nextFrame];     // captures the next frame (locking)
-                if (frame == NULL)          // NULL Pointer? 
-                    break;
-                
-                if ([w parseFrame:frame] != NO) //parse packet (no if unknown type)
+                @autoreleasepool
                 {
-                    // Send packet to ALL plugins
-                    NSEnumerator *plugins = [_wavePlugins objectEnumerator];
-                    response = WavePluginPacketResponseContinue;
-					WavePlugin *_wavePlugin = nil;
-                    while ((_wavePlugin = [plugins nextObject]) && (response & WavePluginPacketResponseContinue)) {
-						response = [_wavePlugin gotPacket:w fromDriver:wd];
-						// Checks if packet should be forwarded to other plugins
+                    frame = [wd nextFrame];     // captures the next frame (locking)
+                    if (frame == NULL)          // NULL Pointer?
+                        break;
                     
-                    }
-                    if (!(response & WavePluginPacketResponseContinue))
-                        continue;
-                    
-					if ([w SSID] == nil || ![w isCorrectSSID] ) {
-						continue;
-					}
-					
-                    if ([_container addPacket:w liveCapture:YES] == NO)			// the packet shall be dropped
-                    {	
-                        continue;
-                    }
-                                        
-                    if ((geiger!=nil) && ((_packets % _geigerInt)==0)) 
+                    if ([w parseFrame:frame] != NO) //parse packet (no if unknown type)
                     {
-                        if (_soundBusy) 
-                        {
-                            _geigerInt+=10;
+                        // Send packet to ALL plugins
+                        NSEnumerator *plugins = [_wavePlugins objectEnumerator];
+                        response = WavePluginPacketResponseContinue;
+                        WavePlugin *_wavePlugin = nil;
+                        while ((_wavePlugin = [plugins nextObject]) && (response & WavePluginPacketResponseContinue)) {
+                            response = [_wavePlugin gotPacket:w fromDriver:wd];
+                            // Checks if packet should be forwarded to other plugins
+                            
                         }
-                        else
-                        {
-                            _soundBusy=YES;
-                            [geiger play];
+                        if (!(response & WavePluginPacketResponseContinue))
+                            continue;
+                        
+                        if ([w SSID] == nil || ![w isCorrectSSID] ) {
+                            continue;
                         }
+                        
+                        if ([_container addPacket:w liveCapture:YES] == NO)			// the packet shall be dropped
+                        {
+                            continue;
+                        }
+                        
+                        if ((geiger!=nil) && ((_packets % _geigerInt)==0))
+                        {
+                            if (_soundBusy)
+                            {
+                                _geigerInt+=10;
+                            }
+                            else
+                            {
+                                _soundBusy=YES;
+                                [geiger play];
+                            }
+                        }
+                        
+                        ++_packets;
+                        
+                        _bytes+=[w length];
+                    }//end parse frame
+                    else {
+                        if (_wavePcapDumper) {
+                            [_wavePcapDumper gotPacket:w fromDriver:wd];
+                        }
+                        DBNSLog(@"WaveScanner: Unknown packet type in parseFrame");   
                     }
-                    
-                    ++_packets;
-                    
-                    _bytes+=[w length];
-                }//end parse frame
-                else {
-					if (_wavePcapDumper) {
-						[_wavePcapDumper gotPacket:w fromDriver:wd];
-					}
-                    DBNSLog(@"WaveScanner: Unknown packet type in parseFrame");   
                 }
             }
             @finally 

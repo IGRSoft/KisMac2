@@ -1582,138 +1582,197 @@ NSInteger lengthSort(id string1, id string2, void *context)
 
 - (NSDictionary*)cache
 {
-	NSString *enc, *type;
-	NSDictionary *cache;
-	NSImage *image = nil;
-	if (_cacheValid) return _cache;
-	
-	switch (_isWep)
+    NSDictionary *cache;
+    NSString *enc, *type;
+    NSImage *image = nil;
+    
+    if (_cacheValid) return _cache;
+    
+    GBStorageController *gbStorage = [GBStorageController sharedControllerForNamespace:kGBStorageDefaultNamespace];
+    
+    switch (_isWep)
     {
-		case encryptionTypeLEAP:
-			enc = NSLocalizedString(@"LEAP", "table description");
-			break;
-		case encryptionTypeWPA2:     
-			enc = NSLocalizedString(@"WPA2", "table description");
+        case encryptionTypeLEAP:
+            enc = NSLocalizedString(@"LEAP", "table description");
+            break;
+        case encryptionTypeWPA2:
+            enc = NSLocalizedString(@"WPA2", "table description");
             if(_challengeResponseStatus == chreResponse)
             {
-                image = [NSImage imageNamed:@"orangegem.pdf"];
+                if (![gbStorage objectForKeyedSubscript:@"orangegem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"orangegem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"orangegem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"orangegem"];
             }
             else if(_challengeResponseStatus == chreChallenge)
             {
-                image = [NSImage imageNamed:@"orangegem.pdf"];
+                if (![gbStorage objectForKeyedSubscript:@"orangegem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"orangegem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"orangegem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"orangegem"];
             }
             else if(_challengeResponseStatus == chreComplete)
             {
-                image = [NSImage imageNamed:@"greengem.pdf"];
+                if (![gbStorage objectForKeyedSubscript:@"greengem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"greengem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"greengem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"greengem"];
             }
-			break;
-		case encryptionTypeWPA:     
-			enc = NSLocalizedString(@"WPA", "table description");
+            break;
+        case encryptionTypeWPA:
+            enc = NSLocalizedString(@"WPA", "table description");
             if(_challengeResponseStatus == chreResponse)
             {
-                image = [NSImage imageNamed:@"orangegem.pdf"];
+                if (![gbStorage objectForKeyedSubscript:@"orangegem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"orangegem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"orangegem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"orangegem"];
             }
             else if(_challengeResponseStatus == chreChallenge)
             {
-                image = [NSImage imageNamed:@"orangegem.pdf"];
+                if (![gbStorage objectForKeyedSubscript:@"orangegem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"orangegem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"orangegem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"orangegem"];
             }
             else if(_challengeResponseStatus == chreComplete)
             {
-                image = [NSImage imageNamed:@"greengem.pdf"];
+                if (![gbStorage objectForKeyedSubscript:@"greengem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"greengem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"greengem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"greengem"];
             }
-			break;
-		case encryptionTypeWEP40:
-			enc = NSLocalizedString(@"WEP-40", "table description");
-            if( [self uniqueIVs] > WEP_GEM_ORANGE_LEVEL && 
-                [self uniqueIVs] < WEP_GEM_GREEN_LEVEL)
+            break;
+        case encryptionTypeWEP40:
+            enc = NSLocalizedString(@"WEP-40", "table description");
+            if( [self uniqueIVs] > WEP_GEM_ORANGE_LEVEL &&
+               [self uniqueIVs] < WEP_GEM_GREEN_LEVEL)
             {
-                image = [NSImage imageNamed:@"orangegem.pdf"];
+                if (![gbStorage objectForKeyedSubscript:@"orangegem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"orangegem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"orangegem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"orangegem"];
             }
             else if([self uniqueIVs] > WEP_GEM_GREEN_LEVEL)
             {
-                image = [NSImage imageNamed:@"greengem.pdf"];
+                if (![gbStorage objectForKeyedSubscript:@"greengem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"greengem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"greengem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"greengem"];
             }
-			break;
-		case encryptionTypeWEP:
-			enc = NSLocalizedString(@"WEP", "table description");
-            if( [self uniqueIVs] > WEP_GEM_ORANGE_LEVEL && 
-                [self uniqueIVs] < WEP_GEM_GREEN_LEVEL)
+            break;
+        case encryptionTypeWEP:
+            enc = NSLocalizedString(@"WEP", "table description");
+            if( [self uniqueIVs] > WEP_GEM_ORANGE_LEVEL &&
+               [self uniqueIVs] < WEP_GEM_GREEN_LEVEL)
             {
-                image = [NSImage imageNamed:@"orangegem.pdf"];
+                if (![gbStorage objectForKeyedSubscript:@"orangegem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"orangegem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"orangegem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"orangegem"];
             }
             else if([self uniqueIVs] > WEP_GEM_GREEN_LEVEL)
             {
-                image = [NSImage imageNamed:@"greengem.pdf"];
+                if (![gbStorage objectForKeyedSubscript:@"greengem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"greengem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"greengem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"greengem"];
             }
-			break;
-		case encryptionTypeNone:
-            image = [NSImage imageNamed:@"greengem.pdf"];
-			enc = NSLocalizedString(@"NO", "table description");
-			break;
-		case encryptionTypeUnknown:
-			enc = @"";
-			break;
-		default:
-			enc = @"";
-			NSAssert(NO, @"Encryption type invalid");
-	}
-   
-	switch (_type) 
+            break;
+        case encryptionTypeNone:
+            image = [NSImage imageNamed:@"greengem"];
+            enc = NSLocalizedString(@"NO", "table description");
+            break;
+        case encryptionTypeUnknown:
+            enc = @"";
+            break;
+        default:
+            enc = @"";
+            NSAssert(NO, @"Encryption type invalid");
+    }
+    
+    switch (_type)
     {
-		case networkTypeUnknown:
-			type = @"";
-			break;
-		case networkTypeAdHoc:
-			type = NSLocalizedString(@"ad-hoc", "table description");
-			break;
-		case networkTypeManaged:
-			type = NSLocalizedString(@"managed", "table description");
-			break;
-		case networkTypeTunnel:
-			type = NSLocalizedString(@"tunnel", "table description");
-			break;
-		case networkTypeProbe:
-			type = NSLocalizedString(@"probe", "table description");
-			break;
-		case networkTypeLucentTunnel:
-			type = NSLocalizedString(@"lucent tunnel", "table description");
-			break;
-		default:
-			type = @"";
-			NSAssert(NO, @"Network type invalid");
-	}
+        case networkTypeUnknown:
+            type = @"";
+            break;
+        case networkTypeAdHoc:
+            type = NSLocalizedString(@"ad-hoc", "table description");
+            break;
+        case networkTypeManaged:
+            type = NSLocalizedString(@"managed", "table description");
+            break;
+        case networkTypeTunnel:
+            type = NSLocalizedString(@"tunnel", "table description");
+            break;
+        case networkTypeProbe:
+            type = NSLocalizedString(@"probe", "table description");
+            break;
+        case networkTypeLucentTunnel:
+            type = NSLocalizedString(@"lucent tunnel", "table description");
+            break;
+        default:
+            type = @"";
+            NSAssert(NO, @"Network type invalid");
+    }
     
     //if we didn't set the Gem yet, set it red here
     if (image == nil)
     {
-        image = [NSImage imageNamed:@"redgem.pdf"];
+        if (![gbStorage objectForKeyedSubscript:@"redgem"])
+        {
+            NSImage *image = [NSImage imageNamed:@"redgem"];
+            [gbStorage setObject:image forKeyedSubscript:@"redgem"];
+        }
+        image = [gbStorage objectForKeyedSubscript:@"redgem"];
     }
-	
-	cache = @{@"id": [NSString stringWithFormat:@"%i", _netID],
-		@"ssid": [self SSID],
-		@"bssid": [self BSSID], 
-		@"signal": [NSString stringWithFormat:@"%i", _curSignal],
-		@"avgsignal": [NSString stringWithFormat:@"%i", [self avgSignal]],
-		@"maxsignal": [NSString stringWithFormat:@"%i", _maxSignal],
-		@"channel": [NSString stringWithFormat:@"%i", _channel],
-        @"primaryChannel": [NSString stringWithFormat:@"%i", _primaryChannel],
-		@"packets": [NSString stringWithFormat:@"%i", _packets],
-		@"data": [self data],
-		@"wep": enc,
-		@"type": type,
-		@"lastseen": [NSString stringWithFormat:@"%@", _date],
-        @"challengeResponse": image};
-	
-	_cache = cache;
-	_cacheValid = YES;
-	return _cache; 
+    
+    cache = @{@"id": [NSString stringWithFormat:@"%i", _netID],
+              @"ssid": [self SSID],
+              @"bssid": [self BSSID],
+              @"signal": [NSString stringWithFormat:@"%i", _curSignal],
+              @"avgsignal": [NSString stringWithFormat:@"%i", [self avgSignal]],
+              @"maxsignal": [NSString stringWithFormat:@"%i", _maxSignal],
+              @"channel": [NSString stringWithFormat:@"%i", _channel],
+              @"primaryChannel": [NSString stringWithFormat:@"%i", _primaryChannel],
+              @"packets": [NSString stringWithFormat:@"%i", _packets],
+              @"data": [self data],
+              @"wep": enc,
+              @"type": type,
+              @"lastseen": [NSString stringWithFormat:@"%@", _date],
+              @"challengeResponse": image};
+    
+    _cache = cache;
+    _cacheValid = YES;
+    
+    return _cache;
 }
 
 #pragma mark -
 
-- (bool)joinNetwork 
+- (bool)joinNetwork
 {
-    return [[WaveDriverAirport sharedInstance] joinBSSID: _rawBSSID 
+    return [[WaveDriverAirport sharedInstance] joinBSSID: _rawBSSID
                                             withPassword: _password];
 }
 

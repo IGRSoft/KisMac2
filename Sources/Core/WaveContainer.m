@@ -282,12 +282,12 @@ UInt32 hashForMAC(const UInt8* val) {
     switch (challengeResponseStatus) {
         case chreResponse:
         case chreChallenge:
-            return @"orangegem.pdf";
+            return @"orangegem";
         case chreComplete:
-            return @"greengem.pdf";
+            return @"greengem";
         case chreNone:
         default:
-            return @"redgem.pdf";
+            return @"redgem";
     }
 }
 
@@ -844,21 +844,25 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
         ++_netCount;
         entry = _netCount - 1;
         memcpy(&_idList[entry].ID, ID, 6);
-		WaveNet *net = [[WaveNet alloc] initWithID:entry];
-		if ([[net SSID] isEqualToString:@"<no ssid>"])
-		{
-			_idList[entry].net = net;
-			CFRetain((__bridge CFTypeRef)(_idList[entry].net));
-			_lookup[l] = entry;
-			
-			[self addNetToView:entry];
-			
-			[[NSNotificationCenter defaultCenter] postNotificationName:KisMACNetworkAdded object:self];
-		}
-		else
-		{
-			DBNSLog(@"Incorrect network");
-		}
+        
+        @autoreleasepool
+        {
+            WaveNet *net = [[WaveNet alloc] initWithID:entry];
+            if ([[net SSID] isEqualToString:@"<no ssid>"])
+            {
+                _idList[entry].net = net;
+                CFRetain((__bridge CFTypeRef)(_idList[entry].net));
+                _lookup[l] = entry;
+                
+                [self addNetToView:entry];
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:KisMACNetworkAdded object:self];
+            }
+            else
+            {
+                DBNSLog(@"Incorrect network");
+            }
+        }
     }
     
     if (l != lentry)

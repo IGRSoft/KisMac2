@@ -136,7 +136,16 @@
         
         _scanning=YES;
         [_window setDocumentEdited:YES];
-		[_scanButton setImage:[NSImage imageNamed:@"toolbar-stop-scan"]];
+        
+        GBStorageController *gbStorage = [GBStorageController sharedControllerForNamespace:kGBStorageDefaultNamespace];
+        
+        if (![gbStorage objectForKeyedSubscript:@"toolbar-stop-scan"])
+        {
+            NSImage *image = [NSImage imageNamed:@"toolbar-stop-scan"];
+            [gbStorage setObject:image forKeyedSubscript:@"toolbar-stop-scan"];
+        }
+        
+		[_scanButton setImage:[gbStorage objectForKeyedSubscript:@"toolbar-stop-scan"]];
 		
         [_scanButton setLabel:@"Stop"];
         result=[scanner startScanning];
@@ -154,7 +163,16 @@
     
 	[self stopActiveAttacks];
     result=[scanner stopScanning];
-    [_scanButton setImage:[NSImage imageNamed:@"toolbar-start-scan"]];
+    
+    GBStorageController *gbStorage = [GBStorageController sharedControllerForNamespace:kGBStorageDefaultNamespace];
+    if (![gbStorage objectForKeyedSubscript:@"toolbar-start-scan"])
+    {
+        NSImage *image = [NSImage imageNamed:@"toolbar-start-scan"];
+        [gbStorage setObject:image forKeyedSubscript:@"toolbar-start-scan"];
+    }
+    
+    [_scanButton setImage:[gbStorage objectForKeyedSubscript:@"toolbar-start-scan"]];
+    
     [_scanButton setLabel:@"Start"];
     _scanning=NO;
     

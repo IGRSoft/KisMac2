@@ -100,10 +100,24 @@
 	}
     [NSApp beginSheet:probeSheet modalForWindow:[WaveHelper mainWindow] modalDelegate:[WaveHelper mainWindow] didEndSelector:nil contextInfo:nil];
     
-    statusOK = [NSImage imageNamed:@"greengem.pdf"];
-    statusNOK = [NSImage imageNamed:@"redgem.pdf"];
+    GBStorageController *gbStorage = [GBStorageController sharedControllerForNamespace:kGBStorageDefaultNamespace];
+    
+    if (![gbStorage objectForKeyedSubscript:@"greengem"])
+    {
+        NSImage *image = [NSImage imageNamed:@"greengem"];
+        [gbStorage setObject:image forKeyedSubscript:@"greengem"];
+    }
+    if (![gbStorage objectForKeyedSubscript:@"redgem"])
+    {
+        NSImage *image = [NSImage imageNamed:@"redgem"];
+        [gbStorage setObject:image forKeyedSubscript:@"redgem"];
+    }
+    
+    statusOK = [gbStorage objectForKeyedSubscript:@"greengem"];
+    statusNOK = [gbStorage objectForKeyedSubscript:@"redgem"];
     statusSPIN = [NSImage imageNamed:@"spin.gif"];
     DBNSLog(@"%@", statusSPIN);
+    
     _currentRateEnumerator = [[_driver permittedRates] objectEnumerator];
 //    [self stepTestProbeRequest];
     [self stepTestRTS];

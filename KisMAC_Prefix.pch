@@ -10,6 +10,8 @@
     #import <BIGeneric/BIGeneric.h>
     #import <Security/Security.h>
     #import <CoreServices/CoreServices.h>
+
+    #import "GBStorage.h"
 #endif
 
 #ifdef DEBUG
