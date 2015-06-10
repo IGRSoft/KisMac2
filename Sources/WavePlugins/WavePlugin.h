@@ -29,16 +29,17 @@
 @class WaveNet;
 @class WavePacket;
 
-typedef enum _WavePluginStatus
+typedef NS_ENUM(NSUInteger, WavePluginStatus)
 {
     WavePluginIdle            = 0,
     WavePluginRunning         = 1,
-} WavePluginStatus;
+};
 
-typedef enum _WavePluginPacketResponse {
+typedef NS_ENUM(NSUInteger, WavePluginPacketResponse)
+{
     WavePluginPacketResponseContinue = 1,
     WavePluginPacketResponseCatched  = 2,
-} WavePluginPacketResponse;
+};
 
 @interface WavePlugin : NSObject
 {

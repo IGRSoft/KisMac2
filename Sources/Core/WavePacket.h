@@ -56,22 +56,25 @@ struct sBeaconFrame { //at least 12 bytes
     UInt16 capabilities;
 };
 
-typedef enum _networkType {
+typedef NS_ENUM(NSUInteger, networkType)
+{
     networkTypeUnknown      = 0,
     networkTypeAdHoc        = 1,
     networkTypeManaged      = 2,
     networkTypeTunnel       = 3,
     networkTypeProbe        = 4,
     networkTypeLucentTunnel = 5
-} networkType;
+};
 
-typedef enum _wpaNoncePresent {
-    wpaNonceNone,
+typedef NS_ENUM(NSUInteger, wpaNoncePresent)
+{
+    wpaNonceNone = 0,
     wpaNonceANonce,
     wpaNonceSNonce
-} wpaNoncePresent;
+};
 
-typedef enum _encryptionType {
+typedef NS_ENUM(NSUInteger, encryptionType)
+{
     encryptionTypeUnknown   = 0,
     encryptionTypeNone      = 1,
     encryptionTypeWEP       = 2,
@@ -79,14 +82,15 @@ typedef enum _encryptionType {
     encryptionTypeWPA       = 4,
     encryptionTypeLEAP      = 5,
     encryptionTypeWPA2      = 6,    
-} encryptionType;
+};
 
-typedef enum _leapAuthCode {
+typedef NS_ENUM(NSUInteger, leapAuthCode)
+{
     leapAuthCodeChallenge   = 1,
     leapAuthCodeResponse    = 2,
     leapAuthCodeSuccess     = 3,
     leapAuthCodeFailure     = 4    
-} leapAuthCode;
+};
 
 //this represents a packet
 @interface WavePacket : NSObject /*<UKTest>*/ {

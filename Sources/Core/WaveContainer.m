@@ -326,7 +326,7 @@ UInt32 hashForMAC(const UInt8* val) {
 			return @"lucent tunnel";
 		default:
 			return @"Unknown";
-			DBNSLog(@"Invalid net type %i, WTF?", type);
+			DBNSLog(@"Invalid net type %@, WTF?", @(type));
 	}
 }
 

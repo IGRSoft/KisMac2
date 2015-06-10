@@ -52,18 +52,22 @@
 #define SSID_SIZE 255
 
 @class WaveDriver;
-struct stream_frame_header {
+
+struct stream_frame_header
+{
     uint32_t frame_sentinel;
     uint8_t frame_type;
     uint32_t frame_len;
 } __attribute__((__packed__));
 
-struct stream_version_packet {
+struct stream_version_packet
+{
     uint16_t drone_version;
 	uint8_t gps_enabled;
 };
 
-struct stream_packet_header {
+struct stream_packet_header
+{
     uint32_t header_len;
     uint16_t drone_version;
     uint32_t len;
@@ -94,29 +98,33 @@ struct stream_packet_header {
     uint8_t sourcename[32];
 } __attribute__((__packed__));
 
-typedef enum {
-    carrier_unknown,
+typedef NS_ENUM(NSInteger, carrier_type)
+{
+    carrier_unknown = 0,
     carrier_80211b,
     carrier_80211bplus,
     carrier_80211a,
     carrier_80211g,
     carrier_80211fhss,
     carrier_80211dsss
-} carrier_type;
+};
 
-typedef enum {
-    encoding_unknown,
+typedef NS_ENUM(NSInteger, encoding_type)
+{
+    encoding_unknown = 0,
     encoding_cck,
     encoding_pbcc,
     encoding_ofdm
-} encoding_type;
+};
 
-struct packet_parm {
+struct packet_parm
+{
     int fuzzy_crypt;
 	int fuzzy_decode;
 };
 
-typedef struct kis_packet {
+typedef struct kis_packet
+{
     unsigned int len;		// The amount of data we've actually got
     unsigned int caplen;	// The amount of data originally captured
     struct timeval ts;          // Capture timestamp
@@ -141,16 +149,18 @@ typedef struct kis_packet {
     struct packet_parm parm;           // Parameters from the packet source that trickle down
 } kismet_packet;
 
-typedef enum {
+typedef NS_ENUM(NSInteger, packet_type)
+{
     packet_noise = -2,  // We're too short or otherwise corrupted
     packet_unknown = -1, // What are we?
     packet_management = 0, // LLC management
     packet_phy = 1, // Physical layer packets, most drivers can't provide these
     packet_data = 2 // Data frames
-} packet_type;
+};
 
 // Subtypes are a little odd because we re-use values depending on the type
-typedef enum {
+typedef NS_ENUM(NSInteger, packet_sub_type)
+{
     packet_sub_unknown = -1,
     // Management subtypes
     packet_sub_association_req = 0,
@@ -185,19 +195,26 @@ typedef enum {
     packet_sub_data_qos_null = 12,
     packet_sub_data_qos_cf_poll_nod = 14,
     packet_sub_data_qos_cf_ack_poll = 15
-} packet_sub_type;
+};
 
 // distribution directions
-typedef enum {
-    no_distribution, from_distribution, to_distribution, inter_distribution, adhoc_distribution
-} distribution_type;
+typedef NS_ENUM(NSInteger, distribution_type)
+{
+    no_distribution = 0,
+    from_distribution,
+    to_distribution,
+    inter_distribution,
+    adhoc_distribution
+};
 
-typedef struct {
+typedef struct
+{
 	short unsigned int macaddr[6];
 } mac_addr;
 
-typedef enum {
-    proto_unknown,
+typedef NS_ENUM(NSUInteger, protocol_info_type)
+{
+    proto_unknown = 0,
     proto_udp, proto_misc_tcp, proto_arp, proto_dhcp_server,
     proto_cdp,
     proto_netbios, proto_netbios_tcp,
@@ -214,9 +231,10 @@ typedef enum {
     proto_peap,
     proto_isakmp,
     proto_pptp,
-} protocol_info_type;
+};
 
-typedef struct {
+typedef struct
+{
     unsigned int : 8 __attribute__ ((packed));
     unsigned int : 8 __attribute__ ((packed));
 
@@ -248,7 +266,8 @@ typedef struct {
     unsigned short to_ds : 1 __attribute__ ((packed));
 } frame_control;
 
-typedef struct {
+typedef struct
+{
     uint8_t timestamp[8];
 
     // This field must be converted to host-endian before being used
@@ -269,7 +288,8 @@ typedef struct {
 } fixed_parameters;
 
 #else
-typedef struct {
+typedef struct
+{
     unsigned short version : 2 __attribute__ ((packed));
     unsigned short type : 2 __attribute__ ((packed));
     unsigned short subtype : 4 __attribute__ ((packed));
@@ -285,7 +305,8 @@ typedef struct {
     unsigned short order : 1 __attribute__ ((packed));
 } frame_control;
 
-typedef struct {
+typedef struct
+{
     uint8_t timestamp[8];
 
     // This field must be converted to host-endian before being used
@@ -305,7 +326,8 @@ typedef struct {
 } fixed_parameters;
 #endif
 
-typedef struct {
+typedef struct
+{
     char dev_id[128];
     uint8_t ip[4];
     char interface[128];
@@ -314,13 +336,15 @@ typedef struct {
     char platform[128];
 } cdp_packet;
 
-typedef enum {
-    proto_netbios_unknown,
+typedef NS_ENUM(NSUInteger, protocol_netbios_type)
+{
+    proto_netbios_unknown = 0,
     proto_netbios_host, proto_netbios_master,
     proto_netbios_domain, proto_netbios_query, proto_netbios_pdcquery
-} protocol_netbios_type;
+};
 
-typedef struct {
+typedef struct
+{
     protocol_info_type type;
     uint8_t source_ip[4];
     uint8_t dest_ip[4];
@@ -334,13 +358,14 @@ typedef struct {
     int prototype_extra;
 } proto_info;
 
-typedef enum {
-    turbocell_unknown,
+typedef NS_ENUM(NSUInteger, turbocell_type)
+{
+    turbocell_unknown = 0,
     turbocell_ispbase, // 0xA0
     turbocell_pollbase, // 0x80
     turbocell_nonpollbase, // 0x00
     turbocell_base // 0x40
-} turbocell_type;
+};
 
 typedef struct {
     packet_type type;
@@ -403,6 +428,5 @@ typedef struct {
 	uint8_t data[MAX_PACKET_LEN];
     uint8_t moddata[MAX_PACKET_LEN];
 }
-
 
 @end

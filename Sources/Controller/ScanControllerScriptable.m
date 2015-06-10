@@ -166,7 +166,7 @@
     return result;
 }
 
-- (BOOL)new
+- (BOOL)isNew
 {
     [self showBusyWithText:NSLocalizedString(@"Resetting document...", "Status for busy dialog")];
     
@@ -207,7 +207,7 @@
     {
         [self showBusyWithText:[NSString stringWithFormat:NSLocalizedString(@"Opening %@...", "Status for busy dialog"), [filename stringByAbbreviatingWithTildeInPath]]];
         
-        [self new];
+        [self isNew];
 		_fileName = filename;
         
         NS_DURING

@@ -63,7 +63,7 @@
 
 - (id)new:(NSScriptCommand *)command 
 {
-    return @([(ScanController*)[NSApp delegate] new]);
+    return @([(ScanController*)[NSApp delegate] isNew]);
 }
 
 - (id)save:(NSScriptCommand *)command {

@@ -30,7 +30,7 @@
 
 #define INVALIDPOINT NSMakePoint(-100, -100)
 
-enum selmode
+typedef NS_ENUM(NSUInteger, selmode)
 {
     selCurPos = 0,
     selWaypoint1 = 1,
@@ -69,7 +69,7 @@ enum selmode
     NSPoint             _center;
     float               _zoomFact;
     
-    enum selmode        _selmode;
+    selmode             _selmode;
     
     IBOutlet NSMenuItem *_setWayPoint1;
     IBOutlet NSMenuItem *_setWayPoint2;

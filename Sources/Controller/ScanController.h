@@ -26,14 +26,15 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-typedef enum
+
+typedef NS_ENUM(NSInteger, __availableTabs)
 {
     tabInvalid = -1,
     tabNetworks = 0,
     tabTraffic = 1,
     tabMap = 2,
     tabDetails = 3
-} __availableTabs;
+};
 
 @class TrafficController;
 @class WaveNet;

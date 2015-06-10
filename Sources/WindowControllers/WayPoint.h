@@ -30,7 +30,7 @@
 
 @interface WayPoint : NSWindowController <NSWindowDelegate>
 {
-    enum selmode    _mode;
+    selmode         _mode;
     waypoint        _w;
     NSPoint         _p;
     

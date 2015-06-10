@@ -84,13 +84,14 @@ protected:
     
     bool    _matchingDone;
     
-    enum  deviceTypes {
+    typedef NS_ENUM(NSUInteger, deviceTypes)
+    {
         intersil = 1,
         zydas,
         ralink,
 		rt73,
         rtl8187
-    } deviceType; 
+    };
 
     IOReturn    _sendFrame(UInt8* data, IOByteCount size);
     

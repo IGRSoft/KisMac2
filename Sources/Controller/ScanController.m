@@ -837,15 +837,18 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
         if (![self isSaved])
         {
             [self showWantToSaveDialog:@selector(reallyCloseDidEnd:returnCode:contextInfo:)];
+            
             return NO;
         }
         
 		[NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(fade:) userInfo:nil repeats:YES];
+        
 		return NO;
 	}
     else
     {
-        [self new];
+        [self isNew];
+        
         return NO;
     }
 }

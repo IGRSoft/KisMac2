@@ -43,7 +43,7 @@
 - (BOOL)startScan;
 - (BOOL)stopScan;
 
-- (BOOL)new;
+- (BOOL)isNew;
 - (BOOL)open:(NSString*)filename;
 - (BOOL)importKisMAC:(NSString*)filename;
 - (BOOL)importImageForMap:(NSString*)filename;

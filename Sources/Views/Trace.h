@@ -28,9 +28,9 @@
 
 #import "BISubView.h"
 
-enum traceState
+typedef NS_ENUM(NSUInteger, traceState)
 {
-    stateNoPointPresent,
+    stateNoPointPresent = 0,
     stateFirstPointPresent,
     stateMultiPointsPresent,
 };
@@ -38,7 +38,7 @@ enum traceState
 @interface Trace : BISubView
 {
     NSMutableArray  *_trace;
-    enum traceState _state;
+    traceState      _state;
     BIValuePair     *_lastPoint;
 }
 
