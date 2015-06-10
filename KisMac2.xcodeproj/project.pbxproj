@@ -414,7 +414,6 @@
 		A537418D19DD4AAC00434C6E /* WaveHelperTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveHelperTest.m; sourceTree = "<group>"; };
 		A537418E19DD4AAC00434C6E /* WaveNetTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveNetTest.m; sourceTree = "<group>"; };
 		A537418F19DD4AAC00434C6E /* WavePacketTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WavePacketTest.m; sourceTree = "<group>"; };
-		A567EDD91A21F0CE00663A18 /* BIGL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = BIGL.framework; path = "/Users/korich/Library/Developer/Xcode/DerivedData/KisMac2-gkydvsrajuiruqdyshxmbwunuwbp/Build/Products/Debug/BIGL.framework"; sourceTree = "<absolute>"; };
 		A57E64381607BC9700BE1BCA /* AirCrackWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AirCrackWrapper.h; sourceTree = "<group>"; };
 		A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AirCrackWrapper.m; sourceTree = "<group>"; };
 		A57E643A1607BC9700BE1BCA /* LEAP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEAP.h; sourceTree = "<group>"; };
@@ -819,7 +818,8 @@
 		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A567EDD91A21F0CE00663A18 /* BIGL.framework */,
+				A505CE431B271A410095C7A0 /* BIGeneric.framework */,
+				A505CE401B271A410095C7A0 /* BIGL.framework */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
 				A535396B180B073D008BB6A1 /* Cocoa.framework */,
@@ -838,8 +838,6 @@
 		29B97314FDCFA39411CA2CEA /* KisMAC */ = {
 			isa = PBXGroup;
 			children = (
-				A505CE431B271A410095C7A0 /* BIGeneric.framework */,
-				A505CE401B271A410095C7A0 /* BIGL.framework */,
 				69719DAF0F7E928900949310 /* Subprojects */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,

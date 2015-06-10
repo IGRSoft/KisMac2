@@ -1,10 +1,30 @@
-//
-//  PrefsFilter.m
-//  KisMAC
-//
-//  Created by mick on Tue Sep 16 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
-//
+/*
+ 
+ File:			PrefsFilter.m
+ Program:		KisMAC
+ Author:		Michael Ro§berg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "PrefsFilter.h"
 #import "KisMACNotifications.h"
@@ -13,7 +33,8 @@
 
 @implementation PrefsFilter
 
--(NSString*)makeValidMACAddress:(NSString*)challenge {
+-(NSString*)makeValidMACAddress:(NSString*)challenge
+{
     const char *c;
     int tmp[6];
     NSString *mac = [[challenge stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];

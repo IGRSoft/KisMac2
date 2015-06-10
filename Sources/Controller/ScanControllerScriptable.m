@@ -2,11 +2,15 @@
  
  File:			ScanControllerScriptable.m
  Program:		KisMAC
- Author:			Michael Rossberg
- mick@binaervarianz.de
+ Author:		Michael Ro§berg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
  Description:	KisMAC is a wireless stumbler for MacOS X.
  
  This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
  
  KisMAC is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License, version 2,

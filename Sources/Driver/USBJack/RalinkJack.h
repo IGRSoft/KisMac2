@@ -9,7 +9,6 @@
 #ifndef	__RALINKJACK_H__
 #define	__RALINKJACK_H__
 
-#import <Cocoa/Cocoa.h>
 #import "USBJack.h"
 #import "ralink.h"
 

@@ -6,7 +6,6 @@
 //  Copyright 2006 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
 #import "KMCommon.h"
 #import "USBJack.h"
 
