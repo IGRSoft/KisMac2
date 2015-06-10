@@ -41,7 +41,6 @@
 #import "MapViewAreaView.h"
 #import "WaveStorageController.h"
 #import "WaveNet.h"
-#import "FSWindow.h"
 #import "InfoController.h"
 #import "PrefsController.h"
 #import "DownloadMapController.h"
@@ -818,9 +817,13 @@
 {
 	if ([_fullscreen state]==NSOffState)
 	{
-		borderlessWindow = [[FSWindow alloc] initWithContentRect:[[NSScreen mainScreen] frame] 
-													   styleMask:(NSTexturedBackgroundWindowMask)
-														backing:NSBackingStoreBuffered defer:YES];
+        if (!borderlessWindow)
+        {
+            borderlessWindow = [[NSWindow alloc] initWithContentRect:[[NSScreen mainScreen] frame]
+                                                           styleMask:(NSTexturedBackgroundWindowMask)
+                                                             backing:NSBackingStoreBuffered defer:YES];
+        }
+    
 		[borderlessWindow setAlphaValue:0];
 		[borderlessWindow setContentView:_mapView];
 		[borderlessWindow makeKeyAndOrderFront:borderlessWindow];
@@ -858,7 +861,8 @@
 			[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
 		}
 		
-		[borderlessWindow close];
+        borderlessWindow = nil;
+        
 		[[WaveHelper mainWindow] makeKeyAndOrderFront:[WaveHelper mainWindow]];
 		[_fullscreen setState:NSOffState];
 	}

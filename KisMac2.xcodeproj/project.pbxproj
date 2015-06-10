@@ -117,7 +117,6 @@
 		6CF9EE6F0B6E9D2A00F54524 /* WaveDriverKismet.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF9EE6D0B6E9D2A00F54524 /* WaveDriverKismet.m */; };
 		87C9272B0BAA137E0025A6AE /* WaveDriverKismetDrone.m in Sources */ = {isa = PBXBuildFile; fileRef = 87C927290BAA137E0025A6AE /* WaveDriverKismetDrone.m */; };
 		87CEBA8309AEF03700AEB0B8 /* GrowlController.m in Sources */ = {isa = PBXBuildFile; fileRef = 87CEBA8109AEF03700AEB0B8 /* GrowlController.m */; };
-		87FA06BB0BF6C69C00A8F24C /* FSWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 87FA06B90BF6C69B00A8F24C /* FSWindow.m */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		A505CE411B271A410095C7A0 /* BIGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A505CE401B271A410095C7A0 /* BIGL.framework */; };
@@ -378,8 +377,6 @@
 		87C927290BAA137E0025A6AE /* WaveDriverKismetDrone.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = WaveDriverKismetDrone.m; sourceTree = "<group>"; };
 		87CEBA8009AEF03700AEB0B8 /* GrowlController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GrowlController.h; sourceTree = "<group>"; };
 		87CEBA8109AEF03700AEB0B8 /* GrowlController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GrowlController.m; sourceTree = "<group>"; };
-		87FA06B80BF6C69B00A8F24C /* FSWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSWindow.h; sourceTree = "<group>"; };
-		87FA06B90BF6C69B00A8F24C /* FSWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSWindow.m; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* KisMac2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KisMac2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A505CE401B271A410095C7A0 /* BIGL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = BIGL.framework; path = "/Users/Korich/Library/Developer/Xcode/DerivedData/KisMac2-clnvubjkejewnidwtxzaryobsumq/Build/Products/Debug/BIGL.framework"; sourceTree = "<absolute>"; };
 		A505CE431B271A410095C7A0 /* BIGeneric.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = BIGeneric.framework; path = "/Users/Korich/Library/Developer/Xcode/DerivedData/KisMac2-clnvubjkejewnidwtxzaryobsumq/Build/Products/Debug/BIGeneric.framework"; sourceTree = "<absolute>"; };
@@ -531,8 +528,6 @@
 		003533A406A5DD8500AB4577 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				87FA06B80BF6C69B00A8F24C /* FSWindow.h */,
-				87FA06B90BF6C69B00A8F24C /* FSWindow.m */,
 				003533A706A5DD8500AB4577 /* InfoController.h */,
 				003533A806A5DD8500AB4577 /* InfoController.mm */,
 				003533A906A5DD8500AB4577 /* ScanController.h */,
@@ -1281,7 +1276,6 @@
 				6C94AA300ADF3FBC001BE161 /* GPSSatInfo.m in Sources */,
 				6CF9EE6F0B6E9D2A00F54524 /* WaveDriverKismet.m in Sources */,
 				87C9272B0BAA137E0025A6AE /* WaveDriverKismetDrone.m in Sources */,
-				87FA06BB0BF6C69C00A8F24C /* FSWindow.m in Sources */,
 				69AF11750E4B292800B1D770 /* IntersilJack.mm in Sources */,
 				69AF11780E4B292800B1D770 /* RT73Jack.mm in Sources */,
 				69AF117A0E4B292800B1D770 /* RalinkJack.mm in Sources */,
