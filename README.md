@@ -22,6 +22,14 @@ Whats new:
 * Rewrote most part of deprecated methods
 * Remove debug info from release
 
+How Build:
+-------
+* git clone https://github.com/IGRSoft/KisMac2.git ./KissMac2
+* cd KissMac2
+* git submodule update --init
+* open KisMac2.xcworkspace
+* Build
+
 Current Developer and Origin:
 -------
 
