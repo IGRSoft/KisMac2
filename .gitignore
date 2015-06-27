@@ -13,4 +13,7 @@ xcuserdata
 profile
 *.moved-aside
 
+# OS X
+.DS_Store
+
 Resources/Generic/vendor.db
