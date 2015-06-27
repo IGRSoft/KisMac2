@@ -376,8 +376,8 @@
 		87CEBA8009AEF03700AEB0B8 /* GrowlController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GrowlController.h; sourceTree = "<group>"; };
 		87CEBA8109AEF03700AEB0B8 /* GrowlController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GrowlController.m; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* KisMac2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KisMac2.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A505CE401B271A410095C7A0 /* BIGL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = BIGL.framework; path = "/Users/Korich/Library/Developer/Xcode/DerivedData/KisMac2-clnvubjkejewnidwtxzaryobsumq/Build/Products/Debug/BIGL.framework"; sourceTree = "<absolute>"; };
-		A505CE431B271A410095C7A0 /* BIGeneric.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = BIGeneric.framework; path = "/Users/Korich/Library/Developer/Xcode/DerivedData/KisMac2-clnvubjkejewnidwtxzaryobsumq/Build/Products/Debug/BIGeneric.framework"; sourceTree = "<absolute>"; };
+		A505CE401B271A410095C7A0 /* BIGL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BIGL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A505CE431B271A410095C7A0 /* BIGeneric.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BIGeneric.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A529AD761A20A4A100CD8E1E /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A529AD791A20A4B400CD8E1E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/Crack.xib; sourceTree = "<group>"; };
 		A529AD7B1A20A4B400CD8E1E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/GPSDialog.xib; sourceTree = "<group>"; };
@@ -1478,7 +1478,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 					"$(SRCROOT)/Resources",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/KisMac2-clnvubjkejewnidwtxzaryobsumq/Build/Products/Debug",
+					"$(BUILT_PRODUCTS_DIR)",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1548,7 +1548,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 					"$(SRCROOT)/Resources",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/KisMac2-clnvubjkejewnidwtxzaryobsumq/Build/Products/Debug",
+					"$(BUILT_PRODUCTS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = KisMAC_Prefix.pch;
