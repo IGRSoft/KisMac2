@@ -26,7 +26,7 @@ How Build:
 -------
 * git clone https://github.com/IGRSoft/KisMac2.git ./KissMac2
 * cd KissMac2
-* git submodule update --init
+* git submodule update --init --recursive
 * open KisMac2.xcworkspace
 * Build
 

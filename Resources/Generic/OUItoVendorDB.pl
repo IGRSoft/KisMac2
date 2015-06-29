@@ -9,7 +9,7 @@ use utf8;
 # then generates a vendor.db file usable by KisMAC.
 
 # The latest OUI can be attained by pointing a browser to
-# http://standards.ieee.org/develop/regauth/oui/oui.txt
+# http://standards-oui.ieee.org/oui.txt
 
 
 my $download = "no";
@@ -54,7 +54,7 @@ if($download ne "no"){
 			exit;
 		}
 	} else {
-		$error = system("curl -sf http://standards.ieee.org/develop/regauth/oui/oui.txt -o $ouiFile");
+		$error = system("curl -sf http://standards-oui.ieee.org/oui.txt -o $ouiFile");
 		
 		if($error != 0){
 			print STDERR "There was an error (code $error) during download.\n";
