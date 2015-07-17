@@ -30,7 +30,7 @@
 
 #include "LEAP.h"
 #include "../3rd Party/DESSupport.h"
-#include "polarssl/md4.h"
+#include "md4.h"
 
 //calulate the last two bytes
 int gethashlast2(const unsigned char *challenge, const unsigned char *response, unsigned char* endofhash)
@@ -72,7 +72,7 @@ void NtPasswordHash(char *secret, int secret_len, unsigned char *hash)
         unicodePassword[i * 2] = (unsigned char) secret[i];
 
     /* Unicode is 2 bytes per char */
-    md4(unicodePassword, secret_len * 2, hash);
+    mbedtls_md4(unicodePassword, secret_len * 2, hash);
 }
 
 int testChallenge(const unsigned char* challenge, const unsigned char* response, unsigned char *zpwhash) 

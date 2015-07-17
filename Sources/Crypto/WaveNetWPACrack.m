@@ -32,7 +32,7 @@
 #import "WPA.h"
 #import "ImportController.h"
 #import "80211b.h"
-#import "polarssl/sha1.h"
+#import "sha1.h"
 
 struct clientData {
     UInt8 ptkInput[WPA_NONCE_LENGTH+WPA_NONCE_LENGTH+12];
@@ -48,14 +48,14 @@ struct clientData {
 #pragma mark-
 
 /* SHA1InitAndUpdateFistSmall64 - Initialize new context And fillup 64*/
-void SHA1InitWithStatic64(sha1_context* context, unsigned char* staticT) {
+void SHA1InitWithStatic64(mbedtls_sha1_context* context, unsigned char* staticT) {
 	
-	sha1_starts(context);
-	sha1_process(context, staticT);
+	mbedtls_sha1_starts(context);
+	mbedtls_sha1_process(context, staticT);
 }
 
 /* Add padding and return the message digest. */
-void SHA1FinalFastWith20ByteData(unsigned char digest[20], sha1_context* context,unsigned char data[64])
+void SHA1FinalFastWith20ByteData(unsigned char digest[20], mbedtls_sha1_context* context,unsigned char data[64])
 {
         //memcpy(buffer, data, 20);
 	memset(&data[21], 0, 41);
@@ -63,7 +63,7 @@ void SHA1FinalFastWith20ByteData(unsigned char digest[20], sha1_context* context
 	data[62] = 2;
 	data[63] = 160;
 
-	sha1_process(context, data);
+	mbedtls_sha1_process(context, data);
 
 	for (UInt32 i = 0; i < 20; ++i)
 	{
@@ -71,9 +71,9 @@ void SHA1FinalFastWith20ByteData(unsigned char digest[20], sha1_context* context
 	}
 }
 
-void prepared_hmac_sha1(const sha1_context *k_ipad, const sha1_context *k_opad, unsigned char digest[64])
+void prepared_hmac_sha1(const mbedtls_sha1_context *k_ipad, const mbedtls_sha1_context *k_opad, unsigned char digest[64])
 {
-    sha1_context ipad, opad;
+    mbedtls_sha1_context ipad, opad;
 
     memcpy(&ipad, k_ipad, sizeof(ipad));
     memcpy(&opad, k_opad, sizeof(opad));
@@ -89,7 +89,7 @@ void prepared_hmac_sha1(const sha1_context *k_ipad, const sha1_context *k_opad, 
 #pragma mark optimized WPA password -> PMK mapping
 #pragma mark -
 
-void fastF(unsigned char *password, int pwdLen, const unsigned char *ssid, int ssidlength, const sha1_context *ipadContext, const sha1_context *opadContext, int count, unsigned char output[40])
+void fastF(unsigned char *password, int pwdLen, const unsigned char *ssid, int ssidlength, const mbedtls_sha1_context *ipadContext, const mbedtls_sha1_context *opadContext, int count, unsigned char output[40])
 {
     unsigned char digest[64], digest1[64];
     
@@ -125,7 +125,7 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
 {
     unsigned char k_ipad[65]; /* inner padding - key XORd with ipad */ 
     unsigned char k_opad[65]; /* outer padding - key XORd with opad */
-    sha1_context ipadContext, opadContext;
+    mbedtls_sha1_context ipadContext, opadContext;
     int pwdLen = strlen(password);
     
     /* XOR key with ipad and opad values */ 
