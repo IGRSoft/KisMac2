@@ -44,23 +44,23 @@
 
     NSString* _geigerSound;             //sound file for the geiger counter
 
-    int _packets;                       //packet count
-    int _geigerInt;
-    int _bytes;                         //bytes since last refresh (for graph)
-    bool _soundBusy;                    //are we clicking?
+    NSInteger _packets;                       //packet count
+    NSInteger _geigerInt;
+    NSInteger _bytes;                         //bytes since last refresh (for graph)
+    BOOL _soundBusy;                    //are we clicking?
     
     NSArray *_drivers;                  // Array of drivers
     
-    int _graphLength;
+    NSInteger _graphLength;
     NSTimeInterval _scanInterval;	//refresh interval
     
-    int  aPacketType;
-    bool aScanRange;
-    bool _scanning;
-    bool _shouldResumeScan;
-    bool _deauthing;
+    NSInteger  aPacketType;
+    BOOL aScanRange;
+    BOOL _scanning;
+    BOOL _shouldResumeScan;
+    BOOL _deauthing;
     double aFreq;
-    int  _driver;
+    NSInteger  _driver;
     
     unsigned char aFrameBuf[MAX_FRAME_BYTES];	//for reading in pcaps (still messy)
     KFrame* aWF;
@@ -77,27 +77,28 @@
 }
 
 - (void)readPCAPDump:(NSString*)dumpFile;
--(KFrame*) nextFrame:(bool*)corrupted;
+- (KFrame*)nextFrame:(BOOL*)corrupted;
 
 //for communications with ScanController which does all the graphic stuff
-- (int) graphLength;
+- (NSInteger) graphLength;
 
 //scanning properties
 - (void) setFrequency:(double)newFreq;
-- (bool) startScanning;
-- (bool) stopScanning;
-- (bool) sleepDrivers: (bool)isSleepy;
-- (void) setGeigerInterval:(int)newGeigerInt sound:(NSString*) newSound;
+- (BOOL) startScanning;
+- (BOOL) stopScanning;
+- (BOOL) sleepDrivers: (BOOL)isSleepy;
+- (void) setGeigerInterval:(NSInteger)newGeigerInt sound:(NSString *)newSound;
 - (NSTimeInterval) scanInterval;
 
 //active attacks
-- (NSString*) tryToInject:(WaveNet*)net;
+- (NSString *)tryToInject:(WaveNet *)net;
 - (void) setDeauthingAll:(BOOL)deauthing;
-- (bool) authFloodNetwork:(WaveNet*)net;
-- (bool) deauthenticateNetwork:(WaveNet*)net atInterval:(int)interval;
-- (bool) beaconFlood;
-- (bool) stopSendingFrames;
-- (bool) injectionTest: (WaveNet *)net withClient: (WaveClient *)client;
+- (BOOL) authFloodNetwork:(WaveNet *)net;
+- (BOOL) deauthenticateNetwork:(WaveNet *)net atInterval:(int)interval;
+- (BOOL) beaconFlood;
+- (BOOL) stopSendingFrames;
+- (BOOL) injectionTest: (WaveNet *)net withClient: (WaveClient *)client;
 
-- (void) sound:(NSSound *)sound didFinishPlaying:(bool)abool;
+- (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)aBool;
+
 @end

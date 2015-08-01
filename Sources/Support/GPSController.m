@@ -332,15 +332,22 @@ bool check_sum(char *s, char h, char l) {
   return NO;              /* checksum error */
 }
 
-int ss(char* inp, char* outp) {
-    int x=0;
+int ss(char* inp, char* outp)
+{
+    int x = 0;
     
-    while(true) {
+    BOOL process = YES;
+    while(process)
+    {
         if (inp[x]==0) return -1;
-        if (inp[x]=='\n') {
+        if (inp[x]=='\n')
+        {
             outp[x]=0;
-            return x;
+            
+            process = NO;
+            break;
         }
+        
         outp[x]=inp[x];
         ++x;
     }
@@ -348,7 +355,8 @@ int ss(char* inp, char* outp) {
     return x;
 }
 
-- (bool)gps_parse:(int) fd {
+- (bool)gps_parse:(int) fd
+{
     int len, valid, x=0;
     static int q = 0;
     char cvalid;

@@ -168,12 +168,14 @@ int safe_write( int fd, void *buf, size_t len )
 		R[i] = i;
 	}
 
-	while (true)
+    BOOL process = YES;
+	while (process)
 	{
 		if( safe_read( mc_pipe[child][0], buf, 14 ) != 14 )
 		{
 			//perror( "in calc_votes: read()" );
-			return;
+            process = NO;
+			break;
 		}
 		
 		B = (int) buf[0];
@@ -416,7 +418,9 @@ int safe_write( int fd, void *buf, size_t len )
 		   sizeof( votes ) )
 		{
 			perror( "in calc_votes: write()" );
-			return;
+			
+            process = NO;
+            break;
 		}
 	}
 }
