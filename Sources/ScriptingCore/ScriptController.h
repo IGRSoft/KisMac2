@@ -37,7 +37,7 @@
 
 - (IBAction)toggleScan:(id)sender;
 
-- (IBAction)new:(id)sender;
+- (IBAction)tryNew:(id)sender;
 
 - (IBAction)openKisMACFile:(id)sender;
 - (IBAction)openKisMAPFile:(id)sender;

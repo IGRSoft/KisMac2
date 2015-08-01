@@ -37,7 +37,7 @@
 - (id)startScan:(NSScriptCommand *)command;
 - (id)stopScan:(NSScriptCommand *)command;
 
-- (id)new:(NSScriptCommand *)command;
+- (id)tryNew:(NSScriptCommand *)command;
 - (id)save:(NSScriptCommand *)command;
 - (id)saveAs:(NSScriptCommand *)commandMark;
 - (id)importKisMAC:(NSScriptCommand *)command;

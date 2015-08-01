@@ -964,3 +964,12 @@ void NotifySleep( void * refCon, io_service_t service,
 }
 
 @end
+
+@implementation ScanController (AppleScript)
+
+- (BOOL)application:(NSApplication *)sender delegateHandlesKey:(NSString *)key
+{
+    return YES;
+}
+
+@end

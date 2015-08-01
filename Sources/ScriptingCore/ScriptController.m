@@ -115,7 +115,7 @@
 
 #pragma mark -
 
-- (IBAction)new:(id)sender
+- (IBAction)tryNew:(id)sender
 {
     ScanController *controller = [NSApp delegate];
     

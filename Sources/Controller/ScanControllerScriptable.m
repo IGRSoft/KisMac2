@@ -123,7 +123,7 @@
 
 - (BOOL)startScan
 {
-    bool result = NO;
+    BOOL result = NO;
     
     if ([WaveHelper loadDrivers])
     {
@@ -134,7 +134,7 @@
             return NO;
         }
         
-        _scanning=YES;
+        _scanning = YES;
         [_window setDocumentEdited:YES];
         
         GBStorageController *gbStorage = [GBStorageController sharedControllerForNamespace:kGBStorageDefaultNamespace];
@@ -148,7 +148,7 @@
 		[_scanButton setImage:[gbStorage objectForKeyedSubscript:@"toolbar-stop-scan"]];
 		
         [_scanButton setLabel:@"Stop"];
-        result=[scanner startScanning];
+        result = [scanner startScanning];
 		[GrowlController notifyGrowlStartScan];
 	}
     

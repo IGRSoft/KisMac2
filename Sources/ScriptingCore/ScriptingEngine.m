@@ -57,7 +57,7 @@
         [e setDescriptor:args[ae] forKeyword:[ae intValue]];
     }
     
-	OSErr err = AESend([e aeDesc], &reply, kAEWaitReply, 0, kAEDefaultTimeout, NULL, NULL);
+    OSErr err = AESend([e aeDesc], &reply, kAEWaitReply, kAENormalPriority, kAEDefaultTimeout, NULL, NULL);
     if(noErr == err)
     {
         NSAppleEventDescriptor *replyDesc = [[NSAppleEventDescriptor alloc] initWithAEDescNoCopy:&reply];

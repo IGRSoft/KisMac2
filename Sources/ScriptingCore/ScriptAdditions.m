@@ -34,61 +34,82 @@
 
 @implementation NSApplication (APLApplicationExtensions)
 
-- (id)showNetworks:(NSScriptCommand *)command {
+- (id)showNetworks:(NSScriptCommand *)command
+{
     return @([(ScanController*)[NSApp delegate] showNetworks]);
 }
-- (id)showTraffic:(NSScriptCommand *)command {
+
+- (id)showTraffic:(NSScriptCommand *)command
+{
     return @([(ScanController*)[NSApp delegate] showTrafficView]);
 }
-- (id)showMap:(NSScriptCommand *)command {
+
+- (id)showMap:(NSScriptCommand *)command
+{
     return @([(ScanController*)[NSApp delegate] showMap]);
 }
-- (id)showDetails:(NSScriptCommand *)command {
+
+- (id)showDetails:(NSScriptCommand *)command
+{
     return @([(ScanController*)[NSApp delegate] showDetails]);
 }
 
 #pragma mark -
 
-- (id)startScan:(NSScriptCommand *)command {
+- (id)startScan:(NSScriptCommand *)command
+{
     return @([(ScanController*)[NSApp delegate] startScan]);
 }
-- (id)stopScan:(NSScriptCommand *)command {
+
+- (id)stopScan:(NSScriptCommand *)command
+{
     return @([(ScanController*)[NSApp delegate] stopScan]);
 }
-- (id)toggleScan:(NSScriptCommand *)command {
+
+- (id)toggleScan:(NSScriptCommand *)command
+{
     return @([(ScanController*)[NSApp delegate] toggleScan]);
 }
 
 #pragma mark -
 
-- (id)new:(NSScriptCommand *)command 
+- (id)tryNew:(NSScriptCommand *)command
 {
     return @([(ScanController*)[NSApp delegate] isNew]);
 }
 
-- (id)save:(NSScriptCommand *)command {
+- (id)save:(NSScriptCommand *)command
+{
     return @([(ScanController*)[NSApp delegate] save:[command directParameter]]);
 }
 
-- (id)saveAs:(NSScriptCommand *)command {
+- (id)saveAs:(NSScriptCommand *)command
+{
     return @([(ScanController*)[NSApp delegate] saveAs:[command directParameter]]);
 }
 
-- (id)importKisMAC:(NSScriptCommand *)command {
+- (id)importKisMAC:(NSScriptCommand *)command
+{
     return @([(ScanController*)[NSApp delegate] importKisMAC:[command directParameter]]);
 }
-- (id)importImageForMap:(NSScriptCommand *)command {
+
+- (id)importImageForMap:(NSScriptCommand *)command
+{
     return @([(ScanController*)[NSApp delegate] importImageForMap:[command directParameter]]);
 }
-- (id)importPCAP:(NSScriptCommand *)command {
+
+- (id)importPCAP:(NSScriptCommand *)command
+{
     return @([(ScanController*)[NSApp delegate] importPCAP:[command directParameter]]);
 }
-- (id)exportKML:(NSScriptCommand *)command {
+
+- (id)exportKML:(NSScriptCommand *)command
+{
     return @([(ScanController*)[NSApp delegate] exportKML:[command directParameter]]);
 }
 
-
-- (id)downloadMap:(NSScriptCommand*)command {
+- (id)downloadMap:(NSScriptCommand*)command
+{
     NSDictionary *args = [command arguments];
     NSSize size = NSZeroSize;
     waypoint w;
@@ -109,63 +130,77 @@
 
 #pragma mark -
 
-- (id)selectNetworkWithBSSID:(NSScriptCommand *)command {
+- (id)selectNetworkWithBSSID:(NSScriptCommand *)command
+{
    return @([(ScanController*)[NSApp delegate] selectNetworkWithBSSID:[command directParameter]]);
 }
 
-- (id)selectNetworkAtIndex:(NSScriptCommand *)command {
+- (id)selectNetworkAtIndex:(NSScriptCommand *)command
+{
    return @([(ScanController*)[NSApp delegate] selectNetworkAtIndex:[command directParameter]]);
 }
 
-- (id)networkCount:(NSScriptCommand *)command {
+- (id)networkCount:(NSScriptCommand *)command
+{
    return @([(ScanController*)[NSApp delegate] networkCount]);
 }
 
 #pragma mark -
 
-- (id)busy:(NSScriptCommand *)command {
+- (id)busy:(NSScriptCommand *)command
+{
    return @([(ScanController*)[NSApp delegate] isBusy]);
 }
 
 #pragma mark -
 
-- (id)bruteforceNewsham:(NSScriptCommand *)command {
+- (id)bruteforceNewsham:(NSScriptCommand *)command
+{
    return @([(ScanController*)[NSApp delegate] bruteforceNewsham]);
 }
 
-- (id)bruteforce40bitLow:(NSScriptCommand *)command {
+- (id)bruteforce40bitLow:(NSScriptCommand *)command
+{
    return @([(ScanController*)[NSApp delegate] bruteforce40bitLow]);
 }
 
-- (id)bruteforce40bitAlpha:(NSScriptCommand *)command {
+- (id)bruteforce40bitAlpha:(NSScriptCommand *)command
+{
    return @([(ScanController*)[NSApp delegate] bruteforce40bitAlpha]);
 }
 
-- (id)bruteforce40bitAll:(NSScriptCommand *)command {
+- (id)bruteforce40bitAll:(NSScriptCommand *)command
+{
    return @([(ScanController*)[NSApp delegate] bruteforce40bitAll]);
 }
 
-- (id)wordlist40bitApple:(NSScriptCommand *)command {
+- (id)wordlist40bitApple:(NSScriptCommand *)command
+{
    return @([(ScanController*)[NSApp delegate] wordlist40bitApple:[command directParameter]]);
 }
 
-- (id)wordlist104bitApple:(NSScriptCommand *)command {
+- (id)wordlist104bitApple:(NSScriptCommand *)command
+{
    return @([(ScanController*)[NSApp delegate] wordlist104bitApple:[command directParameter]]);
 }
 
-- (id)wordlist104bitMD5:(NSScriptCommand *)command {
+- (id)wordlist104bitMD5:(NSScriptCommand *)command
+{
    return @([(ScanController*)[NSApp delegate] wordlist104bitMD5:[command directParameter]]);
 }
 
-- (id)wordlistWPA:(NSScriptCommand *)command {
+- (id)wordlistWPA:(NSScriptCommand *)command
+{
    return @([(ScanController*)[NSApp delegate] wordlistWPA:[command directParameter]]);
 }
 
-- (id)wordlistLEAP:(NSScriptCommand *)command {
+- (id)wordlistLEAP:(NSScriptCommand *)command
+{
    return @([(ScanController*)[NSApp delegate] wordlistLEAP:[command directParameter]]);
 }
 
-- (id)weakSchedulingAttack:(NSScriptCommand *)command {
+- (id)weakSchedulingAttack:(NSScriptCommand *)command
+{
     NSDictionary *args = [command arguments];
     int keyID, keyLen;
     
@@ -178,23 +213,31 @@
 
 #pragma mark -
 
-- (id)showNetworksInMap:(NSScriptCommand*)command {
+- (id)showNetworksInMap:(NSScriptCommand*)command
+{
     [[WaveHelper mapView] setShowNetworks:[[command directParameter] boolValue]];
-    return @YES;    
+    
+    return @YES;
 }
 
-- (id)showTraceInMap:(NSScriptCommand*)command {
+- (id)showTraceInMap:(NSScriptCommand*)command
+{
     [[WaveHelper mapView] setShowTrace:[[command directParameter] boolValue]];
-    return @YES;    
+    
+    return @YES;
 }
 
-- (id)setCurrentPosition:(NSScriptCommand*)command {
+- (id)setCurrentPosition:(NSScriptCommand*)command
+{
     NSDictionary *args = [command arguments];
-    BOOL ret = [[WaveHelper mapView] setCurrentPostionToLatitude:[args[@"Latitude"] doubleValue] andLongitude:[args[@"Longitude"] doubleValue]];
+    BOOL ret = [[WaveHelper mapView] setCurrentPostionToLatitude:[args[@"Latitude"] doubleValue]
+                                                    andLongitude:[args[@"Longitude"] doubleValue]];
+    
     return @(ret);
 }
 
-- (id)setWaypoint:(NSScriptCommand*)command {
+- (id)setWaypoint:(NSScriptCommand*)command
+{
     NSDictionary *args = [command arguments];
     NSPoint p;
     waypoint coord;
@@ -207,6 +250,7 @@
     coord._long = [args[@"Longitude"] doubleValue];
     coord._elevation = 0;
     BOOL ret = [[WaveHelper mapView] setWaypoint:which toPoint:p atCoordinate:coord];
+    
     return @(ret);
 }
 
