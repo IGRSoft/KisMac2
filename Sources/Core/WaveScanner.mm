@@ -57,7 +57,7 @@
     _scanning = NO;
     _driver = 0;
     
-    //srandom(55445);	//does not have to be to really random
+    srandom(55445);	//does not have to be to really random
     
     _scanInterval = 0.25;
     _graphLength = 0;

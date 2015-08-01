@@ -159,13 +159,22 @@ struct leapClientData
 		{
 			for (curKey = 0; curKey < keys; ++curKey)
 			{
-				if (c[curKey].hashend[0] != pwhash[MD4_DIGEST_LENGTH-2] || c[curKey].hashend[1] != pwhash[MD4_DIGEST_LENGTH-1]) continue;
-				if (testChallenge(c[curKey].challenge, c[curKey].response, pwhash)) continue;
+				if (c[curKey].hashend[0] != pwhash[MD4_DIGEST_LENGTH-2] ||
+                    c[curKey].hashend[1] != pwhash[MD4_DIGEST_LENGTH-1])
+                {
+                    continue;
+                }
+                if (testChallenge(c[curKey].challenge, c[curKey].response, pwhash))
+                {
+                    continue;
+                }
 				
 				_password = [NSString stringWithFormat:@"%s for username %@", wrd, c[curKey].username];
 				fclose(fptr);
-				DBNSLog(@"Cracking was successful. Password is <%s> for username %@, client %@", wrd, c[curKey].username, c[curKey].clientID);
+				DBNSLog(@"Cracking was successful. Password is <%s> for username %@, client %@",
+                        wrd, c[curKey].username, c[curKey].clientID);
 				free(c);
+                
 				return YES;
 			}
 		}

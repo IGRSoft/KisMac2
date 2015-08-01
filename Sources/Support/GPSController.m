@@ -339,17 +339,21 @@ int ss(char* inp, char* outp)
     BOOL process = YES;
     while(process)
     {
-        if (inp[x]==0) return -1;
-        if (inp[x]=='\n')
+        if (inp[x] == 0)
         {
-            outp[x]=0;
-            
+            x = -1;
             process = NO;
-            break;
         }
-        
-        outp[x]=inp[x];
-        ++x;
+        if (inp[x] == '\n')
+        {
+            outp[x] = 0;
+            process = NO;
+        }
+        if (process)
+        {
+            outp[x] = inp[x];
+            ++x;
+        }
     }
     
     return x;

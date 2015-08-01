@@ -1486,8 +1486,6 @@
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = /Applications;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				OTHER_CFLAGS = "";
-				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = (
 					"-lcrypto",
 					"-lpcap",
@@ -1496,12 +1494,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.igrsoft.kismac;
 				PRODUCT_NAME = KisMac2;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"-Wall",
-				);
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1510,7 +1502,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
-				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1556,8 +1547,6 @@
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = /Applications;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				OTHER_CFLAGS = "";
-				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = (
 					"-lcrypto",
 					"-lpcap",
@@ -1566,12 +1555,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.igrsoft.kismac;
 				PRODUCT_NAME = KisMac2;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"-Wall",
-				);
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

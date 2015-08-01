@@ -89,7 +89,7 @@
                                 </connections>
                             </button>
                             <textField verticalHuggingPriority="750" id="1193">
-                                <rect key="frame" x="48" y="4" width="462" height="30"/>
+                                <rect key="frame" x="48" y="1" width="462" height="33"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
                                 <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="left" id="2382">
                                     <font key="font" metaFont="systemBold" size="24"/>
@@ -187,6 +187,7 @@
                 <outlet property="delegate" destination="466" id="730"/>
                 <outlet property="initialFirstResponder" destination="1353" id="1444"/>
             </connections>
+            <point key="canvasLocation" x="-0.5" y="-33"/>
         </window>
         <menu title="MainMenu" systemMenu="main" id="29" userLabel="MainMenu">
             <items>
@@ -1133,7 +1134,6 @@ CA
                 </scrollView>
             </subviews>
         </customView>
-        <customObject id="1103" userLabel="Font Manager" customClass="NSFontManager"/>
         <customObject id="1137" userLabel="WaveContainer" customClass="WaveContainer"/>
         <customObject id="1180" userLabel="TrafficController" customClass="TrafficController">
             <connections>
@@ -1515,7 +1515,7 @@ CA
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" headerView="2429" id="1240">
-                                                    <rect key="frame" x="0.0" y="0.0" width="440.5" height="16"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="441" height="16"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1708,7 +1708,6 @@ CA
                 <menuItem title="Clear Recent Searches" tag="1002" id="1448"/>
             </items>
         </menu>
-        <imageCell controlSize="small" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="2093" userLabel="Image Cell"/>
     </objects>
     <resources>
         <image name="NSApplicationIcon" width="128" height="128"/>
