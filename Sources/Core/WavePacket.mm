@@ -349,10 +349,10 @@ bool is8021xPacket(const UInt8* fileData) {
             return NO;
     }
 	if ((memcmp(_addr2, "\x00\x90\xd0\xf8\x99\x00", 6) == 0) && (_type == IEEE80211_TYPE_DATA)) {
-		DBNSLog(@"%@ %@ %@ %@ %@", [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X%.2X", _addr1[0], _addr1[1], _addr1[2], _addr1[3], _addr1[4], _addr1[5], _addr1[6]],
-			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X%.2X", _addr2[0], _addr2[1], _addr2[2], _addr2[3], _addr2[4], _addr2[5], _addr2[6]], 
-			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X%.2X", _addr3[0], _addr3[1], _addr3[2], _addr3[3], _addr3[4], _addr3[5], _addr3[6]], 
-			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X%.2X", _addr4[0], _addr4[1], _addr4[2], _addr4[3], _addr4[4], _addr4[5], _addr4[6]], 
+		DBNSLog(@"%@ %@ %@ %@ %@", [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", _addr1[0], _addr1[1], _addr1[2], _addr1[3], _addr1[4], _addr1[5]],
+			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", _addr2[0], _addr2[1], _addr2[2], _addr2[3], _addr2[4], _addr2[5]],
+			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", _addr3[0], _addr3[1], _addr3[2], _addr3[3], _addr3[4], _addr3[5]],
+			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", _addr4[0], _addr4[1], _addr4[2], _addr4[3], _addr4[4], _addr4[5]],
 			  [WaveHelper frameControlToString:hdr1->frame_ctl]);
         [WaveHelper dumpKFrame:f];
     }
@@ -411,7 +411,7 @@ bool is8021xPacket(const UInt8* fileData) {
     }
     if (m == nil)
         return nil;
-    return [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X%.2X", m[0], m[1], m[2], m[3], m[4], m[5], m[6]];
+    return [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", m[0], m[1], m[2], m[3], m[4], m[5]];
 }
 
 #pragma mark -
