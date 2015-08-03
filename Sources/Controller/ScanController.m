@@ -38,7 +38,7 @@
 #import "../Controller/TrafficController.h"
 #import "WaveContainer.h"
 #import "../WaveDrivers/WaveDriver.h"
-#import "ScriptController.h"
+#import "BridgeController.h"
 #import "MapView.h"
 #import <sys/sysctl.h>
 #import <BIGeneric/BIGeneric.h>

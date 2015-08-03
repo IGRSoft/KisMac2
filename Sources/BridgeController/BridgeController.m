@@ -26,17 +26,22 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#import "ScriptController.h"
+#import "BridgeController.h"
 #import "ScanController.h"
 #import "ScanControllerPrivate.h"
 #import "ScanControllerScriptable.h"
 #import "WaveHelper.h"
-#import "ScriptAdditions.h"
 #import "KisMACNotifications.h"
-#import "ScriptingEngine.h"
 #import "WaveNet.h"
+#import "MapView.h"
 
-@implementation ScriptController
+@interface BridgeController ()
+
+@property(nonatomic, strong) ScanController* scanController;
+
+@end
+
+@implementation BridgeController
 
 - (id)init
 {
@@ -49,6 +54,16 @@
 											   object:nil];
 
     return self;
+}
+
+- (ScanController *)scanController
+{
+    if (!_scanController)
+    {
+        _scanController = (ScanController*)[NSApp delegate];
+    }
+    
+    return _scanController;
 }
 
 - (void)tryToSave:(NSNotification*)note
@@ -93,50 +108,48 @@
 
 - (IBAction)showNetworks:(id)sender
 {
-    [ScriptingEngine selfSendEvent:'KshN'];
+    [self.scanController showNetworks];
 }
 - (IBAction)showTrafficView:(id)sender
 {
-    [ScriptingEngine selfSendEvent:'KshT'];
+    [self.scanController showTrafficView];
 }
 - (IBAction)showMap:(id)sender
 {
-    [ScriptingEngine selfSendEvent:'KshM'];
+    [self.scanController showMap];
 }
 - (IBAction)showDetails:(id)sender
 {
-    [ScriptingEngine selfSendEvent:'KshD'];
+    [self.scanController showDetails];
 }
 
 - (IBAction)toggleScan:(id)sender
 {
-	[ScriptingEngine selfSendEvent:'KssS'];
+    [self.scanController toggleScan];
 }
 
 #pragma mark -
 
 - (IBAction)tryNew:(id)sender
 {
-    ScanController *controller = [NSApp delegate];
-    
-    if ((sender!=self) && (![controller isSaved]))
+    if ((sender != self) && (![self.scanController isSaved]))
     {
         [self showWantToSaveDialog:@selector(new:)];
+        
         return;
     }
 
-   [ScriptingEngine selfSendEvent:'KNew'];
+    [self.scanController isNew];
 }
 
 #pragma mark -
 
-- (IBAction)openKisMACFile:(id)sender {
-    
-    ScanController *controller = [NSApp delegate];
-    
-    if ((sender!=self) && (![controller isSaved]))
+- (IBAction)openKisMACFile:(id)sender
+{
+    if ((sender != self) && (![self.scanController isSaved]))
     {
         [self showWantToSaveDialog:@selector(openKisMACFile:)];
+        
         return;
     }
     
@@ -175,9 +188,7 @@
 
 - (void)openPath:(NSString*)path
 {
-    [ScriptingEngine selfSendEvent:'odoc'
-                         withClass:'aevt'
-               andDefaultArgString:path];
+    [self.scanController open:path];
 }
 
 #pragma mark -
@@ -193,13 +204,11 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 for (int i = 0; i < [[op URLs] count]; ++i) {
-				 NSString *file = [[op URLs][i] path];
-				 [ScriptingEngine selfSendEvent:'KImK'
-						   withDefaultArgString:file];
+			 for (int i = 0; i < [[op URLs] count]; ++i)
+             {
+                 [self.scanController importKisMAC:[[op URLs][i] path]];
 			 }
 		 }
-		 
 	 }];
 }
 - (IBAction)importImageForMap:(id)sender
@@ -215,8 +224,7 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 [ScriptingEngine selfSendEvent:'KImI'
-					   withDefaultArgString:[[op URL] path]];
+             [self.scanController importImageForMap:[[op URL] path]];
 		 }
 		 
 	 }];
@@ -231,10 +239,9 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 for (int i = 0; i < [[op URLs] count]; ++i) {
-				 NSString *file = [[op URLs][i] path];
-				 [ScriptingEngine selfSendEvent:'KImP'
-						   withDefaultArgString:file];
+			 for (int i = 0; i < [[op URLs] count]; ++i)
+             {
+                 [self.scanController importPCAP:[[op URLs][i] path]];
 			 }
 		 }
 		 
@@ -245,16 +252,14 @@
 
 - (IBAction)saveKisMACFile:(id)sender
 {
-    ScanController *controller = [NSApp delegate];
-    
-    NSString *filename = [controller filename];
+    NSString *filename = [self.scanController filename];
     if (!filename)
     {
         [self saveKisMACFileAs:sender];
     }
-    else if (![ScriptingEngine selfSendEvent:'save' withClass:'core' andDefaultArgString:filename])
+    else if (![self.scanController save:filename])
     {
-        [controller showSavingFailureDialog];
+        [self.scanController showSavingFailureDialog];
     }
 }
 
@@ -268,14 +273,11 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 if (![ScriptingEngine selfSendEvent:'KsaA'
-							withDefaultArgString:[[sp URL] path]])
+             if (![self.scanController saveAs:[[sp URL] path]])
              {
-                 ScanController *controller = [NSApp delegate];
-                 [controller showSavingFailureDialog];
+                 [self.scanController showSavingFailureDialog];
              }
 		 }
-		 
 	 }];
 }
 
@@ -289,15 +291,11 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 if (![ScriptingEngine selfSendEvent:'save'
-									   withClass:'core'
-							 andDefaultArgString:[[sp URL] path]])
+			 if (![self.scanController save:[[sp URL] path]])
              {
-                 ScanController *controller = [NSApp delegate];
-				 [controller showSavingFailureDialog];
+				 [self.scanController showSavingFailureDialog];
              }
 		 }
-		 
 	 }];
 }
 
@@ -306,26 +304,25 @@
 - (BOOL) wepCheck
 {
     BOOL result = YES;
-    ScanController *controller = [NSApp delegate];
     
-    if (![controller selectedNetwork])
+    if (![self.scanController selectedNetwork])
     {
         NSBeep();
         result = NO;
     }
-    if (result && [[controller selectedNetwork] passwordAvailable])
+    if (result && [[self.scanController selectedNetwork] passwordAvailable])
     {
-        [controller showAlreadyCrackedDialog];
+        [self.scanController showAlreadyCrackedDialog];
         result = NO;
     }
-    if (result && [[controller selectedNetwork] wep] != encryptionTypeWEP && [[controller selectedNetwork] wep] != encryptionTypeWEP40)
+    if (result && [[self.scanController selectedNetwork] wep] != encryptionTypeWEP && [[self.scanController selectedNetwork] wep] != encryptionTypeWEP40)
     {
-        [controller showWrongEncryptionType];
+        [self.scanController showWrongEncryptionType];
         result = NO;
     }
-    if (result && [[[controller selectedNetwork] cryptedPacketsLog] count] < 8)
+    if (result && [[[self.scanController selectedNetwork] cryptedPacketsLog] count] < 8)
     {
-        [controller showNeedMorePacketsDialog];
+        [self.scanController showNeedMorePacketsDialog];
         result = NO;
     }
     
@@ -339,7 +336,7 @@
         return;
     }
     
-    [ScriptingEngine selfSendEvent:'KCBN'];
+    [self.scanController bruteforceNewsham];
 }
 
 - (IBAction)bruteforce40bitLow:(id)sender
@@ -349,7 +346,7 @@
         return;
     }
     
-    [ScriptingEngine selfSendEvent:'KCBL'];
+    [self.scanController bruteforce40bitLow];
 }
 
 - (IBAction)bruteforce40bitAlpha:(id)sender
@@ -359,7 +356,7 @@
         return;
     }
     
-    [ScriptingEngine selfSendEvent:'KCBa'];
+    [self.scanController bruteforce40bitAlpha];
 }
 
 - (IBAction)bruteforce40bitAll:(id)sender
@@ -369,7 +366,7 @@
         return;
     }
     
-    [ScriptingEngine selfSendEvent:'KCBA'];
+    [self.scanController bruteforce40bitAll];
 }
 
 #pragma mark -
@@ -390,8 +387,9 @@
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
 			 for (int i = 0; i < [[op URLs] count]; ++i)
-				 [ScriptingEngine selfSendEvent:'KCWa'
-						   withDefaultArgString:[[op URLs][i] path]];
+             {
+                 [self.scanController wordlist40bitApple:[[op URLs][i] path]];
+             }
 		 }
 		 
 	 }];
@@ -413,8 +411,9 @@
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
 			 for (int i = 0; i < [[op URLs] count]; ++i)
-				 [ScriptingEngine selfSendEvent:'KCWA'
-						   withDefaultArgString:[[op URLs][i] path]];
+             {
+                 [self.scanController wordlist104bitApple:[[op URLs][i] path]];
+             }
 		 }
 		 
 	 }];
@@ -436,8 +435,9 @@
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
 			 for (int i = 0; i < [[op URLs] count]; ++i)
-				 [ScriptingEngine selfSendEvent:'KCWM'
-						   withDefaultArgString:[[op URLs][i] path]];
+             {
+                 [self.scanController wordlist104bitMD5:[[op URLs][i] path]];
+             }
 		 }
 		 
 	 }];
@@ -445,36 +445,34 @@
 
 - (IBAction)wordlistWPA:(id)sender
 {
-    ScanController *controller = [NSApp delegate];
-    
-    if (![controller selectedNetwork])
+    if (![self.scanController selectedNetwork])
     {
         NSBeep();
         return;
     }
-    if ([[controller selectedNetwork] passwordAvailable])
+    if ([[self.scanController selectedNetwork] passwordAvailable])
     {
-        [controller showAlreadyCrackedDialog];
+        [self.scanController showAlreadyCrackedDialog];
         return;
     }
-    if (([[controller selectedNetwork] wep] != encryptionTypeWPA) && ([[controller selectedNetwork] wep] != encryptionTypeWPA2 ))
+    if (([[self.scanController selectedNetwork] wep] != encryptionTypeWPA) && ([[self.scanController selectedNetwork] wep] != encryptionTypeWPA2 ))
     {
-        [controller showWrongEncryptionType];
+        [self.scanController showWrongEncryptionType];
         return;
     }
-	if ([[controller selectedNetwork] SSID] == nil)
+	if ([[self.scanController selectedNetwork] SSID] == nil)
     {
-        [controller showNeedToRevealSSID];
+        [self.scanController showNeedToRevealSSID];
         return;
     }
-	if ([[[controller selectedNetwork] SSID] length] > 32)
+	if ([[[self.scanController selectedNetwork] SSID] length] > 32)
     {
-        [controller showNeedToRevealSSID];
+        [self.scanController showNeedToRevealSSID];
         return;
     }
-	if ([[controller selectedNetwork] capturedEAPOLKeys] == 0)
+	if ([[self.scanController selectedNetwork] capturedEAPOLKeys] == 0)
     {
-        [controller showNeedMorePacketsDialog];
+        [self.scanController showNeedMorePacketsDialog];
         return;
     }
 
@@ -487,8 +485,9 @@
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
 			 for (int i = 0; i < [[op URLs] count]; ++i)
-				 [ScriptingEngine selfSendEvent:'KCWW'
-						   withDefaultArgString:[[op URLs][i] path]];
+             {
+                 [self.scanController wordlistWPA:[[op URLs][i] path]];
+             }
 		 }
 		 
 	 }];
@@ -496,26 +495,24 @@
 
 - (IBAction)wordlistLEAP:(id)sender
 {
-    ScanController *controller = [NSApp delegate];
-    
-    if (![controller selectedNetwork])
+    if (![self.scanController selectedNetwork])
     {
         NSBeep();
         return;
     }
-    if ([[controller selectedNetwork] passwordAvailable])
+    if ([[self.scanController selectedNetwork] passwordAvailable])
     {
-        [controller showAlreadyCrackedDialog];
+        [self.scanController showAlreadyCrackedDialog];
         return;
     }
-    if ([[controller selectedNetwork] wep] != encryptionTypeLEAP)
+    if ([[self.scanController selectedNetwork] wep] != encryptionTypeLEAP)
     {
-        [controller showWrongEncryptionType];
+        [self.scanController showWrongEncryptionType];
         return;
     }
-	if ([[controller selectedNetwork] capturedLEAPKeys] == 0)
+	if ([[self.scanController selectedNetwork] capturedLEAPKeys] == 0)
     {
-        [controller showNeedMorePacketsDialog];
+        [self.scanController showNeedMorePacketsDialog];
         return;
     }
    
@@ -528,8 +525,9 @@
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
 			 for (int i = 0; i < [[op URLs] count]; ++i)
-				 [ScriptingEngine selfSendEvent:'KCWL'
-						   withDefaultArgString:[[op URLs][i] path]];
+             {
+                 [self.scanController wordlistLEAP:[[op URLs][i] path]];
+             }
 		 }
 		 
 	 }];
@@ -543,10 +541,8 @@
     {
         return;
     }
-    NSAppleEventDescriptor *keyLen = [NSAppleEventDescriptor descriptorWithInt32:5];
     
-    NSDictionary *args = @{[NSString stringWithFormat:@"%d", 'KCKl']: keyLen};
-    [ScriptingEngine selfSendEvent:'KCSc' withArgs:args];
+    [self.scanController weakSchedulingAttackForKeyLen:5 andKeyID:0];
 }
 
 - (IBAction)weakSchedulingAttack104bit:(id)sender
@@ -555,7 +551,8 @@
     {
         return;
     }
-    [ScriptingEngine selfSendEvent:'KCSc'];
+    
+    [self.scanController weakSchedulingAttackForKeyLen:13 andKeyID:0];
 }
 
 - (IBAction)weakSchedulingAttack40And104bit:(id)sender
@@ -564,10 +561,8 @@
     {
         return;
     }
-    NSAppleEventDescriptor *keyLen = [NSAppleEventDescriptor descriptorWithInt32:0xFFFFFF];
     
-    NSDictionary *args = @{[NSString stringWithFormat:@"%d", 'KCKl']: keyLen};
-    [ScriptingEngine selfSendEvent:'KCSc' withArgs:args];
+    [self.scanController weakSchedulingAttackForKeyLen:0xFFFFFF andKeyID:0];
 }
 
 #pragma mark -
@@ -576,15 +571,14 @@
 {
     BOOL show = ([sender state] == NSOffState);
     
-    [ScriptingEngine selfSendEvent:'KMSN'
-					withDefaultArg:[NSAppleEventDescriptor descriptorWithBoolean:show]];
+    [[WaveHelper mapView] setShowNetworks:show];
 }
 
-- (IBAction)showTraceInMap:(id)sender {
+- (IBAction)showTraceInMap:(id)sender
+{
     BOOL show = ([sender state] == NSOffState);
     
-    [ScriptingEngine selfSendEvent:'KMST'
-					withDefaultArg:[NSAppleEventDescriptor descriptorWithBoolean:show]];
+    [[WaveHelper mapView] setShowTrace:show];
 }
 
 

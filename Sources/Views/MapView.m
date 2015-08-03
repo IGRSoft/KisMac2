@@ -91,6 +91,10 @@
 	_zoomFact = 1.0 / (ZOOMFACT * ZOOMFACT * ZOOMFACT * ZOOMFACT);
 	[self _alignNetworks];
     [self setNeedsDisplay:YES];
+    
+    _wayPoint = [[WayPoint alloc] initWithWindowNibName:@"WayPointDialog"];
+    [[_wayPoint window] setFrameUsingName:@"aKisMAC_WayPoint"];
+    [[_wayPoint window] setFrameAutosaveName:@"aKisMAC_WayPoint"];
 }
 
 #pragma mark -
@@ -414,19 +418,24 @@
     if (NSPointInRect(p, [_controlPanel frame])) [_controlPanel mouseMovedToPoint:p];
 }
 
-- (void)mouseDown:(NSEvent *)theEvent {
+- (void)mouseDown:(NSEvent *)theEvent
+{
     BOOL keepOn = YES;
     NSPoint p;
-    WayPoint *wayPoint;
     waypoint w;
     
     p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    if (NSPointInRect(p, [_controlPanel frame])) {
+    if (NSPointInRect(p, [_controlPanel frame]))
+    {
         [_controlPanel mouseDownAtPoint:p];
+        
         return;
     }
     
-    if (_selmode >= selShowCurPos) return;
+    if (_selmode >= selShowCurPos)
+    {
+        return;
+    }
     
     _old = _point[_selmode];
     
@@ -442,11 +451,8 @@
         case NSLeftMouseUp:
             keepOn = NO;
             
-            wayPoint = [[WayPoint alloc] initWithWindowNibName:@"WayPointDialog"];
-            [[wayPoint window] setFrameUsingName:@"aKisMAC_WayPoint"];
-            [[wayPoint window] setFrameAutosaveName:@"aKisMAC_WayPoint"];
-            
-            if (_selmode == selCurPos) {
+            if (_selmode == selCurPos)
+            {
                 // calculate current point for setting the current position
                 NS_DURING
                     w._long = _wp[1]._long - (_point[1].x - p.x) / (_point[1].x - _point[2].x) * (_wp[1]._long - _wp[2]._long);
@@ -456,14 +462,16 @@
                     w._lat  = 0.0;
                 NS_ENDHANDLER
                 _point[selCurPos] = INVALIDPOINT;
-            } else {// set the waypoints with current coordinates
+            } else
+            {
+                // set the waypoints with current coordinates
                 w=[[WaveHelper gpsController] currentPoint];
             }
                    
-            [wayPoint setWaypoint:w];
-            [wayPoint setMode:_selmode];
-            [wayPoint setPoint:p];
-            [wayPoint showWindow:self];
+            [_wayPoint setWaypoint:w];
+            [_wayPoint setMode:_selmode];
+            [_wayPoint setPoint:p];
+            [_wayPoint showWindow:self];
             p = _old;
         case NSLeftMouseDragged:
             _point[_selmode] = p;
