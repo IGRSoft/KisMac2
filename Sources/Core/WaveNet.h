@@ -28,20 +28,23 @@
 
 #import "WavePacket.h"
 
-enum {
+enum
+{
     trafficData,
     packetData,
     signalData
 };
 
-enum {
+enum
+{
     chreNone,
     chreChallenge,
     chreResponse,
     chreComplete
 };
 
-struct graphStruct {
+struct graphStruct
+{
     int trafficData[MAX_YIELD_SIZE + 1];
     int packetData[MAX_YIELD_SIZE + 1];
     int signalData[MAX_YIELD_SIZE + 1];
@@ -184,7 +187,7 @@ struct graphStruct {
 - (NSString *)longitude;
 - (NSString *)elevation;
 
-- (float)dataCount;
+- (double)dataCount;
 - (int)curTraffic;
 - (int)curPackets;
 - (int)curSignal;

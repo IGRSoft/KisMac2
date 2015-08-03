@@ -53,7 +53,8 @@
 
 struct graphStruct zeroGraphData;
 
-struct signalCoords {
+struct signalCoords
+{
 	double x, y;
 	int strength;
 } __attribute__((packed));
@@ -72,7 +73,8 @@ NSInteger lengthSort(id string1, id string2, void *context)
 
 @implementation WaveNet
 
--(id)initWithID:(int)netID {
+-(id)initWithID:(int)netID
+{
     waypoint cp;
     GPSController *gpsc;
 
@@ -1346,7 +1348,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 {
     NSString * dateString;
     
-    @synchronized(self)
+    @synchronized(_date)
     {
         if(nil == _date)
         {
@@ -1361,33 +1363,51 @@ NSInteger lengthSort(id string1, id string2, void *context)
     return dateString;
 }
 
-- (NSDate*)lastSeenDate {
+- (NSDate*)lastSeenDate
+{
     return _date;
 }
-- (NSString *)firstDate {
+
+- (NSString *)firstDate
+{
     return [NSString stringWithFormat:@"%@", aFirstDate]; //[aFirstDate descriptionWithCalendarFormat:@"%H:%M %d-%m-%y" timeZone:nil locale:nil];
 }
-- (NSDate *)firstSeenDate {
+
+- (NSDate *)firstSeenDate
+{
     return aFirstDate;
 }
-- (NSString *)getIP {
-    if (_IPAddress) {
+
+- (NSString *)getIP
+{
+    if (_IPAddress)
+    {
         return _IPAddress;
     }
     return nil;
 }
-- (NSString *)data {
+
+- (NSString *)data
+{
     return [WaveHelper bytesToString: _bytes];
 }
-- (float)dataCount {
+
+- (double)dataCount
+{
     return _bytes;
 }
-- (NSString *)getVendor {
-    if (_vendor) return _vendor;
+
+- (NSString *)getVendor
+{
+    if (_vendor)
+        return _vendor;
+    
     _vendor=[WaveHelper vendorForMAC:_BSSID];
     return _vendor;
 }
-- (NSString*)rates {
+
+- (NSString*)rates
+{
 	int i;
 	NSMutableArray *a = [NSMutableArray array];
 	for (i = 0; i < _rateCount; ++i) {
@@ -1395,13 +1415,18 @@ NSInteger lengthSort(id string1, id string2, void *context)
 	}
 	return [a componentsJoinedByString:@", "];
 }
-- (NSString*)comment {
+- (NSString*)comment
+{
     return aComment;
 }
-- (void)setComment:(NSString*)comment {
-    aComment=comment;
+
+- (void)setComment:(NSString*)comment
+{
+    aComment = comment;
 }
-- (int)avgSignal {
+
+- (int)avgSignal
+{
     int sum = 0;
     int i, x, c;
     int max = (graphLength < _avgTime*4) ? graphLength : _avgTime*4;
@@ -1414,13 +1439,19 @@ NSInteger lengthSort(id string1, id string2, void *context)
             ++c;
         }
     }
-    if (c==0) return 0;
+    if (c==0)
+        return 0;
+    
     return sum / c;
 }
-- (int)curSignal {
+
+- (int)curSignal
+{
     return _curSignal;
 }
-- (int)curPackets {
+
+- (int)curPackets
+{
     return curPackets;
 }
 - (int)curTraffic {
@@ -1747,23 +1778,26 @@ NSInteger lengthSort(id string1, id string2, void *context)
         image = [gbStorage objectForKeyedSubscript:@"redgem"];
     }
     
-    cache = @{@"id": [NSString stringWithFormat:@"%i", _netID],
-              @"ssid": [self SSID],
-              @"bssid": [self BSSID],
-              @"signal": [NSString stringWithFormat:@"%i", _curSignal],
-              @"avgsignal": [NSString stringWithFormat:@"%i", [self avgSignal]],
-              @"maxsignal": [NSString stringWithFormat:@"%i", _maxSignal],
-              @"channel": [NSString stringWithFormat:@"%i", _channel],
-              @"primaryChannel": [NSString stringWithFormat:@"%i", _primaryChannel],
-              @"packets": [NSString stringWithFormat:@"%i", _packets],
-              @"data": [self data],
-              @"wep": enc,
-              @"type": type,
-              @"lastseen": [NSString stringWithFormat:@"%@", _date],
-              @"challengeResponse": image};
-    
-    _cache = cache;
-    _cacheValid = YES;
+    @synchronized(self)
+    {
+        cache = @{@"id": [NSString stringWithFormat:@"%i", _netID],
+                  @"ssid": [self SSID],
+                  @"bssid": [self BSSID],
+                  @"signal": [NSString stringWithFormat:@"%i", _curSignal],
+                  @"avgsignal": [NSString stringWithFormat:@"%i", [self avgSignal]],
+                  @"maxsignal": [NSString stringWithFormat:@"%i", _maxSignal],
+                  @"channel": [NSString stringWithFormat:@"%i", _channel],
+                  @"primaryChannel": [NSString stringWithFormat:@"%i", _primaryChannel],
+                  @"packets": [NSString stringWithFormat:@"%i", _packets],
+                  @"data": [self data],
+                  @"wep": enc,
+                  @"type": type,
+                  @"lastseen": [NSString stringWithFormat:@"%@", _date],
+                  @"challengeResponse": image};
+        
+        _cache = cache;
+        _cacheValid = YES;
+    }
     
     return _cache;
 }

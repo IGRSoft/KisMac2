@@ -34,8 +34,6 @@
 @class BIGLTextView;
 @class BIGLImageView;
 
-#define MAX_YIELD_SIZE (int)1200
-
 @interface TrafficController : NSObject {
     IBOutlet BIGLView       *_view;
     IBOutlet WaveScanner    *_scanner;
