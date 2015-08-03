@@ -140,6 +140,7 @@
 		A5353827180ABCE1008BB6A1 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = A53536B5180ABCE0008BB6A1 /* md5.c */; };
 		A5353972180B15B9008BB6A1 /* DESSupport.c in Sources */ = {isa = PBXBuildFile; fileRef = A5353970180B15B9008BB6A1 /* DESSupport.c */; };
 		A5353975180B1C99008BB6A1 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = A5353974180B1C99008BB6A1 /* sha1.c */; };
+		A54B4CDD1B6F847B003279DD /* DownloadMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = A54B4CDB1B6F847B003279DD /* DownloadMap.xib */; };
 		A57E644D1607BC9700BE1BCA /* AirCrackWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */; };
 		A57E644F1607BC9700BE1BCA /* LEAP.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E643B1607BC9700BE1BCA /* LEAP.m */; };
 		A57E64551607BC9700BE1BCA /* WaveNetLEAPCrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64411607BC9700BE1BCA /* WaveNetLEAPCrack.m */; };
@@ -395,6 +396,7 @@
 		A537418D19DD4AAC00434C6E /* WaveHelperTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveHelperTest.m; sourceTree = "<group>"; };
 		A537418E19DD4AAC00434C6E /* WaveNetTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveNetTest.m; sourceTree = "<group>"; };
 		A537418F19DD4AAC00434C6E /* WavePacketTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WavePacketTest.m; sourceTree = "<group>"; };
+		A54B4CDC1B6F847B003279DD /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DownloadMap.xib; sourceTree = "<group>"; };
 		A57E64381607BC9700BE1BCA /* AirCrackWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AirCrackWrapper.h; sourceTree = "<group>"; };
 		A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AirCrackWrapper.m; sourceTree = "<group>"; };
 		A57E643A1607BC9700BE1BCA /* LEAP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEAP.h; sourceTree = "<group>"; };
@@ -723,6 +725,7 @@
 		00F57C1606A886350035AE2F /* XIB */ = {
 			isa = PBXGroup;
 			children = (
+				A54B4CDB1B6F847B003279DD /* DownloadMap.xib */,
 				A529AD781A20A4B400CD8E1E /* Crack.xib */,
 				A529AD7A1A20A4B400CD8E1E /* GPSDialog.xib */,
 				A529AD7C1A20A4B400CD8E1E /* Import.xib */,
@@ -1131,6 +1134,7 @@
 				691CF1B00E4CC47C0042B146 /* UsbVendorsIntersil.plist in Resources */,
 				691CF1B10E4CC47C0042B146 /* UsbVendorsRT73.plist in Resources */,
 				691CF1B20E4CC47C0042B146 /* UsbVendorsRT2570.plist in Resources */,
+				A54B4CDD1B6F847B003279DD /* DownloadMap.xib in Resources */,
 				691CF1B30E4CC47C0042B146 /* UsbVendorsRTL8187.plist in Resources */,
 				A529AD9F1A20A4B400CD8E1E /* PrefsDriver.xib in Resources */,
 				A529AD9E1A20A4B400CD8E1E /* PrefsAdvanced.xib in Resources */,
@@ -1433,6 +1437,14 @@
 				A529AD971A20A4B400CD8E1E /* en */,
 			);
 			name = wepInjection.xib;
+			sourceTree = "<group>";
+		};
+		A54B4CDB1B6F847B003279DD /* DownloadMap.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A54B4CDC1B6F847B003279DD /* en */,
+			);
+			name = DownloadMap.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
