@@ -141,6 +141,7 @@
 		A5353972180B15B9008BB6A1 /* DESSupport.c in Sources */ = {isa = PBXBuildFile; fileRef = A5353970180B15B9008BB6A1 /* DESSupport.c */; };
 		A5353975180B1C99008BB6A1 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = A5353974180B1C99008BB6A1 /* sha1.c */; };
 		A54B4CDD1B6F847B003279DD /* DownloadMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = A54B4CDB1B6F847B003279DD /* DownloadMap.xib */; };
+		A55AAF191B6FD30F00B2200B /* OUItoVendorDB.py in Resources */ = {isa = PBXBuildFile; fileRef = A55AAF181B6FD30F00B2200B /* OUItoVendorDB.py */; };
 		A57E644D1607BC9700BE1BCA /* AirCrackWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */; };
 		A57E644F1607BC9700BE1BCA /* LEAP.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E643B1607BC9700BE1BCA /* LEAP.m */; };
 		A57E64551607BC9700BE1BCA /* WaveNetLEAPCrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64411607BC9700BE1BCA /* WaveNetLEAPCrack.m */; };
@@ -298,7 +299,6 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* KisMAC_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KisMAC_Prefix.pch; sourceTree = "<group>"; };
-		689FF0710DB9AEF500ED7BE5 /* OUItoVendorDB.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = OUItoVendorDB.pl; sourceTree = "<group>"; };
 		691CF1AC0E4CC47B0042B146 /* UsbVendorsIntersil.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UsbVendorsIntersil.plist; sourceTree = "<group>"; };
 		691CF1AD0E4CC47C0042B146 /* UsbVendorsRT73.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UsbVendorsRT73.plist; sourceTree = "<group>"; };
 		691CF1AE0E4CC47C0042B146 /* UsbVendorsRT2570.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UsbVendorsRT2570.plist; sourceTree = "<group>"; };
@@ -397,6 +397,7 @@
 		A537418E19DD4AAC00434C6E /* WaveNetTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveNetTest.m; sourceTree = "<group>"; };
 		A537418F19DD4AAC00434C6E /* WavePacketTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WavePacketTest.m; sourceTree = "<group>"; };
 		A54B4CDC1B6F847B003279DD /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DownloadMap.xib; sourceTree = "<group>"; };
+		A55AAF181B6FD30F00B2200B /* OUItoVendorDB.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = OUItoVendorDB.py; sourceTree = "<group>"; };
 		A57E64381607BC9700BE1BCA /* AirCrackWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AirCrackWrapper.h; sourceTree = "<group>"; };
 		A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AirCrackWrapper.m; sourceTree = "<group>"; };
 		A57E643A1607BC9700BE1BCA /* LEAP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEAP.h; sourceTree = "<group>"; };
@@ -469,7 +470,7 @@
 		0035332D06A5DD5700AB4577 /* Generic */ = {
 			isa = PBXGroup;
 			children = (
-				689FF0710DB9AEF500ED7BE5 /* OUItoVendorDB.pl */,
+				A55AAF181B6FD30F00B2200B /* OUItoVendorDB.py */,
 				0035332E06A5DD5700AB4577 /* example.dump */,
 				0035333106A5DD5700AB4577 /* vendor.db */,
 			);
@@ -1131,6 +1132,7 @@
 				A529ADA11A20A4B400CD8E1E /* PrefsGPS.xib in Resources */,
 				0042E7A609C0C8B600183F90 /* world.kismap in Resources */,
 				A529ADA01A20A4B400CD8E1E /* PrefsFilter.xib in Resources */,
+				A55AAF191B6FD30F00B2200B /* OUItoVendorDB.py in Resources */,
 				691CF1B00E4CC47C0042B146 /* UsbVendorsIntersil.plist in Resources */,
 				691CF1B10E4CC47C0042B146 /* UsbVendorsRT73.plist in Resources */,
 				691CF1B20E4CC47C0042B146 /* UsbVendorsRT2570.plist in Resources */,
@@ -1164,7 +1166,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$PROJECT_DIR/Resources/Generic/OUItoVendorDB.pl\" -d /tmp/OUI.txt \"$PROJECT_DIR/Resources/Generic/vendor.db\"";
+			shellScript = "python \"$PROJECT_DIR/Resources/Generic/OUItoVendorDB.py\"";
 		};
 		6910302B0F9E313700C4E466 /* Create DMG */ = {
 			isa = PBXShellScriptBuildPhase;
