@@ -124,7 +124,7 @@ static GPSInfoController *_gc;
 + (NSString*) macToString:(UInt8*)m {
     if (!m)
         return nil;
-    return [NSString stringWithFormat:@"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X:%.2X", m[0], m[1], m[2], m[3], m[4], m[5], m[6]];
+    return [NSString stringWithFormat:@"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X", m[0], m[1], m[2], m[3], m[4], m[5]];
 }
 
 // Returns the vendor for a specific MAC-Address
