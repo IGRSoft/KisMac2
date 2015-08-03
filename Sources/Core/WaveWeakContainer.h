@@ -29,13 +29,13 @@
 @interface WaveWeakContainer : NSObject
 {
     UInt8 **_data[LAST_BIT];
-    UInt32 _count;
+    NSUInteger _count;
 }
 
 - (id)initWithData:(NSData*)data;
 
 - (void)setBytes:(const UInt8*)bytes forIV:(const UInt8*)iv;
-- (int)count;
+- (NSUInteger)count;
 
 - (void)addData:(NSData*)data;
 - (NSData*)data;

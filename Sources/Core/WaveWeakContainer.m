@@ -41,9 +41,13 @@
     return self;
 }
 
-- (id)initWithData:(NSData*)data {
+- (id)initWithData:(NSData*)data
+{
     self = [super init];
-    if (!self) return nil;
+    if (!self)
+    {
+        return nil;
+    }
     
     [self addData:data];
     
@@ -52,67 +56,83 @@
 
 #pragma mark -
 
-- (void)setBytes:(const UInt8*)bytes forIV:(const UInt8*)iv {
-    UInt8 *d;
-    if (_data[iv[2]] == nil) {
+- (void)setBytes:(const UInt8*)bytes forIV:(const UInt8*)iv
+{
+    if (_data[iv[2]] == nil)
+    {
         _data[iv[2]] = malloc(sizeof(_data)+sizeof(iv[2]));
         NSAssert(_data[iv[2]], @"malloc failed");
         memset(_data[iv[2]], 0, sizeof(_data));
     }
     
     if ((_data[iv[2]])[iv[1]] == nil)
-	{
-		void *obj = malloc(sizeof(_data) * sizeof(iv[1]));
-		if (obj == NULL) {
-			DBNSLog(@"malloc failed");
-			return;
-		}
-		else
-		{
-			(_data[iv[2]])[iv[1]] = obj;
-			memset((_data[iv[2]])[iv[1]], 0, sizeof(obj));
-			free(obj);
-		}
+    {
+        void *obj = malloc(sizeof(_data) * sizeof(iv[1]));
+        if (obj == NULL)
+        {
+            DBNSLog(@"malloc failed");
+            
+            return;
+        }
+        else
+        {
+            (_data[iv[2]])[iv[1]] = obj;
+            memset((_data[iv[2]])[iv[1]], 0, sizeof(obj));
+            free(obj);
+        }
     }
     
-    d = &((_data[iv[2]])[iv[1]])[iv[0] * 3];
+    UInt8 *d = &((_data[iv[2]])[iv[1]])[iv[0] * 3];
     memcpy(d + 1, bytes, 2);
     
-    if (d[0] == 0) {
+    if (d[0] == 0)
+    {
         d[0] = 1;
         ++_count;
     } 
 }
 
-- (int) count {
+- (NSUInteger) count
+{
     return _count;
 }
 
-- (void)addData:(NSData*)data {
-    if (!data) return;
+- (void)addData:(NSData*)data
+{
+    if (!data)
+    {
+        return;
+    }
     NSParameterAssert([data length] % 5 == 0);
     
     const UInt8 *d = [data bytes];
-    int i;
     
-    for (i = 0; i  < [data length]; i+=5) {
+    for (NSUInteger i = 0; i  < [data length]; i+=5)
+    {
         [self setBytes:&d[i+3] forIV:&d[i]];
     }
 }
 
-- (NSData*)data {
+- (NSData*)data
+{
     UInt8 *d, *m;
-    int x, y, z;
+    NSInteger x, y, z;
     
     d = malloc(_count * 5);
     m = d;
     
-    for(x = 0; x < LAST_BIT; ++x) {
-        if (_data[x] != nil) {
-            for (y = 0; y < LAST_BIT; ++y) {
-                if ((_data[x])[y] != nil) {
-                    for (z = 0; z < (LAST_BIT * 3); z+=3) {
-                        if (((_data[x])[y])[z] != 0) {
+    for(x = 0; x < LAST_BIT; ++x)
+    {
+        if (_data[x] != nil)
+        {
+            for (y = 0; y < LAST_BIT; ++y)
+            {
+                if ((_data[x])[y] != nil)
+                {
+                    for (z = 0; z < (LAST_BIT * 3); z+=3)
+                    {
+                        if (((_data[x])[y])[z] != 0)
+                        {
                             m[0] = (z / 3) & 0xFF;
                             m[1] = y & 0xFF;
                             m[2] = x & 0xFF;
@@ -135,18 +155,25 @@
 
 #pragma mark -
 
-- (void) dealloc {
-    int x, y;
+- (void) dealloc
+{
+    NSInteger x, y;
     
-    for(x = 0; x < LAST_BIT; ++x) {
-        if (_data[x] != nil) {
-            for (y = 0; y < LAST_BIT; ++y) {
-                if ((_data[x])[y] != nil) {
+    for(x = 0; x < LAST_BIT; ++x)
+    {
+        if (_data[x] != nil)
+        {
+            for (y = 0; y < LAST_BIT; ++y)
+            {
+                if ((_data[x])[y] != nil)
+                {
                     free((_data[x])[y]);
                 }
             }
+            
             free(_data[x]);
         }
     }
 }
+
 @end
