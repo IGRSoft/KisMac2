@@ -141,7 +141,6 @@
 		A5353972180B15B9008BB6A1 /* DESSupport.c in Sources */ = {isa = PBXBuildFile; fileRef = A5353970180B15B9008BB6A1 /* DESSupport.c */; };
 		A5353975180B1C99008BB6A1 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = A5353974180B1C99008BB6A1 /* sha1.c */; };
 		A54B4CDD1B6F847B003279DD /* DownloadMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = A54B4CDB1B6F847B003279DD /* DownloadMap.xib */; };
-		A55AAF191B6FD30F00B2200B /* OUItoVendorDB.py in Resources */ = {isa = PBXBuildFile; fileRef = A55AAF181B6FD30F00B2200B /* OUItoVendorDB.py */; };
 		A57E644D1607BC9700BE1BCA /* AirCrackWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */; };
 		A57E644F1607BC9700BE1BCA /* LEAP.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E643B1607BC9700BE1BCA /* LEAP.m */; };
 		A57E64551607BC9700BE1BCA /* WaveNetLEAPCrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64411607BC9700BE1BCA /* WaveNetLEAPCrack.m */; };
@@ -1132,7 +1131,6 @@
 				A529ADA11A20A4B400CD8E1E /* PrefsGPS.xib in Resources */,
 				0042E7A609C0C8B600183F90 /* world.kismap in Resources */,
 				A529ADA01A20A4B400CD8E1E /* PrefsFilter.xib in Resources */,
-				A55AAF191B6FD30F00B2200B /* OUItoVendorDB.py in Resources */,
 				691CF1B00E4CC47C0042B146 /* UsbVendorsIntersil.plist in Resources */,
 				691CF1B10E4CC47C0042B146 /* UsbVendorsRT73.plist in Resources */,
 				691CF1B20E4CC47C0042B146 /* UsbVendorsRT2570.plist in Resources */,

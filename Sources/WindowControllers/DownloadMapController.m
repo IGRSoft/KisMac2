@@ -73,6 +73,7 @@
 
     w._lat  = [_latitude  floatValue] * ([[_nsButton titleOfSelectedItem] isEqualToString:@"N"] ? 1.0 : -1.0);
     w._long = [_longitude floatValue] * ([[_ewButton titleOfSelectedItem] isEqualToString:@"E"] ? 1.0 : -1.0);
+    w._elevation = 0;
     
     if ([[_server titleOfSelectedItem] isEqualToString: NSLocalizedString(@"TerraServer (Satellite)", "menu item, needs to be like in DownloadMap.nib")]) {
         server = @"TerraServer (Satellite)";
