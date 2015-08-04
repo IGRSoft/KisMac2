@@ -32,9 +32,6 @@
 //#define DEBUG			//This has currently no meaning
 //#define LOGPACKETS		//do not enable unless you know what you are doing
 
-// 1201 = 5 minutes (plus one) for 0.25s interval
-#define MAX_YIELD_SIZE (int)1200
-
 #define MAX_RATE_COUNT 64
 
 //this is given to us by the driver

@@ -25,8 +25,6 @@
 /* Begin PBXBuildFile section */
 		002E7DFC06A86C6F00C9D931 /* ImportController.m in Sources */ = {isa = PBXBuildFile; fileRef = 002E7DF806A86C6F00C9D931 /* ImportController.m */; };
 		0035337A06A5DD5700AB4577 /* example.dump in Resources */ = {isa = PBXBuildFile; fileRef = 0035332E06A5DD5700AB4577 /* example.dump */; };
-		0035337B06A5DD5700AB4577 /* KisMAC.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 0035332F06A5DD5700AB4577 /* KisMAC.scriptSuite */; };
-		0035337C06A5DD5700AB4577 /* KisMAC.scriptTerminology in Resources */ = {isa = PBXBuildFile; fileRef = 0035333006A5DD5700AB4577 /* KisMAC.scriptTerminology */; };
 		0035337D06A5DD5700AB4577 /* vendor.db in Resources */ = {isa = PBXBuildFile; fileRef = 0035333106A5DD5700AB4577 /* vendor.db */; };
 		0035339906A5DD5700AB4577 /* usbprism2_prep.sh in Resources */ = {isa = PBXBuildFile; fileRef = 0035334F06A5DD5700AB4577 /* usbprism2_prep.sh */; };
 		0035339A06A5DD5700AB4577 /* usbprism2_unprep.sh in Resources */ = {isa = PBXBuildFile; fileRef = 0035335006A5DD5700AB4577 /* usbprism2_unprep.sh */; };
@@ -52,8 +50,7 @@
 		0035346A06A5DD8500AB4577 /* PrefsTraffic.m in Sources */ = {isa = PBXBuildFile; fileRef = 003533ED06A5DD8500AB4577 /* PrefsTraffic.m */; };
 		0035346E06A5DD8500AB4577 /* PrefsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 003533F106A5DD8500AB4577 /* PrefsController.m */; };
 		0035347006A5DD8500AB4577 /* PrefsWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 003533F306A5DD8500AB4577 /* PrefsWindow.m */; };
-		0035347206A5DD8500AB4577 /* ScriptAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 003533F606A5DD8500AB4577 /* ScriptAdditions.m */; };
-		0035347406A5DD8500AB4577 /* ScriptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 003533F806A5DD8500AB4577 /* ScriptController.m */; };
+		0035347406A5DD8500AB4577 /* BridgeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 003533F806A5DD8500AB4577 /* BridgeController.m */; };
 		0035347606A5DD8500AB4577 /* GPSController.m in Sources */ = {isa = PBXBuildFile; fileRef = 003533FB06A5DD8500AB4577 /* GPSController.m */; };
 		0035348806A5DD8500AB4577 /* WaveDriver.m in Sources */ = {isa = PBXBuildFile; fileRef = 0035341006A5DD8500AB4577 /* WaveDriver.m */; };
 		0035348C06A5DD8500AB4577 /* WaveDriverAirport.m in Sources */ = {isa = PBXBuildFile; fileRef = 0035341406A5DD8500AB4577 /* WaveDriverAirport.m */; };
@@ -69,7 +66,6 @@
 		00971F5706E4FFBF004307EA /* BISubView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00971F5506E4FFBF004307EA /* BISubView.m */; };
 		0097241506E51844004307EA /* BIImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0097241306E51844004307EA /* BIImageView.m */; };
 		0097243A06E51A99004307EA /* BITextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0097243806E51A99004307EA /* BITextView.m */; };
-		009B192406FC83A800E8883A /* ScriptingEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 009B192206FC83A800E8883A /* ScriptingEngine.m */; };
 		009D64F306FF73BA00B0F1EC /* MapViewAreaView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 009D64F206FF73BA00B0F1EC /* MapViewAreaView.mm */; };
 		00A622AA06FEE4FB005D248A /* Trace.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A622A806FEE4FB005D248A /* Trace.m */; };
 		00A7F9D306C6D20A00A6BB8F /* devilDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = 00A7F9D206C6D20A00A6BB8F /* devilDocument.icns */; };
@@ -144,6 +140,8 @@
 		A5353827180ABCE1008BB6A1 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = A53536B5180ABCE0008BB6A1 /* md5.c */; };
 		A5353972180B15B9008BB6A1 /* DESSupport.c in Sources */ = {isa = PBXBuildFile; fileRef = A5353970180B15B9008BB6A1 /* DESSupport.c */; };
 		A5353975180B1C99008BB6A1 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = A5353974180B1C99008BB6A1 /* sha1.c */; };
+		A54B4CDD1B6F847B003279DD /* DownloadMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = A54B4CDB1B6F847B003279DD /* DownloadMap.xib */; };
+		A55AAF191B6FD30F00B2200B /* OUItoVendorDB.py in Resources */ = {isa = PBXBuildFile; fileRef = A55AAF181B6FD30F00B2200B /* OUItoVendorDB.py */; };
 		A57E644D1607BC9700BE1BCA /* AirCrackWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */; };
 		A57E644F1607BC9700BE1BCA /* LEAP.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E643B1607BC9700BE1BCA /* LEAP.m */; };
 		A57E64551607BC9700BE1BCA /* WaveNetLEAPCrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A57E64411607BC9700BE1BCA /* WaveNetLEAPCrack.m */; };
@@ -198,8 +196,6 @@
 		002E7DF706A86C6F00C9D931 /* ImportController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ImportController.h; path = Sources/WindowControllers/ImportController.h; sourceTree = SOURCE_ROOT; };
 		002E7DF806A86C6F00C9D931 /* ImportController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ImportController.m; path = Sources/WindowControllers/ImportController.m; sourceTree = SOURCE_ROOT; };
 		0035332E06A5DD5700AB4577 /* example.dump */ = {isa = PBXFileReference; lastKnownFileType = file; path = example.dump; sourceTree = "<group>"; };
-		0035332F06A5DD5700AB4577 /* KisMAC.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.scriptSuite; path = KisMAC.scriptSuite; sourceTree = "<group>"; };
-		0035333006A5DD5700AB4577 /* KisMAC.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.scriptTerminology; path = KisMAC.scriptTerminology; sourceTree = "<group>"; };
 		0035333106A5DD5700AB4577 /* vendor.db */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = vendor.db; sourceTree = "<group>"; };
 		0035334106A5DD5700AB4577 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		0035334F06A5DD5700AB4577 /* usbprism2_prep.sh */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.sh; path = usbprism2_prep.sh; sourceTree = "<group>"; };
@@ -249,10 +245,8 @@
 		003533F106A5DD8500AB4577 /* PrefsController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = PrefsController.m; sourceTree = "<group>"; };
 		003533F206A5DD8500AB4577 /* PrefsWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PrefsWindow.h; sourceTree = "<group>"; };
 		003533F306A5DD8500AB4577 /* PrefsWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = PrefsWindow.m; sourceTree = "<group>"; };
-		003533F506A5DD8500AB4577 /* ScriptAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ScriptAdditions.h; sourceTree = "<group>"; };
-		003533F606A5DD8500AB4577 /* ScriptAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ScriptAdditions.m; sourceTree = "<group>"; };
-		003533F706A5DD8500AB4577 /* ScriptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ScriptController.h; sourceTree = "<group>"; };
-		003533F806A5DD8500AB4577 /* ScriptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ScriptController.m; sourceTree = "<group>"; };
+		003533F706A5DD8500AB4577 /* BridgeController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BridgeController.h; sourceTree = "<group>"; };
+		003533F806A5DD8500AB4577 /* BridgeController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = BridgeController.m; sourceTree = "<group>"; };
 		003533FA06A5DD8500AB4577 /* GPSController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GPSController.h; sourceTree = "<group>"; };
 		003533FB06A5DD8500AB4577 /* GPSController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GPSController.m; sourceTree = "<group>"; };
 		0035340F06A5DD8500AB4577 /* WaveDriver.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = WaveDriver.h; sourceTree = "<group>"; };
@@ -281,8 +275,6 @@
 		0097241306E51844004307EA /* BIImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BIImageView.m; sourceTree = "<group>"; };
 		0097243706E51A99004307EA /* BITextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BITextView.h; sourceTree = "<group>"; };
 		0097243806E51A99004307EA /* BITextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BITextView.m; sourceTree = "<group>"; };
-		009B192106FC83A800E8883A /* ScriptingEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptingEngine.h; sourceTree = "<group>"; };
-		009B192206FC83A800E8883A /* ScriptingEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScriptingEngine.m; sourceTree = "<group>"; };
 		009D64F206FF73BA00B0F1EC /* MapViewAreaView.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; path = MapViewAreaView.mm; sourceTree = "<group>"; };
 		00A622A706FEE4FB005D248A /* Trace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Trace.h; sourceTree = "<group>"; };
 		00A622A806FEE4FB005D248A /* Trace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Trace.m; sourceTree = "<group>"; };
@@ -307,7 +299,6 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* KisMAC_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KisMAC_Prefix.pch; sourceTree = "<group>"; };
-		689FF0710DB9AEF500ED7BE5 /* OUItoVendorDB.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = OUItoVendorDB.pl; sourceTree = "<group>"; };
 		691CF1AC0E4CC47B0042B146 /* UsbVendorsIntersil.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UsbVendorsIntersil.plist; sourceTree = "<group>"; };
 		691CF1AD0E4CC47C0042B146 /* UsbVendorsRT73.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UsbVendorsRT73.plist; sourceTree = "<group>"; };
 		691CF1AE0E4CC47C0042B146 /* UsbVendorsRT2570.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UsbVendorsRT2570.plist; sourceTree = "<group>"; };
@@ -405,6 +396,8 @@
 		A537418D19DD4AAC00434C6E /* WaveHelperTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveHelperTest.m; sourceTree = "<group>"; };
 		A537418E19DD4AAC00434C6E /* WaveNetTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveNetTest.m; sourceTree = "<group>"; };
 		A537418F19DD4AAC00434C6E /* WavePacketTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WavePacketTest.m; sourceTree = "<group>"; };
+		A54B4CDC1B6F847B003279DD /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DownloadMap.xib; sourceTree = "<group>"; };
+		A55AAF181B6FD30F00B2200B /* OUItoVendorDB.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = OUItoVendorDB.py; sourceTree = "<group>"; };
 		A57E64381607BC9700BE1BCA /* AirCrackWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AirCrackWrapper.h; sourceTree = "<group>"; };
 		A57E64391607BC9700BE1BCA /* AirCrackWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AirCrackWrapper.m; sourceTree = "<group>"; };
 		A57E643A1607BC9700BE1BCA /* LEAP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEAP.h; sourceTree = "<group>"; };
@@ -477,10 +470,8 @@
 		0035332D06A5DD5700AB4577 /* Generic */ = {
 			isa = PBXGroup;
 			children = (
-				689FF0710DB9AEF500ED7BE5 /* OUItoVendorDB.pl */,
+				A55AAF181B6FD30F00B2200B /* OUItoVendorDB.py */,
 				0035332E06A5DD5700AB4577 /* example.dump */,
-				0035332F06A5DD5700AB4577 /* KisMAC.scriptSuite */,
-				0035333006A5DD5700AB4577 /* KisMAC.scriptTerminology */,
 				0035333106A5DD5700AB4577 /* vendor.db */,
 			);
 			name = Generic;
@@ -621,18 +612,14 @@
 			path = PreferencePanes;
 			sourceTree = "<group>";
 		};
-		003533F406A5DD8500AB4577 /* ScriptingCore */ = {
+		003533F406A5DD8500AB4577 /* BridgeController */ = {
 			isa = PBXGroup;
 			children = (
-				009B192106FC83A800E8883A /* ScriptingEngine.h */,
-				009B192206FC83A800E8883A /* ScriptingEngine.m */,
-				003533F506A5DD8500AB4577 /* ScriptAdditions.h */,
-				003533F606A5DD8500AB4577 /* ScriptAdditions.m */,
-				003533F706A5DD8500AB4577 /* ScriptController.h */,
-				003533F806A5DD8500AB4577 /* ScriptController.m */,
+				003533F706A5DD8500AB4577 /* BridgeController.h */,
+				003533F806A5DD8500AB4577 /* BridgeController.m */,
 			);
-			name = ScriptingCore;
-			path = Sources/ScriptingCore;
+			name = BridgeController;
+			path = Sources/BridgeController;
 			sourceTree = "<group>";
 		};
 		003533F906A5DD8500AB4577 /* Support */ = {
@@ -739,6 +726,7 @@
 		00F57C1606A886350035AE2F /* XIB */ = {
 			isa = PBXGroup;
 			children = (
+				A54B4CDB1B6F847B003279DD /* DownloadMap.xib */,
 				A529AD781A20A4B400CD8E1E /* Crack.xib */,
 				A529AD7A1A20A4B400CD8E1E /* GPSDialog.xib */,
 				A529AD7C1A20A4B400CD8E1E /* Import.xib */,
@@ -781,7 +769,7 @@
 				003533B206A5DD8500AB4577 /* Core */,
 				003533D206A5DD8500AB4577 /* Driver */,
 				003533DA06A5DD8500AB4577 /* Preferences */,
-				003533F406A5DD8500AB4577 /* ScriptingCore */,
+				003533F406A5DD8500AB4577 /* BridgeController */,
 				003533F906A5DD8500AB4577 /* Support */,
 				003533FE06A5DD8500AB4577 /* Views */,
 				0035340E06A5DD8500AB4577 /* WaveDrivers */,
@@ -1124,8 +1112,6 @@
 				0035337A06A5DD5700AB4577 /* example.dump in Resources */,
 				A529ADA21A20A4B400CD8E1E /* PrefsMap.xib in Resources */,
 				A5A2F5B019DDA55B0046299A /* NetworkWPA.tif in Resources */,
-				0035337B06A5DD5700AB4577 /* KisMAC.scriptSuite in Resources */,
-				0035337C06A5DD5700AB4577 /* KisMAC.scriptTerminology in Resources */,
 				0035337D06A5DD5700AB4577 /* vendor.db in Resources */,
 				0035339906A5DD5700AB4577 /* usbprism2_prep.sh in Resources */,
 				A529AD981A20A4B400CD8E1E /* Crack.xib in Resources */,
@@ -1146,9 +1132,11 @@
 				A529ADA11A20A4B400CD8E1E /* PrefsGPS.xib in Resources */,
 				0042E7A609C0C8B600183F90 /* world.kismap in Resources */,
 				A529ADA01A20A4B400CD8E1E /* PrefsFilter.xib in Resources */,
+				A55AAF191B6FD30F00B2200B /* OUItoVendorDB.py in Resources */,
 				691CF1B00E4CC47C0042B146 /* UsbVendorsIntersil.plist in Resources */,
 				691CF1B10E4CC47C0042B146 /* UsbVendorsRT73.plist in Resources */,
 				691CF1B20E4CC47C0042B146 /* UsbVendorsRT2570.plist in Resources */,
+				A54B4CDD1B6F847B003279DD /* DownloadMap.xib in Resources */,
 				691CF1B30E4CC47C0042B146 /* UsbVendorsRTL8187.plist in Resources */,
 				A529AD9F1A20A4B400CD8E1E /* PrefsDriver.xib in Resources */,
 				A529AD9E1A20A4B400CD8E1E /* PrefsAdvanced.xib in Resources */,
@@ -1178,7 +1166,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$PROJECT_DIR/Resources/Generic/OUItoVendorDB.pl\" -d /tmp/OUI.txt \"$PROJECT_DIR/Resources/Generic/vendor.db\"";
+			shellScript = "python \"$PROJECT_DIR/Resources/Generic/OUItoVendorDB.py\"";
 		};
 		6910302B0F9E313700C4E466 /* Create DMG */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1239,8 +1227,7 @@
 				0035346A06A5DD8500AB4577 /* PrefsTraffic.m in Sources */,
 				0035346E06A5DD8500AB4577 /* PrefsController.m in Sources */,
 				0035347006A5DD8500AB4577 /* PrefsWindow.m in Sources */,
-				0035347206A5DD8500AB4577 /* ScriptAdditions.m in Sources */,
-				0035347406A5DD8500AB4577 /* ScriptController.m in Sources */,
+				0035347406A5DD8500AB4577 /* BridgeController.m in Sources */,
 				0035347606A5DD8500AB4577 /* GPSController.m in Sources */,
 				0035348806A5DD8500AB4577 /* WaveDriver.m in Sources */,
 				0035348C06A5DD8500AB4577 /* WaveDriverAirport.m in Sources */,
@@ -1257,7 +1244,6 @@
 				0097243A06E51A99004307EA /* BITextView.m in Sources */,
 				0090AC8606E5E3250096C5FC /* MapControlPanel.m in Sources */,
 				00E1426E06E62A44009DC179 /* PointView.m in Sources */,
-				009B192406FC83A800E8883A /* ScriptingEngine.m in Sources */,
 				00A622AA06FEE4FB005D248A /* Trace.m in Sources */,
 				009D64F306FF73BA00B0F1EC /* MapViewAreaView.mm in Sources */,
 				00875D1C0708ADB300CACFCB /* WaveHelper.m in Sources */,
@@ -1453,6 +1439,14 @@
 				A529AD971A20A4B400CD8E1E /* en */,
 			);
 			name = wepInjection.xib;
+			sourceTree = "<group>";
+		};
+		A54B4CDB1B6F847B003279DD /* DownloadMap.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A54B4CDC1B6F847B003279DD /* en */,
+			);
+			name = DownloadMap.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

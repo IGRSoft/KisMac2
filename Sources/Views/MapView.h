@@ -46,6 +46,7 @@ typedef NS_ENUM(NSUInteger, selmode)
 @class MapControlPanel;
 @class PointView;
 @class Trace;
+@class WayPoint;
 
 @interface MapView : BIView
 {
@@ -57,6 +58,7 @@ typedef NS_ENUM(NSUInteger, selmode)
     BITextView          *_gpsStatusView;
     MapControlPanel     *_controlPanel;
     PointView           *_pView;
+    WayPoint            *_wayPoint;
     BOOL                _visible;
 	BOOL				_autoCenter;
     NSImage             *_mapImage;

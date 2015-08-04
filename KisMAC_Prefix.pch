@@ -32,3 +32,6 @@
 #define SRET { [[WaveHelper importController] terminateWithCode: 1]; return; }
 #define RET { [[WaveHelper importController] terminateWithCode: -1]; return; }
 #define CHECK { if (_password != nil) RET; if (_isWep != encryptionTypeWEP && _isWep != encryptionTypeWEP40) RET; if ([_packetsLog count] < 8) RET; }
+
+// 1201 = 5 minutes (plus one) for 0.25s interval
+#define MAX_YIELD_SIZE 1200

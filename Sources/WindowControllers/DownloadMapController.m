@@ -27,7 +27,7 @@
  */
 
 #import "DownloadMapController.h"
-#import "ScriptingEngine.h"
+#import "ScanControllerScriptable.h"
 #import "WaveHelper.h"
 
 @implementation DownloadMapController 
@@ -69,9 +69,6 @@
 - (IBAction)okAction:(id)sender {
     waypoint w;
     NSString *server;
-    double tmp;
-    NSMutableDictionary *d;
-    NSAppleEventDescriptor *serv, *lat, *lon, *zoom, *width, *height;
     BOOL map24 = NO;
 
     w._lat  = [_latitude  floatValue] * ([[_nsButton titleOfSelectedItem] isEqualToString:@"N"] ? 1.0 : -1.0);
@@ -102,24 +99,16 @@
         return;
     }
     
-    serv = [NSAppleEventDescriptor descriptorWithString:server];
-    zoom = [NSAppleEventDescriptor descriptorWithInt32:[[_scale titleOfSelectedItem] intValue]];
-    lat = [NSAppleEventDescriptor descriptorWithDescriptorType:typeIEEE64BitFloatingPoint bytes:&w._lat length:sizeof(double)];
-    lon = [NSAppleEventDescriptor descriptorWithDescriptorType:typeIEEE64BitFloatingPoint bytes:&w._long length:sizeof(double)];
-    tmp = [_height intValue];
-    height = [NSAppleEventDescriptor descriptorWithDescriptorType:typeIEEE64BitFloatingPoint bytes:&tmp length:sizeof(double)];
-    tmp = [_width intValue];
-    width  = [NSAppleEventDescriptor descriptorWithDescriptorType:typeIEEE64BitFloatingPoint bytes:&tmp length:sizeof(double)];
-    
-    d = [NSMutableDictionary dictionaryWithObjectsAndKeys:lat, [NSString stringWithFormat:@"%d", 'KMLa'], lon, [NSString stringWithFormat:@"%d", 'KMLo'], serv, [NSString stringWithFormat:@"%d", keyDirectObject], nil];
-    
-    if ([[_scale titleOfSelectedItem] intValue] != 3 && !map24) d[[NSString stringWithFormat:@"%d", 'KScl']] = zoom;
-    if ([_width  intValue] != 1000 && !map24) d[[NSString stringWithFormat:@"%d", 'KWid']] = width;
-    if ([_height intValue] != 1000 && !map24) d[[NSString stringWithFormat:@"%d", 'KHig']] = height;
+    int scale = ([[_scale titleOfSelectedItem] intValue] != 3 && !map24) ? [[_scale titleOfSelectedItem] intValue] : 1;
+    int width = ([_width  intValue] != 1000 && !map24) ? [_width  intValue] : 0;
+    int height = ([_height  intValue] != 1000 && !map24) ? [_height  intValue] : 0;
     
     [[self window] close];
-
-    [ScriptingEngine selfSendEvent:'KDMp' withArgs:d];
+    
+    [(ScanController*)[NSApp delegate] downloadMapFrom:server
+                                              forPoint:w
+                                            resolution:NSMakeSize(width, height)
+                                             zoomLevel:scale];
 
     NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
     [def setObject:[_scale titleOfSelectedItem] forKey:@"DownloadMapScale"];
