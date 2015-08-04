@@ -100,7 +100,6 @@
 		69B54B300F0698C600AB7E6E /* WavePluginInjecting.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B54B2E0F0698C600AB7E6E /* WavePluginInjecting.m */; };
 		69BFC5770F077867008DB1AF /* WavePluginAuthenticationFlood.m in Sources */ = {isa = PBXBuildFile; fileRef = 69BFC5750F077867008DB1AF /* WavePluginAuthenticationFlood.m */; };
 		69BFC5F30F078532008DB1AF /* WavePluginBeaconFlood.m in Sources */ = {isa = PBXBuildFile; fileRef = 69BFC5F10F078532008DB1AF /* WavePluginBeaconFlood.m */; };
-		69DF1ABE0F0D0F93000E9B94 /* KMCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 69DF1ABD0F0D0F93000E9B94 /* KMCommon.m */; };
 		6C03D77009B547F2005B2316 /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C03D76F09B547F2005B2316 /* Growl.framework */; };
 		6C03D77309B547F6005B2316 /* Growl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6C03D76F09B547F2005B2316 /* Growl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		6C32713412CFC4070033A649 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C32713312CFC4070033A649 /* CoreLocation.framework */; };
@@ -346,7 +345,6 @@
 		69BFC5F00F078532008DB1AF /* WavePluginBeaconFlood.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WavePluginBeaconFlood.h; sourceTree = "<group>"; };
 		69BFC5F10F078532008DB1AF /* WavePluginBeaconFlood.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WavePluginBeaconFlood.m; sourceTree = "<group>"; };
 		69DF1ABB0F0D0E40000E9B94 /* KMCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KMCommon.h; sourceTree = "<group>"; };
-		69DF1ABD0F0D0F93000E9B94 /* KMCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KMCommon.m; sourceTree = "<group>"; };
 		6C03D76F09B547F2005B2316 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Growl.framework; path = Resources/Growl.framework; sourceTree = "<group>"; };
 		6C32713312CFC4070033A649 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		6C41BAAE0AA0B52900E0B411 /* GPSInfoController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GPSInfoController.h; sourceTree = "<group>"; };
@@ -560,7 +558,6 @@
 				00875D190708ADB300CACFCB /* WaveHelper.h */,
 				00875D1A0708ADB300CACFCB /* WaveHelper.m */,
 				69DF1ABB0F0D0E40000E9B94 /* KMCommon.h */,
-				69DF1ABD0F0D0F93000E9B94 /* KMCommon.m */,
 			);
 			name = Core;
 			path = Sources/Core;
@@ -1271,7 +1268,6 @@
 				69BFC5770F077867008DB1AF /* WavePluginAuthenticationFlood.m in Sources */,
 				69BFC5F30F078532008DB1AF /* WavePluginBeaconFlood.m in Sources */,
 				A5353826180ABCE1008BB6A1 /* md4.c in Sources */,
-				69DF1ABE0F0D0F93000E9B94 /* KMCommon.m in Sources */,
 				694A888D0F3CD87E006B819C /* WavePcapDump.m in Sources */,
 				69359CB30FB05DD2008B8722 /* WaveSpectrumDriver.m in Sources */,
 				6C461C6F12CEC58100156CBF /* WavePluginMidi.m in Sources */,

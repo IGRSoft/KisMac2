@@ -42,8 +42,3 @@ enum {
 
 typedef UInt8 KMRate;
 
-@interface KMCommon : NSObject {
-    
-}
-
-@end

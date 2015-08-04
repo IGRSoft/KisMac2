@@ -179,7 +179,8 @@
     [self setNeedsDisplay:_visible];
 }
 
-- (void)_updateGPSStatus:(NSNotification*)note {
+- (void)_updateGPSStatus:(NSNotification*)note
+{
     if ([(NSString*)[note object] compare:_gpsStatus] == NSOrderedSame) return;
 
 	[self _centerCurPos];

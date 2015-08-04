@@ -28,52 +28,54 @@
 
 #include <CoreLocation/CoreLocation.h>
 
-struct _position {
+struct _position
+{
     char dir;
-    float coordinates;
+    CGFloat coordinates;
 };
 
 @interface GPSController : NSObject <CLLocationManagerDelegate>
 {
-    bool    _gpsThreadUp;
-    bool    _gpsShallRun;
-	bool	_gpsdReconnect;
-    bool    _reliable;
-    bool    _tripmateMode;
-    int     _traceInterval;
-    int     _onNoFix;
-    bool    _debugEnabled;
-    int     _linesRead;
-    int     _serialFD;
-    int     _veldir;
-    float   _velkt;
-	float   _maxvel;
-	float   _peakvel;
-    int     _numsat;
-    float   _hdop;
-	float   _sectordist;
-	float   _sectortime;
-	float   _totaldist;
-    
+    BOOL      _gpsThreadUp;
+    BOOL      _gpsShallRun;
+    BOOL      _gpsdReconnect;
+    BOOL      _reliable;
+    BOOL      _tripmateMode;
+    NSInteger _traceInterval;
+    NSInteger _onNoFix;
+    BOOL      _debugEnabled;
+    NSInteger _linesRead;
+    NSInteger _serialFD;
+    NSInteger _veldir;
+    CGFloat   _velkt;
+    CGFloat   _maxvel;
+    CGFloat   _peakvel;
+    NSInteger _numsat;
+    CGFloat   _hdop;
+    CGFloat   _sectordist;
+    CGFloat   _sectortime;
+    CGFloat   _totaldist;
+
     struct _position    _ns, _ew, _elev;
-    NSDate*             _lastAdd;
-    NSString*           _position;
-    NSString*           _gpsDevice;
-    NSDate*             _lastUpdate;
-    NSDate*				_sectorStart;
-    NSLock*             _gpsLock;
-    NSString*           _status;
+    
+    NSDate   * _lastAdd;
+    NSString * _position;
+    NSString * _gpsDevice;
+    NSDate   * _lastUpdate;
+    NSDate   * _sectorStart;
+    NSLock   * _gpsLock;
+    NSString * _status;
     
     CLLocationManager * clManager;
 }
 
-- (bool)startForDevice:(NSString*) device;
-- (bool)reliable;
+- (BOOL)startForDevice:(NSString*) device;
+- (BOOL)reliable;
 - (void)resetTrace;
-- (bool)gpsRunning;
-- (void)setTraceInterval:(int)interval;
-- (void)setTripmateMode:(bool)mode;
-- (void)setOnNoFix:(int)onNoFix;
+- (BOOL)gpsRunning;
+- (void)setTraceInterval:(NSInteger)interval;
+- (void)setTripmateMode:(BOOL)mode;
+- (void)setOnNoFix:(NSInteger)onNoFix;
 - (NSDate*)lastUpdate;
 - (NSString*)NSCoord;
 - (NSString*)EWCoord;

@@ -48,17 +48,19 @@
 /*
  * generate 104-bit key based on the supplied string
  */
-void WirelessCryptMD5(char const *str, unsigned char *key) {
+void WirelessCryptMD5(char const *str, unsigned char *key)
+{
     int i, j;
     u_char md5_buf[64];
     mbedtls_md5_context ctx;
-
+    
     j = 0;
-    for(i = 0; i < 64; ++i) {
+    for(i = 0; i < 64; ++i)
+    {
         if(str[j] == 0) j = 0;
         md5_buf[i] = str[j++];
     }
-
+    
     mbedtls_md5_starts(&ctx);
     mbedtls_md5_update(&ctx, md5_buf, 64);
     mbedtls_md5_finish(&ctx, md5_buf);
@@ -68,7 +70,7 @@ void WirelessCryptMD5(char const *str, unsigned char *key) {
 
 @implementation WaveHelper
 
-static NSDictionary *_vendors = nil;	//Dictionary
+static NSDictionary *_vendors = nil;
 static BISpeechController *_speechController = nil;
 
 // Global dictionary to keeps drivers
@@ -84,7 +86,8 @@ static ScanController *_scanController;
 static GPSInfoController *_gc;
 
 // Converts a byte count to a human readable string
-+ (NSString *) bytesToString:(float) bytes {
++ (NSString *) bytesToString:(float) bytes
+{
     if (bytes > 700000000)
         return [NSString stringWithFormat:@"%1.2fGiB",bytes/1024/1024/1024];
     else if (bytes > 700000)
@@ -97,7 +100,7 @@ static GPSInfoController *_gc;
 
 
 //converts a string to an url encoded string
-+ (NSString*) urlEncodeString:(NSString*)string 
++ (NSString*) urlEncodeString:(NSString*)string
 {
     return [string stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
 }
@@ -107,40 +110,44 @@ static GPSInfoController *_gc;
 #pragma mark -
 
 // Encode a binary string into form XX:XX:XX.....
-+ (NSString*) hexEncode:(UInt8*)data length:(int)len {
++ (NSString*) hexEncode:(UInt8*)data length:(int)len
+{
     NSParameterAssert(len > 0);
-	NSParameterAssert(data);
-	int i, j;
-	
-	NSMutableString *ms = [NSMutableString stringWithFormat:@"%.2X", data[0]];
+    NSParameterAssert(data);
+    int i, j;
     
-	for (i = 1; i < len; ++i) {
+    NSMutableString *ms = [NSMutableString stringWithFormat:@"%.2X", data[0]];
+    
+    for (i = 1; i < len; ++i) {
         j = data[i];
         [ms appendFormat:@":%.2X", j];
     }
-	return ms;
+    return ms;
 }
 
-+ (NSString*) macToString:(UInt8*)m {
++ (NSString*) macToString:(UInt8*)m
+{
     if (!m)
         return nil;
+    
     return [NSString stringWithFormat:@"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X", m[0], m[1], m[2], m[3], m[4], m[5]];
 }
 
 // Returns the vendor for a specific MAC-Address
-+ (NSString *)vendorForMAC:(NSString*)MAC {
++ (NSString *)vendorForMAC:(NSString*)MAC
+{
     NSString *aVendor;
     
     // The dictionary is cached for speed, but it needs to be loaded the first time
     if (_vendors == nil) {
-		NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"vendor.db"];
+        NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"vendor.db"];
         _vendors = [NSDictionary dictionaryWithContentsOfFile:path];
-		if (!_vendors) {
-			DBNSLog(@"No vendors Database found!");
-			return @"error";
-		}
+        if (!_vendors) {
+            DBNSLog(@"No vendors Database found!");
+            return @"error";
+        }
     }
-	
+    
     // Do we have a valid MAC?
     if ((MAC == nil) || ([MAC length] < 11))
         return @"";
@@ -154,8 +161,8 @@ static GPSInfoController *_gc;
             if (aVendor == nil) {
                 aVendor = _vendors[[MAC substringToIndex:5]];
                 if (aVendor == nil) {
-                    return @"unknown";                    
-                } 
+                    return @"unknown";
+                }
             }
         }
     }
@@ -178,21 +185,24 @@ static GPSInfoController *_gc;
 #pragma mark Channel utility functions
 #pragma mark -
 
-+ (int)chan2freq:(int)channel {
++ (int)chan2freq:(int)channel
+{
     if (channel == 14)
         return 2484;
     if (channel >= 1 && channel <= 13)
         return 2407 + channel * 5;
-	if (channel < 200)
+    if (channel < 200)
         return 5000 + channel * 5;
     return 0;
 }
-+ (int)freq2chan:(int)frequency {
+
++ (int)freq2chan:(int)frequency
+{
     if (frequency == 2484)
         return 14;
     if (frequency < 2484 && frequency > 2411 && ((frequency - 2407) % 5 == 0))
         return (frequency - 2407) / 5;
-	if (frequency >= 5000 && frequency < 5900 && (frequency % 5) == 0)
+    if (frequency >= 5000 && frequency < 5900 && (frequency % 5) == 0)
         return (frequency - 5000) / 5;
     return 0;
 }
@@ -201,15 +211,16 @@ static GPSInfoController *_gc;
 #pragma mark Driver handling
 #pragma mark -
 
-+ (bool)isServiceAvailable:(char*)service {
++ (bool)isServiceAvailable:(char*)service
+{
     mach_port_t masterPort;
     io_iterator_t iterator;
     io_object_t sdev;
- 
+    
     if (IOMasterPort(MACH_PORT_NULL, &masterPort) != KERN_SUCCESS) {
         return NO; // REV/FIX: throw.
     }
-        
+    
     if (IORegistryCreateIterator(masterPort, kIOServicePlane, kIORegistryIterateRecursively, &iterator) == KERN_SUCCESS) {
         while ((sdev = IOIteratorNext(iterator)))
             if (IOObjectConformsTo(sdev, service)) {
@@ -223,28 +234,30 @@ static GPSInfoController *_gc;
 }
 
 //tells us whether a driver is in the RAM
-+ (bool)isDriverLoaded:(int)driverID {
++ (bool)isDriverLoaded:(int)driverID
+{
     switch(driverID) {
-    case 1:
-        if (![self isServiceAvailable:"WLanDriver"]) return NO;
-        else return YES;
-    case 2:
-        if (![self isServiceAvailable:"MACJackDriver"]) return NO;
-        else return YES;
-    case 3:
-        if (![self isServiceAvailable:"AiroJackDriver"]) return NO;
-        else return YES;
-    case 4:
-        if ([self isServiceAvailable:"AirPortDriver"] || [self isServiceAvailable:"AirPortPCI"] ||
-            [self isServiceAvailable:"AirPortPCI_MM"] || [self isServiceAvailable:"AirPort_Brcm43xx"]  ||
-            [WaveHelper isServiceAvailable:"AirPort_Athr5424"] || [self isServiceAvailable:"AirPort_Athr5424ab"]) return YES;
-        else return NO;
-    default:
-        return NO;
+        case 1:
+            if (![self isServiceAvailable:"WLanDriver"]) return NO;
+            else return YES;
+        case 2:
+            if (![self isServiceAvailable:"MACJackDriver"]) return NO;
+            else return YES;
+        case 3:
+            if (![self isServiceAvailable:"AiroJackDriver"]) return NO;
+            else return YES;
+        case 4:
+            if ([self isServiceAvailable:"AirPortDriver"] || [self isServiceAvailable:"AirPortPCI"] ||
+                [self isServiceAvailable:"AirPortPCI_MM"] || [self isServiceAvailable:"AirPort_Brcm43xx"]  ||
+                [WaveHelper isServiceAvailable:"AirPort_Athr5424"] || [self isServiceAvailable:"AirPort_Athr5424ab"]) return YES;
+            else return NO;
+        default:
+            return NO;
     }
 }
 
-+ (bool)unloadAllDrivers {
++ (bool)unloadAllDrivers
+{
     id key;
     WaveDriver *w;
     NSEnumerator *e;
@@ -285,13 +298,14 @@ static GPSInfoController *_gc;
     a = [d objectForKey:@"ActiveDrivers"];
     
     //see if all of the drivers mentioned in our prefs are loaded
-    for (i = 0; i < [a count]; ++i) {
+    for (i = 0; i < [a count]; ++i)
+    {
         driverProps = a[i];
         name = driverProps[@"deviceName"];
         
         //the driver does not exist. go for it
-        if (!_waveDrivers[name]) {
-        
+        if (!_waveDrivers[name])
+        {
             //ugly hack but it works, this makes sure that the airport card is used only once
             interfaceName = driverProps[@"driverID"];
             
@@ -299,7 +313,7 @@ static GPSInfoController *_gc;
             driver = NSClassFromString(interfaceName);
             
             // Call driver Class method "loadBackend"
-            if (![driver loadBackend]) 
+            if (![driver loadBackend])
             {
                 //return NO;
             }
@@ -323,10 +337,10 @@ static GPSInfoController *_gc;
             else
             {
                 NSRunCriticalAlertPanel(NSLocalizedString(@"Could not instantiate Driver.", "Driver init failed"),
-                NSLocalizedString (@"Instantiation Failure Description", @"LONG description of what might have gone wrong"),
-                name,
-                OK, nil, nil);
-            
+                                        NSLocalizedString (@"Instantiation Failure Description", @"LONG description of what might have gone wrong"),
+                                        name,
+                                        OK, nil, nil);
+                
                 DBNSLog(@"Error could not instantiate driver %@", interfaceName);
                 return NO;
             }
@@ -335,96 +349,123 @@ static GPSInfoController *_gc;
     
     //now make sure any drivers that have been removed from the list are gone
     NSEnumerator *e = [_waveDrivers objectEnumerator];
-   
+    
     while((w = [e nextObject]))
     {
         if(![a containsObject: [w configuration]])
         {
             [_waveDrivers removeObjectForKey: [w deviceName]];
             
-        }           
-    }//end 
-
+        }
+    }//end
+    
     return YES;
 }
 
-+ (NSArray*) getWaveDrivers {
-    if (!_waveDrivers) {
++ (NSArray*) getWaveDrivers
+{
+    if (!_waveDrivers)
+    {
         _waveDrivers = [NSMutableDictionary dictionary];
     }
     
     return [_waveDrivers allValues];
 }
 
-+ (WaveDriver*) injectionDriver {
++ (WaveDriver*) injectionDriver
+{
     NSEnumerator *e;
     NSString *k;
     NSDictionary *d;
     
     e = [_waveDrivers keyEnumerator];
-    while ((k = [e nextObject])) {
+    while ((k = [e nextObject]))
+    {
         d = [(WaveDriver*)_waveDrivers[k] configuration];
-        if ([d[@"injectionDevice"] intValue]) return _waveDrivers[k];
+        if ([d[@"injectionDevice"] intValue])
+            return _waveDrivers[k];
     }
     
     return nil;
 }
 
-+ (WaveDriver*) driverWithName:(NSString*) s {
++ (WaveDriver*) driverWithName:(NSString*)s
+{
     return _waveDrivers[s];
 }
 
 #pragma mark -
 
-+ (NSWindow*) mainWindow {
++ (NSWindow*) mainWindow
+{
     return aMainWindow;
 }
-+ (void) setMainWindow:(NSWindow*)mw {
+
++ (void) setMainWindow:(NSWindow*)mw
+{
     aMainWindow = mw;
 }
 
-+ (ScanController*) scanController {
++ (ScanController*) scanController
+{
     return _scanController;
 }
-+ (void) setScanController:(ScanController*)scanController {
+
++ (void) setScanController:(ScanController*)scanController
+{
     _scanController=scanController;
 }
 
-+ (GPSInfoController*) GPSInfoController {
-	return _gc;
++ (GPSInfoController*) GPSInfoController
+{
+    return _gc;
 }
-+ (void) setGPSInfoController:(GPSInfoController*)GPSController {
+
++ (void) setGPSInfoController:(GPSInfoController*)GPSController
+{
     _gc=GPSController;
 }
 
-+ (GPSController*) gpsController {
++ (GPSController*)gpsController
+{
     return aGPSController;
 }
 
-+ (void) initGPSControllerWithDevice:(NSString*)device {
-    if (!aGPSController) 
++ (void) initGPSControllerWithDevice:(NSString*)device
+{
+    if (!aGPSController)
+    {
         aGPSController = [[GPSController alloc] init];
+    }
+    
     [aGPSController startForDevice:device];
 }
 
-+ (MapView*) mapView {
++ (MapView*) mapView
+{
     return _mapView;
 }
-+ (void) setMapView:(MapView*)mv {
+
++ (void) setMapView:(MapView*)mv
+{
     _mapView = mv;
 }
 
-+ (Trace*) trace {
++ (Trace*) trace
+{
     return _trace;
 }
-+ (void) setTrace:(Trace*)trace {
+
++ (void) setTrace:(Trace*)trace
+{
     _trace = trace;
 }
 
-+ (NSColor*)intToColor:(NSNumber*)c {
-    float r, g, b, a;    
++ (NSColor*)intToColor:(NSNumber*)c
+{
+    float r, g, b, a;
     int i = [c intValue];
-
+    
     a =  (i >> 24) & 0xFF;
     r =  (i >> 16) & 0xFF;
     g =  (i >> 8 ) & 0xFF;
@@ -432,7 +473,9 @@ static GPSInfoController *_gc;
     
     return [NSColor colorWithCalibratedRed:r/255 green:g/255 blue:b/255 alpha:a/255];
 }
-+ (NSNumber*)colorToInt:(NSColor*)c {
+
++ (NSNumber*)colorToInt:(NSColor*)c
+{
     unsigned int i;
     float a, r,g, b;
     
@@ -445,14 +488,18 @@ static GPSInfoController *_gc;
     return [NSNumber numberWithInt:i];
 }
 
-+ (ImportController*) importController {
++ (ImportController*) importController
+{
     return _im;
 }
-+ (void) setImportController:(ImportController*)im {
+
++ (void) setImportController:(ImportController*)im
+{
     _im = im;
 }
 
-+ (NSMutableArray*) getProbeArrayForID:(char*)ident {
++ (NSMutableArray*) getProbeArrayForID:(char*)ident
+{
     NSMutableArray *ar;
     NSString *idstr;
     if (!_probes) _probes = [NSMutableDictionary dictionary];
@@ -467,14 +514,15 @@ static GPSInfoController *_gc;
     return ar;
 }
 
-+ (bool)runScript:(NSString*)script {
++ (bool)runScript:(NSString*)script
+{
     return [self runScript:script withArguments:nil];
 }
 
 + (bool)runScript:(NSString*)script withArguments:(NSArray*)args
 {
     bool ret = NO;
-
+    
     NSString* s = [NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], script];
     
     ret = [[BLAuthentication sharedInstance] executeCommand:s withArgs:args];
@@ -485,7 +533,8 @@ static GPSInfoController *_gc;
     return ret;
 }
 
-+ (void)addDictionary:(NSDictionary*)s toDictionary:(NSMutableDictionary*)d {
++ (void)addDictionary:(NSDictionary*)s toDictionary:(NSMutableDictionary*)d
+{
     NSEnumerator* e = [s keyEnumerator];
     id key;
     
@@ -494,33 +543,35 @@ static GPSInfoController *_gc;
     }
 }
 
-+ (int)showCouldNotInstaniciateDialog:(NSString*)driverName {
++ (int)showCouldNotInstaniciateDialog:(NSString*)driverName
+{
     NSString *warning = NSLocalizedString(@"Could not instanciate Driver description", "LONG description");
     /*@"KisMAC has been able to load the driver (%@). Reasons for this failure could be:\n\n"
-        "\t1. You selecteted the wrong driver.\n"
-        "\t2. You did not insert your PCMCIA card (only if you selected such a driver).\n"
-        "\t3. Your kernel extensions screwed up. In this case simply reboot.\n"
-        "\t4. You are using a 3rd party card and you are having another driver for the card installed, which could not be unloaded by KisMAC."
-        "If you have the sourceforge wireless driver, please install the patch, provided with KisMAC.\n"*/
-        
+     "\t1. You selecteted the wrong driver.\n"
+     "\t2. You did not insert your PCMCIA card (only if you selected such a driver).\n"
+     "\t3. Your kernel extensions screwed up. In this case simply reboot.\n"
+     "\t4. You are using a 3rd party card and you are having another driver for the card installed, which could not be unloaded by KisMAC."
+     "If you have the sourceforge wireless driver, please install the patch, provided with KisMAC.\n"*/
+    
     return NSRunCriticalAlertPanel(
-        NSLocalizedString(@"Could not instaniciate Driver.", "Error title"), 
-        warning, driverName,
-        NSLocalizedString(@"Retry", "Retry button"),
-        NSLocalizedString(@"Abort", "Abort button"),
-        nil);
+                                   NSLocalizedString(@"Could not instaniciate Driver.", "Error title"),
+                                   warning, driverName,
+                                   NSLocalizedString(@"Retry", "Retry button"),
+                                   NSLocalizedString(@"Abort", "Abort button"),
+                                   nil);
 }
 
 #pragma mark -
 #pragma mark -
 
-+ (NSString*)frameControlToString:(UInt16)fc {
++ (NSString*)frameControlToString:(UInt16)fc
+{
     NSString *typeStr;
     NSString *subtypeStr;
     UInt16 type =    (fc & IEEE80211_TYPE_MASK);
     UInt16 subtype = (fc & IEEE80211_SUBTYPE_MASK);
-	typeStr = @"UNKNOWN";
-	subtypeStr = @"UNKNOWN";
+    typeStr = @"UNKNOWN";
+    subtypeStr = @"UNKNOWN";
     switch (type) {
         case IEEE80211_TYPE_MGT:
             typeStr = @"Management";
@@ -560,7 +611,7 @@ static GPSInfoController *_gc;
                     break;
                 case IEEE80211_SUBTYPE_ACTION:
                     subtypeStr = @"Action";
-                    break;                    
+                    break;
             }
             break;
         case IEEE80211_TYPE_CTL:
@@ -583,7 +634,7 @@ static GPSInfoController *_gc;
                     break;
                 case IEEE80211_SUBTYPE_CF_END_ACK:
                     subtypeStr = @"CF END ACK";
-                    break;                    
+                    break;
             }
             break;
         case IEEE80211_TYPE_DATA:
@@ -615,21 +666,25 @@ static GPSInfoController *_gc;
                     break;
                 case IEEE80211_SUBTYPE_QOS_DATA:
                     subtypeStr = @"QOS Data";
-                    break;                    
+                    break;
             }
             break;
     }
     return [NSString stringWithFormat:@"%@ %@", typeStr, subtypeStr];
 }
-+ (void)dumpKFrame:(KFrame *)f {
+
++ (void)dumpKFrame:(KFrame *)f
+{
     UInt32 size = f->ctrl.len;
     UInt8 *data = f->data;
     DBNSLog(@"--FRAME LENGTH %d--", (int)size);
     int idx = 0;
     int i,j;
-	for (i=0;i<size;i=i+8) {
+    for (i=0;i<size;i=i+8)
+    {
         fprintf(stderr, "0x%.4x ", i);
-        for (j=0;j<8;++j) {
+        for (j=0;j<8;++j)
+        {
             if (idx < size)
                 fprintf(stderr, "%.2x ", data[idx]);
             else
@@ -639,4 +694,5 @@ static GPSInfoController *_gc;
         fprintf(stderr, "\n");
     }
 }
+
 @end
