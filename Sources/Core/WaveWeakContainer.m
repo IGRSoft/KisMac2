@@ -58,32 +58,31 @@
 
 - (void)setBytes:(const UInt8*)bytes forIV:(const UInt8*)iv
 {
-    if (_data[iv[2]] == nil)
+    UInt8 *d;
+    if (_data[iv[2]] == NULL)
     {
-        _data[iv[2]] = malloc(sizeof(_data)+sizeof(iv[2]));
-        NSAssert(_data[iv[2]], @"malloc failed");
-        memset(_data[iv[2]], 0, sizeof(_data));
-    }
-    
-    if ((_data[iv[2]])[iv[1]] == nil)
-    {
-        void *obj = malloc(sizeof(_data) * sizeof(iv[1]));
-        if (obj == NULL)
+        _data[iv[2]] = malloc(sizeof(UInt8 *)*LAST_BIT);
+        if(_data[iv[2]] == NULL)
         {
             DBNSLog(@"malloc failed");
-            
             return;
         }
-        else
-        {
-            (_data[iv[2]])[iv[1]] = obj;
-            memset((_data[iv[2]])[iv[1]], 0, sizeof(obj));
-            free(obj);
-        }
+        memset(_data[iv[2]], 0, sizeof(UInt8 *)*LAST_BIT);
     }
     
-    UInt8 *d = &((_data[iv[2]])[iv[1]])[iv[0] * 3];
-    memcpy(d + 1, bytes, 2);
+    if ((_data[iv[2]])[iv[1]] == NULL)
+	{
+		(_data[iv[2]])[iv[1]] = malloc(3*sizeof(UInt8)*LAST_BIT);
+		if ((_data[iv[2]])[iv[1]] == NULL) {
+			DBNSLog(@"malloc failed");
+			return;
+		}
+        memset((_data[iv[2]])[iv[1]], 0, 3*sizeof(UInt8)*LAST_BIT);
+    }
+    
+    d = &((_data[iv[2]])[iv[1]])[iv[0] * 3];
+    d[1] = bytes[0];
+    d[2] = bytes[1];
     
     if (d[0] == 0)
     {
