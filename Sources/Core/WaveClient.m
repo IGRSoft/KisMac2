@@ -102,24 +102,26 @@
 
 - (NSDictionary*)dataDictionary {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-	
-	dict[@"curSignal"] = @(_curSignal);
-	dict[@"receivedBytes"] = [NSNumber numberWithDouble:_receivedBytes];
-	dict[@"sentBytes"] = [NSNumber numberWithDouble:_sentBytes];
-	
-	dict[@"ID"] = _ID;
-	if (_date) dict[@"date"] = _date;
-    if (_IPAddress) dict[@"IPAddress"] = _IPAddress;
-	
-	if (_sNonce) dict[@"wpaSNonce"] = _sNonce;
-	if (_aNonce) dict[@"wpaANonce"] = _aNonce;
-	if (_packet) dict[@"wpaPacket"] = _packet;
-	if (_MIC)    dict[@"wpaMIC"] = _MIC;
-    if (_wpaKeyCipher) dict[@"wpaKeyCipher"] = @(_wpaKeyCipher);
+    
+    @synchronized(self) {
+        dict[@"curSignal"] = @(_curSignal);
+        dict[@"receivedBytes"] = [NSNumber numberWithDouble:_receivedBytes];
+        dict[@"sentBytes"] = [NSNumber numberWithDouble:_sentBytes];
         
-	if (_leapUsername)  dict[@"leapUsername"] = _leapUsername;
-	if (_leapChallenge) dict[@"leapChallenge"] = _leapChallenge;
-	if (_leapResponse)  dict[@"leapResponse"] = _leapResponse;
+        dict[@"ID"] = _ID;
+        if (_date) dict[@"date"] = _date;
+        if (_IPAddress) dict[@"IPAddress"] = _IPAddress;
+        
+        if (_sNonce) dict[@"wpaSNonce"] = _sNonce;
+        if (_aNonce) dict[@"wpaANonce"] = _aNonce;
+        if (_packet) dict[@"wpaPacket"] = _packet;
+        if (_MIC)    dict[@"wpaMIC"] = _MIC;
+        if (_wpaKeyCipher) dict[@"wpaKeyCipher"] = @(_wpaKeyCipher);
+            
+        if (_leapUsername)  dict[@"leapUsername"] = _leapUsername;
+        if (_leapChallenge) dict[@"leapChallenge"] = _leapChallenge;
+        if (_leapResponse)  dict[@"leapResponse"] = _leapResponse;
+    }
 
 	return dict;
 }
@@ -132,70 +134,74 @@
     if (![w isEAPPacket])
         return;
     
-    if ([w isWPAKeyPacket]) {
-        switch ([w wpaCopyNonce:nonce]) {
-            case wpaNonceANonce:
-                DBNSLog(@"Detected WPA challenge for %@!", _ID);
-				[GrowlController notifyGrowlWPAChallenge:@"" mac:_ID bssid:[w BSSIDString]];
-                DBNSLog(@"Nonce %.2X %.2X", nonce[0], nonce[WPA_NONCE_LENGTH-1]);
-				_aNonce = [NSData dataWithBytes:nonce length:WPA_NONCE_LENGTH];
-                _wpaKeyCipher = [w wpaKeyCipher];
+    @synchronized(self) {
+        if ([w isWPAKeyPacket]) {
+            switch ([w wpaCopyNonce:nonce]) {
+                case wpaNonceANonce:
+                    DBNSLog(@"Detected WPA challenge for %@!", _ID);
+                    [GrowlController notifyGrowlWPAChallenge:@"" mac:_ID bssid:[w BSSIDString]];
+                    DBNSLog(@"Nonce %.2X %.2X", nonce[0], nonce[WPA_NONCE_LENGTH-1]);
+                    _aNonce = [NSData dataWithBytes:nonce length:WPA_NONCE_LENGTH];
+                    _wpaKeyCipher = [w wpaKeyCipher];
+                    break;
+                case wpaNonceSNonce:
+                    DBNSLog(@"Detected WPA response for %@!", _ID);
+                    [GrowlController notifyGrowlWPAResponse:@"" mac:_ID bssid:[w BSSIDString]];
+                    DBNSLog(@"Nonce %.2X %.2X", nonce[0], nonce[WPA_NONCE_LENGTH-1]);
+                    _sNonce = [NSData dataWithBytes:nonce length:WPA_NONCE_LENGTH];
+                    break;
+                case wpaNonceNone:
+                    DBNSLog(@"Nonce None");
+                    break;
+            }
+            packet = [w eapolData];
+            mic = [w eapolMIC];
+            if (packet) _packet = packet;
+            if (mic)    _MIC = mic;
+        } else if ([w isLEAPKeyPacket]) {
+            switch ([w leapCode]) {
+            case leapAuthCodeChallenge:
+                if (!_leapUsername) _leapUsername = [w username];
+                if (!_leapChallenge) _leapChallenge = [w challenge];
                 break;
-            case wpaNonceSNonce:
-                DBNSLog(@"Detected WPA response for %@!", _ID);
-				[GrowlController notifyGrowlWPAResponse:@"" mac:_ID bssid:[w BSSIDString]];
-                DBNSLog(@"Nonce %.2X %.2X", nonce[0], nonce[WPA_NONCE_LENGTH-1]);
-				_sNonce = [NSData dataWithBytes:nonce length:WPA_NONCE_LENGTH];
+            case leapAuthCodeResponse:
+                if (!_leapResponse) _leapResponse = [w response];
                 break;
-            case wpaNonceNone:
-                DBNSLog(@"Nonce None");
+            case leapAuthCodeFailure:
+                DBNSLog(@"Detected LEAP authentication failure for client %@! Username: %@. Deleting all collected auth data!", _ID, _leapUsername);
+                _leapUsername = nil;
+                _leapChallenge = nil;
+                _leapResponse = nil;
                 break;
-        }
-        packet = [w eapolData];
-        mic = [w eapolMIC];
-        if (packet) _packet = packet;
-        if (mic)    _MIC = mic;
-    } else if ([w isLEAPKeyPacket]) {
-        switch ([w leapCode]) {
-        case leapAuthCodeChallenge:
-			if (!_leapUsername) _leapUsername = [w username];
-			if (!_leapChallenge) _leapChallenge = [w challenge];
-            break;
-        case leapAuthCodeResponse:
-			if (!_leapResponse) _leapResponse = [w response];
-            break;
-        case leapAuthCodeFailure:
-            DBNSLog(@"Detected LEAP authentication failure for client %@! Username: %@. Deleting all collected auth data!", _ID, _leapUsername);
-			_leapUsername = nil;
-			_leapChallenge = nil;
-			_leapResponse = nil;
-            break;
-        default:
-            break;
+            default:
+                break;
+            }
         }
     }
 }
 
 -(void) parseFrameAsIncoming:(WavePacket*)w {
-    if (!_ID) {
-        _ID=[w stringReceiverID];
-		if ([_ID isEqualToString:@"00:0F:F7:C8:7A:60"] || [_ID isEqualToString:@"00:11:20:EE:CE:48"] || 
-			[_ID isEqualToString:@"00:12:D9:B3:16:C0"] || [_ID isEqualToString:@"00:12:D9:B3:18:90"] ||
-			[_ID isEqualToString:@"00:12:D9:B3:1D:40"])
-        {
-            NSString *speachText = [NSString stringWithFormat:@"Found desired Access Point: %@", _ID];
-			DBNSLog(@"Found desired Access Point: %@", _ID);
-			[WaveHelper speakSentence:(__bridge CFStringRef)(speachText) withVoice:[[NSUserDefaults standardUserDefaults] integerForKey:@"Voice"]];
-			NSBeep(); NSBeep(); NSBeep();
-		}
-	}
+    @synchronized(self) {
+        if (!_ID) {
+            _ID=[w stringReceiverID];
+            if ([_ID isEqualToString:@"00:0F:F7:C8:7A:60"] || [_ID isEqualToString:@"00:11:20:EE:CE:48"] || 
+                [_ID isEqualToString:@"00:12:D9:B3:16:C0"] || [_ID isEqualToString:@"00:12:D9:B3:18:90"] ||
+                [_ID isEqualToString:@"00:12:D9:B3:1D:40"])
+            {
+                NSString *speachText = [NSString stringWithFormat:@"Found desired Access Point: %@", _ID];
+                DBNSLog(@"Found desired Access Point: %@", _ID);
+                [WaveHelper speakSentence:(__bridge CFStringRef)(speachText) withVoice:[[NSUserDefaults standardUserDefaults] integerForKey:@"Voice"]];
+                NSBeep(); NSBeep(); NSBeep();
+            }
+        }
 
-    _receivedBytes+=[w length];
-    _changed = YES;
-    
-    if ([w destinationIPAsString] != nil && ![[w destinationIPAsString] isEqualToString:@"0.0.0.0"] ) {
-        _IPAddress = [w destinationIPAsString];
-     //   DBNSLog(@"Incoming Packet Client dest IP Found: %@", [w destinationIPAsString]);
+        _receivedBytes+=[w length];
+        _changed = YES;
+        
+        if ([w destinationIPAsString] != nil && ![[w destinationIPAsString] isEqualToString:@"0.0.0.0"] ) {
+            _IPAddress = [w destinationIPAsString];
+         //   DBNSLog(@"Incoming Packet Client dest IP Found: %@", [w destinationIPAsString]);
+        }
     }
     
     if (![w toDS])
@@ -203,26 +209,28 @@
 }
 
 -(void) parseFrameAsOutgoing:(WavePacket*)w {
-    if (!_ID) {
-        _ID=[w stringSenderID];
-		if ([_ID isEqualToString:@"00:0F:F7:C8:7A:60"] || [_ID isEqualToString:@"00:11:20:EE:CE:48"] || 
-			[_ID isEqualToString:@"00:12:D9:B3:16:C0"] || [_ID isEqualToString:@"00:12:D9:B3:18:90"] ||
-			[_ID isEqualToString:@"00:12:D9:B3:1D:40"])
-        {
-            NSString *speachText = [NSString stringWithFormat:@"Found desired Access Point: %@", _ID];
-			DBNSLog(@"Found desired Access Point: %@", _ID);
-			[WaveHelper speakSentence:(__bridge CFStringRef)(speachText) withVoice:[[NSUserDefaults standardUserDefaults] integerForKey:@"Voice"]];
-			NSBeep(); NSBeep(); NSBeep();
-		}
-    }
-	_date = [NSDate date];
-    
-    _curSignal=[w signal];
-    _sentBytes+=[w length];    
-    _changed = YES;
-    if ([w sourceIPAsString] != nil  && ![[w sourceIPAsString] isEqualToString:@"0.0.0.0"] ) {
-        _IPAddress = [w sourceIPAsString];
-        //DBNSLog(@"Outgoing Packet Client source IP Found: %@", [w sourceIPAsString]);
+    @synchronized(self) {
+        if (!_ID) {
+            _ID=[w stringSenderID];
+            if ([_ID isEqualToString:@"00:0F:F7:C8:7A:60"] || [_ID isEqualToString:@"00:11:20:EE:CE:48"] || 
+                [_ID isEqualToString:@"00:12:D9:B3:16:C0"] || [_ID isEqualToString:@"00:12:D9:B3:18:90"] ||
+                [_ID isEqualToString:@"00:12:D9:B3:1D:40"])
+            {
+                NSString *speachText = [NSString stringWithFormat:@"Found desired Access Point: %@", _ID];
+                DBNSLog(@"Found desired Access Point: %@", _ID);
+                [WaveHelper speakSentence:(__bridge CFStringRef)(speachText) withVoice:[[NSUserDefaults standardUserDefaults] integerForKey:@"Voice"]];
+                NSBeep(); NSBeep(); NSBeep();
+            }
+        }
+        _date = [NSDate date];
+        
+        _curSignal=[w signal];
+        _sentBytes+=[w length];    
+        _changed = YES;
+        if ([w sourceIPAsString] != nil  && ![[w sourceIPAsString] isEqualToString:@"0.0.0.0"] ) {
+            _IPAddress = [w sourceIPAsString];
+            //DBNSLog(@"Outgoing Packet Client source IP Found: %@", [w sourceIPAsString]);
+        }
     }
     
     if (![w fromDS])
@@ -232,8 +240,10 @@
 #pragma mark -
 
 - (NSString *)ID {
-    if (!_ID) return NSLocalizedString(@"<unknown>", "unknown client ID");
-    return _ID;
+    @synchronized(self) {
+        if (!_ID) return NSLocalizedString(@"<unknown>", "unknown client ID");
+        return _ID;
+    }
 }
 
 - (NSString *)received {
@@ -245,19 +255,28 @@
 }
 
 - (NSString *)vendor {
-    if (_vendor) return _vendor;
-    _vendor=[WaveHelper vendorForMAC:_ID];
-    return _vendor;
+    @synchronized(self) {
+        if (_vendor) return _vendor;
+        _vendor=[WaveHelper vendorForMAC:_ID];
+        return _vendor;
+    }
 }
 
 - (NSString *)date {
-    if (_date==nil) return @"";
-    else return [NSString stringWithFormat:@"%@", _date]; //return [_date descriptionWithCalendarFormat:@"%H:%M %d-%m-%y" timeZone:nil locale:nil];
+    // This method crashed in stringWithFormat when another thread released _date,
+    // hence the liberal scattering of @synchronized(self) around access
+    // to member variables that are subject the whims of ARC.
+    @synchronized(self) {
+        if (_date==nil) return @"";
+        else return [NSString stringWithFormat:@"%@", _date]; //return [_date descriptionWithCalendarFormat:@"%H:%M %d-%m-%y" timeZone:nil locale:nil];
+    }
 }
 
-- (NSString *)getIPAddress{
-    if (_IPAddress == nil) return @"unknown";
-    return _IPAddress;
+- (NSString *)getIPAddress {
+    @synchronized(self) {
+        if (_IPAddress == nil) return @"unknown";
+        return _IPAddress;
+    }
 }
 
 #pragma mark -
@@ -271,8 +290,10 @@
 }
 
 - (int)curSignal {
-    if ([_date compare:[NSDate dateWithTimeIntervalSinceNow:0.5]]==NSOrderedDescending) _curSignal=0;
-    return _curSignal;
+    @synchronized(self) {
+        if ([_date compare:[NSDate dateWithTimeIntervalSinceNow:0.5]]==NSOrderedDescending) _curSignal=0;
+        return _curSignal;
+    }
 }
 
 - (NSDate *)rawDate {
@@ -308,13 +329,15 @@
     int     ID32[6];
     int i;
     
-    if (!_ID) return nil;
+    @synchronized(self) {
+        if (!_ID) return nil;
     
-    if (sscanf([_ID UTF8String], "%2X:%2X:%2X:%2X:%2X:%2X", &ID32[0], &ID32[1], &ID32[2], &ID32[3], &ID32[4], &ID32[5]) != 6) return nil;
-    for (i = 0; i < 6; ++i)
-        ID8[i] = ID32[i];
+        if (sscanf([_ID UTF8String], "%2X:%2X:%2X:%2X:%2X:%2X", &ID32[0], &ID32[1], &ID32[2], &ID32[3], &ID32[4], &ID32[5]) != 6) return nil;
+        for (i = 0; i < 6; ++i)
+            ID8[i] = ID32[i];
     
-    return [NSData dataWithBytes:ID8 length:6];
+        return [NSData dataWithBytes:ID8 length:6];
+    }
 }
 
 - (BOOL) eapolDataAvailable {
@@ -343,9 +366,11 @@
 #pragma mark -
 
 - (BOOL)changed {
-    BOOL c = _changed;
-    _changed = NO;
-    return c;
+    @synchronized(self) {
+        BOOL c = _changed;
+        _changed = NO;
+        return c;
+    }
 }
 
 - (void)wasChanged {
