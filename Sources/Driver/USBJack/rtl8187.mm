@@ -1269,9 +1269,11 @@ IOReturn RTL8187Jack::_init() {
     _priv = (struct rtl8187_priv *)malloc(sizeof(struct rtl8187_priv));
     bzero(_priv, sizeof(struct rtl8187_priv));
 
+    _lockDevice();
     rtl8187_probe();
     NICInitialized = true;
     _deviceInit = true;
+    _unlockDevice();
     DBNSLog(@"_init exit");
     return kIOReturnSuccess;
 }
@@ -1401,8 +1403,10 @@ int  RTL8187Jack::rtl8187_probe(void) {
     return 0;
 }
 bool RTL8187Jack::setChannel(UInt16 channel) {
+    _lockDevice();
     rtl8187_set_channel(_priv, channel);
     _channel = channel;
+    _unlockDevice();
     return YES;
 }
 bool RTL8187Jack::getAllowedChannels(UInt16* channels) {
@@ -1418,7 +1422,9 @@ bool RTL8187Jack::startCapture(UInt16 channel) {
     DBNSLog(@"Start capture");
 	if (NICInitialized) {
         //		DBNSLog(@"Done.\n");
+        _lockDevice();
         rtl8187_start(_priv);
+        _unlockDevice();
         setChannel(channel);
 		return true;
 	}
@@ -1431,7 +1437,9 @@ bool RTL8187Jack::stopCapture() {
     //	DBNSLog(@"Stop capture : ");
 	if (NICInitialized) {
         //		DBNSLog(@"Done.\n");
+        _lockDevice();
         rtl8187_stop(_priv);
+        _unlockDevice();
 		return true;
 	}
 	else {
