@@ -287,9 +287,10 @@ void  USBJack::_lockDevice() {
 void  USBJack::_unlockDevice() {
     pthread_mutex_unlock(&_wait_mutex);
 }
-void USBJack::_interruptReceived(void *refCon, IOReturn result, unsigned int len)
+void USBJack::_interruptReceived(void *refCon, IOReturn result, void *arg0)
 {
     USBJack             *me = (USBJack*) refCon;
+    unsigned int        len = (unsigned int)(size_t)arg0;
     IOReturn                    kr;
     UInt32                      type;
 
@@ -363,7 +364,7 @@ void USBJack::_interruptReceived(void *refCon, IOReturn result, unsigned int len
 	}
     
     bzero(&me->_receiveBuffer, sizeof(me->_receiveBuffer));
-    kr = (*me->_interface)->ReadPipeAsync((me->_interface), (me->kInPipe), &me->_receiveBuffer, sizeof(me->_receiveBuffer), (IOAsyncCallback1)_interruptReceived, refCon);
+    kr = (*me->_interface)->ReadPipeAsync((me->_interface), (me->kInPipe), &me->_receiveBuffer, sizeof(me->_receiveBuffer), _interruptReceived, refCon);
 	
     if (kIOReturnSuccess != kr)
 	{
@@ -617,7 +618,7 @@ IOReturn USBJack::_findInterfaces(IOUSBDeviceInterface197 **dev) {
         //startUp Interrupt handling
         UInt32 numBytesRead = sizeof(_receiveBuffer); // leave one byte at the end for NUL termination
         bzero(&_receiveBuffer, numBytesRead);
-        kr = (*intf)->ReadPipeAsync(intf, kInPipe, &_receiveBuffer, numBytesRead, (IOAsyncCallback1)_interruptReceived, this);
+        kr = (*intf)->ReadPipeAsync(intf, kInPipe, &_receiveBuffer, numBytesRead, _interruptReceived, this);
         
         if (kIOReturnSuccess != kr) {
             DBNSLog(@"unable to do async interrupt read (%08x)\n", kr);
