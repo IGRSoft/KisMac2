@@ -88,7 +88,7 @@ public:
     bool startCapture(UInt16 channel);
     bool stopCapture();
     
-    bool _massagePacket(void *inBuf, void *outBuf, UInt16 len);
+    bool _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);
     int         WriteTxDescriptor(void* theFrame, UInt16 length);
     bool        sendKFrame(KFrame *frame);
     IOReturn    _sendFrame(UInt8* data, IOByteCount size);

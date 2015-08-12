@@ -1448,7 +1448,7 @@ bool RTL8187Jack::stopCapture() {
 	}
 }
 
-bool RTL8187Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len) {
+bool RTL8187Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel) {
     
     unsigned char* pData = (unsigned char *)inBuf;    
     KFrame *pFrame = (KFrame *)outBuf;
@@ -1486,6 +1486,7 @@ bool RTL8187Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len) {
 	}
     pFrame->ctrl.signal = (UInt8)((100.0 / 65.0) * signal);
     pFrame->ctrl.silence = 0;
+    pFrame->ctrl.channel = channel;
 
 //    dumpFrame(pData, len);
             

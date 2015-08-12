@@ -1145,7 +1145,7 @@ int RalinkJack::WriteTxDescriptor(void* theFrame, UInt16 length) {
     return sizeof(TXD_STRUC);
 }
 
-bool RalinkJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len){
+bool RalinkJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel){
     unsigned char* pData = (unsigned char *)inBuf;
     KFrame *pFrame = (KFrame *)outBuf;
     PRXD_STRUC pRxD;
@@ -1186,6 +1186,7 @@ bool RalinkJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len){
         pFrame->ctrl.rate = pRxD->BBR0 / 5;
     }
     pFrame->ctrl.len = pRxD->DataByteCnt - 4;
+    pFrame->ctrl.channel = channel;
     
     memcpy(pFrame->data, pData, pFrame->ctrl.len); 
 

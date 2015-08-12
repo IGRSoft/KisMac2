@@ -213,9 +213,8 @@ KFrame *USBJack::receiveFrame()
         receivedFrame = getFrameFromQueue(&len, &channel);
         if (receivedFrame)
         {
-            if(!_massagePacket(receivedFrame, (void *)&_frameBuffer, len))
+            if(!_massagePacket(receivedFrame, (void *)&_frameBuffer, len, channel))
                 continue;
-            ret->ctrl.channel = channel;
             return ret;
         }
         else 
@@ -380,7 +379,7 @@ void USBJack::_interruptReceived(void *refCon, IOReturn result, void *arg0)
     }
         
 }
-bool USBJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len){
+bool USBJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 /* channel */) {
     return true;         //override if needed
 }
 
