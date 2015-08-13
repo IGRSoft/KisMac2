@@ -9,7 +9,7 @@
 
 #include "FCS.h"
 
-typedef unsigned long int UNS_32_BITS;
+typedef uint32_t UNS_32_BITS;
 
 static UNS_32_BITS crc_32_tab[] = { /* CRC polynomial 0xedb88320 */
     0x00000000L, 0x77073096L, 0xee0e612cL, 0x990951baL, 0x076dc419L,
@@ -66,7 +66,19 @@ static UNS_32_BITS crc_32_tab[] = { /* CRC polynomial 0xedb88320 */
     0x2d02ef8dL
 };
 
-unsigned long UPDC32(unsigned long octet, unsigned long crc) 
+uint32_t UPDC32(uint32_t octet, uint32_t crc)
 {
     return (crc_32_tab[((crc) ^ (octet)) & 0xff] ^ ((crc) >> 8));
+}
+
+
+uint32_t CRC32_block(const uint8_t *p, size_t n, uint32_t crc)
+{
+    while ( n-- )
+    {
+        uint32_t octet = *p++;
+        crc = (crc_32_tab[((crc) ^ (octet)) & 0xff] ^ ((crc) >> 8));
+    }
+
+    return crc;
 }
