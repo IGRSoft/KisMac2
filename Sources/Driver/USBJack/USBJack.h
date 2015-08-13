@@ -117,7 +117,7 @@ protected:
     KFrame *            getFrameFromQueue(UInt16 *len, UInt16 *channel);
     
 	// Method for convert driver native data to KFrame
-    virtual bool        _massagePacket(void *inBuf, void *outBuf, UInt16 len);	
+    virtual bool        _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);	
 
     static void         _runCFRunLoop(USBJack* me);
   

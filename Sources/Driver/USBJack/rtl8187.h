@@ -128,7 +128,7 @@ public:
     bool setChannel(UInt16 channel);
     bool startCapture(UInt16 channel);    
     bool getAllowedChannels(UInt16* channels);
-    bool _massagePacket(void *inBuf, void *outBuf, UInt16 len);
+    bool _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);
     bool stopCapture();
     
     int         WriteTxDescriptor(void* theFrame, UInt16 length, UInt8 rate);

@@ -269,7 +269,7 @@ bool IntersilJack::sendKFrame(KFrame *frame) {
     return YES;
 }
 
-bool IntersilJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len) {
+bool IntersilJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 /* channel */) {
     unsigned char* pData = (unsigned char *)inBuf;
     WLFrame *head = (WLFrame *)pData;
     KFrame *f = (KFrame *)outBuf;

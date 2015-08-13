@@ -1758,7 +1758,7 @@ bool RT73Jack::stopCapture(){
 }
 
 
-bool RT73Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len) {
+bool RT73Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel) {
 /*  pr0gg3d: A notice... {len} field that is passed
     is rounded at power of two. Don't use this for
         packet length.
@@ -1787,6 +1787,7 @@ bool RT73Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len) {
     
     // this is probablty not the most efficient way to do this
     pFrame->ctrl.signal = pRxD->PlcpRssi;    //rssi is the signal level
+    pFrame->ctrl.channel = channel;
     
     // Copy entire packet
     memcpy(pFrame->data, pData + sizeof(RXD_STRUC), pFrame->ctrl.len);
