@@ -30,33 +30,43 @@
 
 @implementation PrefsClient
 
- - (id)init {
-    controller = nil;
+ - (id)init
+{
+    if (self = [super init])
+    {
+        controller = nil;
+    }
+    
     return self;
 }
 
-- (void)setController:(id)newController {
+- (void)setController:(id)newController
+{
     controller = newController;
 }
 
 #pragma mark -
 
-- (void)setValueForSender:(id)sender {
+- (void)setValueForSender:(id)sender
+{
     // implemented by subclasses
 }
 
-- (void)updateUI {
+- (void)updateUI
+{
     // implemented by subclasses
 }
 
-- (BOOL)updateDictionary {
+- (BOOL)updateDictionary
+{
     // implemented by subclasses
     return true;
 }
 
 #pragma mark -
 
-- (NSView*)controlBox {
+- (NSView*)controlBox
+{
     return controlBox;
 }
 

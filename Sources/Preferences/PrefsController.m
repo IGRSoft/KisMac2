@@ -68,7 +68,8 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
 
 @implementation PrefsController
 
-- (id)init {
+- (id)init
+{
 	self = [super init];
 	
     prefsToolbar=[[NSToolbar alloc] initWithIdentifier:@"prefsToolbar"];
@@ -189,7 +190,8 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
     return self;
 }
 
-- (void)awakeFromNib {
+- (void)awakeFromNib
+{
     [prefsWindow setTitle:@"KisMAC Preferences"];
     [prefsWindow setToolbar:prefsToolbar];
     [prefsWindow center];
@@ -212,8 +214,10 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
 
     // TODO make this more error proof
 
-    if(currentToolbarItem == sender) {
+    if(currentToolbarItem == sender)
+    {
         [currentClient updateUI];
+        
         return;
     }
     
@@ -221,11 +225,14 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
 
     if (currentClient&&(![currentClient updateDictionary])) return;
     
-    for(i = 0 ; i < count ; ++i) {
-        if([[itemsArray[i] itemIdentifier] isEqualToString:[sender itemIdentifier]]) {
+    for(i = 0 ; i < count ; ++i)
+    {
+        if([[itemsArray[i] itemIdentifier] isEqualToString:[sender itemIdentifier]])
+        {
             nibName = nibNamesDict[[itemsArray[i] itemIdentifier]];
             className = classNamesDict[[itemsArray[i] itemIdentifier]];
             currentToolbarItem = sender;
+            
             break;
         }
     }
@@ -246,7 +253,8 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
     newWindowHeight = NSHeight(controlBoxFrame) + 10;
     newWindowHeight += NSHeight([[prefsToolbar _toolbarView] frame]);
     //newWindowHeight += 43;
-    newWindowFrame = [NSWindow frameRectForContentRect:NSMakeRect(NSMinX(windowFrame), NSMaxY(windowFrame) - newWindowHeight, NSWidth(windowFrame), newWindowHeight) styleMask:[prefsWindow styleMask]];
+    newWindowFrame = [NSWindow frameRectForContentRect:NSMakeRect(NSMinX(windowFrame), NSMaxY(windowFrame) - newWindowHeight, NSWidth(windowFrame), newWindowHeight)
+                                             styleMask:[prefsWindow styleMask]];
     [prefsWindow setFrame:newWindowFrame display:YES animate:[prefsWindow isVisible]];    
     [controlBox setFrameOrigin:NSMakePoint(floor((NSWidth([contentView frame]) - NSWidth(controlBoxFrame)) / 2.0),
                                            floor(NSHeight([contentView frame]) - NSHeight(controlBoxFrame)))];
@@ -260,11 +268,13 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
 #pragma mark -
 
 
-- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar {
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
+{
     return @[@"Scanning", @"Filter", @"Sounds", @"Driver", @"GPS", @"Map", @"Traffic", @"Advanced"];
 }
 
-- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar {
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
+{
     return [self toolbarDefaultItemIdentifiers:toolbar];
 }
 
@@ -298,60 +308,75 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
         [newItem setMinSize:[[item view] bounds].size];
         [newItem setMaxSize:[[item view] bounds].size];
     }
+    
     return newItem;
 }
 
 #pragma mark -
 
-- (id)objectForKey:(NSString*)key {
+- (id)objectForKey:(NSString*)key
+{
     id object = changesDict[key];
-    if(object) return object;
+    if(object)
+    {
+        return object;
+    }
     
     object = [defaults objectForKey:key];
-    if(!object) DBNSLog(@"Error: -[PrefsController objectForKey:%@] returning NULL!", key);
+    if(!object)
+    {
+        DBNSLog(@"Error: -[PrefsController objectForKey:%@] returning NULL!", key);
+    }
+    
     return object;
 }
 
-- (void)setObject:(id)object forKey:(NSString*)key {
+- (void)setObject:(id)object forKey:(NSString*)key
+{
     changesDict[key] = object;
 }
 
-- (NSWindow*)window {
+- (NSWindow*)window
+{
     return prefsWindow;
 }
 
 #pragma mark -
 
-- (IBAction)refreshUI:(id)sender {
+- (IBAction)refreshUI:(id)sender
+{
     [currentClient updateUI];
 }
 
 - (IBAction)clickOk:(id)sender
 {
-    if (![currentClient updateDictionary]) return;
+    if (![currentClient updateDictionary])
+    {
+        return;
+    }
     
     [prefsWindow close];
     [changesDict removeAllObjects];
     [currentClient updateUI];
 }
 
-- (IBAction)clickCancel:(id)sender {
+- (IBAction)clickCancel:(id)sender
+{
     [prefsWindow close];
     [changesDict removeAllObjects];
     [currentClient updateUI];
 }
 
-- (BOOL)windowShouldClose:(id)sender {
+- (BOOL)windowShouldClose:(id)sender
+{
     return [currentClient updateDictionary];
 }
 
-- (void)windowWillClose:(NSNotification *)aNotification {
+- (void)windowWillClose:(NSNotification *)aNotification
+{
     [currentClient updateDictionary];
     [defaults synchronize];
     [[NSNotificationCenter defaultCenter] postNotificationName:KisMACUserDefaultsChanged object:self];
 }
-
-#pragma mark -
-
 
 @end

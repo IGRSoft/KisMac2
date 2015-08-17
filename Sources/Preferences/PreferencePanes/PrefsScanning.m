@@ -32,14 +32,13 @@
 
 @implementation PrefsScanning
 
-
--(void)updateUI
+- (void)updateUI
 {
     [_dontAskToSave setState:[[controller objectForKey:@"dontAskToSave"] boolValue]];    
     [_terminateIfClosed setState:[[controller objectForKey:@"terminateIfClosed"] boolValue]];    
 }
 
--(IBAction)setValueForSender:(id)sender
+- (IBAction)setValueForSender:(id)sender
 {
     if(sender == _dontAskToSave)
     {

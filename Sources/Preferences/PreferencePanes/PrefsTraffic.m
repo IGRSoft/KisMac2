@@ -31,27 +31,37 @@
 
 @implementation PrefsTraffic
 
--(void)updateUI {
+- (void)updateUI
+{
     [_showSSID setState:[[controller objectForKey:@"TrafficViewShowSSID"] intValue]];
     [_showBSSID setState:[[controller objectForKey:@"TrafficViewShowBSSID"] intValue]];
     [_avgSignalTime setIntValue:[[controller objectForKey:@"WaveNetAvgTime"] intValue]];
 }
 
--(BOOL)updateDictionary {    
+- (BOOL)updateDictionary
+{
     [_avgSignalTime validateEditing];
 
     [controller setObject:@([_avgSignalTime intValue]) forKey:@"WaveNetAvgTime"];
+    
     return YES;
 }
 
--(IBAction)setValueForSender:(id)sender {
-    if(sender == _showSSID) {
+- (IBAction)setValueForSender:(id)sender
+{
+    if(sender == _showSSID)
+    {
         [controller setObject:[NSNumber numberWithInt:[_showSSID state]] forKey:@"TrafficViewShowSSID"];
-    } else if(sender == _showBSSID) {
+    }
+    else if(sender == _showBSSID)
+    {
         [controller setObject:[NSNumber numberWithInt:[_showBSSID state]] forKey:@"TrafficViewShowBSSID"];
-    } else if(sender == _avgSignalTime) {
+    }
+    else if(sender == _avgSignalTime)
+    {
         [controller setObject:@([_avgSignalTime intValue]) forKey:@"WaveNetAvgTime"];
-    } else {
+    }
+    else {
         DBNSLog(@"Error: Invalid sender(%@) in setValueForSender:",sender);
     }
 }

@@ -37,7 +37,8 @@
 
 @implementation PrefsGPS
 
--(NSString*) getRegistryString:(io_object_t) sObj name:(char *)propName {
+- (NSString *)getRegistryString:(io_object_t)sObj name:(char *)propName
+{
     static char resultStr[LAST_BIT];
     CFTypeRef nameCFstring;
     CFTypeRef propNameString;
@@ -49,6 +50,7 @@
         sObj, propNameString,
         kCFAllocatorDefault, 0);
     CFRelease(propNameString);
+    
     if (nameCFstring)
     {
         CFStringGetCString (
@@ -56,11 +58,14 @@
             kCFStringEncodingASCII);
         CFRelease (nameCFstring);
     }
+    
     return @(resultStr);
 }
 
-- (void)updateRestrictions {
-    switch ([aGPSSel indexOfSelectedItem]) {
+- (void)updateRestrictions
+{
+    switch ([aGPSSel indexOfSelectedItem])
+    {
         case 0:
             [_gpsdHost setEnabled:NO];
             [_gpsdPort setEnabled:NO];
@@ -84,8 +89,9 @@
             break;
     }
 }
-- (void)updateUI {
-    unsigned int i;
+
+- (void)updateUI
+{
     kern_return_t kernResult;
     mach_port_t masterPort;
     CFMutableDictionaryRef classesToMatch;
@@ -133,14 +139,19 @@
     [aGPSSel addItemWithTitle: NSLocalizedString(@"<use GPSd to get coordinates>", "menu item for GPS prefs")];
     [aGPSSel addItemWithTitle: NSLocalizedString(@"<use CoreLocation to get coordinates>", "menu item for GPS prefs")];
     
-    if ([a count] > 0) [[aGPSSel menu] addItem:[NSMenuItem separatorItem]];
+    if ([a count] > 0)
+    {
+        [[aGPSSel menu] addItem:[NSMenuItem separatorItem]];
+    }
     
-    if ([[controller objectForKey:@"GPSDevice"] isEqualToString:@""]) {
+    if ([[controller objectForKey:@"GPSDevice"] isEqualToString:@""])
+    {
         [aGPSSel selectItemAtIndex:0];
         found = YES;
     }
     
-    if ([[controller objectForKey:@"GPSDevice"] isEqualToString:@"GPSd"]) {
+    if ([[controller objectForKey:@"GPSDevice"] isEqualToString:@"GPSd"])
+    {
         [aGPSSel selectItemAtIndex:1];
         found = YES;
     }
@@ -150,15 +161,18 @@
         found = YES;
     }
     
-    for (i=0;i<[a count];++i) {
+    for (NSUInteger i = 0; i < [a count]; ++i)
+    {
         [aGPSSel addItemWithTitle:a[i]];
-        if ([[controller objectForKey:@"GPSDevice"] isEqualToString:a[i]]) {
+        if ([[controller objectForKey:@"GPSDevice"] isEqualToString:a[i]])
+        {
             [aGPSSel selectItemAtIndex:(i+3)];
             found = YES;
         }
     }
     
-    if (!found) {
+    if (!found)
+    {
         [aGPSSel addItemWithTitle:[controller objectForKey:@"GPSDevice"]];
         [aGPSSel selectItemAtIndex:[a count]+1];
     }
@@ -167,46 +181,72 @@
     [self updateRestrictions];
 }
 
--(BOOL)updateDictionary {
-    
-    if ((![aGPSSel isEnabled]) || ([aGPSSel indexOfSelectedItem]==0)) {
+- (BOOL)updateDictionary
+{
+    if ((![aGPSSel isEnabled]) || ([aGPSSel indexOfSelectedItem]==0))
+    {
         [controller setObject:@"" forKey:@"GPSDevice"];
-    } else if ([[aGPSSel titleOfSelectedItem] isEqualToString: NSLocalizedString(@"<use GPSd to get coordinates>", "menu item for GPS prefs")]) {
+    }
+    else if ([[aGPSSel titleOfSelectedItem] isEqualToString: NSLocalizedString(@"<use GPSd to get coordinates>", "menu item for GPS prefs")])
+    {
         [controller setObject:@"GPSd" forKey:@"GPSDevice"];
-    } else if ([[aGPSSel titleOfSelectedItem] isEqualToString: NSLocalizedString(@"<use CoreLocation to get coordinates>", "menu item for GPS prefs")]) {
+    }
+    else if ([[aGPSSel titleOfSelectedItem] isEqualToString: NSLocalizedString(@"<use CoreLocation to get coordinates>", "menu item for GPS prefs")])
+    {
         [controller setObject:@"CoreLocation" forKey:@"GPSDevice"];
-    } else {
+    }
+    else
+    {
         [controller setObject:[aGPSSel titleOfSelectedItem] forKey:@"GPSDevice"];
     }
     
     [_gpsdPort validateEditing];
     [_gpsdHost validateEditing];
     
-    [controller setObject:[NSNumber numberWithInt:[_noFix indexOfSelectedItem]] forKey:@"GPSNoFix"];
-    [controller setObject:[NSNumber numberWithInt:[_traceOp indexOfSelectedItem]] forKey:@"GPSTrace"];
-    [controller setObject:[NSNumber numberWithBool:[_tripmateMode state]==NSOnState] forKey:@"GPSTripmate"];
-    [controller setObject:@([_gpsdPort intValue]) forKey:@"GPSDaemonPort"];
-    [controller setObject:[[_gpsdHost stringValue] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] forKey:@"GPSDaemonHost"];
+    [controller setObject:[NSNumber numberWithInt:[_noFix indexOfSelectedItem]]
+                   forKey:@"GPSNoFix"];
+    [controller setObject:[NSNumber numberWithInt:[_traceOp indexOfSelectedItem]]
+                   forKey:@"GPSTrace"];
+    [controller setObject:[NSNumber numberWithBool:[_tripmateMode state]==NSOnState]
+                   forKey:@"GPSTripmate"];
+    [controller setObject:@([_gpsdPort intValue])
+                   forKey:@"GPSDaemonPort"];
+    [controller setObject:[[_gpsdHost stringValue] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]
+                   forKey:@"GPSDaemonHost"];
     
     [self updateRestrictions];
 
     return YES;
 }
 
--(IBAction)setValueForSender:(id)sender {
-    if(sender == aGPSSel) {
+- (IBAction)setValueForSender:(id)sender
+{
+    if(sender == aGPSSel)
+    {
         [self updateDictionary];
-    } else if (sender == _noFix) {
+    }
+    else if (sender == _noFix)
+    {
         [controller setObject:[NSNumber numberWithInt:[_noFix indexOfSelectedItem]] forKey:@"GPSNoFix"];
-    } else if (sender == _traceOp) {
+    }
+    else if (sender == _traceOp)
+    {
         [controller setObject:[NSNumber numberWithInt:[_traceOp indexOfSelectedItem]] forKey:@"GPSTrace"];
-    } else if (sender == _tripmateMode) {
+    }
+    else if (sender == _tripmateMode)
+    {
         [controller setObject:[NSNumber numberWithBool:[_tripmateMode state]==NSOnState] forKey:@"GPSTripmate"];
-    } else if (sender == _gpsdPort) {
+    }
+    else if (sender == _gpsdPort)
+    {
         [controller setObject:@([_gpsdPort intValue]) forKey:@"GPSDaemonPort"];
-    } else if (sender == _gpsdHost) {
+    }
+    else if (sender == _gpsdHost)
+    {
         [controller setObject:[[_gpsdHost stringValue] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] forKey:@"GPSDaemonHost"];
-    } else {
+    }
+    else
+    {
         DBNSLog(@"Error: Invalid sender(%@) in setValueForSender:",sender);
     }
 	NSUserDefaults *sets = [NSUserDefaults standardUserDefaults];

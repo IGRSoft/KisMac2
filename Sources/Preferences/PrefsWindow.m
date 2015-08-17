@@ -30,11 +30,18 @@
 
 @implementation PrefsWindow
 
-- (id)init {
+- (id)init
+{
+    if (self = [super init])
+    {
+    }
+    
     return self;
 }
 
-- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize {
+- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize
+{
     return [sender frame].size;
 }
+
 @end

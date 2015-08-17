@@ -31,7 +31,8 @@
 
 @implementation PrefsMap
 
--(void)updateUI {
+- (void)updateUI
+{
     [_cpColor setColor:[WaveHelper intToColor:[controller objectForKey:@"CurrentPositionColor"]]];
     [_traceColor setColor:[WaveHelper intToColor:[controller objectForKey:@"TraceColor"]]];
     [_wpColor setColor:[WaveHelper intToColor:[controller objectForKey:@"WayPointColor"]]];
@@ -42,30 +43,46 @@
     [[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
 }
 
--(BOOL)updateDictionary {
+- (BOOL)updateDictionary
+{
     [controller setObject:@([_areaQual floatValue]) forKey:@"NetAreaQuality"];
     [controller setObject:@([_areaSens intValue]) forKey:@"NetAreaSensitivity"];
     
     return YES;
 }
 
--(IBAction)setValueForSender:(id)sender {
-    if(sender == _cpColor) {
+- (IBAction)setValueForSender:(id)sender
+{
+    if(sender == _cpColor)
+    {
         [controller setObject:[WaveHelper colorToInt:[_cpColor color]] forKey:@"CurrentPositionColor"];
-    } else if(sender == _traceColor) {
+    }
+    else if(sender == _traceColor)
+    {
         [controller setObject:[WaveHelper colorToInt:[_traceColor color]] forKey:@"TraceColor"];
-    } else if(sender == _wpColor) {
+    }
+    else if(sender == _wpColor)
+    {
         [controller setObject:[WaveHelper colorToInt:[_wpColor color]] forKey:@"WayPointColor"];
-    } else if(sender == _areaColorGood) {
+    }
+    else if(sender == _areaColorGood)
+    {
         [controller setObject:[WaveHelper colorToInt:[sender color]] forKey:@"NetAreaColorGood"];
-    } else if(sender == _areaColorBad) {
+    }
+    else if(sender == _areaColorBad)
+    {
         [controller setObject:[WaveHelper colorToInt:[sender color]] forKey:@"NetAreaColorBad"];
-    } else if(sender == _areaQual) {
+    }
+    else if(sender == _areaQual)
+    {
         [controller setObject:@([sender floatValue]) forKey:@"NetAreaQuality"];
-    } else if(sender == _areaSens) {
+    }
+    else if(sender == _areaSens)
+    {
         [controller setObject:@([sender intValue]) forKey:@"NetAreaSensitivity"];
     }
-    else {
+    else
+    {
         DBNSLog(@"Error: Invalid sender(%@) in setValueForSender:",sender);
     }
 }

@@ -27,7 +27,8 @@
 
 @class PrefsController;
 
-@interface PrefsClient : NSObject {
+@interface PrefsClient : NSObject
+{
     IBOutlet NSView* controlBox;
 
     PrefsController* controller;
@@ -35,9 +36,9 @@
 
 - (void)setController:(id)newController;
 
--(void)updateUI;
--(BOOL)updateDictionary;
--(IBAction)setValueForSender:(id)sender;
+- (void)updateUI;
+- (BOOL)updateDictionary;
+- (IBAction)setValueForSender:(id)sender;
 
 - (NSView*)controlBox;
 
