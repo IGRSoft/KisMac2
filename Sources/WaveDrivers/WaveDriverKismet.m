@@ -64,7 +64,7 @@ static int KismetInstances = 0;
     return activeDriver;
 }
 
-+ (bool) wantsIPAndPort {
++ (BOOL) wantsIPAndPort {
     return YES;
 }
 
@@ -78,17 +78,17 @@ static int KismetInstances = 0;
 
 #pragma mark -
 
-+ (bool) loadBackend {
++ (BOOL) loadBackend {
     return YES;
 }
 
-+ (bool) unloadBackend {
++ (BOOL) unloadBackend {
     return YES;
 }
 
 #pragma mark -
 
-- (bool) startedScanning {
+- (BOOL) startedScanning {
 	NSUserDefaults *defs;
     defs = [NSUserDefaults standardUserDefaults];
 	
@@ -153,7 +153,7 @@ static int KismetInstances = 0;
 	return YES;
 }
 
-- (bool) stopCapture {
+- (BOOL) stopCapture {
 	close(sockd);
 	return YES;
 }

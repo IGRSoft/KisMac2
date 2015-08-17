@@ -43,17 +43,17 @@
     return passiveDriver;
 }
 
-+ (bool) allowsInjection
++ (BOOL) allowsInjection
 {
     return NO;
 }
 
-+ (bool) wantsIPAndPort
++ (BOOL) wantsIPAndPort
 {
     return YES;
 }
 
-+ (bool) allowsChannelHopping
++ (BOOL) allowsChannelHopping
 {
     return NO;
 }
@@ -82,12 +82,12 @@
 	return YES;
 }
 
-+ (bool) loadBackend
++ (BOOL) loadBackend
 {
 	return YES;
 }
 
-+ (bool) unloadBackend
++ (BOOL) unloadBackend
 {
 	return YES;
 }
@@ -104,23 +104,23 @@
 
 #pragma mark -
 
-- (unsigned short) getChannelUnCached
+- (UInt16) getChannelUnCached
 {
 	return _currentChannel;
 }
 
-- (bool) setChannel:(unsigned short)newChannel
+- (BOOL) setChannel:(UInt16)newChannel
 {
 	_currentChannel = newChannel;
 	return YES;
 }
 
-- (bool) startCapture:(unsigned short)newChannel
+- (BOOL) startCapture:(UInt16)newChannel
 {
     return YES;
 }
 
-- (bool) stopCapture
+- (BOOL) stopCapture
 {
 	close(drone_fd);
     return YES;
@@ -128,7 +128,7 @@
 
 #pragma mark -
 
-- (bool) startedScanning
+- (BOOL) startedScanning
 {
 	NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
 	const char* hostname = 0;

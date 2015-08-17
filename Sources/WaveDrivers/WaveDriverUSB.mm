@@ -58,15 +58,15 @@
     return passiveDriver;
 }
 
-+ (bool) allowsInjection {
++ (BOOL) allowsInjection {
     return YES;
 }
 
-+ (bool) allowsChannelHopping {
++ (BOOL) allowsChannelHopping {
     return YES;
 }
 
-+ (bool) allowsMultipleInstances {
++ (BOOL) allowsMultipleInstances {
     return YES;  //may be later
 }
 
@@ -80,20 +80,20 @@
 
 #pragma mark -
 
-+ (bool) loadBackend {
++ (BOOL) loadBackend {
     return YES;
 }
 
-+ (bool) unloadBackend {
++ (BOOL) unloadBackend {
        return YES;
 }
 
 #pragma mark -
 
-- (unsigned short) getChannelUnCached
+- (UInt16) getChannelUnCached
 {
     UInt16 channel = 0;
-    bool success = FALSE;
+    BOOL success = FALSE;
     
     //make sure we have a driver before we ask it for its channel
     if(_driver)
@@ -107,16 +107,16 @@
     return channel;
 }
 
-- (bool) setChannel:(unsigned short)newChannel {
+- (BOOL) setChannel:(UInt16)newChannel {
     if (((_allowedChannels >> (newChannel - 1)) & 0x0001) == 0)
         return NO;
     
     return _driver->setChannel(newChannel);
 }
 
-- (bool) startCapture:(unsigned short)newChannel
+- (BOOL) startCapture:(UInt16)newChannel
 {
-    bool success = FALSE;
+    BOOL success = FALSE;
     
     if (newChannel == 0) newChannel = _firstChannel;
     
@@ -134,9 +134,9 @@
     return success;
 }
 
-- (bool) stopCapture
+- (BOOL) stopCapture
 {
-    bool success = FALSE;
+    BOOL success = FALSE;
     
     //if there is no driver, success will remain false
     if(_driver)
@@ -147,14 +147,14 @@
     return success; 
 }
 
-- (bool) sleepDriver
+- (BOOL) sleepDriver
 {
     if(_driver) delete(_driver);
     _driver = nil;
     return YES;
 }
 
-- (bool) wakeDriver
+- (BOOL) wakeDriver
 {
     return YES;
 }
@@ -163,7 +163,7 @@
 
 - (KFrame *) nextFrame {
     KFrame *f = NULL;
-    bool success;
+    BOOL success;
     
     //make sure we have _driver and the device is actually there
     success = (_driver && _driver->devicePresent());
@@ -222,7 +222,7 @@
 	}
 }
 
--(bool) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval notifyTarget:(id)target notifySelectorString:(NSString *)selector {
+-(BOOL) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval notifyTarget:(id)target notifySelectorString:(NSString *)selector {
     NSThread *thr = [NSThread currentThread];
     if (howMany != 0) {
         NSData *data = [NSData dataWithBytes:f length:sizeof(KFrame)];
@@ -245,10 +245,10 @@
     return YES;
 }
 
--(bool) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval {
+-(BOOL) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval {
     return [self sendKFrame:f howMany:howMany atInterval:interval notifyTarget:nil notifySelectorString:nil];
 }
--(bool) stopSendingFrames {
+-(BOOL) stopSendingFrames {
     _transmitting = NO;
     [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:_interval]];
     return YES;
@@ -256,16 +256,21 @@
 
 #pragma mark -
 
-- (int) allowedChannels {
+- (NSUInteger) allowedChannels
+{
     UInt16 channels;
     
     if (_allowedChannels)
         return _allowedChannels;
     
-    if (_driver->getAllowedChannels(&channels)) {
+    if (_driver->getAllowedChannels(&channels))
+    {
         _allowedChannels = channels;
+        
         return channels;
-    } else return 0xFFFF;
+    }
+    
+    return 0xFFFF;
 }
 
 #pragma mark -

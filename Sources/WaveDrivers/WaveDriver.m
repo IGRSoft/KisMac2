@@ -47,107 +47,130 @@ char WaveDrivers [][30] =
 - (id) init {
     self = [super init];
     if (!self)
+    {
         return nil;
+    }
     
     _permittedRates = nil;
 	_currentRate = KMRate11;
+    
     return self;
 }
 //private
-- (unsigned short) getChannelUnCached {
+- (NSInteger) getChannelUnCached
+{
     return 0;
 }
 
 #pragma mark -
 
-+ (enum WaveDriverType) type {
++ (enum WaveDriverType) type
+{
     return notSpecifiedDriver;
 }
 
-+ (bool) allowsInjection {
++ (BOOL) allowsInjection
+{
     return NO;
 }
 
-+ (bool) wantsIPAndPort {
++ (BOOL) wantsIPAndPort
+{
     return NO;
 }
 
-+ (bool) allowsChannelHopping {
++ (BOOL) allowsChannelHopping
+{
     return NO;
 }
 
-+ (bool) allowsMultipleInstances {
++ (BOOL) allowsMultipleInstances
+{
     return NO;
 }
 
-+ (NSString*) description {
++ (NSString*) description
+{
     return @"meta-driver";
 }
 
-+ (NSString*) deviceName {
++ (NSString*) deviceName
+{
     return nil;
 }
 
 #pragma mark -
 
-+ (bool) loadBackend {
++ (BOOL) loadBackend
+{
     return NO;
 }
 
-+ (bool) unloadBackend {
++ (BOOL) unloadBackend
+{
     return NO;
 }
 
 #pragma mark -
 
-- (enum WaveDriverType) type {
+- (enum WaveDriverType) type
+{
     return [[self class] type];
 }
 
-- (bool) allowsInjection {
+- (BOOL) allowsInjection
+{
     return [[self class] allowsInjection];
 }
 
-- (bool) wantsIPAndPort {
+- (BOOL) wantsIPAndPort
+{
     return [[self class] wantsIPAndPort];
 }
 
-- (bool) allowsChannelHopping {
+- (BOOL) allowsChannelHopping
+{
     return [[self class] allowsChannelHopping];
 }
 
-- (bool) allowsMultipleInstances {
+- (BOOL) allowsMultipleInstances
+{
     return [[self class] allowsMultipleInstances];
 }
 
-- (bool) unloadBackend {
+- (BOOL) unloadBackend
+{
     return [[self class] unloadBackend];
 }
 
-- (NSString*) deviceName {
+- (NSString*) deviceName
+{
     return [[self class] deviceName];
 }
 
 #pragma mark -
 
-- (NSComparisonResult)compareDrivers:(WaveDriver *)driver {
+- (NSComparisonResult)compareDrivers:(WaveDriver *)driver
+{
     return [[driver deviceName] compare:[self deviceName]];
 }
 
 #pragma mark -
 
-- (bool)setConfiguration:(NSDictionary*)dict 
+- (BOOL)setConfiguration:(NSDictionary*)dict 
 {
-    int i, j, supChannelMask;
-    NSString *key;
+    NSUInteger i, j, supChannelMask;
     NSUserDefaults *sets;
     NSMutableArray *a;
     
 	_config = dict;
     
     _firstChannel = [_config[@"firstChannel"] intValue];
-    if (_firstChannel == 0) _firstChannel = 1;
-		_currentChannel = _firstChannel;
+    if (_firstChannel == 0)
+    {
+        _firstChannel = 1;
+    }
+    _currentChannel = _firstChannel;
 
     j = 0;
     _fcc = NO;
@@ -156,32 +179,15 @@ char WaveDrivers [][30] =
     _lastChannel = 0;
     
     supChannelMask = [self allowedChannels];
-    for (i = 1; i <= 14; ++i)
-    {
-        key=[NSString stringWithFormat:@"useChannel%.2i", i];
-        if (((supChannelMask >> (i - 1)) & 0x0001) == 0) 
-        {
-            _useChannel[i - 1] = NO;
-        }
-        else 
-        {
-            _useChannel[i - 1] = [_config[key] intValue];
-        }
-        
-        if (_useChannel[i - 1])
-        {
-            ++j;
-        }
-        
-        if (i == 11 && j == 11) _fcc = YES;
-        if (i == 13 && j == 13) _etsi = YES; 
-    }
+    _useChannel = _config[@"useChannels"];
+    
+    if ([_useChannel containsObject:@(13)] ||
+        [_useChannel containsObject:@(13)] ||
+        [_useChannel containsObject:@(11)]) _fcc = YES;
+    if ([_useChannel containsObject:@(13)]) _etsi = YES;
     
     if (j > 1) _hop = YES;
     else _hop = NO;
-    
-    if (_fcc && (_useChannel[13] | _useChannel[12] | _useChannel[11])) _fcc = NO;
-    if (_etsi && _useChannel[13]) _etsi = NO;
     
     _autoAdjustTimer = [_config[@"autoAdjustTimer"] boolValue];
     
@@ -199,120 +205,143 @@ char WaveDrivers [][30] =
     return YES;
 }
 
-- (NSDictionary*)configuration {
+- (NSDictionary*)configuration
+{
     return _config;
 }
 
-- (bool)ETSI {
+- (BOOL)ETSI
+{
     return _etsi;
 }
 
-- (bool)FCC {
+- (BOOL)FCC
+{
     return _fcc;
 }
 
-- (bool)hopping {
+- (BOOL)hopping
+{
     return _hop;
 }
 
-- (bool)autoAdjustTimer {
+- (BOOL)autoAdjustTimer
+{
     return _autoAdjustTimer;
 }
 
 #pragma mark -
 
-- (unsigned short) getChannel {
+- (UInt16) getChannel
+{
     if (![self allowsChannelHopping]) return 0;
 
     return _currentChannel;
 }
 
-- (bool) setChannel:  (unsigned short)newChannel {
+- (BOOL) setChannel:  (UInt16)newChannel
+{
     return NO;
 }
 
-- (bool) startCapture:(unsigned short)newChannel {
+- (BOOL) startCapture:(UInt16)newChannel
+{
     return YES;
 }
 
-- (bool) stopCapture {
+- (BOOL) stopCapture
+{
     return YES;
 }
 
-- (bool) sleepDriver{
+- (BOOL) sleepDriver
+{
     return YES;
 }
 
-- (bool) wakeDriver{
+- (BOOL) wakeDriver
+{
     return YES;
 }
 
-- (void)hopToNextChannel {
-    int channel = _currentChannel+1, i;
-   
-    if (!_hop) {
-        while (_useChannel[channel - 1] == NO) {
-            channel = (channel % 14) + 1;
-            if (channel == _currentChannel) break; //just make sure it ends
-        }
-         _currentChannel = [self getChannelUnCached];
-         if (_currentChannel == channel) {
-             return;
-         } else {
-             for(i=0; i < 20; ++i) {
-                 [self setChannel: channel];
-                 _currentChannel = [self getChannelUnCached];
-                 if (_currentChannel == channel) break;
-             }
-             if (i == 20) {
-                 [self stopCapture];
-                 [self startCapture: channel];
-             }
-         }
-         return;
+- (void)hopToNextChannel
+{
+    if (_currentChannel == 0 || [@(_currentChannel) isEqualToValue:_useChannel.lastObject])
+    {
+        _currentChannel = [_useChannel[0] integerValue];
     }
     
-    if (_autoAdjustTimer && (_packets!=0)) {
-        if (_autoRepeat<1) {
+    NSUInteger curPos = [_useChannel indexOfObject:@(_currentChannel)];
+    if (curPos+1 >= _useChannel.count)
+    {
+        _currentChannel = [_useChannel[0] integerValue];
+        curPos = [_useChannel indexOfObject:@(_currentChannel)];
+    }
+    
+    NSInteger channel = [_useChannel[curPos+1] integerValue];
+    NSUInteger i = 0;
+    if (!_hop)
+    {
+        [self setChannel:channel];
+        for(i = 0; i < 20; ++i)
+        {
+            _currentChannel = [self getChannelUnCached];
+            if (_currentChannel == channel)
+                break;
+        }
+        if (i == 20)
+        {
+            [self stopCapture];
+            [self startCapture:channel];
+        }
+        return;
+    }
+    
+    if (_autoAdjustTimer && (_packets!=0))
+    {
+        if (_autoRepeat < 1)
+        {
             ++_autoRepeat;
             return;
-        } else _autoRepeat=0;
-        _packets = 0;
-    }
-    
-    if (_etsi) channel = ((_currentChannel + 1) % 13) + 1;
-    else if (_fcc) channel = ((_currentChannel + 1) % 11) + 1;
-    else {
-        channel = (_currentChannel % 14) + 1;
-        while (_useChannel[channel - 1] == NO) {
-            channel = (channel % 14) + 1;
-            if (channel == _currentChannel) break; //just make sure it ends
         }
+        else
+        {
+            _autoRepeat = 0;
+        }
+        _packets = 0;
     }
     
     //set the channel and make sure it is set
     //but do not force it too bad
-    for(i=0; i < 20; ++i) {
-        [self setChannel: channel];
+    [self setChannel: channel];
+    for(i = 0; i < 20; ++i)
+    {
         _currentChannel = [self getChannelUnCached];
         if (channel == _currentChannel) break;
     }
-    if (i == 20) {
+    if (i == 20)
+    {
         [self stopCapture];
         [self startCapture: channel];
     }
 
     //see if we can switching channel was successful, otherwise the card does may be not support the card
-    if (_lastChannel == _currentChannel) {
+    if (_lastChannel == _currentChannel)
+    {
         ++_hopFailure;
-        if (_hopFailure >= 5) {
+        if (_hopFailure >= 5)
+        {
             _hopFailure = 0;
-            DBNSLog(@"Looks like your card does not support channel %d. KisMAC will disable this channel.", channel);
-            _useChannel[channel - 1] = NO;
+            DBNSLog(@"Looks like your card does not support channel %@. KisMAC will disable this channel.", @(channel));
+            NSMutableArray *useChannel = [_useChannel mutableCopy];
+            [useChannel removeObject:@(channel)];
+            _useChannel = [useChannel copy];
             _etsi = NO;
             _fcc = NO;
         }
-    } else {
+    }
+    else
+    {
         _hopFailure = 0;
         _lastChannel = _currentChannel;
     }
@@ -320,21 +349,25 @@ char WaveDrivers [][30] =
 
 #pragma mark -
 
-- (NSArray*) networksInRange {
+- (NSArray*) networksInRange
+{
     return nil;
 }
 
-- (KFrame*) nextFrame {
+- (KFrame*) nextFrame
+{
     return nil;
 }
 
 #pragma mark -
 
--(bool) startedScanning {
+-(BOOL) startedScanning
+{
 	return YES;
 }
 
--(bool) stoppedScanning {
+-(BOOL) stoppedScanning
+{
 	return YES;
 }
 
@@ -342,35 +375,49 @@ char WaveDrivers [][30] =
 #pragma mark Sending frame
 #pragma mark
 
--(bool) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval {
+-(BOOL) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval
+{
     return NO;
 }
--(bool) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval notifyTarget:(id)target notifySelectorString:(NSString *)selector {
+
+-(BOOL) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval notifyTarget:(id)target notifySelectorString:(NSString *)selector
+{
     return NO;
 }
--(bool) stopSendingFrames {
+
+-(BOOL) stopSendingFrames
+{
     return NO;
 }
 
 #pragma mark -
 
-- (int) allowedChannels {
+- (UInt16) allowedChannels
+{
     return 0xFFFF;
 }
 
 #pragma mark -
 
-- (NSArray *) permittedRates {
-    if (!_permittedRates) {
+- (NSArray *) permittedRates
+{
+    if (!_permittedRates)
+    {
         _permittedRates = @[];
     }
+    
     return _permittedRates;
 }
-- (KMRate) currentRate {
+
+- (KMRate) currentRate
+{
 	return _currentRate;
 }
-- (bool) setCurrentRate: (KMRate)rate {
+
+- (BOOL) setCurrentRate: (KMRate)rate
+{
 	_currentRate = rate;
+    
 	return YES;
 }
 

@@ -37,5 +37,5 @@
 + (int) airportInstanceCount;
 +(WaveDriverAirport*)sharedInstance;
 
-- (bool)joinBSSID:(UInt8*) bssid withPassword:(NSString*)passwd;
+- (BOOL)joinBSSID:(UInt8*) bssid withPassword:(NSString*)passwd;
 @end

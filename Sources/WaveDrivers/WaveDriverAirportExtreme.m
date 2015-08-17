@@ -73,11 +73,11 @@ static pcap_t *_device;
     return passiveDriver;
 }
 
-+ (bool) allowsInjection {
++ (BOOL) allowsInjection {
     return NO;
 }
 
-+ (bool) allowsChannelHopping {
++ (BOOL) allowsChannelHopping {
     return YES;
 }
 
@@ -108,7 +108,7 @@ static pcap_t *_device;
     return ret;
 }
 
-+ (bool) loadBackend {
++ (BOOL) loadBackend {
     ImportController *importController;
     int result;
     int x;
@@ -138,7 +138,7 @@ static pcap_t *_device;
     return (result==0);
 }
 
-+ (bool) unloadBackend
++ (BOOL) unloadBackend
 {
 	
 	return YES;
@@ -235,14 +235,14 @@ pcap_dumper_t * dumper;
 
 #pragma mark -
 
-- (unsigned short) getChannelUnCached 
+- (UInt16) getChannelUnCached 
 {
 	return [[airportInterface wlanChannel] channelNumber];
 }
 
-- (bool) setChannel:(unsigned short)newChannel 
+- (BOOL) setChannel:(UInt16)newChannel
 {
-    bool success = FALSE;
+    BOOL success = FALSE;
     NSError * error = nil;
 
 	NSSet *channels = [airportInterface supportedWLANChannels];
@@ -283,9 +283,9 @@ pcap_dumper_t * dumper;
     return success;
 }
 
-- (bool) startCapture:(unsigned short)newChannel
+- (BOOL) startCapture:(unsigned short)newChannel
 {
-    bool success = FALSE;
+    BOOL success = FALSE;
     
     //we lave to let go to scan...
     [airportInterface disassociate];
@@ -300,9 +300,9 @@ pcap_dumper_t * dumper;
     return success;
 }
 
--(bool) stopCapture
+-(BOOL) stopCapture
 {
-    bool success;
+    BOOL success;
     //restore dlt
     success = pcap_set_datalink(_device, 1);
     

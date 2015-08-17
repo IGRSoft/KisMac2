@@ -32,7 +32,7 @@
 
 @implementation WaveDriverUSBIntersil
 
-bool explicitlyLoadedUSBIntersil = NO;
+BOOL explicitlyLoadedUSBIntersil = NO;
 
 #pragma mark -
 
@@ -46,7 +46,7 @@ bool explicitlyLoadedUSBIntersil = NO;
 
 #pragma mark -
 
-+ (bool) loadBackend {
++ (BOOL) loadBackend {
     
     if ([WaveHelper isServiceAvailable: (char*)"com_intersil_prism2USB"]) {
         NSRunCriticalAlertPanel(
@@ -69,7 +69,7 @@ bool explicitlyLoadedUSBIntersil = NO;
     return YES;
 }
 
-+ (bool) unloadBackend {
++ (BOOL) unloadBackend {
 	if (!explicitlyLoadedUSBIntersil) return YES;
 	
     DBNSLog(@"Restarting the USB drivers");
@@ -90,7 +90,7 @@ bool explicitlyLoadedUSBIntersil = NO;
     return self;
 }
 
-- (bool) wakeDriver{
+- (BOOL) wakeDriver{
     [self sleepDriver];
     
     _driver = new IntersilJack;

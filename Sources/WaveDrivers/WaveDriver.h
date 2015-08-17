@@ -41,59 +41,59 @@ enum WaveDriverType
 @interface WaveDriver : NSObject
 {
     NSDictionary *_config;
-    int _firstChannel;
-    int _currentChannel;
-    int _useChannel[14];
-    int _autoRepeat;
-    int _packets;
-    int _lastChannel;
-    int _hopFailure;
-    int _allowedChannels;
+    UInt16 _firstChannel;
+    UInt16 _currentChannel;
+    UInt16 _lastChannel;
+    NSArray *_useChannel;
+    NSUInteger _autoRepeat;
+    NSUInteger _packets;
+    NSUInteger _hopFailure;
+    NSUInteger _allowedChannels;
     KMRate _currentRate;
 	
-    bool _autoAdjustTimer;
-    bool _hop;
-    bool _etsi;
-    bool _fcc;
+    BOOL _autoAdjustTimer;
+    BOOL _hop;
+    BOOL _etsi;
+    BOOL _fcc;
     
     NSArray *_permittedRates;
 }
 
 + (enum WaveDriverType) type;
-+ (bool) allowsInjection;
-+ (bool) wantsIPAndPort;
-+ (bool) allowsChannelHopping;
-+ (bool) allowsMultipleInstances;
++ (BOOL) allowsInjection;
++ (BOOL) wantsIPAndPort;
++ (BOOL) allowsChannelHopping;
++ (BOOL) allowsMultipleInstances;
 + (NSString*) description;
 + (NSString*) deviceName;
 
-+ (bool) loadBackend;
-+ (bool) unloadBackend;
++ (BOOL) loadBackend;
++ (BOOL) unloadBackend;
 
 - (enum WaveDriverType) type;
-- (bool) allowsInjection;
-- (bool) wantsIPAndPort;
-- (bool) allowsChannelHopping;
-- (bool) allowsMultipleInstances;
-- (bool) unloadBackend;
+- (BOOL) allowsInjection;
+- (BOOL) wantsIPAndPort;
+- (BOOL) allowsChannelHopping;
+- (BOOL) allowsMultipleInstances;
+- (BOOL) unloadBackend;
 - (NSString*) deviceName;
 
 - (NSComparisonResult)compareDrivers:(WaveDriver *)driver;
 
-- (bool)setConfiguration:(NSDictionary*)dict;
+- (BOOL)setConfiguration:(NSDictionary*)dict;
 - (NSDictionary*)configuration;
-- (bool)ETSI;
-- (bool)FCC;
-- (bool)hopping;
-- (bool)autoAdjustTimer;
+- (BOOL)ETSI;
+- (BOOL)FCC;
+- (BOOL)hopping;
+- (BOOL)autoAdjustTimer;
 - (void)hopToNextChannel;
 
-- (unsigned short) getChannel;
-- (bool) setChannel:  (unsigned short)newChannel;
-- (bool) startCapture:(unsigned short)newChannel;
-- (bool) stopCapture;
-- (bool) sleepDriver;
-- (bool) wakeDriver;
+- (UInt16) getChannel;
+- (BOOL) setChannel:  (UInt16)newChannel;
+- (BOOL) startCapture:(UInt16)newChannel;
+- (BOOL) stopCapture;
+- (BOOL) sleepDriver;
+- (BOOL) wakeDriver;
 
 // for active scanning
 - (NSArray*) networksInRange;
@@ -102,18 +102,18 @@ enum WaveDriverType
 - (KFrame*) nextFrame;
 
 // for the kismet drones
--(bool) startedScanning;
--(bool) stoppedScanning;
+-(BOOL) startedScanning;
+-(BOOL) stoppedScanning;
 
 // for packet injection
--(bool) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval;
--(bool) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval notifyTarget:(id)target notifySelectorString:(NSString *)selector;
--(bool) stopSendingFrames;
+-(BOOL) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval;
+-(BOOL) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval notifyTarget:(id)target notifySelectorString:(NSString *)selector;
+-(BOOL) stopSendingFrames;
 
 //for the cards that support this
-- (int) allowedChannels;
+- (UInt16) allowedChannels;
 - (KMRate) currentRate;
-- (bool) setCurrentRate: (KMRate)rate;
+- (BOOL) setCurrentRate: (KMRate)rate;
 
 //For injection and other things
 - (NSArray *) permittedRates;

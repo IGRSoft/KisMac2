@@ -126,11 +126,10 @@
         c = 0;
         lc = 0;
         
-        for (x = 1; x <= 14; ++x) {
-            if ([config[[NSString stringWithFormat:@"useChannel%.2i",x]] intValue]) {
-                ++c;
-                lc = x;
-            }
+        for (NSNumber *useChannel in config[@"useChannels"])
+        {
+            ++c;
+            lc = useChannel.integerValue;
         }
         
         for (x = 1; x <= 14; ++x)

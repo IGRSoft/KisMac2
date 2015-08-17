@@ -53,6 +53,13 @@
 	IBOutlet NSBox			*_dumpFilterBox;
 	IBOutlet NSBox			*_savedumpsat;
 	IBOutlet NSBox			*_globalsettings;
+    
+    IBOutlet NSButton       *_use24GHzChannels;
+    IBOutlet NSButton       *_use50GHzChannels;
+    
+    IBOutlet NSButton       *_useAll50GHzChannels;
+    IBOutlet NSButton       *_useRange50GHzChannels;
+    IBOutlet NSTextField	*_range50GHzChannels;
 }
 
 - (IBAction)selAddDriver:(id)sender;

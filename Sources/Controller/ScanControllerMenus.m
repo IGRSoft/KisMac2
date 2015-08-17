@@ -387,7 +387,6 @@
 {
     WaveDriver *wd;
     NSMutableDictionary *md;
-    int y;
     int newChannel = [[[sender title] substringFromIndex:8] intValue];
     
     wd = [WaveHelper driverWithName:_whichDriver];
@@ -397,8 +396,7 @@
     }
     
     md = [[wd configuration] mutableCopy];
-    for( y = 1 ; y < 15 ; ++y )
-        md[[NSString stringWithFormat:@"useChannel%.2i",y]] = @((y==newChannel) ? 1 : 0);
+    md[@"useChannels"] = @[@(newChannel)];
   
     [wd setConfiguration: md];
 
@@ -418,16 +416,14 @@
     }
     
     md = [[wd configuration] mutableCopy];
-    if ([[sender title] isEqualToString:NSLocalizedString(@"All FCC/IC Channels (1-11)", "menu item. needs to be the same as in MainMenu.nib")]) {
-        for( y = 1 ; y <= 11 ; ++y)
-            md[[NSString stringWithFormat:@"useChannel%.2i", y]] = @1;
-
-        md[[NSString stringWithFormat:@"useChannel%.2i", 12]] = @0;
-        md[[NSString stringWithFormat:@"useChannel%.2i", 13]] = @0;
-     } else {
-        for( y = 1 ; y <= 13 ; ++y)
-            md[[NSString stringWithFormat:@"useChannel%.2i", y]] = @1;
+    NSMutableArray *chanels = [NSMutableArray array];
+    NSUInteger endPos = ([[sender title] isEqualToString:NSLocalizedString(@"All FCC/IC Channels (1-11)", "menu item. needs to be the same as in MainMenu.nib")]) ? 11 : 13;
+    for( y = 1 ; y <= endPos ; ++y)
+    {
+        [chanels addObject:@(y)];
     }
+    
+    md[@"useChannels"] = chanels;
     
     [wd setConfiguration: md];
     

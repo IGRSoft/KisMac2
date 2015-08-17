@@ -116,7 +116,7 @@ static WaveDriverAirport * staticInstance = nil;
 
 #pragma mark -
 //apple knows best, ask api if wireless is available
-+ (bool) loadBackend
++ (BOOL) loadBackend
 {
     NSSet * availableInterfaces;
     
@@ -125,7 +125,7 @@ static WaveDriverAirport * staticInstance = nil;
     return ([availableInterfaces count] > 0);
 }
 
-+ (bool) unloadBackend
++ (BOOL) unloadBackend
 {
     return YES;
 }
@@ -155,13 +155,13 @@ static WaveDriverAirport * staticInstance = nil;
 	return;
 }
 
-- (bool)joinBSSID:(UInt8*) bssid withPassword:(NSString*)passwd;
+- (BOOL)joinBSSID:(UInt8*) bssid withPassword:(NSString*)passwd;
 {
     CWNetwork * netToJoin;
     NSError * error = nil;
     NSEnumerator * enumerator;
-    bool foundNet = NO;
-    bool success = NO;
+    BOOL foundNet = NO;
+    BOOL success = NO;
 	
     if(nil == networks)
     {

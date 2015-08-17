@@ -51,7 +51,8 @@
     return self;
 }
 
-- (bool) wakeDriver{
+- (BOOL) wakeDriver
+{
     [self sleepDriver];
     
     _driver = new RalinkJack;
