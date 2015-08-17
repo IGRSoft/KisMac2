@@ -72,7 +72,7 @@ void NtPasswordHash(char *secret, int secret_len, unsigned char *hash)
         unicodePassword[i * 2] = (unsigned char) secret[i];
 
     /* Unicode is 2 bytes per char */
-    mbedtls_md4(unicodePassword, secret_len * 2, hash);
+    md4(unicodePassword, secret_len * 2, hash);
 }
 
 int testChallenge(const unsigned char* challenge, const unsigned char* response, unsigned char *zpwhash) 

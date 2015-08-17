@@ -424,6 +424,10 @@
 		A581FC2B177B36A800C05CE9 /* FCS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCS.m; sourceTree = "<group>"; };
 		A585F7791771DB7100045928 /* HTTPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPStream.h; sourceTree = "<group>"; };
 		A585F77A1771DB7100045928 /* HTTPStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPStream.m; sourceTree = "<group>"; };
+		A599CC9B1B82349000C48A5D /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		A599CC9C1B82349000C48A5D /* md4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md4.h; sourceTree = "<group>"; };
+		A599CC9D1B82349000C48A5D /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md5.h; sourceTree = "<group>"; };
+		A599CC9E1B82349000C48A5D /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
 		A59E42D71796ADBF00B1139F /* updateHelpIndex.command */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = updateHelpIndex.command; sourceTree = SOURCE_ROOT; };
 		A5A2F59519DD74C20046299A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Resources/Images.xcassets; sourceTree = "<group>"; };
 		A5A2F59919DD9EB40046299A /* spin@2x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "spin@2x.gif"; sourceTree = "<group>"; };
@@ -435,10 +439,6 @@
 		A5A2F5AA19DDA55B0046299A /* NetworkWPA.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = NetworkWPA.tif; sourceTree = "<group>"; };
 		A5A6FA781B289F65006B90E1 /* GBStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBStorage.h; sourceTree = "<group>"; };
 		A5A6FA791B289F65006B90E1 /* GBStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBStorage.m; sourceTree = "<group>"; };
-		A5D643C81B590F1200A6AF41 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = mbedtls/config.h; sourceTree = "<group>"; };
-		A5D643C91B590F1200A6AF41 /* md4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = md4.h; path = mbedtls/md4.h; sourceTree = "<group>"; };
-		A5D643CA1B590F1200A6AF41 /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = md5.h; path = mbedtls/md5.h; sourceTree = "<group>"; };
-		A5D643CB1B590F1200A6AF41 /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sha1.h; path = mbedtls/sha1.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -970,12 +970,13 @@
 		A5353668180ABCDF008BB6A1 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				A5D643C81B590F1200A6AF41 /* config.h */,
-				A5D643C91B590F1200A6AF41 /* md4.h */,
-				A5D643CA1B590F1200A6AF41 /* md5.h */,
-				A5D643CB1B590F1200A6AF41 /* sha1.h */,
+				A599CC9B1B82349000C48A5D /* config.h */,
+				A599CC9C1B82349000C48A5D /* md4.h */,
+				A599CC9D1B82349000C48A5D /* md5.h */,
+				A599CC9E1B82349000C48A5D /* sha1.h */,
 			);
-			path = include;
+			name = include;
+			path = include/polarssl;
 			sourceTree = "<group>";
 		};
 		A535369A180ABCE0008BB6A1 /* library */ = {
@@ -1463,10 +1464,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = KisMAC_Prefix.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					DEBUG,
-					MBEDTLS_MD4_C,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Subprojects/polarssl/include",
 					"$(SRCROOT)/Subprojects/BIGeneric/**",
@@ -1526,7 +1524,6 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = KisMAC_Prefix.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = MBEDTLS_MD4_C;
 				GCC_UNROLL_LOOPS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Subprojects/polarssl/include",

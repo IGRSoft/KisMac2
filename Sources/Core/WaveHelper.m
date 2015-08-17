@@ -52,7 +52,7 @@ void WirelessCryptMD5(char const *str, unsigned char *key)
 {
     int i, j;
     u_char md5_buf[64];
-    mbedtls_md5_context ctx;
+    md5_context ctx;
     
     j = 0;
     for(i = 0; i < 64; ++i)
@@ -61,9 +61,9 @@ void WirelessCryptMD5(char const *str, unsigned char *key)
         md5_buf[i] = str[j++];
     }
     
-    mbedtls_md5_starts(&ctx);
-    mbedtls_md5_update(&ctx, md5_buf, 64);
-    mbedtls_md5_finish(&ctx, md5_buf);
+    md5_starts(&ctx);
+    md5_update(&ctx, md5_buf, 64);
+    md5_finish(&ctx, md5_buf);
     
     memcpy(key, md5_buf, 13);
 }

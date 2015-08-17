@@ -43,7 +43,7 @@ void fast_hmac_md5 (
     unsigned char *key, int key_len,
     void * digest) 
 { 
-    mbedtls_md5_context context;
+    md5_context context;
     unsigned char k_ipad[65]; /* inner padding - key XORd with ipad */
     unsigned char k_opad[65]; /* outer padding - key XORd with opad */
     int i;
@@ -69,16 +69,16 @@ void fast_hmac_md5 (
     memset(&k_opad[key_len], 0x5c, sizeof k_opad - key_len); 
     
     /* perform inner MD5 */
-    mbedtls_md5_starts(&context); /* init context for 1st pass */
-    mbedtls_md5_update(&context, k_ipad, 64);  /* start with inner pad*/
-    mbedtls_md5_update(&context, text, text_len); /* then text of datagram */
-    mbedtls_md5_finish(&context, digest); /* finish up 1st pass */
+    md5_starts(&context); /* init context for 1st pass */
+    md5_update(&context, k_ipad, 64);  /* start with inner pad*/
+    md5_update(&context, text, text_len); /* then text of datagram */
+    md5_finish(&context, digest); /* finish up 1st pass */
     
     /* perform outer MD5 */
-    mbedtls_md5_starts(&context); /* init context for 2nd pass */
-    mbedtls_md5_update(&context, (const unsigned char*)k_opad, 64);  /* start with outer pad */
-    mbedtls_md5_update(&context, (const unsigned char*)digest, 16); /* then results of 1st hash */
-	mbedtls_md5_finish(&context, digest); /* finish up 2nd pass */
+    md5_starts(&context); /* init context for 2nd pass */
+    md5_update(&context, (const unsigned char*)k_opad, 64);  /* start with outer pad */
+    md5_update(&context, (const unsigned char*)digest, 16); /* then results of 1st hash */
+	md5_finish(&context, digest); /* finish up 2nd pass */
 } 
 
 void hmac_md5 (
@@ -86,18 +86,18 @@ void hmac_md5 (
     unsigned char *key, int key_len,
     void * digest) 
 { 
-    mbedtls_md5_context context;
+    md5_context context;
     unsigned char k_ipad[65]; /* inner padding - key XORd with ipad */
     unsigned char k_opad[65]; /* outer padding - key XORd with opad */
     int i;
     
     /* if key is longer than 64 bytes reset it to key=MD5(key) */ 
     if (key_len > 64) { 
-        mbedtls_md5_context tctx;
+        md5_context tctx;
         
-        mbedtls_md5_starts(&tctx);
-        mbedtls_md5_update(&tctx, key, key_len);
-        mbedtls_md5_finish(&tctx, key);
+        md5_starts(&tctx);
+        md5_update(&tctx, key, key_len);
+        md5_finish(&tctx, key);
         
         //key = tctx.digest; 
         key_len = 16;
@@ -127,22 +127,22 @@ void hmac_md5 (
     } 
     
     /* perform inner MD5 */
-    mbedtls_md5_starts(&context); /* init context for 1st pass */
-    mbedtls_md5_update(&context, k_ipad, 64);  /* start with inner pad*/
-    mbedtls_md5_update(&context, text, text_len); /* then text of datagram */
-    mbedtls_md5_finish(&context, digest); /* finish up 1st pass */
+    md5_starts(&context); /* init context for 1st pass */
+    md5_update(&context, k_ipad, 64);  /* start with inner pad*/
+    md5_update(&context, text, text_len); /* then text of datagram */
+    md5_finish(&context, digest); /* finish up 1st pass */
     //memcpy(digest, context.digest, 16); 
     
     /* perform outer MD5 */
-    mbedtls_md5_starts(&context); /* init context for 2nd pass */
-    mbedtls_md5_update(&context, (const unsigned char*)k_opad, 64);  /* start with outer pad */
-    mbedtls_md5_update(&context, (const unsigned char*)digest, 16); /* then results of 1st hash */
-    mbedtls_md5_finish(&context, digest); /* finish up 2nd pass */
+    md5_starts(&context); /* init context for 2nd pass */
+    md5_update(&context, (const unsigned char*)k_opad, 64);  /* start with outer pad */
+    md5_update(&context, (const unsigned char*)digest, 16); /* then results of 1st hash */
+    md5_finish(&context, digest); /* finish up 2nd pass */
     //memcpy(digest, context.digest, 16);
 } 
 
 void fast_hmac_sha1( unsigned char *text, int text_len, unsigned char *key, int key_len, unsigned char *digest) {
-    mbedtls_sha1_context context;
+    sha1_context context;
     unsigned char k_ipad[65]; /* inner padding - key XORd with ipad */ 
     unsigned char k_opad[65]; /* outer padding - key XORd with opad */
     int i; 
@@ -167,16 +167,16 @@ void fast_hmac_sha1( unsigned char *text, int text_len, unsigned char *key, int 
     memset(&k_opad[key_len], 0x5c, sizeof k_opad - key_len); 
     
     /* perform inner SHA1*/
-    mbedtls_sha1_starts(&context); /* init context for 1st pass */
-    mbedtls_sha1_update(&context, k_ipad, 64); /* start with inner pad */
-    mbedtls_sha1_update(&context, text, text_len); /* then text of datagram */
-    mbedtls_sha1_finish(&context, digest); /* finish up 1st pass */
+    sha1_starts(&context); /* init context for 1st pass */
+    sha1_update(&context, k_ipad, 64); /* start with inner pad */
+    sha1_update(&context, text, text_len); /* then text of datagram */
+    sha1_finish(&context, digest); /* finish up 1st pass */
     
     /* perform outer SHA1 */ 
-    mbedtls_sha1_starts(&context); /* init context for 2nd pass */
-    mbedtls_sha1_update(&context, k_opad, 64); /* start with outer pad */
-    mbedtls_sha1_update(&context, digest, 20); /* then results of 1st hash */
-    mbedtls_sha1_finish(&context, digest); /* finish up 2nd pass */
+    sha1_starts(&context); /* init context for 2nd pass */
+    sha1_update(&context, k_opad, 64); /* start with outer pad */
+    sha1_update(&context, digest, 20); /* then results of 1st hash */
+    sha1_finish(&context, digest); /* finish up 2nd pass */
 }
 
 
@@ -184,18 +184,18 @@ void hmac_sha1( unsigned char *text, int text_len,
     unsigned char *key, int key_len,
     unsigned char *digest) 
 {
-    mbedtls_sha1_context context;
+    sha1_context context;
     unsigned char k_ipad[65]; /* inner padding - key XORd with ipad */ 
     unsigned char k_opad[65]; /* outer padding - key XORd with opad */
     int i; 
     
     /* if key is longer than 64 bytes reset it to key=SHA1(key) */
     if (key_len > 64) { 
-        mbedtls_sha1_context      tctx;
+        sha1_context      tctx;
         
-        mbedtls_sha1_starts(&tctx);
-        mbedtls_sha1_update(&tctx, key, key_len);
-        mbedtls_sha1_finish(&tctx, key);
+        sha1_starts(&tctx);
+        sha1_update(&tctx, key, key_len);
+        sha1_finish(&tctx, key);
         
         key_len = 20;
     }
@@ -224,16 +224,16 @@ void hmac_sha1( unsigned char *text, int text_len,
     } 
     
     /* perform inner SHA1*/
-    mbedtls_sha1_starts(&context); /* init context for 1st pass */
-    mbedtls_sha1_update(&context, k_ipad, 64); /* start with inner pad */
-    mbedtls_sha1_update(&context, text, text_len); /* then text of datagram */
-    mbedtls_sha1_finish(&context, digest); /* finish up 1st pass */
+    sha1_starts(&context); /* init context for 1st pass */
+    sha1_update(&context, k_ipad, 64); /* start with inner pad */
+    sha1_update(&context, text, text_len); /* then text of datagram */
+    sha1_finish(&context, digest); /* finish up 1st pass */
     
     /* perform outer SHA1 */ 
-    mbedtls_sha1_starts(&context); /* init context for 2nd pass */
-    mbedtls_sha1_update(&context, k_opad, 64); /* start with outer pad */
-    mbedtls_sha1_update(&context, digest, 20); /* then results of 1st hash */
-    mbedtls_sha1_finish(&context, digest); /* finish up 2nd pass */
+    sha1_starts(&context); /* init context for 2nd pass */
+    sha1_update(&context, k_opad, 64); /* start with outer pad */
+    sha1_update(&context, digest, 20); /* then results of 1st hash */
+    sha1_finish(&context, digest); /* finish up 2nd pass */
 }
 
 #pragma mark -

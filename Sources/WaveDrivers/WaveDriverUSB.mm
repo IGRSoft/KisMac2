@@ -256,7 +256,7 @@
 
 #pragma mark -
 
-- (NSUInteger) allowedChannels
+- (UInt16) allowedChannels
 {
     UInt16 channels;
     
