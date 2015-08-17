@@ -36,7 +36,6 @@
 #import "KisMAC80211.h"
 #include <unistd.h>
 #include <stdlib.h>
-#import "WaveSpectrumDriver.h"
 #import "GrowlController.h"
 #import "WaveContainer.h"
 #import "WavePcapDump.h"
@@ -63,7 +62,6 @@
     _graphLength = 0;
     _soundBusy = NO;
     
-    _waveSpectrum = [[WaveSpectrumDriver alloc] init];
     return self;
 }
 

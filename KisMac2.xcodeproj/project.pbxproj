@@ -82,7 +82,6 @@
 		691CF1B10E4CC47C0042B146 /* UsbVendorsRT73.plist in Resources */ = {isa = PBXBuildFile; fileRef = 691CF1AD0E4CC47C0042B146 /* UsbVendorsRT73.plist */; };
 		691CF1B20E4CC47C0042B146 /* UsbVendorsRT2570.plist in Resources */ = {isa = PBXBuildFile; fileRef = 691CF1AE0E4CC47C0042B146 /* UsbVendorsRT2570.plist */; };
 		691CF1B30E4CC47C0042B146 /* UsbVendorsRTL8187.plist in Resources */ = {isa = PBXBuildFile; fileRef = 691CF1AF0E4CC47C0042B146 /* UsbVendorsRTL8187.plist */; };
-		69359CB30FB05DD2008B8722 /* WaveSpectrumDriver.m in Sources */ = {isa = PBXBuildFile; fileRef = 69359CB10FB05DD2008B8722 /* WaveSpectrumDriver.m */; };
 		694A888D0F3CD87E006B819C /* WavePcapDump.m in Sources */ = {isa = PBXBuildFile; fileRef = 694A888B0F3CD87E006B819C /* WavePcapDump.m */; };
 		697B46400F0620DC00AC69EB /* WavePluginDeauthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 697B463E0F0620DC00AC69EB /* WavePluginDeauthentication.m */; };
 		698665470FAF5899002D1A84 /* spin.gif in Resources */ = {isa = PBXBuildFile; fileRef = 698665460FAF5899002D1A84 /* spin.gif */; };
@@ -301,8 +300,6 @@
 		691CF1AD0E4CC47C0042B146 /* UsbVendorsRT73.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UsbVendorsRT73.plist; sourceTree = "<group>"; };
 		691CF1AE0E4CC47C0042B146 /* UsbVendorsRT2570.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UsbVendorsRT2570.plist; sourceTree = "<group>"; };
 		691CF1AF0E4CC47C0042B146 /* UsbVendorsRTL8187.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UsbVendorsRTL8187.plist; sourceTree = "<group>"; };
-		69359CB00FB05DD2008B8722 /* WaveSpectrumDriver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveSpectrumDriver.h; sourceTree = "<group>"; };
-		69359CB10FB05DD2008B8722 /* WaveSpectrumDriver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveSpectrumDriver.m; sourceTree = "<group>"; };
 		694A888A0F3CD87E006B819C /* WavePcapDump.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WavePcapDump.h; sourceTree = "<group>"; };
 		694A888B0F3CD87E006B819C /* WavePcapDump.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WavePcapDump.m; sourceTree = "<group>"; };
 		697B463D0F0620DC00AC69EB /* WavePluginDeauthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WavePluginDeauthentication.h; sourceTree = "<group>"; };
@@ -758,7 +755,6 @@
 			isa = PBXGroup;
 			children = (
 				A57E64371607BC9700BE1BCA /* Crypto */,
-				69359CAF0FB05D47008B8722 /* WaveSpectrumDrivers */,
 				69A9B3150F04D74B00D1E817 /* WavePlugins */,
 				003533A006A5DD8500AB4577 /* 3rd Party */,
 				003533A406A5DD8500AB4577 /* Controller */,
@@ -872,16 +868,6 @@
 			comments = "This folder contains Usb Devices files for matching vendors/products against drivers. ";
 			name = UsbDevicesPlist;
 			path = Resources/UsbDevicesPlist;
-			sourceTree = "<group>";
-		};
-		69359CAF0FB05D47008B8722 /* WaveSpectrumDrivers */ = {
-			isa = PBXGroup;
-			children = (
-				69359CB00FB05DD2008B8722 /* WaveSpectrumDriver.h */,
-				69359CB10FB05DD2008B8722 /* WaveSpectrumDriver.m */,
-			);
-			name = WaveSpectrumDrivers;
-			path = Sources/WaveSpectrumDrivers;
 			sourceTree = "<group>";
 		};
 		69719DAF0F7E928900949310 /* Subprojects */ = {
@@ -1270,7 +1256,6 @@
 				69BFC5F30F078532008DB1AF /* WavePluginBeaconFlood.m in Sources */,
 				A5353826180ABCE1008BB6A1 /* md4.c in Sources */,
 				694A888D0F3CD87E006B819C /* WavePcapDump.m in Sources */,
-				69359CB30FB05DD2008B8722 /* WaveSpectrumDriver.m in Sources */,
 				6C461C6F12CEC58100156CBF /* WavePluginMidi.m in Sources */,
 				A57E644D1607BC9700BE1BCA /* AirCrackWrapper.m in Sources */,
 				A57E644F1607BC9700BE1BCA /* LEAP.m in Sources */,

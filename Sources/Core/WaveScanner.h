@@ -31,7 +31,6 @@
 #import "KisMAC80211.h"
 
 @class WaveNet;
-@class WaveSpectrumDriver;
 @class WaveContainer;
 @class WaveClient;
 @class ImportController;
@@ -72,8 +71,6 @@
     IBOutlet WaveContainer* _container;
    
     NSMutableDictionary *_wavePlugins;
-    
-    WaveSpectrumDriver *_waveSpectrum;
 }
 
 - (void)readPCAPDump:(NSString*)dumpFile;
