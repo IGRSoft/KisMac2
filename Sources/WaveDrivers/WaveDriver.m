@@ -271,7 +271,12 @@ char WaveDrivers [][30] =
         _currentChannel = [_useChannel[0] integerValue];
     }
     
-    NSUInteger curPos = [_useChannel indexOfObject:@(_currentChannel)];
+    NSInteger curPos = [_useChannel indexOfObject:@(_currentChannel)];
+    if (_useChannel.count == 1)
+    {
+        _currentChannel = [_useChannel[0] integerValue];
+        curPos = -1;
+    }
     if (curPos+1 >= _useChannel.count)
     {
         _currentChannel = [_useChannel[0] integerValue];

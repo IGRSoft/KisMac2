@@ -383,15 +383,48 @@
 {
 }
 
-- (IBAction)selChannel:(id)sender
+- (IBAction)selChannel:(NSMenuItem *)sender
 {
     WaveDriver *wd;
     NSMutableDictionary *md;
-    int newChannel = [[[sender title] substringFromIndex:8] intValue];
+    
+    NSUInteger newChannel = 0;
+    if (sender.tag == 14)
+    {
+        NSAlert *alert = [NSAlert alertWithMessageText:@"Enter Channel number"
+                                         defaultButton:@"OK"
+                                       alternateButton:@"Cancel"
+                                           otherButton:nil
+                             informativeTextWithFormat:@""];
+        
+        NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 24)];
+        NSNumberFormatter *intFormat = [[NSNumberFormatter alloc] init];
+        [intFormat setFormat:@"#"];
+        [input setFormatter:intFormat];
+        
+        [input setIntValue:15];
+        
+        [alert setAccessoryView:input];
+        NSInteger button = [alert runModal];
+        if (button == NSAlertDefaultReturn)
+        {
+            newChannel = [input intValue];
+        }
+        else
+        {
+            return;
+        }
+    }
+    else
+    {
+        newChannel = [[[sender title] substringFromIndex:8] intValue];
+    }
     
     wd = [WaveHelper driverWithName:_whichDriver];
-    if (!wd) {
+    if (!wd)
+    {
         DBNSLog(@"Error: invalid driver selected (%@)", _whichDriver);
+        
         return;
     }
     

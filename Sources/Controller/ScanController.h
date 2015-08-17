@@ -177,7 +177,7 @@ io_connect_t  root_port;    // a reference to the Root Power Domain IOService
 - (IBAction)exportPDF:(id)sender;
 - (IBAction)exportJPEG:(id)sender;
 
-- (IBAction)selChannel:(id)sender;
+- (IBAction)selChannel:(NSMenuItem *)sender;
 - (IBAction)selChannelRange:(id)sender;
 - (IBAction)setAutoAdjustTimer:(id)sender;
 

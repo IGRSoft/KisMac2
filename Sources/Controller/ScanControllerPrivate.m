@@ -87,7 +87,8 @@
 			[sets setObject:whichDriver forKey:@"whichDriver"];
 		}
 		
-        for (x = 0; x < [a count]; ++x) {
+        for (x = 0; x < [a count]; ++x)
+        {
             wd = a[x];
             mi = (NSMenuItem*)[aChannelMenu insertItemWithTitle:[wd deviceName]
 														 action:@selector(selDriver:)
@@ -133,8 +134,20 @@
         }
         
         for (x = 1; x <= 14; ++x)
-            [[aChannelMenu itemAtIndex:x + 5 + _activeDriversCount] setState:((c==1 && lc == x) ? NSOnState : NSOffState)];
+        {
+            [[aChannelMenu itemAtIndex:x + 5 + _activeDriversCount] setState:((c == 1 && lc == x) ? NSOnState : NSOffState)];
+        }
         
+        NSMenuItem *menuItem = [aChannelMenu itemAtIndex:(x + 1) + 5 + _activeDriversCount];
+        [menuItem setState:((c == 1 && lc > 14) ? NSOnState : NSOffState)];
+        if (menuItem.state == NSOnState)
+        {
+            menuItem.title = [NSString stringWithFormat:@"Custom Channel (%@)", @(lc)];
+        }
+        else
+        {
+            menuItem.title = @"Custom Channel";
+        }
         [[aChannelMenu itemAtIndex: _activeDriversCount + 1] setState:([actWD autoAdjustTimer]? NSOnState : NSOffState)];
 
         //just make sure the driver knows about its configuration
