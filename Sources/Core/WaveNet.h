@@ -65,7 +65,7 @@ struct graphStruct
     
     // Statistical Data
     int					_packets;				//# of packets
-    int					_packetsPerChannel[16];	//how many packets on each channel
+    int					_packetsPerChannel[166];//how many packets on each channel
     int					_dataPackets;			//# of Data packets
     int                 _mgmtPackets;           //# of Management packets
     int                 _ctrlPackets;           //# of Control packets
