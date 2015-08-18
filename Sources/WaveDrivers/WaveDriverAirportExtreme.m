@@ -276,7 +276,7 @@ pcap_dumper_t * dumper;
         
     _currentChannel = newChannel;
     
-    if(!success)
+    if(!success && error != nil)
     {
         CFShow((__bridge CFTypeRef)(error));
     }
