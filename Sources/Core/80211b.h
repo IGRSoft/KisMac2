@@ -217,6 +217,13 @@ typedef struct _frameLEAP {
 #define	IEEE80211_SUBTYPE_ACTION		OSSwapBigToHostConstInt16(0xd000)
 
 /* control subtypes */
+// These two were defined in 802.11ac
+#define	IEEE80211_SUBTYPE_BEAMFORM_POLL	OSSwapBigToHostConstInt16(0x4000)
+#define	IEEE80211_SUBTYPE_VHT_NDP_ANNOUNCE OSSwapBigToHostConstInt16(0x5000)
+
+// This was defined in 802.11n
+#define	IEEE80211_SUBTYPE_CONTROL_WRAPPER  OSSwapBigToHostConstInt16(0x7000)
+
 #define	IEEE80211_SUBTYPE_BLOCK_ACK_REQ	OSSwapBigToHostConstInt16(0x8000)
 #define	IEEE80211_SUBTYPE_BLOCK_ACK		OSSwapBigToHostConstInt16(0x9000)
 #define	IEEE80211_SUBTYPE_PS_POLL		OSSwapBigToHostConstInt16(0xa000)
