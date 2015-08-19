@@ -264,41 +264,42 @@ char WaveDrivers [][30] =
     return YES;
 }
 
+- (void) tryToSetChannel: (NSInteger) channel
+{
+    [self setChannel:channel];
+
+    NSInteger i;
+    for(i = 0; i < 20; ++i)
+    {
+        _currentChannel = [self getChannelUnCached];
+        if (_currentChannel == channel)
+            break;
+    }
+    if (i == 20)
+    {
+        [self stopCapture];
+        [self startCapture:channel];
+    }
+    
+}
+
 - (void)hopToNextChannel
 {
-    if (_currentChannel == 0 || [@(_currentChannel) isEqualToValue:_useChannel.lastObject])
-    {
-        _currentChannel = [_useChannel[0] integerValue];
-    }
-    
+    if ( _useChannel.count == 0 ) return;   // Paranoia...
+
+    // This works even if _currentChannel is invalid
     NSInteger curPos = [_useChannel indexOfObject:@(_currentChannel)];
-    if (_useChannel.count == 1)
+    if (curPos == NSNotFound ||         // _currentChannel == 0 OR
+        curPos+1 >= _useChannel.count)  // scanned all channels
     {
-        _currentChannel = [_useChannel[0] integerValue];
+        // Back to the first channel
         curPos = -1;
     }
-    if (curPos+1 >= _useChannel.count)
-    {
-        _currentChannel = [_useChannel[0] integerValue];
-        curPos = [_useChannel indexOfObject:@(_currentChannel)];
-    }
-    
-    NSInteger channel = [_useChannel[curPos+1] integerValue];
-    NSUInteger i = 0;
+    NSInteger nextChannel = [_useChannel[curPos+1] integerValue];
+
     if (!_hop)
     {
-        [self setChannel:channel];
-        for(i = 0; i < 20; ++i)
-        {
-            _currentChannel = [self getChannelUnCached];
-            if (_currentChannel == channel)
-                break;
-        }
-        if (i == 20)
-        {
-            [self stopCapture];
-            [self startCapture:channel];
-        }
+        [self tryToSetChannel: nextChannel];
         return;
     }
     
@@ -318,17 +319,7 @@ char WaveDrivers [][30] =
     
     //set the channel and make sure it is set
     //but do not force it too bad
-    [self setChannel: channel];
-    for(i = 0; i < 20; ++i)
-    {
-        _currentChannel = [self getChannelUnCached];
-        if (channel == _currentChannel) break;
-    }
-    if (i == 20)
-    {
-        [self stopCapture];
-        [self startCapture: channel];
-    }
+    [self tryToSetChannel: nextChannel];
 
     //see if we can switching channel was successful, otherwise the card does may be not support the card
     if (_lastChannel == _currentChannel)
@@ -337,9 +328,9 @@ char WaveDrivers [][30] =
         if (_hopFailure >= 5)
         {
             _hopFailure = 0;
-            DBNSLog(@"Looks like your card does not support channel %@. KisMAC will disable this channel.", @(channel));
+            DBNSLog(@"Looks like your card does not support channel %@. KisMAC will disable this channel.", @(nextChannel));
             NSMutableArray *useChannel = [_useChannel mutableCopy];
-            [useChannel removeObject:@(channel)];
+            [useChannel removeObject:@(nextChannel)];
             _useChannel = [useChannel copy];
             _etsi = NO;
             _fcc = NO;
