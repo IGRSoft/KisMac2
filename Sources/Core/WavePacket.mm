@@ -210,7 +210,8 @@ bool is8021xPacket(const UInt8* fileData) {
         _signal=0;
     
     // Determine frame channel (received channel)
-    _channel=(f->ctrl.channel>14 || f->ctrl.channel<1 ? 1 : f->ctrl.channel);
+    //_channel=(f->ctrl.channel>14 || f->ctrl.channel<1 ? 1 : f->ctrl.channel);
+    _channel = f->ctrl.channel;
     
     // TODO: Determine frame rx rate
 //    DBNSLog(@"rx_rate %d", f->ctrl.rate);
@@ -292,6 +293,9 @@ bool is8021xPacket(const UInt8* fileData) {
                 case IEEE80211_SUBTYPE_CF_END_ACK:
 				case IEEE80211_SUBTYPE_BLOCK_ACK:
 				case IEEE80211_SUBTYPE_BLOCK_ACK_REQ:
+                case IEEE80211_SUBTYPE_CONTROL_WRAPPER:
+                case IEEE80211_SUBTYPE_VHT_NDP_ANNOUNCE:
+                case IEEE80211_SUBTYPE_BEAMFORM_POLL:
                     break;
                 default:
                     DBNSLog(@"%d %d", _type, _subtype);

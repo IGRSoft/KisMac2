@@ -1348,7 +1348,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 {
     NSString * dateString;
     
-    @synchronized(_date)
+    @synchronized(self)
     {
         if(nil == _date)
         {
@@ -1617,7 +1617,10 @@ NSInteger lengthSort(id string1, id string2, void *context)
     NSString *enc, *type;
     NSImage *image = nil;
     
-    if (_cacheValid) return _cache;
+    @synchronized(self)
+    {
+        if (_cacheValid) return _cache;
+    }
     
     GBStorageController *gbStorage = [GBStorageController sharedControllerForNamespace:kGBStorageDefaultNamespace];
     
@@ -1798,8 +1801,8 @@ NSInteger lengthSort(id string1, id string2, void *context)
         _cache = cache;
         _cacheValid = YES;
     }
-    
-    return _cache;
+
+    return cache;
 }
 
 #pragma mark -

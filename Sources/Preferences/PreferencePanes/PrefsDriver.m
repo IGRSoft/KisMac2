@@ -455,12 +455,23 @@
 - (NSArray *)get50GhzChannels
 {
     NSMutableSet *Channels = [NSMutableSet set];
-    
+    static NSSet *ValidChannels = nil;
+
+    if ( ValidChannels == nil )
+        ValidChannels = [NSSet setWithObjects:
+            // List taken from: https://en.wikipedia.org/wiki/List_of_WLAN_channels
+            // It should be intersected with what the driver considers valid.
+            @(7), @(8), @(9), @(11), @(12), @(16), @(34), @(36), @(38), @(40),
+            @(42), @(44), @(46), @(48), @(52), @(56), @(60), @(64), @(100),
+            @(104), @(108), @(112), @(116), @(120), @(124), @(128), @(132),
+            @(136), @(140), @(144), @(149), @(153), @(157), @(161), @(165), nil];
+
     if ([_useAll50GHzChannels state] == NSOnState)
     {
         for (NSUInteger i = Max24GhzChannels + 1; i <= Max50GhzChannels; ++i)
         {
-            [Channels addObject:@(i)];
+            if ( [ValidChannels containsObject: @(i)] )
+                [Channels addObject:@(i)];
         }
     }
     if ([_useRange50GHzChannels state] == NSOnState)
@@ -476,12 +487,15 @@
                 
                 for (NSUInteger i = startChanel; i <= endChanel; ++i)
                 {
-                    [Channels addObject:@(i)];
+                    if ( [ValidChannels containsObject: @(i)] )
+                        [Channels addObject:@(i)];
                 }
             }
-            else if ([component integerValue] > 0)
+            else
             {
-                [Channels addObject:@([component integerValue])];
+                NSInteger i = [component integerValue];
+                if ( i > 0 && [ValidChannels containsObject: @(i)] )
+                    [Channels addObject:@(i)];
             }
         }
     }
