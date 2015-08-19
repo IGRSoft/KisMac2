@@ -33,7 +33,7 @@ How Build:
 Current Developer and Origin:
 -------
 
-This project, KisMac2, is an active project to continue where original development of KisMac has stopped. The lead developer is Vitaliy Parovishnik (Korich) - http://IGRSoft.com and you are welcome to contact us and join in the project.
+This project, KisMac2, is an active project to continue where original development of KisMac has stopped. The lead developer is Vitalii Parovishnyk (Korich) - http://IGRSoft.com and you are welcome to contact us and join in the project.
 
 Michael Rossberg / Geoffrey Kruse / kismac-ng.org is the original KisMac and the project is not actively maintained since 2011, please see the <a href="https://en.wikipedia.org/wiki/KisMAC">KisMac Wikipedia page</a> for more information on the earlier history of that project.
 
