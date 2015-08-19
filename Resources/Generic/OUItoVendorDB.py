@@ -19,13 +19,17 @@ def xcodePrint(string):
 	sys.stdout.flush()
 
 def needForce(filename):
+	configuration = os.getenv("CONFIGURATION")
+	if configuration == 'Release':
+		return True
+
 	if (os.path.exists(filename)):
 		fileCreation = os.path.getctime(filename)
 		now = time.time()
 		days_ago = now - 60*60*24*7 # Number of seconds in seven days
 		return fileCreation < days_ago
 
-	return False;
+	return False
 
 def downloadFile(fileurl, filename):
 	request = urllib2.Request(fileurl)
