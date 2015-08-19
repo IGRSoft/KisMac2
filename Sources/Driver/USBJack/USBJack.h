@@ -113,11 +113,14 @@ protected:
 
     int                 initFrameQueue(void);
     int                 destroyFrameQueue(void);
-    int                 insertFrameIntoQueue(KFrame *f, UInt16 len, UInt16 channel);
+    int                 insertFrameIntoQueue(void *f, UInt16 len, UInt16 channel);
     KFrame *            getFrameFromQueue(UInt16 *len, UInt16 *channel);
     
 	// Method for convert driver native data to KFrame
     virtual bool        _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);	
+
+    // Driver specific packet handler
+    virtual void        _rawFrameReceived(unsigned int len);
 
     static void         _runCFRunLoop(USBJack* me);
   

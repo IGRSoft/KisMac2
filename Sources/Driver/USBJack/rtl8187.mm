@@ -1448,6 +1448,14 @@ bool RTL8187Jack::stopCapture() {
 	}
 }
 
+void RTL8187Jack::_rawFrameReceived(unsigned int len)
+{
+    // _receiveBuffer has the raw 802.11 frame with an rtl8187_rx_hdr appended,
+    // so we just queue the whole thing.  See also: USBJack::_rawFrameReceived().
+    // We get to dissect it in _massagePacket() after it is dequeued.
+    insertFrameIntoQueue(&_receiveBuffer, len, _channel);
+}
+
 bool RTL8187Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel) {
     
     unsigned char* pData = (unsigned char *)inBuf;    

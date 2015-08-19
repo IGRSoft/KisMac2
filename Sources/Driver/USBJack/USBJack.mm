@@ -291,10 +291,8 @@ void USBJack::_interruptReceived(void *refCon, IOReturn result, void *arg0)
     USBJack             *me = (USBJack*) refCon;
     unsigned int        len = (unsigned int)(size_t)arg0;
     IOReturn                    kr;
-    UInt32                      type;
 
 //    DBNSLog(@"Interrupt Received %d", len);
-    KFrame *frame;
 	bool needBreakProcess = false;
 	
     if (kIOReturnSuccess != result) {
@@ -316,52 +314,12 @@ void USBJack::_interruptReceived(void *refCon, IOReturn result, void *arg0)
 			}
         }
     }
-    
+
 	if (!needBreakProcess)
 	{
-		type = NSSwapLittleShortToHost(me->_receiveBuffer.type);
-		if (_USB_ISRXFRM(type))
-		{
-			if (len <= sizeof(KFrame))
-			{
-				// Get raw data pointer
-				frame = (KFrame*)&(me->_receiveBuffer.rxfrm);
-				
-				// Here we insert raw data frame into queue because we need to do things
-				// as fast as possible. Remember that we are servicing an interrupt.
-				// Custom conversion will be done on dequeuing
-				
-				// Lock for copying frame
-				me->insertFrameIntoQueue(frame, len, me->_channel);
-			}
-		}
-		else
-		{
-			switch (type)
-			{
-				case _USB_CMDRESP:
-				case _USB_WRIDRESP:
-				case _USB_RRIDRESP:
-				case _USB_WMEMRESP:
-				case _USB_RMEMRESP:
-					pthread_mutex_lock(&me->_wait_mutex);
-					memcpy(&me->_inputBuffer, &me->_receiveBuffer, len);
-					pthread_cond_signal(&me->_wait_cond);
-					pthread_mutex_unlock(&me->_wait_mutex);
-					break;
-				case _USB_BUFAVAIL:
-					DBNSLog(@"Received BUFAVAIL packet, frmlen=%d\n", me->_receiveBuffer.bufavail.frmlen);
-					break;
-				case _USB_ERROR:
-					DBNSLog(@"Received USB_ERROR packet, errortype=%d\n", me->_receiveBuffer.usberror.errortype);
-					break;
-				case _USB_INFOFRM:
-				default:
-					break;
-			}
-		}
+            me->_rawFrameReceived(len);
 	}
-    
+
     bzero(&me->_receiveBuffer, sizeof(me->_receiveBuffer));
     kr = (*me->_interface)->ReadPipeAsync((me->_interface), (me->kInPipe), &me->_receiveBuffer, sizeof(me->_receiveBuffer), _interruptReceived, refCon);
 	
@@ -379,6 +337,49 @@ void USBJack::_interruptReceived(void *refCon, IOReturn result, void *arg0)
     }
         
 }
+
+// Default packet check/queuing.
+void USBJack::_rawFrameReceived(unsigned int len)
+{
+    UInt32 type = NSSwapLittleShortToHost(_receiveBuffer.type);
+    if (_USB_ISRXFRM(type))
+    {
+        // Here we insert raw data frame into queue because we need to do things
+        // as fast as possible. Remember that we are servicing an interrupt.
+        // Custom conversion will be done on dequeuing
+
+        insertFrameIntoQueue(&_receiveBuffer, len, _channel);
+        return;
+    }
+
+    // The following is presumably only for the IntersilJack driver
+    // since it is the only one that waits on _wait_cond.
+    switch (type)
+    {
+        case _USB_CMDRESP:
+        case _USB_WRIDRESP:
+        case _USB_RRIDRESP:
+        case _USB_WMEMRESP:
+        case _USB_RMEMRESP:
+            pthread_mutex_lock(&_wait_mutex);
+            memcpy(&_inputBuffer, &_receiveBuffer, len);
+            pthread_cond_signal(&_wait_cond);
+            pthread_mutex_unlock(&_wait_mutex);
+            break;
+        case _USB_BUFAVAIL:
+            DBNSLog(@"Received BUFAVAIL packet, frmlen=%d\n", _receiveBuffer.bufavail.frmlen);
+            break;
+        case _USB_ERROR:
+            DBNSLog(@"Received USB_ERROR packet, errortype=%d\n", _receiveBuffer.usberror.errortype);
+            break;
+        case _USB_INFOFRM:
+            break;
+        default:
+            DBNSLog(@"Received unrecognized USB packet, type=0x%04X\n", type);
+            break;
+    }
+}
+
 bool USBJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 /* channel */) {
     return true;         //override if needed
 }
@@ -396,7 +397,7 @@ int USBJack::destroyFrameQueue(void) {
     free(_frameRing);
     return 0;
 }
-int USBJack::insertFrameIntoQueue(KFrame *f, UInt16 len, UInt16 channel)  {
+int USBJack::insertFrameIntoQueue(void *f, UInt16 len, UInt16 channel)  {
     struct __frameRingSlot *slot = nil;
     
     if(_frameRing)
@@ -419,7 +420,7 @@ int USBJack::insertFrameIntoQueue(KFrame *f, UInt16 len, UInt16 channel)  {
         //make sure f exists, otherwise we crash and burn
         if(f)
         {
-            memcpy(&(slot->frame), f, sizeof(KFrame));
+            memcpy(&(slot->frame), f, len);
         }
         slot->len = len;
         slot->channel = channel;
