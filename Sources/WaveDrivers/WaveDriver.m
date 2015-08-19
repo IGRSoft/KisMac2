@@ -159,7 +159,7 @@ char WaveDrivers [][30] =
 
 - (BOOL)setConfiguration:(NSDictionary*)dict 
 {
-    NSUInteger i, j;
+    NSUInteger i;
     NSUserDefaults *sets;
     NSMutableArray *a;
     
@@ -172,7 +172,6 @@ char WaveDrivers [][30] =
     }
     _currentChannel = _firstChannel;
 
-    j = 0;
     _fcc = NO;
     _etsi = NO;
     _hopFailure = 0;
@@ -185,7 +184,7 @@ char WaveDrivers [][30] =
         [_useChannel containsObject:@(11)]) _fcc = YES;
     if ([_useChannel containsObject:@(13)]) _etsi = YES;
     
-    if (j > 1) _hop = YES;
+    if ([_useChannel count] > 1) _hop = YES;
     else _hop = NO;
     
     _autoAdjustTimer = [_config[@"autoAdjustTimer"] boolValue];
@@ -278,6 +277,7 @@ char WaveDrivers [][30] =
     {
         [self stopCapture];
         [self startCapture:channel];
+        _currentChannel = [self getChannelUnCached];
     }
     
 }
@@ -327,12 +327,24 @@ char WaveDrivers [][30] =
         if (_hopFailure >= 5)
         {
             _hopFailure = 0;
-            DBNSLog(@"Looks like your card does not support channel %@. KisMAC will disable this channel.", @(nextChannel));
             NSMutableArray *useChannel = [_useChannel mutableCopy];
-            [useChannel removeObject:@(nextChannel)];
+            if (nextChannel == 12)
+            {
+                // Assume FCC jurisdiction and disable channels 12-14
+                DBNSLog(@"Setting channel 12 failed; assuming FCC jurisdiction. KisMAC will disable channels 12-14.");
+                _fcc = YES;
+                [useChannel removeObject:@(14)];
+                [useChannel removeObject:@(13)];
+                [useChannel removeObject:@(12)];
+            }
+            else
+            {
+                DBNSLog(@"Looks like your card does not support channel %@. KisMAC will disable this channel.", @(nextChannel));
+                [useChannel removeObject:@(nextChannel)];
+                if (nextChannel == 14)
+                    _etsi = YES;
+            }
             _useChannel = [useChannel copy];
-            _etsi = NO;
-            _fcc = NO;
         }
     }
     else

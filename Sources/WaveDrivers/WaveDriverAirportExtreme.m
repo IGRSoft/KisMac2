@@ -220,7 +220,7 @@ pcap_dumper_t * dumper;
     
     if (retErr != 0)
     {
-        DBNSLog(@"Error opening airpot device using pcap_set_datalink()");
+        DBNSLog(@"Error opening airport device using pcap_set_datalink()");
         return nil;
     }
     
@@ -242,20 +242,22 @@ pcap_dumper_t * dumper;
 
 - (BOOL) setChannel:(UInt16)newChannel
 {
-    BOOL success = FALSE;
+    BOOL success = NO;
     NSError * error = nil;
 
 	NSSet *channels = [airportInterface supportedWLANChannels];
 	CWChannel *wlanChannel = nil;
 	
-	for (CWChannel *_wlanChannel in channels) {
-		if ([_wlanChannel channelNumber] == newChannel) {
+	for (CWChannel *_wlanChannel in channels)
+    {
+		if ([_wlanChannel channelNumber] == newChannel)
 			wlanChannel = _wlanChannel;
-		}
 	}
-	
-	if (wlanChannel != nil)
-		success = [airportInterface setWLANChannel:wlanChannel error: &error];
+
+	if (wlanChannel == nil)
+        return NO;
+
+    success = [airportInterface setWLANChannel:wlanChannel error: &error];
     
     //this is kindof a hack...  The airport interface may not go completely
     //into monitor mode the first time.  It can be interrupted by a "sw beacon miss"
@@ -265,7 +267,7 @@ pcap_dumper_t * dumper;
     //If it only makes it to "Run" mode, you will see this problem.
     //enable debug output of the driver using the airport utility
     //to see what is happening here.
-    if(!success && wlanChannel)
+    if(!success)
     {
         [airportInterface disassociate];
         pcap_set_datalink(_device, 1);
@@ -273,9 +275,9 @@ pcap_dumper_t * dumper;
         sleep(2);
         success = [airportInterface setWLANChannel:wlanChannel error: &error];
     }
-        
+
     _currentChannel = newChannel;
-    
+
     if(!success && error != nil)
     {
         CFShow((__bridge CFTypeRef)(error));
@@ -285,13 +287,14 @@ pcap_dumper_t * dumper;
 
 - (BOOL) startCapture:(unsigned short)newChannel
 {
-    BOOL success = FALSE;
+    BOOL success = YES;
     
     //we lave to let go to scan...
     [airportInterface disassociate];
     
     //set dlt
-    success = pcap_set_datalink(_device, DLTType);
+    if (pcap_set_datalink(_device, DLTType) != 0)
+        success = NO;
     
     //sleep here in case it works the first time
     sleep(2);
@@ -302,9 +305,10 @@ pcap_dumper_t * dumper;
 
 -(BOOL) stopCapture
 {
-    BOOL success;
     //restore dlt
-    success = pcap_set_datalink(_device, 1);
+    BOOL success = YES;
+    if (pcap_set_datalink(_device, 1) != 0)
+        success = NO;
     
     return success;
 }
