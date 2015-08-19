@@ -159,7 +159,7 @@ char WaveDrivers [][30] =
 
 - (BOOL)setConfiguration:(NSDictionary*)dict 
 {
-    NSUInteger i, j, supChannelMask;
+    NSUInteger i, j;
     NSUserDefaults *sets;
     NSMutableArray *a;
     
@@ -178,7 +178,6 @@ char WaveDrivers [][30] =
     _hopFailure = 0;
     _lastChannel = 0;
     
-    supChannelMask = [self allowedChannels];
     _useChannel = _config[@"useChannels"];
     
     if ([_useChannel containsObject:@(13)] ||
