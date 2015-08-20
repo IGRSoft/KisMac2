@@ -368,6 +368,19 @@
 }
 
 #pragma mark -
+static NSSet *GetValid5GHzChannels()
+{
+    static NSSet *Valid5GHzChannels = nil;
+    if ( Valid5GHzChannels == nil )
+        Valid5GHzChannels = [NSSet setWithObjects:
+                         // List taken from: https://en.wikipedia.org/wiki/List_of_WLAN_channels
+                         // It should be intersected with what the driver considers valid.
+                         @(7), @(8), @(9), @(11), @(12), @(16), @(34), @(36), @(38), @(40),
+                         @(42), @(44), @(46), @(48), @(52), @(56), @(60), @(64), @(100),
+                         @(104), @(108), @(112), @(116), @(120), @(124), @(128), @(132),
+                         @(136), @(140), @(144), @(149), @(153), @(157), @(161), @(165), nil];
+    return Valid5GHzChannels;
+}
 
 - (IBAction)selAddDriver:(id)sender
 {
@@ -392,10 +405,12 @@
     
     drivers = [[controller objectForKey:@"ActiveDrivers"] mutableCopy];
     
+    NSSet *ValidChannels = GetValid5GHzChannels();
     NSMutableArray *useChannels = [NSMutableArray array];
     for (NSUInteger i = 1; i <= Max50GhzChannels; ++i)
     {
-        [useChannels addObject:@(i)];
+        if ( i < 12 || (i > 14 && [ValidChannels containsObject: @(i)]) )
+            [useChannels addObject:@(i)];
     }
     
     [drivers addObject:@{
@@ -455,16 +470,7 @@
 - (NSArray *)get50GhzChannels
 {
     NSMutableSet *Channels = [NSMutableSet set];
-    static NSSet *ValidChannels = nil;
-
-    if ( ValidChannels == nil )
-        ValidChannels = [NSSet setWithObjects:
-            // List taken from: https://en.wikipedia.org/wiki/List_of_WLAN_channels
-            // It should be intersected with what the driver considers valid.
-            @(7), @(8), @(9), @(11), @(12), @(16), @(34), @(36), @(38), @(40),
-            @(42), @(44), @(46), @(48), @(52), @(56), @(60), @(64), @(100),
-            @(104), @(108), @(112), @(116), @(120), @(124), @(128), @(132),
-            @(136), @(140), @(144), @(149), @(153), @(157), @(161), @(165), nil];
+    NSSet *ValidChannels = GetValid5GHzChannels();
 
     if ([_useAll50GHzChannels state] == NSOnState)
     {

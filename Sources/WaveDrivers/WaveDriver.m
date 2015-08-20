@@ -264,7 +264,8 @@ char WaveDrivers [][30] =
 
 - (void) tryToSetChannel: (NSInteger) channel
 {
-    [self setChannel:channel];
+    if ([self setChannel:channel] == NO)
+        return;
 
     NSInteger i;
     for(i = 0; i < 20; ++i)
@@ -351,6 +352,7 @@ char WaveDrivers [][30] =
     {
         _hopFailure = 0;
         _lastChannel = _currentChannel;
+        //DBNSLog(@"Channel now %@", @(_currentChannel));
     }
 }
 
