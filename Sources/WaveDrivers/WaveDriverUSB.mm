@@ -108,7 +108,7 @@
 }
 
 - (BOOL) setChannel:(UInt16)newChannel {
-    if (((_allowedChannels >> (newChannel - 1)) & 0x0001) == 0)
+    if ((([self allowedChannels] >> (newChannel - 1)) & 0x0001) == 0)
         return NO;
     
     return _driver->setChannel(newChannel);
