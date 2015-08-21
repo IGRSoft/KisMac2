@@ -292,13 +292,15 @@ pcap_dumper_t * dumper;
     //we lave to let go to scan...
     [airportInterface disassociate];
     
+    if (newChannel == 0) newChannel = _firstChannel;
+    [self setChannel:newChannel];
+
     //set dlt
     if (pcap_set_datalink(_device, DLTType) != 0)
         success = NO;
     
     //sleep here in case it works the first time
     sleep(2);
-    [self setChannel:newChannel];
 
     return success;
 }
