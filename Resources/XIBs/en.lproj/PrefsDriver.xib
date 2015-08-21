@@ -165,7 +165,7 @@
                                                                 <fragment content="0"/>
                                                             </attributedString>
                                                             <decimal key="minimum" value="1"/>
-                                                            <decimal key="maximum" value="14"/>
+                                                            <real key="maximum" value="165"/>
                                                         </numberFormatter>
                                                         <font key="font" metaFont="system"/>
                                                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -380,7 +380,7 @@
                                         <attributedString key="attributedStringForZero">
                                             <fragment content="0.00"/>
                                         </attributedString>
-                                        <decimal key="minimum" value="0.2"/>
+                                        <real key="minimum" value="0.1"/>
                                         <decimal key="maximum" value="10"/>
                                     </numberFormatter>
                                     <font key="font" metaFont="system"/>
