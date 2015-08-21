@@ -301,21 +301,20 @@
     if (!_scanning) //we are already scanning
     {
         _scanning = YES;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            _drivers = [WaveHelper getWaveDrivers];
-            
-            WaveDriver *w;
-            for (NSUInteger i = 0; i < [_drivers count]; ++i)
-            {
-                w = _drivers[i];
-                if ([w type] == passiveDriver)
-                { //for PseudoJack this is done by the timer
-                    [w startCapture:0];
-                }
-                [self doScan:w];
+        _drivers = [WaveHelper getWaveDrivers];
+
+        WaveDriver *w;
+        for (NSUInteger i = 0; i < [_drivers count]; ++i)
+        {
+            w = _drivers[i];
+            if ([w type] == passiveDriver)
+            { //for PseudoJack this is done by the timer
+                [w startCapture:0];
             }
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                [self doScan:w];
+            });
         }
-                       );
         
         _scanTimer = [NSTimer scheduledTimerWithTimeInterval:_scanInterval
                                                       target:self
