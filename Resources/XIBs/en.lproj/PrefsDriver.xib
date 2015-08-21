@@ -139,7 +139,7 @@
                                                 <button id="YRi-cC-FQK">
                                                     <rect key="frame" x="15" y="140" width="186" height="18"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                    <buttonCell key="cell" type="check" title="2.4GHz Chanels" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="yqK-gA-Uss">
+                                                    <buttonCell key="cell" type="check" title="2.4GHz Channels" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="yqK-gA-Uss">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
@@ -148,9 +148,9 @@
                                                     </connections>
                                                 </button>
                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="gVv-mx-Uef">
-                                                    <rect key="frame" x="14" y="164" width="46" height="17"/>
+                                                    <rect key="frame" x="14" y="164" width="53" height="17"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Iclude:" id="hku-zJ-pru">
+                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Include:" id="hku-zJ-pru">
                                                         <font key="font" metaFont="system"/>
                                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -189,7 +189,7 @@
                                                 <button id="7CM-nX-c6v">
                                                     <rect key="frame" x="15" y="120" width="186" height="18"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                    <buttonCell key="cell" type="check" title="5.0GHz Chanels" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="hwh-1y-7EI">
+                                                    <buttonCell key="cell" type="check" title="5.0GHz Channels" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="hwh-1y-7EI">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
