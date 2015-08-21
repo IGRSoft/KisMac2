@@ -162,33 +162,32 @@ char WaveDrivers [][30] =
     NSUInteger i;
     NSUserDefaults *sets;
     NSMutableArray *a;
-    
-	_config = dict;
-    
-    _firstChannel = [_config[@"firstChannel"] intValue];
-    if (_firstChannel == 0)
-    {
-        _firstChannel = 1;
-    }
-    _currentChannel = _firstChannel;
 
     _fcc = NO;
     _etsi = NO;
+    _hop = NO;
     _hopFailure = 0;
     _lastChannel = 0;
-    
+	_config = dict;
+
     _useChannel = _config[@"useChannels"];
-    
-    if ([_useChannel containsObject:@(13)] ||
-        [_useChannel containsObject:@(13)] ||
-        [_useChannel containsObject:@(11)]) _fcc = YES;
-    if ([_useChannel containsObject:@(13)]) _etsi = YES;
-    
-    if ([_useChannel count] > 1) _hop = YES;
-    else _hop = NO;
-    
+    _firstChannel = [_config[@"firstChannel"] intValue];
     _autoAdjustTimer = [_config[@"autoAdjustTimer"] boolValue];
     
+    // Intersect with allowed channels from the driver
+
+    if ([_useChannel count] == 0) return NO;    // If no usable channels, give up.
+    if ([_useChannel count] > 1) _hop = YES;
+
+    if (_firstChannel == 0 || ![_useChannel containsObject:@(_firstChannel)])
+    {
+        _firstChannel = [[_useChannel objectAtIndex:0] integerValue];
+    }
+    _currentChannel = _firstChannel;
+
+    if ([_useChannel containsObject:@(12)] == NO) _fcc = YES;
+    if ([_useChannel containsObject:@(14)] == NO) _etsi = YES;
+
     sets = [NSUserDefaults standardUserDefaults];
     a = [[sets objectForKey:@"ActiveDrivers"] mutableCopy];
     for (i = 0; i < [a count]; ++i)
