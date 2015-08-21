@@ -1182,7 +1182,7 @@ CA
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="channel" editable="NO" width="20" minWidth="15" maxWidth="1000" id="1204">
+                                    <tableColumn identifier="channel" editable="NO" width="25" minWidth="15" maxWidth="1000" id="1204">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Ch">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1325,7 +1325,7 @@ CA
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="lastseen" editable="NO" width="140.149" minWidth="54.149000000000001" maxWidth="1000" id="1205">
+                                    <tableColumn identifier="lastseen" editable="NO" width="150" minWidth="55" maxWidth="1000" id="1205">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Last Seen">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1338,7 +1338,7 @@ CA
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="challengeResponse" editable="NO" width="40" minWidth="40" maxWidth="40" id="1210">
+                                    <tableColumn identifier="challengeResponse" editable="NO" width="50" minWidth="40" maxWidth="50" id="1210">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Ch/Re">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
