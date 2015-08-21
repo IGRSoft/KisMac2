@@ -187,7 +187,7 @@
     
 	[scanner setGeigerInterval:[sets integerForKey:@"GeigerSensity"] sound:key];
 
-    if ([sets floatForKey:@"frequence"] < 0.2)
+    if ([sets floatForKey:@"frequence"] < 0.1)
 		[sets setFloat:0.25 forKey:@"frequence"];
     
 	[scanner setFrequency:[sets floatForKey:@"frequence"]];
