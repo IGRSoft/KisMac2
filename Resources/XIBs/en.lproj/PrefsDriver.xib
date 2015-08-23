@@ -336,9 +336,9 @@
                                                     </connections>
                                                 </textField>
                                                 <button id="wAZ-Bz-xgr">
-                                                    <rect key="frame" x="15" y="165" width="91" height="18"/>
+                                                    <rect key="frame" x="15" y="165" width="104" height="18"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                    <buttonCell key="cell" type="check" title="All Chanels" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="TyJ-uR-rZ7">
+                                                    <buttonCell key="cell" type="check" title="All Channels" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="TyJ-uR-rZ7">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
