@@ -163,6 +163,7 @@ pcap_dumper_t * dumper;
     [airportInterface disassociate];
     
     DBNSLog(@"Airport Interface: %@", airportInterface);
+    DBNSLog(@"Airport country code: %@", [airportInterface countryCode]);
     
     shouldPlayback = [[defs objectForKey: @"playback-rawdump"] boolValue];
     const char * deviceName = [interfaceName UTF8String];
