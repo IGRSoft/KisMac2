@@ -602,7 +602,7 @@
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
 	[invocation setSelector:_busyFunction];
 	[invocation setArgument:&obj atIndex:2];
-	[invocation invoke];
+    [invocation invokeWithTarget:self];
 
     [self menuSetEnabled:YES
 					menu:[NSApp mainMenu]];
@@ -621,7 +621,7 @@
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
 		[invocation setSelector:_busyFunction];
 		[invocation setArgument:(__bridge void *)(anObject) atIndex:0];
-		[invocation invoke];
+		[invocation invokeWithTarget:self];
         _doModal = NO;
 	
 		[self menuSetEnabled:YES
