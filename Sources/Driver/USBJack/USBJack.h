@@ -109,6 +109,7 @@ protected:
     bool                _attachDevice();
     static void         _addDevice(void *refCon, io_iterator_t iterator);
     static void         _handleDeviceRemoval(void *refCon, io_iterator_t iterator);
+    static void         _DeviceNotification(void *refCon, io_service_t service, natural_t messageType, void *messageArgument);
     static void         _interruptReceived(void *refCon, IOReturn result, void *arg0);
 
     int                 initFrameQueue(void);
@@ -129,6 +130,7 @@ protected:
 
 //    SInt32                      _vendorID;
 //    SInt32                      _productID;
+    io_object_t                 _notification;
     
     char * _plistFile;
     bool                        _devicePresent;
