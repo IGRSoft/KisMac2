@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/IGRSoft/KisMac2.svg)](https://travis-ci.org/IGRSoft/KisMac2)
+
 <img src="https://raw.githubusercontent.com/IGRSoft/KisMac2/master/Resources/Images.xcassets/AppIcon.appiconset/icon_128x128.png"> KisMac2
 ======
 
