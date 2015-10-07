@@ -599,11 +599,11 @@
 {
 
 	if ([_curNet type] != networkTypeManaged) {
-		[_window showAlertMessage: NSLocalizedString(@"KisMAC can only attack managed networks!", "Error for packet reinjection") title: NSLocalizedString(@"Re-Injection failed", "Error for packet reinjection") button: NULL];
+		[_window showAlertMessage: NSLocalizedString(@"KisMAC can only attack managed networks!", "Error for packet reinjection") title: NSLocalizedString(@"Re-Injection failed", "Error for packet reinjection") button: NSLocalizedString(@"OK", "Alert button OK")];
 		return;
     }
 	if ([_curNet wep] != encryptionTypeWEP && [_curNet wep] != encryptionTypeWEP40) {
-		[_window showAlertMessage: NSLocalizedString(@"You can only reinject into WEP encrypted networks!", "Error for packet reinjection") title: NSLocalizedString(@"Re-Injection failed", "Error for packet reinjection") button: NULL];
+		[_window showAlertMessage: NSLocalizedString(@"You can only reinject into WEP encrypted networks!", "Error for packet reinjection") title: NSLocalizedString(@"Re-Injection failed", "Error for packet reinjection") button: NSLocalizedString(@"OK", "Alert button OK")];
 		return;
     }
 	
@@ -732,7 +732,7 @@
 		{
 			[_window showAlertMessage:NSLocalizedString(@"You have to load a map in order to perform this action", "area mapping failure")
 								title:NSLocalizedString(@"Area mapping failed", "error box title")
-							   button:nil];
+							   button:NSLocalizedString(@"OK", "Alert button OK")];
 			return;
 		}
 		
@@ -781,7 +781,7 @@
 	{
         if (![[WaveHelper mapView] hasValidMap])
 		{
-			[_window showAlertMessage:NSLocalizedString(@"You have to load a map in order to perform this action", "area mapping failure") title:NSLocalizedString(@"Area mapping failed", "error box title") button:nil];
+			[_window showAlertMessage:NSLocalizedString(@"You have to load a map in order to perform this action", "area mapping failure") title:NSLocalizedString(@"Area mapping failed", "error box title") button:NSLocalizedString(@"OK", "Alert button OK")];
 			return;
 		}
         [self stopScan];
