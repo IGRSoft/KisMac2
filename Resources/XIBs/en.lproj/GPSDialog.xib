@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" promptedForUpgradeToXcode5="NO">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
+        <development version="6300" identifier="xcode"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GPSInfoController">
@@ -24,7 +25,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="GPS Info" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="5" userLabel="Window">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -38,6 +39,7 @@
                     <textField verticalHuggingPriority="750" id="21">
                         <rect key="frame" x="18" y="364" width="111" height="13"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Satellites in View" id="167">
                             <font key="font" metaFont="label"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -47,6 +49,7 @@
                     <textField verticalHuggingPriority="750" id="26">
                         <rect key="frame" x="18" y="256" width="43" height="13"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="HDOP:" id="168">
                             <font key="font" metaFont="label"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -56,11 +59,13 @@
                     <levelIndicator verticalHuggingPriority="750" id="29">
                         <rect key="frame" x="20" y="237" width="240" height="16"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                         <levelIndicatorCell key="cell" alignment="left" doubleValue="10" maxValue="8" warningValue="3" criticalValue="5" levelIndicatorStyle="continuousCapacity" id="169"/>
                     </levelIndicator>
                     <textField verticalHuggingPriority="750" id="30">
                         <rect key="frame" x="17" y="227" width="101" height="11"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="More Accurate" id="170">
                             <font key="font" metaFont="miniSystem"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -70,6 +75,7 @@
                     <textField verticalHuggingPriority="750" id="31">
                         <rect key="frame" x="198" y="227" width="101" height="11"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" id="171">
                             <font key="font" metaFont="miniSystem"/>
                             <string key="title">Less Accurate
@@ -81,11 +87,13 @@
                     <levelIndicator verticalHuggingPriority="750" id="35">
                         <rect key="frame" x="20" y="203" width="43" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                         <levelIndicatorCell key="cell" alignment="left" maxValue="1" warningValue="0.5" id="172"/>
                     </levelIndicator>
                     <textField verticalHuggingPriority="750" id="36">
                         <rect key="frame" x="68" y="206" width="64" height="14"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="GPS Fix" id="173">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -95,6 +103,7 @@
                     <textField verticalHuggingPriority="750" id="37">
                         <rect key="frame" x="31" y="206" width="35" height="13"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="NO" id="174">
                             <font key="font" metaFont="label"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -111,6 +120,7 @@
                                 <textField verticalHuggingPriority="750" id="50">
                                     <rect key="frame" x="32" y="128" width="86" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
                                     <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="175">
                                         <font key="font" metaFont="miniSystem"/>
                                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -120,6 +130,7 @@
                                 <textField verticalHuggingPriority="750" id="51">
                                     <rect key="frame" x="149" y="128" width="86" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
                                     <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="176">
                                         <font key="font" metaFont="miniSystem"/>
                                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -129,6 +140,7 @@
                                 <textField verticalHuggingPriority="750" id="52">
                                     <rect key="frame" x="53" y="104" width="81" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
                                     <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="177">
                                         <font key="font" metaFont="miniSystem"/>
                                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -138,6 +150,7 @@
                                 <textField verticalHuggingPriority="750" id="53">
                                     <rect key="frame" x="4" y="130" width="33" height="17"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Lat" id="178">
                                         <font key="font" metaFont="system"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -147,6 +160,7 @@
                                 <textField verticalHuggingPriority="750" id="54">
                                     <rect key="frame" x="120" y="130" width="33" height="17"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Lon" id="179">
                                         <font key="font" metaFont="system"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -156,6 +170,7 @@
                                 <textField verticalHuggingPriority="750" id="55">
                                     <rect key="frame" x="4" y="105" width="52" height="17"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Speed" id="180">
                                         <font key="font" metaFont="system"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -165,6 +180,7 @@
                                 <popUpButton verticalHuggingPriority="750" id="56">
                                     <rect key="frame" x="141" y="105" width="83" height="15"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
                                     <popUpButtonCell key="cell" type="push" title="KPH" bezelStyle="rounded" alignment="left" controlSize="mini" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="60" id="181">
                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="miniSystem"/>
@@ -183,10 +199,12 @@
                                 <progressIndicator verticalHuggingPriority="750" maxValue="100" bezeled="NO" controlSize="small" style="bar" id="67">
                                     <rect key="frame" x="16" y="81" width="208" height="12"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
                                 </progressIndicator>
                                 <textField verticalHuggingPriority="750" id="69">
                                     <rect key="frame" x="53" y="57" width="81" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
                                     <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="182">
                                         <font key="font" metaFont="miniSystem"/>
                                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -196,6 +214,7 @@
                                 <textField verticalHuggingPriority="750" id="70">
                                     <rect key="frame" x="4" y="58" width="52" height="17"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Alt" id="183">
                                         <font key="font" metaFont="system"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -205,6 +224,7 @@
                                 <popUpButton verticalHuggingPriority="750" id="71">
                                     <rect key="frame" x="141" y="58" width="83" height="15"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
                                     <popUpButtonCell key="cell" type="push" title="m" bezelStyle="rounded" alignment="left" controlSize="mini" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="74" id="184">
                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="miniSystem"/>
@@ -222,10 +242,12 @@
                                 <progressIndicator verticalHuggingPriority="750" maxValue="1000" bezeled="NO" controlSize="small" style="bar" id="76">
                                     <rect key="frame" x="16" y="37" width="208" height="12"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
                                 </progressIndicator>
                                 <button verticalHuggingPriority="750" id="81">
                                     <rect key="frame" x="42" y="3" width="154" height="32"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
                                     <buttonCell key="cell" type="push" title="Reset Peak Values" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="185">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
@@ -235,17 +257,21 @@
                                     </connections>
                                 </button>
                             </subviews>
+                            <animations/>
                         </view>
+                        <animations/>
                         <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                         <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </box>
                     <customView id="162" customClass="GPSSatInfo">
                         <rect key="frame" x="20" y="277" width="240" height="86"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                     </customView>
                     <textField verticalHuggingPriority="750" id="164">
                         <rect key="frame" x="53" y="256" width="43" height="13"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" title=" " id="186">
                             <font key="font" metaFont="label"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -253,6 +279,7 @@
                         </textFieldCell>
                     </textField>
                 </subviews>
+                <animations/>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="9"/>

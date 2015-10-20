@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" promptedForUpgradeToXcode5="NO">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
+        <development version="6300" identifier="xcode"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PrefsFilter">
@@ -15,7 +16,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="109" userLabel="View">
             <rect key="frame" x="0.0" y="0.0" width="439" height="246"/>
             <autoresizingMask key="autoresizingMask"/>
@@ -23,6 +24,7 @@
                 <textField verticalHuggingPriority="750" id="220">
                     <rect key="frame" x="223" y="11" width="142" height="22"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" title="01:23:45:67:89:AB" drawsBackground="YES" id="234">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -35,6 +37,7 @@
                 <button verticalHuggingPriority="750" id="219">
                     <rect key="frame" x="367" y="3" width="71" height="32"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <buttonCell key="cell" type="push" title="add" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="233">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
@@ -49,6 +52,7 @@ DQ
                 <button verticalHuggingPriority="750" id="217">
                     <rect key="frame" x="0.0" y="3" width="83" height="32"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <buttonCell key="cell" type="push" title="remove" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="232">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
@@ -68,8 +72,9 @@ DQ
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" autosaveName="KisMAC_FilterListTable" rowHeight="14" headerView="238" id="215">
                                 <rect key="frame" x="0.0" y="0.0" width="437" height="166"/>
                                 <autoresizingMask key="autoresizingMask"/>
+                                <animations/>
                                 <size key="intercellSpacing" width="3" height="2"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
                                     <tableColumn width="433.83099365234375" minWidth="40" maxWidth="1000" id="214">
@@ -92,22 +97,28 @@ DQ
                                 </connections>
                             </tableView>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
+                    <animations/>
                     <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" controlSize="small" horizontal="YES" id="237">
                         <rect key="frame" x="1" y="172" width="426" height="11"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                     </scroller>
                     <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" controlSize="small" horizontal="NO" id="236">
                         <rect key="frame" x="427" y="17" width="11" height="155"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                     </scroller>
                     <tableHeaderView key="headerView" id="238">
                         <rect key="frame" x="0.0" y="0.0" width="437" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                     </tableHeaderView>
                 </scrollView>
             </subviews>
+            <animations/>
         </customView>
     </objects>
 </document>

@@ -124,7 +124,8 @@
     [data writeToFile:[mapName stringByAppendingPathComponent:@"map.pdf"] atomically:NO];
 #else
     data = [_orgImage TIFFRepresentation];
-	data = [[NSBitmapImageRep imageRepWithData:data] representationUsingType:NSPNGFileType properties:nil];
+	data = [[NSBitmapImageRep imageRepWithData:data] representationUsingType:NSPNGFileType
+                                                                  properties:[NSDictionary dictionary]];
     [data writeToFile:[mapName stringByAppendingPathComponent:@"map.png"] atomically:NO];
 #endif
 

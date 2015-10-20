@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
+        <development version="6300" identifier="xcode"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ImportController">
@@ -30,10 +31,12 @@
                     <progressIndicator verticalHuggingPriority="750" maxValue="100" bezeled="NO" indeterminate="YES" style="bar" id="236">
                         <rect key="frame" x="18" y="76" width="410" height="20"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                        <animations/>
                     </progressIndicator>
                     <textField verticalHuggingPriority="750" id="243">
                         <rect key="frame" x="17" y="106" width="412" height="17"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                        <animations/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="248">
                             <font key="font" metaFont="system"/>
                             <string key="title">Working...
@@ -45,6 +48,7 @@
                     <textField verticalHuggingPriority="750" id="qfE-iQ-7b8">
                         <rect key="frame" x="16" y="49" width="412" height="17"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                        <animations/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Status" id="jxP-g1-sen">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -54,6 +58,7 @@
                     <button verticalHuggingPriority="750" id="DE9-DM-hhf">
                         <rect key="frame" x="348" y="13" width="84" height="32"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="W9h-vJ-yqH">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -66,6 +71,7 @@ Gw
                         </connections>
                     </button>
                 </subviews>
+                <animations/>
             </view>
         </window>
     </objects>

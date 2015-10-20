@@ -364,7 +364,8 @@
     NS_DURING
         img  = [[NSImage alloc] initWithData:[_mappingView pdfData]];
         data = [img TIFFRepresentationUsingCompression:NSTIFFCompressionNone factor:0.0];
-        data = [[NSBitmapImageRep imageRepWithData:data] representationUsingType:NSJPEGFileType properties:nil];
+        data = [[NSBitmapImageRep imageRepWithData:data] representationUsingType:NSJPEGFileType
+                                                                      properties:[NSDictionary dictionary]];
             
         [data writeToFile:[filename stringByExpandingTildeInPath] atomically:NO];
         

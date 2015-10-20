@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
+        <development version="6300" identifier="xcode"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PrefsGPS">
@@ -25,6 +26,7 @@
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="257">
                     <rect key="frame" x="314" y="50" width="36" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="275">
                         <font key="font" metaFont="smallSystem"/>
                         <string key="title">port:
@@ -36,6 +38,7 @@
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="254">
                     <rect key="frame" x="19" y="50" width="129" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="274">
                         <font key="font" metaFont="smallSystem"/>
                         <string key="title">GPSd hostname:
@@ -47,6 +50,7 @@
                 <textField verticalHuggingPriority="750" id="253">
                     <rect key="frame" x="348" y="48" width="50" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <animations/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="right" title="2947" drawsBackground="YES" id="273">
                         <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="0" negativeFormat="-0" localizesFormat="NO" hasThousandSeparators="NO" thousandSeparator="," id="256">
                             <attributedString key="attributedStringForZero">
@@ -66,6 +70,7 @@
                 <textField verticalHuggingPriority="750" id="252">
                     <rect key="frame" x="151" y="49" width="158" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <animations/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" title="localhost" drawsBackground="YES" id="272">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -78,6 +83,7 @@
                 <button id="249">
                     <rect key="frame" x="20" y="18" width="327" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <animations/>
                     <buttonCell key="cell" type="check" title="Use Delorme Tripmate Mode" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="271">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -89,6 +95,7 @@
                 <popUpButton verticalHuggingPriority="750" id="239">
                     <rect key="frame" x="148" y="78" width="253" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <animations/>
                     <popUpButtonCell key="cell" type="push" title="every 5 seconds" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="241" id="270">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
@@ -110,6 +117,7 @@
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="236">
                     <rect key="frame" x="19" y="84" width="129" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="269">
                         <font key="font" metaFont="smallSystem"/>
                         <string key="title">tracing options:
@@ -121,6 +129,7 @@
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="235">
                     <rect key="frame" x="18" y="116" width="129" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="268">
                         <font key="font" metaFont="smallSystem"/>
                         <string key="title">on "not fixed" position:
@@ -132,6 +141,7 @@
                 <popUpButton verticalHuggingPriority="750" id="229">
                     <rect key="frame" x="148" y="110" width="253" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <animations/>
                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" id="267">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
@@ -150,6 +160,7 @@
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="228">
                     <rect key="frame" x="18" y="174" width="383" height="43"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="266">
                         <font key="font" metaFont="smallSystem"/>
                         <string key="title">KisMAC will automatically detect your serial GPS. If you have a USB GPS device, you will need to install a driver for emulation.</string>
@@ -160,6 +171,7 @@
                 <popUpButton verticalHuggingPriority="750" id="218">
                     <rect key="frame" x="18" y="146" width="383" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <animations/>
                     <popUpButtonCell key="cell" type="push" title="try to detect automatically" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="225" id="265">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
@@ -184,6 +196,7 @@
                     </connections>
                 </popUpButton>
             </subviews>
+            <animations/>
             <point key="canvasLocation" x="564.5" y="320.5"/>
         </customView>
     </objects>

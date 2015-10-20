@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
+        <development version="6300" identifier="xcode"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PrefsSounds">
@@ -25,6 +26,7 @@
                 <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="214">
                     <rect key="frame" x="20" y="86" width="391" height="5"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                     <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <font key="titleFont" metaFont="system"/>
@@ -32,6 +34,7 @@
                 <textField verticalHuggingPriority="750" id="213">
                     <rect key="frame" x="29" y="18" width="369" height="40"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="232">
                         <font key="font" metaFont="smallSystem"/>
                         <string key="title">If the cracking was successful, the open network sound will be played 3 times. If the cracking failed, the closed network sound 
@@ -43,6 +46,7 @@ will be played 3 times.</string>
                 <button id="212">
                     <rect key="frame" x="30" y="64" width="379" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <buttonCell key="cell" type="check" title="Use sounds for cracking failure/success" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="231">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -54,6 +58,7 @@ will be played 3 times.</string>
                 <textField verticalHuggingPriority="750" id="211">
                     <rect key="frame" x="352" y="195" width="62" height="14"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="packets" id="230">
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -63,6 +68,7 @@ will be played 3 times.</string>
                 <textField verticalHuggingPriority="750" id="190">
                     <rect key="frame" x="316" y="194" width="33" height="19"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" borderStyle="bezel" alignment="right" title="100" drawsBackground="YES" id="229">
                         <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="0" negativeFormat="-0" localizesFormat="NO" hasThousandSeparators="NO" thousandSeparator="," id="169">
                             <attributedString key="attributedStringForZero">
@@ -82,6 +88,7 @@ will be played 3 times.</string>
                 <box horizontalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="194">
                     <rect key="frame" x="217" y="97" width="5" height="112"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                     <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <font key="titleFont" metaFont="system"/>
@@ -89,6 +96,7 @@ will be played 3 times.</string>
                 <textField verticalHuggingPriority="750" id="183">
                     <rect key="frame" x="17" y="195" width="129" height="14"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="227">
                         <font key="font" metaFont="smallSystem"/>
                         <string key="title">WEP enabled network:
@@ -101,6 +109,7 @@ reet:</string>
                 <textField verticalHuggingPriority="750" id="179">
                     <rect key="frame" x="255" y="143" width="129" height="14"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Speak SSIDs with:" id="226">
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -110,6 +119,7 @@ reet:</string>
                 <popUpButton verticalHuggingPriority="750" id="178">
                     <rect key="frame" x="29" y="163" width="143" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <popUpButtonCell key="cell" type="push" title="Item1" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="175" id="225">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
@@ -129,6 +139,7 @@ reet:</string>
                 <popUpButton verticalHuggingPriority="750" id="172">
                     <rect key="frame" x="267" y="163" width="143" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <popUpButtonCell key="cell" type="push" title="Item1" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="182" id="224">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
@@ -147,6 +158,7 @@ reet:</string>
                 <textField verticalHuggingPriority="750" id="171">
                     <rect key="frame" x="17" y="143" width="129" height="14"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="223">
                         <font key="font" metaFont="smallSystem"/>
                         <string key="title">WEP disabled network:
@@ -160,6 +172,7 @@ etet:
                 <popUpButton verticalHuggingPriority="750" id="166">
                     <rect key="frame" x="267" y="111" width="143" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <popUpButtonCell key="cell" type="push" title="None" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="177" id="222">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
@@ -180,6 +193,7 @@ etet:
                 <popUpButton verticalHuggingPriority="750" id="165">
                     <rect key="frame" x="29" y="111" width="143" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <popUpButtonCell key="cell" type="push" title="Item1" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="188" id="221">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
@@ -199,6 +213,7 @@ etet:
                 <textField verticalHuggingPriority="750" id="186">
                     <rect key="frame" x="255" y="195" width="62" height="14"/>
                     <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Play every" id="228">
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -206,6 +221,7 @@ etet:
                     </textFieldCell>
                 </textField>
             </subviews>
+            <animations/>
         </customView>
     </objects>
 </document>
