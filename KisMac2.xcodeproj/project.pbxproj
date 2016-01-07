@@ -12,7 +12,7 @@
 			buildConfigurationList = 691030320F9E313700C4E466 /* Build configuration list for PBXAggregateTarget "Kismac.dmg" */;
 			buildPhases = (
 				6910302B0F9E313700C4E466 /* Create DMG */,
-				698665900FAF60BF002D1A84 /* ShellScript */,
+				698665900FAF60BF002D1A84 /* Customizate DMG */,
 			);
 			dependencies = (
 				691030340F9E315D00C4E466 /* PBXTargetDependency */,
@@ -1164,13 +1164,14 @@
 			shellPath = /bin/sh;
 			shellScript = "set -ex\n\necho $ACTION\n\n\n[ \"$ACTION\" = \"build\" ] || exit 0\n[ \"$BUILD_VARIANTS\" = \"normal\" ] || exit 0\n\ndir=\"$TEMP_FILES_DIR/disk\"\ndmg=\"$BUILT_PRODUCTS_DIR/$PROJECT_NAME.dmg\"\n\nrm -rf \"$dir\"\nmkdir \"$dir\"\ncp -R \"$BUILT_PRODUCTS_DIR/$PROJECT_NAME.app\" \"$dir\"\n\nmkdir \"$dir/.background\"\ncp \"$SRCROOT/DMG Artwork/dmgBackground.tiff\" \"$dir/.background\"\nln -s /Applications $dir\n\nrm -f \"$dmg\"\nhdiutil create  -verbose -srcfolder \"$dir\" -format UDRW -volname \"$PROJECT_NAME\" \"$dmg\"\nhdiutil internet-enable -yes \"$dmg\"\nrm -rf \"$dir\"\n";
 		};
-		698665900FAF60BF002D1A84 /* ShellScript */ = {
+		698665900FAF60BF002D1A84 /* Customizate DMG */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Customizate DMG";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
