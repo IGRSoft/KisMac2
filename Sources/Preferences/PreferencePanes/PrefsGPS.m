@@ -112,7 +112,7 @@
 			CFDictionarySetValue (
 								  classesToMatch,
 								  CFSTR (kIOSerialBSDTypeKey),
-								  CFSTR (kIOSerialBSDRS232Type));
+								  CFSTR (kIOSerialBSDAllTypes));
 			kernResult = IOServiceGetMatchingServices (
 													   masterPort, classesToMatch, &serialIterator);
 			if (KERN_SUCCESS == kernResult)
