@@ -1,10 +1,29 @@
-//
-//  KismetXMLImporter.m
-//  KisMAC
-//
-//  Created by Geoffrey Kruse on 9/22/06.
-//  Copyright 2006 __MyCompanyName__. All rights reserved.
-//
+/*
+ 
+ File:			KismetXMLImporter.h
+ Program:		KisMAC
+ Author:		Geoffrey Kruse
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "KismetXMLImporter.h"
 #import "WaveContainer.h"
@@ -45,17 +64,14 @@
     
 }
 
-- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-	//printf("current chars = %s\n", [string UTF8String]);
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string{
+
     if (!currentStringValue) {
         currentStringValue = [[NSMutableString alloc] initWithCapacity:50];
     }
     if ([string characterAtIndex: 0] != '\n') {
         [currentStringValue appendString:string];
-    }/*else {
-        printf("Found Newline!\n");
-    }*/
-    
+    }
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName

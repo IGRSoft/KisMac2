@@ -1,10 +1,30 @@
-//
-//  HTTPStream.m
-//  KisMAC
-//
-//  Created by mick on Mon Apr 12 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
-//
+/*
+ 
+ File:			HTTPStream.m
+ Program:		KisMAC
+ Author:		Michael Roßberg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "HTTPStream.h"
 #import "WaveHelper.h"
@@ -99,92 +119,102 @@
     [topost deleteCharactersInRange:NSMakeRange(0, 1)];
     
     topost = [NSMutableString stringWithFormat:@"POST %@ HTTP/1.1\r\n"
-            "Host: %@\r\n"
+			"Host: %@\r\n"
             "Connection: close\r\n"
             "Content-Type: application/x-www-form-urlencoded\r\n"
             "Content-Length: %ld\r\n\r\n%@", 
-                [_url path], [_url host], (unsigned long)[topost length], topost];
-
+			[_url path], [_url host], (unsigned long)[topost length], topost];
 
     sockd = socket(AF_INET, SOCK_STREAM, 0);
+	
     if (sockd == -1)
     {
         errstr = @"Socket creation failed!";
         CFRelease(myMessage);
-        goto error;
     }
-    
-    hp = gethostbyname([[_url host] UTF8String]);
-    if (hp == NULL)
-    {
-        errstr = NSLocalizedString(@"Could not resolve Server", "Error for Crashreporter");
-        CFRelease(myMessage);
-        goto error1;
-    }
-    ip = *(int *)hp->h_addr_list[0];
-
-    /* server address */ 
-    serv_name.sin_family = AF_INET;
-    serv_name.sin_addr.s_addr = ip;
-    serv_name.sin_port = htons(80);
-        
-    /* connect to the server */
-    status = connect(sockd, (struct sockaddr*)&serv_name, sizeof(serv_name));
-    if (status == -1) {
-        errstr = NSLocalizedString(@"Could not connect to server.", "Error for Crashreporter");
-        CFRelease(myMessage);
-        goto error1;
-    }
-    
-    i = write(sockd, [topost UTF8String], [topost length]);
-    if (i<=0)
-    {
-        CFRelease(myMessage);
-        errstr = NSLocalizedString(@"Could Not Write", "Error for Crashreporter");
-        goto error1;
-    }
-    
-    while (!CFHTTPMessageIsHeaderComplete(myMessage))
-    {
-        i = read(sockd, buf, 1024);
-        if (i<=0)
-        {
-            CFRelease(myMessage);
-            errstr = NSLocalizedString(@"Could not read Response", "Error for Crashreporter");
-            goto error1;
-        
-        }
-        if (!CFHTTPMessageAppendBytes(myMessage, buf, i))
-        {
-            //Handle parsing error.
-            CFRelease(myMessage);
-            errstr = NSLocalizedString(@"Error reading response", "Error for Crashreporter");
-            goto error1;
-        }
-    }
-    
-    _errorCode = CFHTTPMessageGetResponseStatusCode(myMessage);
-    
-    CFRelease(myMessage);
-    close(sockd);
-    
-    _inProgress = NO;
-
-    return YES;
-
-error1: 
-    close(sockd);
- 
-error:
+	else
+	{
+		hp = gethostbyname([[_url host] UTF8String]);
+		if (hp == NULL)
+		{
+			errstr = NSLocalizedString(@"Could not resolve Server", "Error for Crashreporter");
+			CFRelease(myMessage);
+			close(sockd);
+		}
+		else
+		{
+			ip = *(int *)hp->h_addr_list[0];
+			
+			/* server address */
+			serv_name.sin_family = AF_INET;
+			serv_name.sin_addr.s_addr = ip;
+			serv_name.sin_port = htons(80);
+			
+			/* connect to the server */
+			status = connect(sockd, (struct sockaddr*)&serv_name, sizeof(serv_name));
+			if (status == -1) {
+				errstr = NSLocalizedString(@"Could not connect to server.", "Error for Crashreporter");
+				CFRelease(myMessage);
+				close(sockd);
+			}
+			else
+			{
+				i = write(sockd, [topost UTF8String], [topost length]);
+				if (i <= 0)
+				{
+					CFRelease(myMessage);
+					errstr = NSLocalizedString(@"Could Not Write", "Error for Crashreporter");
+					close(sockd);
+				}
+				else
+				{
+					bool needBreakProcess = false;
+					
+					while (!CFHTTPMessageIsHeaderComplete(myMessage))
+					{
+						i = read(sockd, buf, 1024);
+						if (i<=0)
+						{
+							CFRelease(myMessage);
+							errstr = NSLocalizedString(@"Could not read Response", "Error for Crashreporter");
+							needBreakProcess = true;
+							break;
+							
+						}
+						if (!CFHTTPMessageAppendBytes(myMessage, buf, i))
+						{
+							//Handle parsing error.
+							CFRelease(myMessage);
+							needBreakProcess = true;
+							break;
+						}
+					}
+					
+					if (!needBreakProcess) {
+						_errorCode = CFHTTPMessageGetResponseStatusCode(myMessage);
+						
+						CFRelease(myMessage);
+						close(sockd);
+						
+						_inProgress = NO;
+						
+						return YES;
+					}
+				}
+			}
+		}
+	}
+	
     if (_reportErrors) NSBeginCriticalAlertSheet(
         NSLocalizedString(@"Transmittion failed.", "Title for Crashreporter"),
-        OK, NULL, NULL, [WaveHelper mainWindow], self, NULL, NULL, NULL,
-        [NSString stringWithFormat:@"%@: %@", 
-        NSLocalizedString(@"The transmittion of the report failed because of the following error", "Dialog text for Crashreporter"), 
-        errstr], nil);
+												 OK, NULL, NULL, [WaveHelper mainWindow], self, NULL, NULL, NULL,
+												 [NSString stringWithFormat:@"%@: %@",
+												  NSLocalizedString(@"The transmittion of the report failed because of the following error", "Dialog text for Crashreporter"),
+												  errstr], nil);
 
     _errorCode = -1;
     _inProgress = NO;
+	
     return NO;
 }
 
@@ -193,4 +223,5 @@ error:
 - (void)dealloc {
    
 }
+
 @end

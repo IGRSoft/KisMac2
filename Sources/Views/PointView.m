@@ -1,26 +1,30 @@
 /*
-        
-        File:			PointView.m
-        Program:		KisMAC
-		Author:			Michael Rossberg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			PointView.h
+ Program:		KisMAC
+ Author:		Michael Roßberg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "PointView.h"
 #import "WaveHelper.h"
@@ -28,7 +32,8 @@
 
 @implementation PointView
 
-- (void)_genCacheForSize:(int)size {
+- (void)_genCacheForSize:(int)size
+{
     NSRect q;
     NSColor *c = [WaveHelper intToColor:[[NSUserDefaults standardUserDefaults] objectForKey:@"CurrentPositionColor"]];
     NSBezierPath *x;
@@ -43,7 +48,7 @@
     q.origin.y = (_frame.size.height - size) / 2;
     
     for (z=w; z>=-w; z--) {
-        [[c blendedColorWithFraction:(((float)abs(z))/w) ofColor:[NSColor clearColor]] set];
+        [[c blendedColorWithFraction:(((float)fabsf(z))/w) ofColor:[NSColor clearColor]] set];
         x=[NSBezierPath bezierPathWithOvalInRect:q];
         [x setLineWidth:1.5];
         [x stroke];
@@ -60,28 +65,28 @@
 
     _way1=[NSBezierPath bezierPath];
     
-    x1=cos(30.0/180.0*pi)*r1;
-    y1=sin(30.0/180.0*pi)*r1;
+    x1=cos(30.0/180.0*M_PI)*r1;
+    y1=sin(30.0/180.0*M_PI)*r1;
     
     [_way1 moveToPoint:NSMakePoint(x1,y1)];
-    [_way1 lineToPoint:NSMakePoint(x1+cos(60.0/180.0*pi)*r2,y1+sin(60.0/180.0*pi)*r2)];
-    [_way1 lineToPoint:NSMakePoint(x1+cos(0.0/180.0*pi)*r2 ,y1+sin(0.0/180.0*pi)*r2) ];
+    [_way1 lineToPoint:NSMakePoint(x1+cos(60.0/180.0*M_PI)*r2,y1+sin(60.0/180.0*M_PI)*r2)];
+    [_way1 lineToPoint:NSMakePoint(x1+cos(0.0/180.0*M_PI)*r2 ,y1+sin(0.0/180.0*M_PI)*r2) ];
     [_way1 closePath];
     
-    x1=cos(150.0/180.0*pi)*r1;
-    y1=sin(150.0/180.0*pi)*r1;
+    x1=cos(150.0/180.0*M_PI)*r1;
+    y1=sin(150.0/180.0*M_PI)*r1;
     
     [_way1 moveToPoint:NSMakePoint(x1,y1)];
-    [_way1 lineToPoint:NSMakePoint(x1+cos(120.0/180.0*pi)*r2,y1+sin(120.0/180.0*pi)*r2)];
-    [_way1 lineToPoint:NSMakePoint(x1+cos(180.0/180.0*pi)*r2,y1+sin(180.0/180.0*pi)*r2) ];
+    [_way1 lineToPoint:NSMakePoint(x1+cos(120.0/180.0*M_PI)*r2,y1+sin(120.0/180.0*M_PI)*r2)];
+    [_way1 lineToPoint:NSMakePoint(x1+cos(180.0/180.0*M_PI)*r2,y1+sin(180.0/180.0*M_PI)*r2) ];
     [_way1 closePath];
     
-    x1=cos(270.0/180.0*pi)*r1;
-    y1=sin(270.0/180.0*pi)*r1;
+    x1=cos(270.0/180.0*M_PI)*r1;
+    y1=sin(270.0/180.0*M_PI)*r1;
     
     [_way1 moveToPoint:NSMakePoint(x1,y1)];
-    [_way1 lineToPoint:NSMakePoint(x1+cos(240.0/180.0*pi)*r2,y1+sin(240.0/180.0*pi)*r2)];
-    [_way1 lineToPoint:NSMakePoint(x1+cos(300.0/180.0*pi)*r2,y1+sin(300.0/180.0*pi)*r2) ];
+    [_way1 lineToPoint:NSMakePoint(x1+cos(240.0/180.0*M_PI)*r2,y1+sin(240.0/180.0*M_PI)*r2)];
+    [_way1 lineToPoint:NSMakePoint(x1+cos(300.0/180.0*M_PI)*r2,y1+sin(300.0/180.0*M_PI)*r2) ];
     [_way1 closePath];
     
     t = [NSAffineTransform transform];

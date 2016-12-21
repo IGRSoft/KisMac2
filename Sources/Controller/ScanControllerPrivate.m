@@ -1,26 +1,30 @@
 /*
-        
-        File:			ScanControllerPrivate.m
-        Program:		KisMAC
-		Author:			Michael Rossberg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			ScanControllerPrivate.m
+ Program:		KisMAC
+ Author:		Michael Ro§berg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #include <unistd.h>
 
@@ -29,7 +33,6 @@
 #import "ScanControllerScriptable.h"
 #import "WaveHelper.h"
 #import "WaveNetWPACrack.h"
-#import "SpinChannel.h"
 #import "../WaveDrivers/WaveDriver.h"
 #import "MapView.h"
 #import "MapViewAreaView.h"
@@ -84,7 +87,8 @@
 			[sets setObject:whichDriver forKey:@"whichDriver"];
 		}
 		
-        for (x = 0; x < [a count]; ++x) {
+        for (x = 0; x < [a count]; ++x)
+        {
             wd = a[x];
             mi = (NSMenuItem*)[aChannelMenu insertItemWithTitle:[wd deviceName]
 														 action:@selector(selDriver:)
@@ -123,16 +127,27 @@
         c = 0;
         lc = 0;
         
-        for (x = 1; x <= 14; ++x) {
-            if ([config[[NSString stringWithFormat:@"useChannel%.2i",x]] intValue]) {
-                ++c;
-                lc = x;
-            }
+        for (NSNumber *useChannel in config[@"useChannels"])
+        {
+            ++c;
+            lc = useChannel.integerValue;
         }
         
         for (x = 1; x <= 14; ++x)
-            [[aChannelMenu itemAtIndex:x + 5 + _activeDriversCount] setState:((c==1 && lc == x) ? NSOnState : NSOffState)];
+        {
+            [[aChannelMenu itemAtIndex:x + 5 + _activeDriversCount] setState:((c == 1 && lc == x) ? NSOnState : NSOffState)];
+        }
         
+        NSMenuItem *menuItem = [aChannelMenu itemAtIndex:(x + 1) + 5 + _activeDriversCount];
+        [menuItem setState:((c == 1 && lc > 14) ? NSOnState : NSOffState)];
+        if (menuItem.state == NSOnState)
+        {
+            menuItem.title = [NSString stringWithFormat:@"Custom Channel (%@)", @(lc)];
+        }
+        else
+        {
+            menuItem.title = @"Custom Channel";
+        }
         [[aChannelMenu itemAtIndex: _activeDriversCount + 1] setState:([actWD autoAdjustTimer]? NSOnState : NSOffState)];
 
         //just make sure the driver knows about its configuration
@@ -172,7 +187,7 @@
     
 	[scanner setGeigerInterval:[sets integerForKey:@"GeigerSensity"] sound:key];
 
-    if ([sets floatForKey:@"frequence"] < 0.2)
+    if ([sets floatForKey:@"frequence"] < 0.1)
 		[sets setFloat:0.25 forKey:@"frequence"];
     
 	[scanner setFrequency:[sets floatForKey:@"frequence"]];
@@ -231,8 +246,12 @@
     
     _visibleTab = tab;
     
-    if(tab == tabNetworks) {
-        [self updateNetworkTable:self complete:YES];
+    if(tab == tabNetworks)
+    {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            
+            [self updateNetworkTable:self complete:YES];
+        });
     }
 
     [_showNetworks      setState: tab == tabNetworks ? NSOnState : NSOffState];
@@ -384,13 +403,12 @@
     
     _importController = [[ImportController alloc] initWithWindowNibName:@"Crack"];
     [_importController setTitle:title];
+    [_importController setStatusField:@""];
     [WaveHelper setImportController:_importController];
-	
-    [NSApp beginSheet:[_importController window]
-	   modalForWindow:_window
-		modalDelegate:self
-	   didEndSelector:@selector(crackDone:returnCode:contextInfo:)
-		  contextInfo:nil];
+    
+    [_window beginSheet:[_importController window] completionHandler:^(NSModalResponse retCode){
+        [self crackDone:_window returnCode:retCode contextInfo:nil];
+    }];
 }
 
 - (void)startCrackDialogWithTitle:(NSString*)title
@@ -483,7 +501,10 @@
 
 - (void)networkAdded:(NSNotification*)note
 {
-    [self updateNetworkTable:self complete:YES];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        
+        [self updateNetworkTable:self complete:YES];
+    });
 }
 
 #pragma mark -
@@ -491,7 +512,9 @@
 - (void)refreshScanHierarch
 {
     if (!_refreshGUI)
+    {
 		return;
+    }
     
     [ScanHierarch clearAllItems];
     [ScanHierarch updateTree];
@@ -579,7 +602,7 @@
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
 	[invocation setSelector:_busyFunction];
 	[invocation setArgument:&obj atIndex:2];
-	[invocation invoke];
+    [invocation invokeWithTarget:self];
 
     [self menuSetEnabled:YES
 					menu:[NSApp mainMenu]];
@@ -598,7 +621,7 @@
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
 		[invocation setSelector:_busyFunction];
 		[invocation setArgument:(__bridge void *)(anObject) atIndex:0];
-		[invocation invoke];
+		[invocation invokeWithTarget:self];
         _doModal = NO;
 	
 		[self menuSetEnabled:YES

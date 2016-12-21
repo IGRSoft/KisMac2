@@ -1,26 +1,30 @@
 /*
-        
-        File:			WaveNet.mm
-        Program:		KisMAC
-		Author:			Michael Rossberg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			WaveNet.mm
+ Program:		KisMAC
+ Author:		Michael Ro§berg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import <AppKit/NSSound.h>
 #import <BIGeneric/BIGeneric.h>
@@ -44,13 +48,13 @@
 #define WEP_GEM_GREEN_LEVEL   130000
 
 #define AMOD(x, y) ((x) % (y) < 0 ? ((x) % (y)) + (y) : (x) % (y))
-#define N 256
 
 #define min(a, b)	(a) < (b) ? a : b
 
 struct graphStruct zeroGraphData;
 
-struct signalCoords {
+struct signalCoords
+{
 	double x, y;
 	int strength;
 } __attribute__((packed));
@@ -69,7 +73,8 @@ NSInteger lengthSort(id string1, id string2, void *context)
 
 @implementation WaveNet
 
--(id)initWithID:(int)netID {
+-(id)initWithID:(int)netID
+{
     waypoint cp;
     GPSController *gpsc;
 
@@ -678,7 +683,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 			lSentence=[NSString stringWithFormat: NSLocalizedString(@"found %@ network. SSID is %@", "this is for speech output"),
 				oc, isHidden ? NSLocalizedString(@"hidden", "for speech"): [_SSID uppercaseString]];
 			NS_DURING
-				[WaveHelper speakSentence:[lSentence UTF8String] withVoice:lVoice];
+				[WaveHelper speakSentence:(__bridge CFStringRef)(lSentence) withVoice:lVoice];
 			NS_HANDLER
 			NS_ENDHANDLER
 		}
@@ -728,7 +733,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
                     NSString * lSentence = [NSString stringWithFormat: NSLocalizedString(@"Reencountered network. SSID is %@", "this is for speech output"),
                         [_SSID length] == 0 ? NSLocalizedString(@"hidden", "for speech"): [_SSID uppercaseString]];
                     NS_DURING
-                        [WaveHelper speakSentence:[lSentence UTF8String] withVoice:lVoice];
+                        [WaveHelper speakSentence:(__bridge CFStringRef)(lSentence) withVoice:lVoice];
                     NS_HANDLER
                     NS_ENDHANDLER
                 }
@@ -1358,33 +1363,51 @@ NSInteger lengthSort(id string1, id string2, void *context)
     return dateString;
 }
 
-- (NSDate*)lastSeenDate {
+- (NSDate*)lastSeenDate
+{
     return _date;
 }
-- (NSString *)firstDate {
+
+- (NSString *)firstDate
+{
     return [NSString stringWithFormat:@"%@", aFirstDate]; //[aFirstDate descriptionWithCalendarFormat:@"%H:%M %d-%m-%y" timeZone:nil locale:nil];
 }
-- (NSDate *)firstSeenDate {
+
+- (NSDate *)firstSeenDate
+{
     return aFirstDate;
 }
-- (NSString *)getIP {
-    if (_IPAddress) {
+
+- (NSString *)getIP
+{
+    if (_IPAddress)
+    {
         return _IPAddress;
     }
     return nil;
 }
-- (NSString *)data {
+
+- (NSString *)data
+{
     return [WaveHelper bytesToString: _bytes];
 }
-- (float)dataCount {
+
+- (double)dataCount
+{
     return _bytes;
 }
-- (NSString *)getVendor {
-    if (_vendor) return _vendor;
+
+- (NSString *)getVendor
+{
+    if (_vendor)
+        return _vendor;
+    
     _vendor=[WaveHelper vendorForMAC:_BSSID];
     return _vendor;
 }
-- (NSString*)rates {
+
+- (NSString*)rates
+{
 	int i;
 	NSMutableArray *a = [NSMutableArray array];
 	for (i = 0; i < _rateCount; ++i) {
@@ -1392,13 +1415,18 @@ NSInteger lengthSort(id string1, id string2, void *context)
 	}
 	return [a componentsJoinedByString:@", "];
 }
-- (NSString*)comment {
+- (NSString*)comment
+{
     return aComment;
 }
-- (void)setComment:(NSString*)comment {
-    aComment=comment;
+
+- (void)setComment:(NSString*)comment
+{
+    aComment = comment;
 }
-- (int)avgSignal {
+
+- (int)avgSignal
+{
     int sum = 0;
     int i, x, c;
     int max = (graphLength < _avgTime*4) ? graphLength : _avgTime*4;
@@ -1411,13 +1439,19 @@ NSInteger lengthSort(id string1, id string2, void *context)
             ++c;
         }
     }
-    if (c==0) return 0;
+    if (c==0)
+        return 0;
+    
     return sum / c;
 }
-- (int)curSignal {
+
+- (int)curSignal
+{
     return _curSignal;
 }
-- (int)curPackets {
+
+- (int)curPackets
+{
     return curPackets;
 }
 - (int)curTraffic {
@@ -1528,7 +1562,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
             {
 				if(!isascii(ascii[i]))
                 {
-					asciiKey = [NSString stringWithFormat:@"%s", "Key cannot be converted"];
+					//asciiKey = [NSString stringWithFormat:@"%s", "Key cannot be converted"];
                     break;
 				}
 			}//for
@@ -1579,138 +1613,203 @@ NSInteger lengthSort(id string1, id string2, void *context)
 
 - (NSDictionary*)cache
 {
-	NSString *enc, *type;
-	NSDictionary *cache;
-	NSImage *image = nil;
-	if (_cacheValid) return _cache;
-	
-	switch (_isWep)
+    NSDictionary *cache;
+    NSString *enc, *type;
+    NSImage *image = nil;
+    
+    @synchronized(self)
     {
-		case encryptionTypeLEAP:
-			enc = NSLocalizedString(@"LEAP", "table description");
-			break;
-		case encryptionTypeWPA2:     
-			enc = NSLocalizedString(@"WPA2", "table description");
+        if (_cacheValid) return _cache;
+    }
+    
+    GBStorageController *gbStorage = [GBStorageController sharedControllerForNamespace:kGBStorageDefaultNamespace];
+    
+    switch (_isWep)
+    {
+        case encryptionTypeLEAP:
+            enc = NSLocalizedString(@"LEAP", "table description");
+            break;
+        case encryptionTypeWPA2:
+            enc = NSLocalizedString(@"WPA2", "table description");
             if(_challengeResponseStatus == chreResponse)
             {
-                image = [NSImage imageNamed:@"orangegem.png"];
+                if (![gbStorage objectForKeyedSubscript:@"orangegem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"orangegem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"orangegem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"orangegem"];
             }
             else if(_challengeResponseStatus == chreChallenge)
             {
-                image = [NSImage imageNamed:@"orangegem.png"];
+                if (![gbStorage objectForKeyedSubscript:@"orangegem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"orangegem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"orangegem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"orangegem"];
             }
             else if(_challengeResponseStatus == chreComplete)
             {
-                image = [NSImage imageNamed:@"greengem.png"];
+                if (![gbStorage objectForKeyedSubscript:@"greengem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"greengem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"greengem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"greengem"];
             }
-			break;
-		case encryptionTypeWPA:     
-			enc = NSLocalizedString(@"WPA", "table description");
+            break;
+        case encryptionTypeWPA:
+            enc = NSLocalizedString(@"WPA", "table description");
             if(_challengeResponseStatus == chreResponse)
             {
-                image = [NSImage imageNamed:@"orangegem.png"];
+                if (![gbStorage objectForKeyedSubscript:@"orangegem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"orangegem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"orangegem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"orangegem"];
             }
             else if(_challengeResponseStatus == chreChallenge)
             {
-                image = [NSImage imageNamed:@"orangegem.png"];
+                if (![gbStorage objectForKeyedSubscript:@"orangegem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"orangegem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"orangegem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"orangegem"];
             }
             else if(_challengeResponseStatus == chreComplete)
             {
-                image = [NSImage imageNamed:@"greengem.png"];
+                if (![gbStorage objectForKeyedSubscript:@"greengem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"greengem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"greengem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"greengem"];
             }
-			break;
-		case encryptionTypeWEP40:
-			enc = NSLocalizedString(@"WEP-40", "table description");
-            if( [self uniqueIVs] > WEP_GEM_ORANGE_LEVEL && 
-                [self uniqueIVs] < WEP_GEM_GREEN_LEVEL)
+            break;
+        case encryptionTypeWEP40:
+            enc = NSLocalizedString(@"WEP-40", "table description");
+            if( [self uniqueIVs] > WEP_GEM_ORANGE_LEVEL &&
+               [self uniqueIVs] < WEP_GEM_GREEN_LEVEL)
             {
-                image = [NSImage imageNamed:@"orangegem.png"];
+                if (![gbStorage objectForKeyedSubscript:@"orangegem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"orangegem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"orangegem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"orangegem"];
             }
             else if([self uniqueIVs] > WEP_GEM_GREEN_LEVEL)
             {
-                image = [NSImage imageNamed:@"greengem.png"];
+                if (![gbStorage objectForKeyedSubscript:@"greengem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"greengem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"greengem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"greengem"];
             }
-			break;
-		case encryptionTypeWEP:
-			enc = NSLocalizedString(@"WEP", "table description");
-            if( [self uniqueIVs] > WEP_GEM_ORANGE_LEVEL && 
-                [self uniqueIVs] < WEP_GEM_GREEN_LEVEL)
+            break;
+        case encryptionTypeWEP:
+            enc = NSLocalizedString(@"WEP", "table description");
+            if( [self uniqueIVs] > WEP_GEM_ORANGE_LEVEL &&
+               [self uniqueIVs] < WEP_GEM_GREEN_LEVEL)
             {
-                image = [NSImage imageNamed:@"orangegem.png"];
+                if (![gbStorage objectForKeyedSubscript:@"orangegem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"orangegem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"orangegem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"orangegem"];
             }
             else if([self uniqueIVs] > WEP_GEM_GREEN_LEVEL)
             {
-                image = [NSImage imageNamed:@"greengem.png"];
+                if (![gbStorage objectForKeyedSubscript:@"greengem"])
+                {
+                    NSImage *image = [NSImage imageNamed:@"greengem"];
+                    [gbStorage setObject:image forKeyedSubscript:@"greengem"];
+                }
+                image = [gbStorage objectForKeyedSubscript:@"greengem"];
             }
-			break;
-		case encryptionTypeNone:
-            image = [NSImage imageNamed:@"greengem.png"];
-			enc = NSLocalizedString(@"NO", "table description");
-			break;
-		case encryptionTypeUnknown:
-			enc = @"";
-			break;
-		default:
-			enc = @"";
-			NSAssert(NO, @"Encryption type invalid");
-	}
-   
-	switch (_type) 
+            break;
+        case encryptionTypeNone:
+            image = [NSImage imageNamed:@"greengem"];
+            enc = NSLocalizedString(@"NO", "table description");
+            break;
+        case encryptionTypeUnknown:
+            enc = @"";
+            break;
+        default:
+            enc = @"";
+            NSAssert(NO, @"Encryption type invalid");
+    }
+    
+    switch (_type)
     {
-		case networkTypeUnknown:
-			type = @"";
-			break;
-		case networkTypeAdHoc:
-			type = NSLocalizedString(@"ad-hoc", "table description");
-			break;
-		case networkTypeManaged:
-			type = NSLocalizedString(@"managed", "table description");
-			break;
-		case networkTypeTunnel:
-			type = NSLocalizedString(@"tunnel", "table description");
-			break;
-		case networkTypeProbe:
-			type = NSLocalizedString(@"probe", "table description");
-			break;
-		case networkTypeLucentTunnel:
-			type = NSLocalizedString(@"lucent tunnel", "table description");
-			break;
-		default:
-			type = @"";
-			NSAssert(NO, @"Network type invalid");
-	}
+        case networkTypeUnknown:
+            type = @"";
+            break;
+        case networkTypeAdHoc:
+            type = NSLocalizedString(@"ad-hoc", "table description");
+            break;
+        case networkTypeManaged:
+            type = NSLocalizedString(@"managed", "table description");
+            break;
+        case networkTypeTunnel:
+            type = NSLocalizedString(@"tunnel", "table description");
+            break;
+        case networkTypeProbe:
+            type = NSLocalizedString(@"probe", "table description");
+            break;
+        case networkTypeLucentTunnel:
+            type = NSLocalizedString(@"lucent tunnel", "table description");
+            break;
+        default:
+            type = @"";
+            NSAssert(NO, @"Network type invalid");
+    }
     
     //if we didn't set the Gem yet, set it red here
     if (image == nil)
     {
-        image = [NSImage imageNamed:@"redgem.png"];
+        if (![gbStorage objectForKeyedSubscript:@"redgem"])
+        {
+            NSImage *image = [NSImage imageNamed:@"redgem"];
+            [gbStorage setObject:image forKeyedSubscript:@"redgem"];
+        }
+        image = [gbStorage objectForKeyedSubscript:@"redgem"];
     }
-	
-	cache = @{@"id": [NSString stringWithFormat:@"%i", _netID],
-		@"ssid": [self SSID],
-		@"bssid": [self BSSID], 
-		@"signal": [NSString stringWithFormat:@"%i", _curSignal],
-		@"avgsignal": [NSString stringWithFormat:@"%i", [self avgSignal]],
-		@"maxsignal": [NSString stringWithFormat:@"%i", _maxSignal],
-		@"channel": [NSString stringWithFormat:@"%i", _channel],
-        @"primaryChannel": [NSString stringWithFormat:@"%i", _primaryChannel],
-		@"packets": [NSString stringWithFormat:@"%i", _packets],
-		@"data": [self data],
-		@"wep": enc,
-		@"type": type,
-		@"lastseen": [NSString stringWithFormat:@"%@", _date],
-        @"challengeResponse": image};
-	
-	_cache = cache;
-	_cacheValid = YES;
-	return _cache; 
+    
+    @synchronized(self)
+    {
+        cache = @{@"id": [NSString stringWithFormat:@"%i", _netID],
+                  @"ssid": [self SSID],
+                  @"bssid": [self BSSID],
+                  @"signal": [NSString stringWithFormat:@"%i", _curSignal],
+                  @"avgsignal": [NSString stringWithFormat:@"%i", [self avgSignal]],
+                  @"maxsignal": [NSString stringWithFormat:@"%i", _maxSignal],
+                  @"channel": [NSString stringWithFormat:@"%i", _channel],
+                  @"primaryChannel": [NSString stringWithFormat:@"%i", _primaryChannel],
+                  @"packets": [NSString stringWithFormat:@"%i", _packets],
+                  @"data": [self data],
+                  @"wep": enc,
+                  @"type": type,
+                  @"lastseen": [NSString stringWithFormat:@"%@", _date],
+                  @"challengeResponse": image};
+        
+        _cache = cache;
+        _cacheValid = YES;
+    }
+
+    return cache;
 }
 
 #pragma mark -
 
-- (bool)joinNetwork 
+- (bool)joinNetwork
 {
-    return [[WaveDriverAirport sharedInstance] joinBSSID: _rawBSSID 
+    return [[WaveDriverAirport sharedInstance] joinBSSID: _rawBSSID
                                             withPassword: _password];
 }
 
@@ -1850,7 +1949,7 @@ int ipSort(WaveClient* w1, WaveClient* w2, int ascend) {
     return ascend * i;
 }
 
-typedef int (*SORTFUNC)(id, id, void *);
+typedef int (*SORTFUNC)(id, id, int);
 
 - (void) sortByColumn:(NSString*)ident order:(bool)ascend {
     bool sorted = YES;
@@ -1858,14 +1957,14 @@ typedef int (*SORTFUNC)(id, id, void *);
     int ret;
     unsigned int w, x, y, _sortedCount, a;
     
-    if      ([ident isEqualToString:@"id"])     sf = (SORTFUNC)idSort;
-    else if ([ident isEqualToString:@"client"]) sf = (SORTFUNC)clientSort;
-    else if ([ident isEqualToString:@"vendor"]) sf = (SORTFUNC)vendorSort;
-    else if ([ident isEqualToString:@"signal"]) sf = (SORTFUNC)signalSort;
-    else if ([ident isEqualToString:@"received"]) sf=(SORTFUNC)receivedSort;
-    else if ([ident isEqualToString:@"sent"])   sf = (SORTFUNC)sentSort;
-    else if ([ident isEqualToString:@"lastseen"]) sf=(SORTFUNC)dateSort;
-    else if ([ident isEqualToString:@"ipa"])      sf=(SORTFUNC)ipSort;
+    if      ([ident isEqualToString:@"id"])			sf = (SORTFUNC)idSort;
+    else if ([ident isEqualToString:@"client"])		sf = (SORTFUNC)clientSort;
+    else if ([ident isEqualToString:@"vendor"])		sf = (SORTFUNC)vendorSort;
+    else if ([ident isEqualToString:@"signal"])		sf = (SORTFUNC)signalSort;
+    else if ([ident isEqualToString:@"received"])	sf = (SORTFUNC)receivedSort;
+    else if ([ident isEqualToString:@"sent"])		sf = (SORTFUNC)sentSort;
+    else if ([ident isEqualToString:@"lastseen"])	sf = (SORTFUNC)dateSort;
+    else if ([ident isEqualToString:@"ipa"])		sf = (SORTFUNC)ipSort;
     else {
         DBNSLog(@"Unknown sorting column. This is a bug and should never happen.");
         return;
@@ -1880,7 +1979,7 @@ typedef int (*SORTFUNC)(id, id, void *);
     for (y = 1; y <= _sortedCount; ++y) {
         for (x = y - 1; x < (_sortedCount - y); ++x) {
             w = x + 1;
-            ret = (*sf)(aClients[aClientKeys[x]], aClients[aClientKeys[w]], (void*)a);
+            ret = (*sf)(aClients[aClientKeys[x]], aClients[aClientKeys[w]], a);
             if (ret == NSOrderedDescending) {
                 sorted = NO;
                 
@@ -1896,7 +1995,7 @@ typedef int (*SORTFUNC)(id, id, void *);
         
         for (x = (_sortedCount - y); x >= y; x--) {
             w = x - 1;
-            ret = (*sf)(aClients[aClientKeys[w]], aClients[aClientKeys[x]], (void*)a);
+            ret = (*sf)(aClients[aClientKeys[w]], aClients[aClientKeys[x]], a);
             if (ret == NSOrderedDescending) {
                 sorted = NO;
                 

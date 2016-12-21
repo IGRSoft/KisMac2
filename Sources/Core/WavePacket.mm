@@ -1,26 +1,30 @@
 /*
-        
-        File:			WavePacket.mm
-        Program:		KisMAC
-		Author:			Michael Rossberg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			WavePacket.mm
+ Program:		KisMAC
+ Author:		Michael Ro§berg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "WavePacket.h"
 #import "WaveHelper.h"
@@ -29,7 +33,6 @@
 #import <pcap.h>
 
 #define AMOD(x, y) ((x) % (y) < 0 ? ((x) % (y)) + (y) : (x) % (y))
-#define N 256
 
 bool is8021xPacket(const UInt8* fileData) {
     if (fileData[0] == 0xAA &&
@@ -52,7 +55,7 @@ bool is8021xPacket(const UInt8* fileData) {
 -(void) parseTaggedData:(unsigned char*) packet length:(int) length {
     int len;
 	UInt32 *vendorID;
-    char ssid[256];
+    char ssid[LAST_BIT];
 	
     _primaryChannel = 0;
     
@@ -207,7 +210,8 @@ bool is8021xPacket(const UInt8* fileData) {
         _signal=0;
     
     // Determine frame channel (received channel)
-    _channel=(f->ctrl.channel>14 || f->ctrl.channel<1 ? 1 : f->ctrl.channel);
+    //_channel=(f->ctrl.channel>14 || f->ctrl.channel<1 ? 1 : f->ctrl.channel);
+    _channel = f->ctrl.channel;
     
     // TODO: Determine frame rx rate
 //    DBNSLog(@"rx_rate %d", f->ctrl.rate);
@@ -289,6 +293,9 @@ bool is8021xPacket(const UInt8* fileData) {
                 case IEEE80211_SUBTYPE_CF_END_ACK:
 				case IEEE80211_SUBTYPE_BLOCK_ACK:
 				case IEEE80211_SUBTYPE_BLOCK_ACK_REQ:
+                case IEEE80211_SUBTYPE_CONTROL_WRAPPER:
+                case IEEE80211_SUBTYPE_VHT_NDP_ANNOUNCE:
+                case IEEE80211_SUBTYPE_BEAMFORM_POLL:
                     break;
                 default:
                     DBNSLog(@"%d %d", _type, _subtype);
@@ -346,10 +353,10 @@ bool is8021xPacket(const UInt8* fileData) {
             return NO;
     }
 	if ((memcmp(_addr2, "\x00\x90\xd0\xf8\x99\x00", 6) == 0) && (_type == IEEE80211_TYPE_DATA)) {
-		DBNSLog(@"%@ %@ %@ %@ %@", [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X%.2X", _addr1[0], _addr1[1], _addr1[2], _addr1[3], _addr1[4], _addr1[5], _addr1[6]],
-			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X%.2X", _addr2[0], _addr2[1], _addr2[2], _addr2[3], _addr2[4], _addr2[5], _addr2[6]], 
-			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X%.2X", _addr3[0], _addr3[1], _addr3[2], _addr3[3], _addr3[4], _addr3[5], _addr3[6]], 
-			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X%.2X", _addr4[0], _addr4[1], _addr4[2], _addr4[3], _addr4[4], _addr4[5], _addr4[6]], 
+		DBNSLog(@"%@ %@ %@ %@ %@", [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", _addr1[0], _addr1[1], _addr1[2], _addr1[3], _addr1[4], _addr1[5]],
+			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", _addr2[0], _addr2[1], _addr2[2], _addr2[3], _addr2[4], _addr2[5]],
+			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", _addr3[0], _addr3[1], _addr3[2], _addr3[3], _addr3[4], _addr3[5]],
+			  [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", _addr4[0], _addr4[1], _addr4[2], _addr4[3], _addr4[4], _addr4[5]],
 			  [WaveHelper frameControlToString:hdr1->frame_ctl]);
         [WaveHelper dumpKFrame:f];
     }
@@ -408,7 +415,7 @@ bool is8021xPacket(const UInt8* fileData) {
     }
     if (m == nil)
         return nil;
-    return [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X%.2X", m[0], m[1], m[2], m[3], m[4], m[5], m[6]];
+    return [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", m[0], m[1], m[2], m[3], m[4], m[5]];
 }
 
 #pragma mark -
@@ -716,17 +723,17 @@ bool is8021xPacket(const UInt8* fileData) {
         return _revelsKeyByte;
     }
         
-    int a = (_payload[0] + _payload[1]) % N;
-    int b = AMOD((_payload[0] + _payload[1]) - _payload[2], N);
+    int a = (_payload[0] + _payload[1]) % LAST_BIT;
+    int b = AMOD((_payload[0] + _payload[1]) - _payload[2], LAST_BIT);
 
     for(UInt8 B = 0; B < 13; ++B) {
       if((((0 <= a && a < B) ||
          (a == B && b == (B + 1) * 2)) &&
          (B % 2 ? a != (B + 1) / 2 : 1)) ||
          (a == B + 1 && (B == 0 ? b == (B + 1) * 2 : 1)) ||
-         (_payload[0] == B + 3 && _payload[1] == N - 1) ||
+         (_payload[0] == B + 3 && _payload[1] == LAST_BIT - 1) ||
          (B != 0 && !(B % 2) ? (_payload[0] == 1 && _payload[1] == (B / 2) + 1) ||
-         (_payload[0] == (B / 2) + 2 && _payload[1] == (N - 1) - _payload[0]) : 0)) {
+         (_payload[0] == (B / 2) + 2 && _payload[1] == (LAST_BIT - 1) - _payload[0]) : 0)) {
             //DBNSLog(@"We got a weak packet reveling byte: %u",B);
             _revelsKeyByte = B;
             return _revelsKeyByte;

@@ -1,38 +1,43 @@
 /*
-        
-        File:			WayPoint.m
-        Program:		KisMAC
-	Author:			Michael Rossberg
-				mick@binaervarianz.de
-	Description:		KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			WayPoint.m
+ Program:		KisMAC
+ Author:		Michael Ro§berg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "WayPoint.h"
-#import "ScriptingEngine.h"
+#import "WaveHelper.h"
 
 @implementation WayPoint
 
-- (void)awakeFromNib {
+- (void)awakeFromNib
+{
     [[self window] setDelegate:self];
 }
 
-- (void)setWaypoint:(waypoint)w {
+- (void)setWaypoint:(waypoint)w
+{
     [aLat  setFloatValue: ((w._lat >= 0) ? w._lat : -w._lat) ];
     [aLong setFloatValue: ((w._long>= 0) ? w._long: -w._long)];
     
@@ -43,27 +48,31 @@
     else  [aEW setStringValue:@"W"];
 }
 
-- (void)setMode:(enum selmode)mode {
+- (void)setMode:(enum selmode)mode
+{
     NSParameterAssert(mode == selCurPos || mode == selWaypoint1 || mode == selWaypoint2);
     _mode = mode;
 }
 
-- (void)setPoint:(NSPoint)p {
+- (void)setPoint:(NSPoint)p
+{
     _p = p;
 }
 
-- (IBAction)NSStepClicked:(id)sender {
+- (IBAction)NSStepClicked:(id)sender
+{
     if ([[aNS stringValue] isEqualToString:@"N"]) [aNS setStringValue:@"S"];
     else [aNS setStringValue:@"N"];
 }
 
-- (IBAction)EWStepClicked:(id)sender {
+- (IBAction)EWStepClicked:(id)sender
+{
     if ([[aEW stringValue] isEqualToString:@"E"]) [aEW setStringValue:@"W"];
     else [aEW setStringValue:@"E"];
 }
 
-- (IBAction)OKClicked:(id)sender {
-    NSDictionary *args;
+- (IBAction)OKClicked:(id)sender
+{
     NSAppleEventDescriptor *lat, *lon, *x, *y;
     double z;
     
@@ -76,15 +85,27 @@
     z = _p.y;
     y = [NSAppleEventDescriptor descriptorWithDescriptorType:typeIEEE64BitFloatingPoint bytes:&z length:sizeof(double)];
 
-    switch(_mode) {
+    switch(_mode)
+    {
     case selCurPos:
-        args = @{[NSString stringWithFormat:@"%d", 'KMLa']: lat,[NSString stringWithFormat:@"%d", 'KMLo']: lon};
-        [ScriptingEngine selfSendEvent:'KMSP' withArgs:args];
+        {
+            [[WaveHelper mapView] setCurrentPostionToLatitude:[[lat stringValue] doubleValue]
+                                                 andLongitude:[[lon stringValue] doubleValue]];
+        }
         break;
     case selWaypoint1:
     case selWaypoint2:
-        args = @{[NSString stringWithFormat:@"%d", 'KMLa']: lat,[NSString stringWithFormat:@"%d", 'KMLo']: lon, [NSString stringWithFormat:@"%d", 'KM_x']: x, [NSString stringWithFormat:@"%d", 'KM_y']: y, [NSString stringWithFormat:@"%d", keyDirectObject]: [NSAppleEventDescriptor descriptorWithInt32: (_mode == selWaypoint1) ? 1 : 2]};
-        [ScriptingEngine selfSendEvent:'KMSW' withArgs:args];
+        {
+            NSPoint p;
+            waypoint coord;
+            
+            p.x = [[x stringValue] doubleValue];
+            p.y = [[y stringValue] doubleValue];
+            coord._lat  = [[lat stringValue] doubleValue];
+            coord._long = [[lon stringValue] doubleValue];
+            coord._elevation = 0;
+            [[WaveHelper mapView] setWaypoint:_mode toPoint:p atCoordinate:coord];
+        }
         break;        
     default:
         break;
@@ -93,24 +114,30 @@
     [[self window] performClose:sender];
 }
 
-- (IBAction)CancelClicked:(id)sender {
+- (IBAction)CancelClicked:(id)sender
+{
     [[self window] performClose:sender];
 }
 
 #pragma mark Fade Out Code
 
-- (BOOL)windowShouldClose:(id)sender {
+- (BOOL)windowShouldClose:(id)sender
+{
     // Set up our timer to periodically call the fade: method.
     [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(fade:) userInfo:nil repeats:YES];
     
     return NO;
 }
 
-- (void)fade:(NSTimer *)timer {
-    if ([[self window] alphaValue] > 0.0) {
+- (void)fade:(NSTimer *)timer
+{
+    if ([[self window] alphaValue] > 0.0)
+    {
         // If window is still partially opaque, reduce its opacity.
         [[self window] setAlphaValue:[[self window] alphaValue] - 0.2];
-    } else {
+    }
+    else
+    {
         // Otherwise, if window is completely transparent, destroy the timer and close the window.
         [timer invalidate];
         
@@ -120,4 +147,5 @@
         [[self window] setAlphaValue:1.0];
     }
 }
+
 @end

@@ -1,26 +1,31 @@
 /*
-        
-        File:			ScanController.m
-        Program:		KisMAC
-	Author:			Michael Rossberg
-				mick@binaervarianz.de
-	Description:		KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
+ 
+ File:			ScanController.h
+ Program:		KisMAC
+ Author:		Michael Ro§berg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
 #import "ScanController.h"
 #import "ScanControllerPrivate.h"
 #import "ScanControllerScriptable.h"
@@ -33,8 +38,7 @@
 #import "../Controller/TrafficController.h"
 #import "WaveContainer.h"
 #import "../WaveDrivers/WaveDriver.h"
-#import "ScriptController.h"
-#import "SpinChannel.h"
+#import "BridgeController.h"
 #import "MapView.h"
 #import <sys/sysctl.h>
 #import <BIGeneric/BIGeneric.h>
@@ -62,68 +66,68 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
 + (void)initialize
 {
-    id registrationDict = nil ;
-    NSDictionary * defaultDriverDict = @{@"driverID": @"WaveDriverAirport", @"deviceName": @"Airport Card"};
-
-    registrationDict = @{@"frequence": @0.25f,
-        @"activeScanInterval": @0.25f,
-        @"ScanAtStartUp": @NO,
-        @"dontAskToSave": @NO,
-        @"terminateIfClosed": @YES,
-        @"GeigerSensity": @250,
-        @"Voice": @0,
-        @"CurrentPositionColor": [WaveHelper colorToInt:[NSColor redColor]],
-        @"TraceColor": [WaveHelper colorToInt:[NSColor redColor]],
-        @"WayPointColor": [WaveHelper colorToInt:[NSColor blueColor]],
-        @"NetAreaColorGood": [WaveHelper colorToInt:[[NSColor greenColor] colorWithAlphaComponent:0.5]],
-        @"NetAreaColorBad": [WaveHelper colorToInt:[[NSColor redColor] colorWithAlphaComponent:0.5]],
-        @"NetAreaQuality": @5.0f,
-        @"NetAreaSensitivity": @30,
-        @"WEPSound": @"None",
-        @"noWEPSound": @"None",
-        @"GeigerSound": @"None",
-		@"playCrackSounds": [NSNumber numberWithBool:TRUE],
-        @"GPSDevice": @"CoreLocation",
-        @"GPSTrace": @2,
-        @"GPSNoFix": @0,
-        @"GPSTripmate": @NO,
-        @"DownloadMapScale": @"3",
-        @"DownloadMapServer": @"<Select a Server>",
-        @"DownloadMapWidth": @1024,
-        @"DownloadMapHeight": @768,
-        @"DownloadMapLatitude": @0.0f,
-        @"DownloadMapHLongitude": @0.0f,
-        @"DownloadMapNS": @"N",
-        @"DownloadMapEW": @"E",
-        @"TrafficViewShowSSID": @1,
-        @"TrafficViewShowBSSID": @0,
-        @"FilterBSSIDList": @[],
-        @"GPSDaemonPort": @2947,
-        @"GPSDaemonHost": @"localhost",
-        @"DebugMode": @0,
-        @"WaveNetAvgTime": @2,
-        @"ActiveDrivers": @[defaultDriverDict],
-        @"ac_ff": @2, 
-        @"bf_interval": @0.1f,
-        @"pr_interval": @100};
+    NSDictionary *defaultDriverDict = @{@"driverID": @"WaveDriverAirport", @"deviceName": @"Airport Card"};
     
-    NSDictionary  *networkTableFieldsVisibility = @{@"id": @YES,
-                                          @"channel": @YES,
-                                          @"primaryChannel": @NO,
-                                          @"ssid": @YES,
-                                          @"bssid": @YES,
-                                          @"wep": @YES,
-                                          @"type": @YES,
-                                          @"signal": @YES,
-                                          @"avgsignal": @YES,
-                                          @"maxsignal": @YES,
-                                          @"packets": @YES,
-                                          @"data": @YES,
-                                          @"lastseen": @YES,
-                                          @"challengeResponse": @YES};
+    NSDictionary *registrationDict = @{@"frequence":              @0.25,
+                                       @"activeScanInterval":     @0.25,
+                                       @"ScanAtStartUp":          @NO,
+                                       @"dontAskToSave":          @NO,
+                                       @"terminateIfClosed":      @YES,
+                                       @"GeigerSensity":          @250,
+                                       @"Voice":                  @0,
+                                       @"CurrentPositionColor":   [WaveHelper colorToInt:[NSColor redColor]],
+                                       @"TraceColor":             [WaveHelper colorToInt:[NSColor redColor]],
+                                       @"WayPointColor":          [WaveHelper colorToInt:[NSColor blueColor]],
+                                       @"NetAreaColorGood":       [WaveHelper colorToInt:[[NSColor greenColor] colorWithAlphaComponent:0.5]],
+                                       @"NetAreaColorBad":        [WaveHelper colorToInt:[[NSColor redColor] colorWithAlphaComponent:0.5]],
+                                       @"NetAreaQuality":         @5.0,
+                                       @"NetAreaSensitivity":     @30,
+                                       @"WEPSound":               @"None",
+                                       @"noWEPSound":             @"None",
+                                       @"GeigerSound":            @"None",
+                                       @"playCrackSounds":        [NSNumber numberWithBool:TRUE],
+                                       @"GPSDevice":              @"CoreLocation",
+                                       @"GPSTrace":               @2,
+                                       @"GPSNoFix":               @0,
+                                       @"GPSTripmate":            @NO,
+                                       @"DownloadMapScale":       @"3",
+                                       @"DownloadMapServer":      @"<Select a Server>",
+                                       @"DownloadMapWidth":       @1024,
+                                       @"DownloadMapHeight":      @768,
+                                       @"DownloadMapLatitude":    @0.0,
+                                       @"DownloadMapHLongitude":  @0.0,
+                                       @"DownloadMapNS":          @"N",
+                                       @"DownloadMapEW":          @"E",
+                                       @"TrafficViewShowSSID":    @1,
+                                       @"TrafficViewShowBSSID":   @0,
+                                       @"FilterBSSIDList":        @[],
+                                       @"GPSDaemonPort":          @2947,
+                                       @"GPSDaemonHost":          @"localhost",
+                                       @"DebugMode":              @0,
+                                       @"WaveNetAvgTime":         @2,
+                                       @"ActiveDrivers":          @[defaultDriverDict],
+                                       @"ac_ff":                  @2,
+                                       @"bf_interval":            @0.1,
+                                       @"pr_interval":            @100};
+    
+    NSDictionary  *networkTableFieldsVisibility = @{@"id":                  @YES,
+                                                    @"channel":             @YES,
+                                                    @"primaryChannel":      @NO,
+                                                    @"ssid":                @YES,
+                                                    @"bssid":               @YES,
+                                                    @"wep":                 @YES,
+                                                    @"type":                @YES,
+                                                    @"signal":              @YES,
+                                                    @"avgsignal":           @YES,
+                                                    @"maxsignal":           @YES,
+                                                    @"packets":             @YES,
+                                                    @"data":                @YES,
+                                                    @"lastseen":            @YES,
+                                                    @"challengeResponse":   @YES
+                                                    };
     NSArray *networkTableFieldsOrder = @[@"id", @"channel", @"ssid", @"bssid", @"wep", @"type", @"signal", @"avgsignal", @"maxsignal", @"packets", @"data", @"lastseen", @"challengeResponse"];
     NSDictionary *networkTableFields = @{@"networkTableFieldsVisibility": networkTableFieldsVisibility,
-                                        @"networkTableFieldsOrder": networkTableFieldsOrder};
+                                         @"networkTableFieldsOrder": networkTableFieldsOrder};
     [[NSUserDefaults standardUserDefaults] registerDefaults:registrationDict];
     [[NSUserDefaults standardUserDefaults] registerDefaults:networkTableFields];
 }
@@ -132,33 +136,28 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 {
     self = [super init];
     if (self == nil)
-	{
-		return nil;
-	}
-	
+    {
+        return nil;
+    }
+    
     aNetHierarchVisible = NO;
     _visibleTab = tabNetworks;
     [_window setDocumentEdited:NO];
     _refreshGUI = YES;
-	_refreshGPS = YES;
+    _refreshGPS = YES;
     aMS = nil;
     _zoomToRect = NSZeroRect;
     _importOpen = 0;
-	queue = [[NSOperationQueue alloc] init];
+    queue = [[NSOperationQueue alloc] init];
+    mainQueue = [NSOperationQueue mainQueue];
     
     return self;
 }
 
 - (void)awakeFromNib
 {
-    static BOOL alreadyAwake = NO;
     NSUserDefaults *sets;
-
-    if(!alreadyAwake)
-        alreadyAwake = YES;
-    else
-        return;
-
+    
     [WaveHelper setScanController:self];
     [_headerField setStringValue: [NSString stringWithFormat:@"KisMac v%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]]];
     
@@ -168,10 +167,33 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     _visibleTab = tabInvalid;
     [self showNetworks];
     
-    [_showNetworks setImage: [NSImage imageNamed:@"networks-button.tif"]];
-    [_showTraffic  setImage: [NSImage imageNamed:@"traffic-button.tif"]];
-    [_showMap      setImage: [NSImage imageNamed:@"map-button.tif"]];
-    [_showDetails  setImage: [NSImage imageNamed:@"details-button.tif"]];
+    GBStorageController *gbStorage = [GBStorageController sharedControllerForNamespace:kGBStorageDefaultNamespace];
+    
+    if (![gbStorage objectForKeyedSubscript:@"menu-networks"])
+    {
+        NSImage *image = [NSImage imageNamed:@"menu-networks"];
+        [gbStorage setObject:image forKeyedSubscript:@"menu-networks"];
+    }
+    if (![gbStorage objectForKeyedSubscript:@"menu-graph"])
+    {
+        NSImage *image = [NSImage imageNamed:@"menu-graph"];
+        [gbStorage setObject:image forKeyedSubscript:@"menu-graph"];
+    }
+    if (![gbStorage objectForKeyedSubscript:@"menu-networks"])
+    {
+        NSImage *image = [NSImage imageNamed:@"menu-map"];
+        [gbStorage setObject:image forKeyedSubscript:@"menu-map"];
+    }
+    if (![gbStorage objectForKeyedSubscript:@"menu-details"])
+    {
+        NSImage *image = [NSImage imageNamed:@"menu-details"];
+        [gbStorage setObject:image forKeyedSubscript:@"menu-details"];
+    }
+    
+    [_showNetworks setImage: [gbStorage objectForKeyedSubscript:@"menu-networks"]];
+    [_showTraffic  setImage: [gbStorage objectForKeyedSubscript:@"menu-graph"]];
+    [_showMap      setImage: [gbStorage objectForKeyedSubscript:@"menu-map"]];
+    [_showDetails  setImage: [gbStorage objectForKeyedSubscript:@"menu-details"]];
     
     [_networkTable setDoubleAction:@selector(showDetails:)];
     
@@ -180,214 +202,278 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     id tableColumn = nil;
     NSMenuItem *menuItem = nil;
     NSMutableArray *colsToRemove = [[NSMutableArray alloc] init];
-   
+    
     NSDictionary *networkTableFieldsVisibility = [[NSUserDefaults standardUserDefaults] objectForKey:@"networkTableFieldsVisibility"];
     NSEnumerator *colsEnumerator = [[_networkTable tableColumns] objectEnumerator];
     
-	int i = 0;
-    while ((tableColumn = [colsEnumerator nextObject])) {
+    int i = 0;
+    while ((tableColumn = [colsEnumerator nextObject]))
+    {
         menuItem = [menu insertItemWithTitle:[[tableColumn headerCell] title]
                                       action:@selector(selectedTableContextMenuItem:)
                                keyEquivalent:@""
                                      atIndex:i];
         [menuItem setRepresentedObject:tableColumn];
-        if ([networkTableFieldsVisibility[[tableColumn identifier]] boolValue]) {
+        
+        if ([networkTableFieldsVisibility[[tableColumn identifier]] boolValue])
+        {
             [menuItem setState:NSOnState];
-        } else {
+        }
+        else
+        {
             [colsToRemove addObject:tableColumn];
             [menuItem setState:NSOffState];
         }
-            
+        
         [menuItem setTarget:self];
         ++i;
     }
-	
+    
     colsEnumerator = [colsToRemove objectEnumerator];
     while ((tableColumn = [colsEnumerator nextObject]))
     {
         [_networkTable removeTableColumn:tableColumn];
     }
+    
     [[_networkTable headerView] setMenu:menu];
     
-    [_window makeFirstResponder:_networkTable]; //select the network table not the search box
+    //[_window makeFirstResponder:_networkTable]; //select the network table not the search box
     
     [self menuSetEnabled:NO menu:aNetworkMenu];
     [[_showNetInMap menu] setAutoenablesItems:NO];
     [_showNetInMap setEnabled:NO];
     [_trafficTimePopUp setHidden:YES];
     [_trafficModePopUp setHidden:YES];
-  
-    sets=[NSUserDefaults standardUserDefaults];
+    
+    sets = [NSUserDefaults standardUserDefaults];
     
     if ([[sets objectForKey:@"DebugMode"] intValue] != 1) [[_debugMenu menu] removeItem:_debugMenu];
-
+    
     [_window makeKeyAndOrderFront:self];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateViewItems:)     name:KisMACViewItemChanged      object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modalDone:)           name:KisMACCrackDone            object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(advNetViewInvalid:)   name:KisMACAdvNetViewInvalid    object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modalDone:)           name:KisMACModalDone            object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopScanForced:)      name:KisMACStopScanForced       object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkAdded:)        name:KisMACNetworkAdded         object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePrefs:)         name:KisMACUserDefaultsChanged  object:nil];
-	
-	DBNSLog(@"KisMAC startup done. Version %@. Build from %@. Homedir is %s. NSAppKitVersionNumber: %f", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"], [NSString stringWithFormat:@"%s %s", __DATE__, __TIME__], [[[NSBundle mainBundle] bundlePath] fileSystemRepresentation], NSAppKitVersionNumber);
-	[sets setObject:[[[NSBundle mainBundle] bundlePath] stringByAbbreviatingWithTildeInPath] forKey:@"KisMACHomeDir"];
-	DBNSLog(@"Registering with Growl");
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter addObserver:self
+                      selector:@selector(updateViewItems:)
+                          name:KisMACViewItemChanged
+                        object:nil];
+    [defaultCenter addObserver:self
+                      selector:@selector(modalDone:)
+                          name:KisMACCrackDone
+                        object:nil];
+    [defaultCenter addObserver:self
+                      selector:@selector(advNetViewInvalid:)
+                          name:KisMACAdvNetViewInvalid
+                        object:nil];
+    [defaultCenter addObserver:self
+                      selector:@selector(modalDone:)
+                          name:KisMACModalDone
+                        object:nil];
+    [defaultCenter addObserver:self
+                      selector:@selector(stopScanForced:)
+                          name:KisMACStopScanForced
+                        object:nil];
+    [defaultCenter addObserver:self
+                      selector:@selector(networkAdded:)
+                          name:KisMACNetworkAdded
+                        object:nil];
+    [defaultCenter addObserver:self
+                      selector:@selector(updatePrefs:)
+                          name:KisMACUserDefaultsChanged
+                        object:nil];
+    
+    DBNSLog(@"KisMAC startup done. Version %@. Build from %@. Homedir is %s. NSAppKitVersionNumber: %f",
+            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"],
+            [NSString stringWithFormat:@"%s %s", __DATE__, __TIME__],
+            [[[NSBundle mainBundle] bundlePath] fileSystemRepresentation],
+            NSAppKitVersionNumber);
+    
+    [sets setObject:[[[NSBundle mainBundle] bundlePath] stringByAbbreviatingWithTildeInPath] forKey:@"KisMACHomeDir"];
+    DBNSLog(@"Registering with Growl");
     aGrowlController = [[GrowlController alloc] init];
-	[aGrowlController registerGrowl];
+    [aGrowlController registerGrowl];
     
     IONotificationPortRef  notifyPortRef;   // notification port allocated by IORegisterForSystemPower
     io_object_t            notifierObject;  // notifier object, used to deregister later
     
     // register to receive system sleep notifications
     root_port = IORegisterForSystemPower( (__bridge void *)(scanner), &notifyPortRef, NotifySleep, &notifierObject );
-    if ( MACH_PORT_NULL == root_port ) 
+    if ( MACH_PORT_NULL == root_port )
     {
         DBNSLog(@"IORegisterForSystemPower failed\n");
-    } else {		
-		// add the notification port to the application runloop
-		CFRunLoopAddSource( CFRunLoopGetCurrent(),
-							IONotificationPortGetRunLoopSource(notifyPortRef),
-							kCFRunLoopCommonModes );
-	}
+    }
+    else
+    {
+        // add the notification port to the application runloop
+        CFRunLoopAddSource( CFRunLoopGetCurrent(),
+                           IONotificationPortGetRunLoopSource(notifyPortRef),
+                           kCFRunLoopCommonModes );
+    }
 }
 
 #pragma mark -
 
-- (IBAction)updateNetworkTable:(id)sender complete:(bool)complete {
-	
-	__block bool _complete = complete;
-	
-	[queue addOperationWithBlock:^{
-		int row;
-		__block int i;
-		__block WaveNet *net = nil;
-		
-		if ([_container count] != [_networkTable numberOfRows])
-			_complete = YES;
-		
-		[_channelProg setChannel:[[WaveHelper driverWithName:_whichDriver] getChannel]];
-		
-		if (_visibleTab == tabTraffic) {
-			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-				[_trafficController updateGraph];
-			}];
-		} else if (_visibleTab == tabNetworks) {
-			if (_lastSorted)
-				[_container sortWithShakerByColumn:_lastSorted order:_ascending];
-			
-			if (_complete) {
-				[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-					[_networkTable reloadData];
-				}];
-				if (_detailsPaneVisibile)
-					[aInfoController reloadData];
-				net = [_container netAtIndex:_selectedRow];
-				if ([net isCorrectSSID] && net != _curNet) { //we lost our selected network
-					for (i = [_container count]; i>=0; i--)
-					{
-						net = [_container netAtIndex:i];
-						if ([net isCorrectSSID] && net == _curNet)
-						{
-							_selectedRow = i;
-							[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-								[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
-										   byExtendingSelection: NO];
-							}];
-							break;
-						}
-					}
-				}
-			}
-			else {
-				row = [_container nextChangedRow:0xFFFFFFFF];
-				while (row != 0xFFFFFFFF) {
-					net = [_container netAtIndex:row];
-
-					if ([net isCorrectSSID] && net == _curNet)
-					{
-						[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-							if (_detailsPaneVisibile) [aInfoController reloadData];
-						}];
-						
-						_selectedRow = row;
-						[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
-								   byExtendingSelection: NO];
-					}
-					[_networkTable displayRect:[_networkTable rectOfRow:row]];
-					row = [_container nextChangedRow:row];
-				}
-			}
-		} else if (_visibleTab == tabDetails) {
-			if (_complete) {
-				[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-					[aInfoController reloadData];
-				}];
-				net = [_container netAtIndex:_selectedRow];
-				if ([net isCorrectSSID] && net != _curNet) { //we lost our selected network
-					for (i = [_container count]; i>=0; i--)
-					{
-						net = [_container netAtIndex:i];
-						if ([net isCorrectSSID] && net == _curNet)
-						{
-							_selectedRow = i;
-							[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-								[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
-										   byExtendingSelection: NO];
-							}];
-							break;
-						}
-					}
-				}
-			} else {
-				row = [_container nextChangedRow:0xFFFFFFFF];
-				while (row != 0xFFFFFFFF) {
-					net = [_container netAtIndex:row];
-					if ([net isCorrectSSID] && net == _curNet)
-					{
-						[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-							[aInfoController reloadData];
-						}];
-						
-						_selectedRow = row;
-						[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-							[_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
-									   byExtendingSelection: NO];
-						}];
-					}
-					row = [_container nextChangedRow:row];
-				}
-			}
-		}
-		
-		/*[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-			[_container clearAllBrokenEntries];
-		}];*/
-	}];
-	
-	[queue waitUntilAllOperationsAreFinished];
+- (IBAction)updateNetworkTable:(id)sender complete:(BOOL)complete
+{
+    __block BOOL _complete = complete;
+    
+    [queue cancelAllOperations];
+    
+    __block int row = 0;
+    __block int i = 0;
+    __block WaveNet *net = nil;
+    
+    if ([_container count] != [_networkTable numberOfRows])
+    {
+        _complete = YES;
+    }
+    
+    if (_visibleTab == tabTraffic)
+    {
+        [mainQueue addOperationWithBlock:^{
+            [_trafficController updateGraph];
+        }];
+    }
+    else if (_visibleTab == tabNetworks)
+    {
+        [queue addOperationWithBlock:^{
+            
+            if (_lastSorted)
+            {
+                [_container sortWithShakerByColumn:_lastSorted order:_ascending];
+            }
+            
+            if (_complete)
+            {
+                [mainQueue addOperationWithBlock:^{
+                    [_networkTable reloadData];
+                }];
+                
+                if (_detailsPaneVisibile)
+                {
+                    [aInfoController reloadData];
+                }
+                
+                net = [_container netAtIndex:_selectedRow];
+                
+                if ([net isCorrectSSID] && net != _curNet)
+                { //we lost our selected network
+                    for (i = [_container count]; i >= 0; --i)
+                    {
+                        net = [_container netAtIndex:i];
+                        if ([net isCorrectSSID] && net == _curNet)
+                        {
+                            _selectedRow = i;
+                            [mainQueue addOperationWithBlock:^{
+                                [_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
+                                           byExtendingSelection: NO];
+                            }];
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                row = [_container nextChangedRow:BAD_ADDRESS];
+                while (row != BAD_ADDRESS)
+                {
+                    net = [_container netAtIndex:row];
+                    
+                    if ([net isCorrectSSID] && net == _curNet)
+                    {
+                        _selectedRow = row;
+                        [mainQueue addOperationWithBlock:^{
+                            if (_detailsPaneVisibile)
+                            {
+                                [aInfoController reloadData];
+                                
+                                [_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
+                                           byExtendingSelection: NO];
+                            }
+                        }];
+                    }
+                    
+                    [_networkTable displayRect:[_networkTable rectOfRow:row]];
+                    row = [_container nextChangedRow:row];
+                }
+            }
+        }];
+    }
+    else if (_visibleTab == tabDetails)
+    {
+        [queue addOperationWithBlock:^{
+            
+            if (_complete)
+            {
+                [mainQueue addOperationWithBlock:^{
+                    [aInfoController reloadData];
+                }];
+                
+                net = [_container netAtIndex:_selectedRow];
+                
+                if ([net isCorrectSSID] && net != _curNet)
+                { //we lost our selected network
+                    for (i = [_container count]; i >= 0; --i)
+                    {
+                        net = [_container netAtIndex:i];
+                        if ([net isCorrectSSID] && net == _curNet)
+                        {
+                            _selectedRow = i;
+                            [mainQueue addOperationWithBlock:^{
+                                [_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
+                                           byExtendingSelection: NO];
+                            }];
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                row = [_container nextChangedRow:BAD_ADDRESS];
+                
+                while (row != BAD_ADDRESS)
+                {
+                    net = [_container netAtIndex:row];
+                    if ([net isCorrectSSID] && net == _curNet)
+                    {
+                        _selectedRow = row;
+                        
+                        [mainQueue addOperationWithBlock:^{
+                            [aInfoController reloadData];
+                            
+                            [_networkTable selectRowIndexes:[NSIndexSet indexSetWithIndex:_selectedRow]
+                                       byExtendingSelection: NO];
+                        }];
+                    }
+                    
+                    row = [_container nextChangedRow:row];
+                }
+            }
+        }];
+        
+    }
 }
 
 - (void)updateViewItems:(NSNotification*)note
 {
     if (!_refreshGUI)
-		return;
-	
+        return;
+    
     [self performSelectorOnMainThread:@selector(doUpdateViewItems:)
-						   withObject:nil
-						waitUntilDone:NO];
+                           withObject:nil
+                        waitUntilDone:NO];
 }
 
 - (void)doUpdateViewItems:(id)anObject
 {
     [_container refreshView];
     if (_lastSorted)
-	{
-		[_container sortWithShakerByColumn:_lastSorted
-									 order:_ascending];
+    {
+        [_container sortWithShakerByColumn:_lastSorted
+                                     order:_ascending];
     }
-	
+    
     if (aNetHierarchVisible) {
         [ScanHierarch updateTree];
         [aOutView reloadData];
@@ -417,7 +503,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 {
     WaveNet *net = [_container netAtIndex:rowIndex];
     
-	return [net cache][[aTableColumn identifier]];
+    return [net cache][[aTableColumn identifier]];
 }
 
 - (int)numberOfRowsInTableView:(NSTableView *)aTableView
@@ -428,13 +514,13 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
     if ([_networkTable selectedRow] < 0)
-	{
-		[self hideDetails];
-	}
+    {
+        [self hideDetails];
+    }
     else
-	{
-		[self selectNet:[_container netAtIndex:[_networkTable selectedRow]]];
-	}
+    {
+        [self selectNet:[_container netAtIndex:[_networkTable selectedRow]]];
+    }
 }
 
 - (void)tableView:(NSTableView*)tableView didClickTableColumn:(NSTableColumn *)tableColumn
@@ -442,15 +528,15 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     NSString *ident = [tableColumn identifier];
     
     if (![tableView isEqualTo:_networkTable])
-		return;
-
+        return;
+    
     if ((_lastSorted) && ([_lastSorted isEqualToString:ident])) {
         if (_ascending)
-			_ascending=NO;
+            _ascending=NO;
         else {
             _lastSorted = nil;
             [tableView setIndicatorImage:nil
-						   inTableColumn:tableColumn];
+                           inTableColumn:tableColumn];
             [tableView setHighlightedTableColumn:nil];
             [tableView reloadData];
             return;
@@ -459,22 +545,34 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
         _ascending=YES;
         if (_lastSorted) {
             [tableView setIndicatorImage:nil
-						   inTableColumn:[tableView tableColumnWithIdentifier:_lastSorted]];
+                           inTableColumn:[tableView tableColumnWithIdentifier:_lastSorted]];
         }
         _lastSorted=ident;
     }
     
-    if (_ascending)
-        [tableView setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"]
-					   inTableColumn:tableColumn];
-    else 
-        [tableView setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"]
-					   inTableColumn:tableColumn];
+    GBStorageController *gbStorage = [GBStorageController sharedControllerForNamespace:kGBStorageDefaultNamespace];
     
-	//speedy sort (quick sort is faster than shaker sort, but not stable)
-	[_container sortByColumn:_lastSorted order:_ascending];
-	[tableView setHighlightedTableColumn:tableColumn];
-    [self updateNetworkTable:self complete:YES];
+    if (![gbStorage objectForKeyedSubscript:@"NSAscendingSortIndicator"])
+    {
+        NSImage *image = [NSImage imageNamed:@"NSAscendingSortIndicator"];
+        [gbStorage setObject:image forKeyedSubscript:@"NSAscendingSortIndicator"];
+    }
+    if (![gbStorage objectForKeyedSubscript:@"NSDescendingSortIndicator"])
+    {
+        NSImage *image = [NSImage imageNamed:@"NSDescendingSortIndicator"];
+        [gbStorage setObject:image forKeyedSubscript:@"NSDescendingSortIndicator"];
+    }
+    
+    [tableView setIndicatorImage:_ascending ? [gbStorage objectForKeyedSubscript:@"NSAscendingSortIndicator"] : [gbStorage objectForKeyedSubscript:@"NSDescendingSortIndicator"] inTableColumn:tableColumn];
+    
+    //speedy sort (quick sort is faster than shaker sort, but not stable)
+    [_container sortByColumn:_lastSorted order:_ascending];
+    [tableView setHighlightedTableColumn:tableColumn];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        
+        [self updateNetworkTable:self complete:YES];
+    });
 }
 
 #pragma mark -
@@ -515,13 +613,13 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 {
     unsigned int tmpID[6], i;
     unsigned char ID[6];
-	
+    
     if (item==nil)
-		return YES;
+        return YES;
     
     switch ([(ScanHierarch*)item type]) {
         case 99: //BSSID selector
-            if (sscanf([[item identKey] UTF8String], "%2X%2X%2X%2X%2X%2X", &tmpID[0], &tmpID[1], &tmpID[2], &tmpID[3], &tmpID[4], &tmpID[5]) !=6 ) 
+            if (sscanf([[item identKey] UTF8String], "%2X%2X%2X%2X%2X%2X", &tmpID[0], &tmpID[1], &tmpID[2], &tmpID[3], &tmpID[4], &tmpID[5]) !=6 )
                 DBNSLog(@"Error could not decode ID %@!", [item identKey]);
             for (i=0; i<6; ++i) ID[i] = tmpID[i];
             
@@ -553,7 +651,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
             [_container setViewType:1 value:@([(ScanHierarch*)item type]-20)];
             if (_lastSorted) [_container sortByColumn:_lastSorted order:_ascending];
     }
-	
+    
     [_networkTable reloadData];
     return YES;
 }
@@ -568,11 +666,11 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
         [_detailsDrawer close];
         [sender setTitle: NSLocalizedString(@"Show Details", "menu item")];
         _detailsPaneVisibile = NO;
-
+        
         return;
     }
     if (_visibleTab == tabDetails)
-		return;
+        return;
     
     if (!_detailsDrawer) {
         contentSize = NSMakeSize(200, 250);
@@ -580,10 +678,10 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
         [_detailsDrawer setParentWindow:_window];
         [_detailsDrawer setContentView:detailsView];
         [_detailsDrawer setMinContentSize:NSMakeSize(50, 50)];
-
+        
         [_detailsDrawer setLeadingOffset:50];
         [_detailsDrawer setTrailingOffset:[_window frame].size.height-300];
-
+        
         [_detailsDrawer setMaxContentSize:NSMakeSize(200, 300)];
     }
     
@@ -613,23 +711,23 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 {
     [_container setFilterString:[_searchField stringValue]];
     [_networkTable reloadData];
-	[(NSView*)_mappingView setNeedsDisplay:YES];
-	[self tableViewSelectionDidChange:nil];
+    [(NSView*)_mappingView setNeedsDisplay:YES];
+    [self tableViewSelectionDidChange:nil];
 }
 
 - (void)checkFilter:(id)sender
 {
     NSAlert *alert;
     //written by themacuser
-	if(![[_searchField stringValue] isEqualToString:@""]){
-		alert = [[NSAlert alloc] init];
-		[alert addButtonWithTitle:@"Save all nets"];
-		[alert addButtonWithTitle:@"Save filtered nets"];
-		[alert setMessageText:@"You are filtering the list of networks."];
-		[alert setInformativeText:@"Do you want to save just the filtered networks, or all the networks?"];
-		[alert setAlertStyle:NSWarningAlertStyle];
-		if([alert runModal] == NSAlertFirstButtonReturn){
-			[_container setFilterString:@""];
+    if(![[_searchField stringValue] isEqualToString:@""]){
+        alert = [[NSAlert alloc] init];
+        [alert addButtonWithTitle:@"Save all nets"];
+        [alert addButtonWithTitle:@"Save filtered nets"];
+        [alert setMessageText:@"You are filtering the list of networks."];
+        [alert setInformativeText:@"Do you want to save just the filtered networks, or all the networks?"];
+        [alert setAlertStyle:NSWarningAlertStyle];
+        if([alert runModal] == NSAlertFirstButtonReturn){
+            [_container setFilterString:@""];
             _saveFilteredOnly = NO;
         }else {
             _saveFilteredOnly = YES;
@@ -640,16 +738,16 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 - (IBAction)changeSearchType:(id)sender
 {
     int ndx;
-	[_container setFilterType:[sender title]];
+    [_container setFilterType:[sender title]];
     NSMenu * searchMenu = [sender menu];
     for (ndx=0; ndx < [searchMenu numberOfItems]; ++ndx) {
         [[searchMenu itemAtIndex:ndx] setState:0];
     }
     //[searchMenu release];
     [sender setState:1];
-	[_networkTable reloadData];
-	[(NSView*)_mappingView setNeedsDisplay:YES];
-	[self tableViewSelectionDidChange:nil];
+    [_networkTable reloadData];
+    [(NSView*)_mappingView setNeedsDisplay:YES];
+    [self tableViewSelectionDidChange:nil];
 }
 
 #pragma mark -
@@ -657,7 +755,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 -(void) dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-
+    
     [_importController stopAnimation];
 }
 
@@ -672,8 +770,9 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
 {
-    if (![self isSaved]) {
-		[self showWantToSaveDialog:@selector(reallyQuitDidEnd:returnCode:contextInfo:)];
+    if (![self isSaved])
+    {
+        [self showWantToSaveDialog:@selector(reallyQuitDidEnd:returnCode:contextInfo:)];
         return NSTerminateLater;
     }
     
@@ -683,15 +782,15 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 - (void)reallyQuitDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     [self menuSetEnabled:YES menu:[NSApp mainMenu]];
-	switch (returnCode) {
-    case NSAlertOtherReturn:
-        [NSApp replyToApplicationShouldTerminate:NO];
-        break;
-    case NSAlertDefaultReturn:
-        [NSNotificationCenter postNotification:KisMACTryToSave];
-    case NSAlertAlternateReturn:
-    default:        
-        [NSApp replyToApplicationShouldTerminate:YES];
+    switch (returnCode) {
+        case NSAlertOtherReturn:
+            [NSApp replyToApplicationShouldTerminate:NO];
+            break;
+        case NSAlertDefaultReturn:
+            [NSNotificationCenter postNotification:KisMACTryToSave];
+        case NSAlertAlternateReturn:
+        default:
+            [NSApp replyToApplicationShouldTerminate:YES];
     }
 }
 
@@ -706,11 +805,11 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     
     [self updatePrefs:nil];
     sets = [NSUserDefaults standardUserDefaults];
-
+    
     logPath = [@"~/Library/Logs/DiagnosticReports/" stringByExpandingTildeInPath];
     mang = [NSFileManager defaultManager];
     
-    if ([[sets objectForKey:@"SupressCrashReport"] intValue]!=1)
+    if ([[sets objectForKey:@"SupressCrashReport"] intValue] != 1)
     {
         enumerator = [mang enumeratorAtPath: logPath];
         
@@ -743,7 +842,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
             [crc setReport:crashLogs];
             [crc showWindow:self];
             [[crc window] makeKeyAndOrderFront:self];
-        
+            
             DBNSLog(@"crash occured the last time kismac started");
         }
     }//crash logs enabled
@@ -762,11 +861,13 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
 - (NSRect)windowWillUseStandardFrame:(NSWindow *)sender defaultFrame:(NSRect)defaultFrame
 {
-    if (aNetHierarchVisible) {
+    if (aNetHierarchVisible)
+    {
         defaultFrame.size.width-=[_netHierarchDrawer contentSize].width+10;
         defaultFrame.origin.x+=[_netHierarchDrawer contentSize].width+10;
     }
-    if (_detailsPaneVisibile) {
+    if (_detailsPaneVisibile)
+    {
         defaultFrame.size.width-=[_detailsDrawer contentSize].width+10;
         [_window setFrame:[_window frame] display:YES animate:YES];
     }
@@ -777,11 +878,11 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize
 {
     [_detailsDrawer setTrailingOffset:proposedFrameSize.height-280];
-	
+    
     return proposedFrameSize;
 }
 
-- (BOOL)windowShouldClose:(id)sender 
+- (BOOL)windowShouldClose:(id)sender
 {
     NSUserDefaults *sets = [NSUserDefaults standardUserDefaults];
     
@@ -790,32 +891,35 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
         if (![self isSaved])
         {
             [self showWantToSaveDialog:@selector(reallyCloseDidEnd:returnCode:contextInfo:)];
+            
             return NO;
         }
-
-		[NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(fade:) userInfo:nil repeats:YES];
-		return NO;
-	} 
-    else 
+        
+        [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(fade:) userInfo:nil repeats:YES];
+        
+        return NO;
+    }
+    else
     {
-        [self new];
+        [self isNew];
+        
         return NO;
     }
 }
 
 - (void)reallyCloseDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-	[self menuSetEnabled:YES menu:[NSApp mainMenu]];
-	switch (returnCode) 
+    [self menuSetEnabled:YES menu:[NSApp mainMenu]];
+    switch (returnCode)
     {
-    case NSAlertDefaultReturn:
-        [NSNotificationCenter postNotification:KisMACTryToSave];
-    case NSAlertOtherReturn:
-        break;
-    case NSAlertAlternateReturn:
-    default:
-        [_window setDocumentEdited:NO];
-		[NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(fade:) userInfo:nil repeats:YES];
+        case NSAlertDefaultReturn:
+            [NSNotificationCenter postNotification:KisMACTryToSave];
+        case NSAlertOtherReturn:
+            break;
+        case NSAlertAlternateReturn:
+        default:
+            [_window setDocumentEdited:NO];
+            [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(fade:) userInfo:nil repeats:YES];
     }
 }
 
@@ -831,16 +935,16 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
         [timer invalidate];
         
         [_window close];
-		[NSApp terminate:self];
+        [NSApp terminate:self];
     }
 }
 
 void NotifySleep( void * refCon, io_service_t service,
-                  natural_t messageType, void * messageArgument ){
-
+                 natural_t messageType, void * messageArgument ){
+    
     switch ( messageType )
     {
-        
+            
         case kIOMessageSystemWillSleep:
             DBNSLog(@"Going to Sleep, Shutting down dirvers");
             [(__bridge WaveScanner*)refCon sleepDrivers: YES];
@@ -859,15 +963,15 @@ void NotifySleep( void * refCon, io_service_t service,
 
 - (void)trackClient:(id)sender
 {
-	[_monitorMenu setState:NSOnState];
-	[_monitorAllMenu setState:NSOffState];
-	NSString *bssid, *mac;
-	bssid = [_curNet BSSID];
-	mac = [aInfoController theRow];
-	[_monitorMenu setTitle:[NSString stringWithFormat:@"%@ %@ - %@",NSLocalizedString(@"Monitoring ", "menu item"), bssid, mac]];
-	[WavePluginMidi setTrackString:bssid];
-	[WavePluginMidi setTrackStringClient:mac];
-
+    [_monitorMenu setState:NSOnState];
+    [_monitorAllMenu setState:NSOffState];
+    NSString *bssid, *mac;
+    bssid = [_curNet BSSID];
+    mac = [aInfoController theRow];
+    [_monitorMenu setTitle:[NSString stringWithFormat:@"%@ %@ - %@",NSLocalizedString(@"Monitoring ", "menu item"), bssid, mac]];
+    [WavePluginMidi setTrackString:bssid];
+    [WavePluginMidi setTrackStringClient:mac];
+    
 }
 
 - (void)selectedTableContextMenuItem:(id)sender
@@ -880,6 +984,15 @@ void NotifySleep( void * refCon, io_service_t service,
         [_networkTable addTableColumn:[sender representedObject]];
         [sender setState:NSOnState];
     }
+}
+
+@end
+
+@implementation ScanController (AppleScript)
+
+- (BOOL)application:(NSApplication *)sender delegateHandlesKey:(NSString *)key
+{
+    return YES;
 }
 
 @end

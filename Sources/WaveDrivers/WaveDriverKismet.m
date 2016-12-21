@@ -1,31 +1,35 @@
 /*
-        
-        File:			WaveDriverKismet.m
-        Program:		KisMAC
-		Author:			Geordie Millar
-						themacuser@gmail.com
-		Description:	Scan with a Kismet server in KisMac.
-
-		Details:		Tested with Kismet 2006.04.R1 on OpenWRT White Russian RC6 on a Diamond Digital R100
-						(broadcom mini-PCI card, wrt54g capturesource)
-						and Kismet 2006.04.R1 on Voyage Linux on a PC Engines WRAP.2E
-						(CM9 mini-PCI card, madwifing)
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			WaveDriverKismet.m
+ Program:		KisMAC
+ Author:		Geordie Millar
+                themacuser@gmail.com
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	Scan with a Kismet server in KisMac.
+ 
+ Details:		Tested with Kismet 2006.04.R1 on OpenWRT White Russian RC6 on a Diamond Digital R100
+                (broadcom mini-PCI card, wrt54g capturesource)
+                and Kismet 2006.04.R1 on Voyage Linux on a PC Engines WRAP.2E
+                (CM9 mini-PCI card, madwifing)
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "WaveDriverKismet.h"
 #import "WaveHelper.h"
@@ -60,7 +64,7 @@ static int KismetInstances = 0;
     return activeDriver;
 }
 
-+ (bool) wantsIPAndPort {
++ (BOOL) wantsIPAndPort {
     return YES;
 }
 
@@ -74,17 +78,17 @@ static int KismetInstances = 0;
 
 #pragma mark -
 
-+ (bool) loadBackend {
++ (BOOL) loadBackend {
     return YES;
 }
 
-+ (bool) unloadBackend {
++ (BOOL) unloadBackend {
     return YES;
 }
 
 #pragma mark -
 
-- (bool) startedScanning {
+- (BOOL) startedScanning {
 	NSUserDefaults *defs;
     defs = [NSUserDefaults standardUserDefaults];
 	
@@ -133,12 +137,14 @@ static int KismetInstances = 0;
 	
 	status = connect(sockd, (struct sockaddr*)&serv_name, sizeof(serv_name));
 		
-	if (status == -1) {
+	if (status == -1)
+    {
 		DBNSLog(@"Could not connect to %s port %d", hostname, port);
-		NSRunCriticalAlertPanel(
-            NSLocalizedString(@"Could not connect to the Kismet server", "Error dialog title"),
-            [NSString stringWithFormat:@"KisMac could not connect to the Kismet server at %s port %d. Check the IP address and port.",hostname,port],
-            OK, nil, nil);
+        
+        NSRunCriticalAlertPanel(NSLocalizedString(@"Could not connect to the Kismet server", "Error dialog title"),
+                                @"KisMac could not connect to the Kismet server at %s port %@. Check the IP address and port.",
+                                OK, nil, nil, hostname, @(port));
+
 		return nil;
 	}
 		
@@ -147,7 +153,7 @@ static int KismetInstances = 0;
 	return YES;
 }
 
-- (bool) stopCapture {
+- (BOOL) stopCapture {
 	close(sockd);
 	return YES;
 }

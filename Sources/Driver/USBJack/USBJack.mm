@@ -24,6 +24,7 @@
 	
 #include <IOKit/IOKitLib.h>
 #include <IOKit/IOCFPlugIn.h>
+#include <IOKit/IOMessage.h>
 
 #include "USBJack.h"
 
@@ -47,6 +48,7 @@ USBJack::USBJack() {
     _runLoop = NULL;
     _channel = 3;
     _notifyPort = NULL;
+    _notification = NULL;
     
     _numDevices = -1;
     _frameRing = NULL;
@@ -78,20 +80,28 @@ USBJack::~USBJack() {
     pthread_cond_destroy(&_wait_cond);
 }
 
-bool USBJack::loadPropertyList() {
-    CFDataRef data;
+bool USBJack::loadPropertyList()
+{
     CFStringRef ref;
     CFStringRef plistFile = CFStringCreateWithCString(kCFAllocatorDefault, getPlistFile(), kCFStringEncodingASCII);
     CFURLRef url = CFBundleCopyResourceURL(CFBundleGetMainBundle(), plistFile, CFSTR("plist"), NULL);
 	CFRelease(plistFile);
     if (url == NULL)
+    {
         return false;
-    CFURLCreateDataAndPropertiesFromResource(kCFAllocatorDefault, url, &data, nil, nil, nil);
+    }
+    
+    NSData *data = [NSData dataWithContentsOfURL:(__bridge NSURL *)url
+                                          options:NSMappedRead
+                                            error:nil];
+    
 	CFRelease(url);
-    _vendorsPlist = CFPropertyListCreateFromXMLData(kCFAllocatorDefault, data, kCFPropertyListImmutable, &ref);
+    _vendorsPlist = CFPropertyListCreateFromXMLData(kCFAllocatorDefault, (__bridge CFDataRef)(data), kCFPropertyListImmutable, &ref);
     if (CFDictionaryGetTypeID() != CFGetTypeID(_vendorsPlist))
+    {
         return false;
-    CFRelease(data);
+    }
+
 	return true;
 }
 IOReturn USBJack::_init() {
@@ -172,19 +182,6 @@ void USBJack::startMatching()
     _addDevice(this, _deviceAddedIter);	// Iterate once to get already-present devices and
     // arm the notification
     
-    kr = IOServiceAddMatchingNotification(  _notifyPort,
-                                          kIOTerminatedNotification,
-                                          matchingDict,
-                                          _handleDeviceRemoval,
-                                          this,
-                                          &_deviceRemovedIter );
-    
-    _handleDeviceRemoval(this, _deviceRemovedIter); 	// Iterate once to arm the notification
-    
-	if (kIOReturnSuccess != kr) {
-		DBNSLog(@"unable to handle Device Removal (%08x)\n", kr);
-	}
-    
     // Now done with the master_port
     masterPort = 0;
 }
@@ -205,9 +202,8 @@ KFrame *USBJack::receiveFrame()
         receivedFrame = getFrameFromQueue(&len, &channel);
         if (receivedFrame)
         {
-            if(!_massagePacket(receivedFrame, (void *)&_frameBuffer, len))
+            if(!_massagePacket(receivedFrame, (void *)&_frameBuffer, len, channel))
                 continue;
-            ret->ctrl.channel = channel;
             return ret;
         }
         else 
@@ -279,86 +275,101 @@ void  USBJack::_lockDevice() {
 void  USBJack::_unlockDevice() {
     pthread_mutex_unlock(&_wait_mutex);
 }
-void USBJack::_interruptReceived(void *refCon, IOReturn result, unsigned int len)
+void USBJack::_interruptReceived(void *refCon, IOReturn result, void *arg0)
 {
     USBJack             *me = (USBJack*) refCon;
+    unsigned int        len = (unsigned int)(size_t)arg0;
     IOReturn                    kr;
-    UInt32                      type;
 
 //    DBNSLog(@"Interrupt Received %d", len);
-    KFrame *frame;
+	bool needBreakProcess = false;
+	
     if (kIOReturnSuccess != result) {
-        if (result == (IOReturn)0xe00002ed) {
+        if (result == (IOReturn)0xe00002ed)
+		{
             me->_devicePresent = false;
             
             //tell the receive function that we are gone
             me->insertFrameIntoQueue(NULL, 0, 0);
+			
             return;
-        } else {
+        }
+		else
+		{
             DBNSLog(@"error from async interruptReceived (%08x)\n", result);
-            if (me->_devicePresent) goto readon;
+            if (me->_devicePresent)
+			{
+				needBreakProcess = true;
+			}
         }
     }
-    
-    type = NSSwapLittleShortToHost(me->_receiveBuffer.type);
-    if (_USB_ISRXFRM(type)) {
-        if (len > sizeof(KFrame)) {
-            goto readon;
-        }
-            
-        // Get raw data pointer
-        frame = (KFrame*)&(me->_receiveBuffer.rxfrm);
+
+	if (!needBreakProcess)
+	{
+            me->_rawFrameReceived(len);
+	}
+
+    bzero(&me->_receiveBuffer, sizeof(me->_receiveBuffer));
+    kr = (*me->_interface)->ReadPipeAsync((me->_interface), (me->kInPipe), &me->_receiveBuffer, sizeof(me->_receiveBuffer), _interruptReceived, refCon);
+	
+    if (kIOReturnSuccess != kr)
+	{
+        DBNSLog(@"unable to do async interrupt read (%08x). this means the card is stopped!\n", kr);
+		// I haven't been able to reproduce the error that caused it to hit this point in the code again since adding the following lines
+		// however, when it hit this point previously, the only solution was to kill and relaunch KisMAC, so at least this won't make anything worse
+		DBNSLog(@"Attempting to re-initialise adapter...");
+		
+		if (me->_init() != kIOReturnSuccess)
+		{
+			DBNSLog(@"USBJack::_interruptReceived: _init() failed\n");
+		}
+    }
         
+}
+
+// Default packet check/queuing.
+void USBJack::_rawFrameReceived(unsigned int len)
+{
+    UInt32 type = NSSwapLittleShortToHost(_receiveBuffer.type);
+    if (_USB_ISRXFRM(type))
+    {
         // Here we insert raw data frame into queue because we need to do things
         // as fast as possible. Remember that we are servicing an interrupt.
         // Custom conversion will be done on dequeuing
-        
-        // Lock for copying frame
-        me->insertFrameIntoQueue(frame, len, me->_channel);
 
-    } else {
-        switch (type) {
-        case _USB_INFOFRM:
-            /*if (action == ABORT)
-                    goto exit;
-            if (action == HANDLE)
-                    _usbin_info(wlandev, usbin);*/
-            break;
+        insertFrameIntoQueue(&_receiveBuffer, len, _channel);
+        return;
+    }
+
+    // The following is presumably only for the IntersilJack driver
+    // since it is the only one that waits on _wait_cond.
+    switch (type)
+    {
         case _USB_CMDRESP:
         case _USB_WRIDRESP:
         case _USB_RRIDRESP:
         case _USB_WMEMRESP:
         case _USB_RMEMRESP:
-                pthread_mutex_lock(&me->_wait_mutex);
-                memcpy(&me->_inputBuffer, &me->_receiveBuffer, len);
-                pthread_cond_signal(&me->_wait_cond);
-                pthread_mutex_unlock(&me->_wait_mutex);
-                break;
+            pthread_mutex_lock(&_wait_mutex);
+            memcpy(&_inputBuffer, &_receiveBuffer, len);
+            pthread_cond_signal(&_wait_cond);
+            pthread_mutex_unlock(&_wait_mutex);
+            break;
         case _USB_BUFAVAIL:
-                DBNSLog(@"Received BUFAVAIL packet, frmlen=%d\n", me->_receiveBuffer.bufavail.frmlen);
-                break;
+            DBNSLog(@"Received BUFAVAIL packet, frmlen=%d\n", _receiveBuffer.bufavail.frmlen);
+            break;
         case _USB_ERROR:
-                DBNSLog(@"Received USB_ERROR packet, errortype=%d\n", me->_receiveBuffer.usberror.errortype);
-                break;
-    
+            DBNSLog(@"Received USB_ERROR packet, errortype=%d\n", _receiveBuffer.usberror.errortype);
+            break;
+        case _USB_INFOFRM:
+            break;
         default:
-                break;
-        }
+            DBNSLog(@"Received unrecognized USB packet, type=0x%04X\n", type);
+            break;
     }
-    
-readon:
-    bzero(&me->_receiveBuffer, sizeof(me->_receiveBuffer));
-    kr = (*me->_interface)->ReadPipeAsync((me->_interface), (me->kInPipe), &me->_receiveBuffer, sizeof(me->_receiveBuffer), (IOAsyncCallback1)_interruptReceived, refCon);
-    if (kIOReturnSuccess != kr) {
-        DBNSLog(@"unable to do async interrupt read (%08x). this means the card is stopped!\n", kr);
-		// I haven't been able to reproduce the error that caused it to hit this point in the code again since adding the following lines
-		// however, when it hit this point previously, the only solution was to kill and relaunch KisMAC, so at least this won't make anything worse
-		DBNSLog(@"Attempting to re-initialise adapter...");
-		if (me->_init() != kIOReturnSuccess) DBNSLog(@"USBJack::_interruptReceived: _init() failed\n");
-    }
-        
 }
-bool USBJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len){
+
+bool USBJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 /* channel */) {
     return true;         //override if needed
 }
 
@@ -375,7 +386,7 @@ int USBJack::destroyFrameQueue(void) {
     free(_frameRing);
     return 0;
 }
-int USBJack::insertFrameIntoQueue(KFrame *f, UInt16 len, UInt16 channel)  {
+int USBJack::insertFrameIntoQueue(void *f, UInt16 len, UInt16 channel)  {
     struct __frameRingSlot *slot = nil;
     
     if(_frameRing)
@@ -398,7 +409,7 @@ int USBJack::insertFrameIntoQueue(KFrame *f, UInt16 len, UInt16 channel)  {
         //make sure f exists, otherwise we crash and burn
         if(f)
         {
-            memcpy(&(slot->frame), f, sizeof(KFrame));
+            memcpy(&(slot->frame), f, len);
         }
         slot->len = len;
         slot->channel = channel;
@@ -591,12 +602,65 @@ IOReturn USBJack::_findInterfaces(IOUSBDeviceInterface197 **dev) {
         
         _interface = intf;
         
+        // Set up for device removal notification.
+        io_service_t usbDevice;
+        kr = (*intf)->GetDevice(intf, &usbDevice);
+        if (kr == kIOReturnSuccess)
+        {
+            // Register for an interest notification of this specific device being removed.
+            kr = IOServiceAddInterestNotification(_notifyPort,          // notifyPort
+                                                  usbDevice,            // service
+                                                  kIOGeneralInterest,   // interestType
+                                                  _DeviceNotification,  // callback
+                                                  this,                 // refCon
+                                                  &_notification);      // notification
+            if (kr != kIOReturnSuccess)
+            {
+                DBNSLog(@"USBJack::_findInterfaces: IOServiceAddInterestNotification failed (%08x)\n", kr);
+            }
+            // No release of usbDevice when obtained from GetDevice()
+        }
+#if 0
+        // Alternate notification of device departure; not as specific as it matches VID/PID
+        if (kr != kIOReturnSuccess)
+        {
+            // We only want notification for this VID/PID, so we have to mess with the matching dictionary.
+            CFMutableDictionaryRef matchingDictRemoved = IOServiceMatching(kIOUSBDeviceClassName);
+            if (matchingDictRemoved != NULL)
+            {
+                UInt16 vendorID, productID;
+                if ((*dev)->GetDeviceVendor(dev, &vendorID) == kIOReturnSuccess &&
+                    (*dev)->GetDeviceProduct(dev, &productID) == kIOReturnSuccess)
+                {
+                    // Ick!
+                    SInt32 temp = vendorID;
+                    CFNumberRef numberRef = CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type, &temp);
+                    CFDictionarySetValue(matchingDictRemoved, CFSTR(kUSBVendorID), numberRef);
+                    CFRelease(numberRef);
+                    temp = productID;
+                    numberRef = CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type, &temp);
+                    CFDictionarySetValue(matchingDictRemoved, CFSTR(kUSBProductID), numberRef);
+                    CFRelease(numberRef);
+
+                    kr = IOServiceAddMatchingNotification(_notifyPort,
+                                                          kIOTerminatedNotification,
+                                                          matchingDictRemoved,
+                                                          _handleDeviceRemoval,
+                                                          this,
+                                                          &_deviceRemovedIter);
+                    matchingDictRemoved = NULL; // IOServiceAddMatchingNotification consumed the reference to matchingDictRemoved
+
+                    _handleDeviceRemoval(this, _deviceRemovedIter); 	// Iterate once to arm the notification
+                }
+            }
+        }
+#endif
         DBNSLog(@"USBJack is now ready to start working.\n");
         
         //startUp Interrupt handling
         UInt32 numBytesRead = sizeof(_receiveBuffer); // leave one byte at the end for NUL termination
         bzero(&_receiveBuffer, numBytesRead);
-        kr = (*intf)->ReadPipeAsync(intf, kInPipe, &_receiveBuffer, numBytesRead, (IOAsyncCallback1)_interruptReceived, this);
+        kr = (*intf)->ReadPipeAsync(intf, kInPipe, &_receiveBuffer, numBytesRead, _interruptReceived, this);
         
         if (kIOReturnSuccess != kr) {
             DBNSLog(@"unable to do async interrupt read (%08x)\n", kr);
@@ -677,9 +741,10 @@ void USBJack::_addDevice(void *refCon, io_iterator_t iterator) {
     USBJack     *me = (USBJack*)refCon;
 
     
-    while ((usbDevice = IOIteratorNext(iterator))) {
+    while ((usbDevice = IOIteratorNext(iterator)))
+    {
         //DBNSLog(@"USB Device added.\n");
-       
+
         kr = IOCreatePlugInInterfaceForService(usbDevice, kIOUSBDeviceUserClientTypeID, kIOCFPlugInInterfaceID, &plugInInterface, &score);
         if ((kIOReturnSuccess != kr) || !plugInInterface) {
             kr = IOObjectRelease(usbDevice);				// done with the device object now that I have the plugin
@@ -722,17 +787,17 @@ void USBJack::_addDevice(void *refCon, io_iterator_t iterator) {
         values = (const void **) malloc(count * sizeof(CFTypeRef));
         
         CFDictionaryGetKeysAndValues( (CFDictionaryRef) (me->_vendorsPlist) , keys, values);
-        DBNSLog(@"---");
+//      DBNSLog(@"---");
         for (i=0;i<count;++i) {
             n = CFDictionaryGetValue((CFDictionaryRef)values[i], CFSTR("idProduct"));
             CFNumberGetValue((CFNumberRef)n, kCFNumberSInt16Type, &productId);
             n = CFDictionaryGetValue((CFDictionaryRef)values[i], CFSTR("idVendor"));
             CFNumberGetValue((CFNumberRef)n, kCFNumberSInt16Type, &vendorId);
-            DBNSLog(@"vendor %d vendorId %d product %d productId %d", vendor, vendorId, product, productId);
             if ((vendor == vendorId) && (product == productId)) {
                 length = CFStringGetMaximumSizeForEncoding(CFStringGetLength((CFStringRef)keys[i]), kCFStringEncodingASCII) + 1;
                 modelStr = (char *)malloc(length);
                 CFStringGetCString((CFStringRef)keys[i], modelStr, length, kCFStringEncodingASCII);
+                DBNSLog(@"vendor %04X, product %04X", vendor, product);
                 DBNSLog(@"USB Device found (%s)", modelStr);
                 free(modelStr);
                 me->_foundDevices[++me->_numDevices] = dev;
@@ -752,21 +817,20 @@ void USBJack::_addDevice(void *refCon, io_iterator_t iterator) {
 void USBJack::_handleDeviceRemoval(void *refCon, io_iterator_t iterator)
 {
     kern_return_t	kr;
-    io_service_t	obj;
+    io_service_t	usbDevice;
     int                 count = 0;
     USBJack     *me = (USBJack*)refCon;
-    
-    while ((obj = IOIteratorNext(iterator)))
+
+    while ((usbDevice = IOIteratorNext(iterator)))
     {
         ++count;
-        //we need to not release devices that don't belong to us!?
-        DBNSLog(@"USBJack: Device removed.\n");
-        kr = IOObjectRelease(obj);
-		if (kIOReturnSuccess != kr) {
-			DBNSLog(@"unable to IOObjectRelease (%08x)\n", kr);
-		}
+        kr = IOObjectRelease(usbDevice);				// done with the device object
+        if (kIOReturnSuccess != kr)
+        {
+            DBNSLog(@"unable to IOObjectRelease (%08x)\n", kr);
+        }
     }
-    
+
     if (count) 
     {
         me->_matchingDone = FALSE;
@@ -774,6 +838,24 @@ void USBJack::_handleDeviceRemoval(void *refCon, io_iterator_t iterator)
         me->stopRun();
     }
 }
+
+void USBJack::_DeviceNotification(void *refCon, io_service_t service, natural_t messageType, void *messageArgument)
+{
+    if (messageType == kIOMessageServiceIsTerminated)
+    {
+        USBJack *me = (USBJack*)refCon;
+        kern_return_t kr = IOObjectRelease(me->_notification);
+        if (kIOReturnSuccess != kr)
+        {
+            DBNSLog(@"_DeviceNotification: unable to IOObjectRelease (%08x)\n", kr);
+        }
+        me->_notification = NULL;
+        me->_matchingDone = FALSE;
+        me->_interface = NULL;
+        me->stopRun();
+    }
+}
+
 
 #pragma mark -
 #pragma mark Loop Functions
@@ -787,19 +869,27 @@ bool USBJack::stopRun()
 
     // Disable keeping
     _stayUp = false;
-    
+
     // If we have to notify, do that
     if (_notifyPort) 
     {
         IONotificationPortDestroy(_notifyPort);
         _notifyPort = NULL;
     }
-    
+
+    if (_notification)
+    {
+        IOObjectRelease(_notification);
+        _notification = NULL;
+    }
+
     // Stop loop
     if (_runLoop)
+    {
         CFRunLoopStop(_runLoop);
-    _runLoop = NULL;
-    
+        _runLoop = NULL;
+    }
+
     return true;
 }
 void USBJack::_runCFRunLoop(USBJack* me) {

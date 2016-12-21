@@ -1,41 +1,44 @@
 /*
-        
-        File:			ScanController.h
-        Program:		KisMAC
-	Author:			Michael Ro§berg
-				mick@binaervarianz.de
-	Description:		KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
+ 
+ File:			ScanController.h
+ Program:		KisMAC
+ Author:		Michael Ro§berg
+ mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
 
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
-
-#import <Cocoa/Cocoa.h>
-
-typedef enum {
+typedef NS_ENUM(NSInteger, __availableTabs)
+{
     tabInvalid = -1,
     tabNetworks = 0,
     tabTraffic = 1,
     tabMap = 2,
     tabDetails = 3
-} __availableTabs;
+};
 
 @class TrafficController;
 @class WaveNet;
 @class WaveContainer;
-@class SpinChannel;
 @class BIZoomView;
 @class BIToolbarView;
 @class MapView;
@@ -51,7 +54,8 @@ typedef enum {
 io_connect_t  root_port;    // a reference to the Root Power Domain IOService
 
 //This is the main class. it basically provides an interface between the base and the gui
-@interface ScanController : NSObject {
+@interface ScanController : NSObject
+{
     NSString            *_fileName;             //filename for the currently open capture
     WaveNet             *_curNet;               //the currently selected network
     int                 _selectedRow;
@@ -87,6 +91,7 @@ io_connect_t  root_port;    // a reference to the Root Power Domain IOService
 	NSString *_lastError;
     NSString *_activeAttackNetID;
 	NSOperationQueue *queue;
+    NSOperationQueue *mainQueue;
     
     IBOutlet WaveContainer      *_container;
     IBOutlet WaveScanner        *scanner;
@@ -142,13 +147,12 @@ io_connect_t  root_port;    // a reference to the Root Power Domain IOService
     IBOutlet NSPopUpButton      *_trafficTimePopUp;
     IBOutlet NSPopUpButton      *_trafficModePopUp;
     IBOutlet NSDrawer           *_netHierarchDrawer;
-    IBOutlet SpinChannel        *_channelProg;
 	GPSInfoController* _g;
 	NSWindow *borderlessWindow;
     DownloadMapController* dmc;
 }
 
-- (IBAction)updateNetworkTable:(id)sender complete:(bool)complete;
+- (IBAction)updateNetworkTable:(id)sender complete:(BOOL)complete;
 
 - (IBAction)showInfo:(id)sender;
 - (IBAction)showNetHierarch:(id)sender;
@@ -168,11 +172,12 @@ io_connect_t  root_port;    // a reference to the Root Power Domain IOService
 - (IBAction)exportNS:(id)sender;
 - (IBAction)exportKMLFile:(id)sender;
 - (IBAction)exportWarD:(id)sender;
+- (IBAction)exportToServer:(id)sender;
 - (IBAction)exportMacstumbler:(id)sender;
 - (IBAction)exportPDF:(id)sender;
 - (IBAction)exportJPEG:(id)sender;
 
-- (IBAction)selChannel:(id)sender;
+- (IBAction)selChannel:(NSMenuItem *)sender;
 - (IBAction)selChannelRange:(id)sender;
 - (IBAction)setAutoAdjustTimer:(id)sender;
 

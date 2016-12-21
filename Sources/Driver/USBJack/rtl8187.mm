@@ -114,9 +114,9 @@ static const UInt8 rtl8225z2_tx_power_cck_ch14[] = {
 static const UInt8 rtl8225z2_tx_power_cck[] = {
 	0x36, 0x35, 0x2e, 0x25, 0x1c, 0x12, 0x09, 0x04
 };
-static const UInt8 rtl8225z2_tx_power_ofdm[] = {
+/*static const UInt8 rtl8225z2_tx_power_ofdm[] = {
 	0x42, 0x00, 0x40, 0x00, 0x40
-};
+};*/
 static const UInt8 rtl8225z2_tx_gain_cck_ofdm[] = {
 	0x00, 0x01, 0x02, 0x03, 0x04, 0x05,
 	0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b,
@@ -371,7 +371,6 @@ UInt32 rtl818x_ioread32(struct rtl8187_priv *priv, UInt16 addr) {
     {
         DBNSLog(@"%s addr %x %x", __func__, addr, ret);
     }
-//    DBNSLog(@"<<< 32 addr %x data %x (%x)", addr, val, CFSwapInt32LittleToHost(val));
 	return CFSwapInt32LittleToHost(val);
 }
 
@@ -384,8 +383,11 @@ void rtl818x_iowrite8(struct rtl8187_priv *priv, UInt16 addr, UInt8 val) {
     theRequest.wIndex = 0; 
     theRequest.pData = &val;
     theRequest.wLength = sizeof(val);
-//    DBNSLog(@">>> 8 addr %x data %x", addr, val);
     ret = (*(priv->_interface))->ControlRequest(priv->_interface, 0, &theRequest);
+	if (ret != kIOReturnSuccess)
+    {
+        DBNSLog(@"%s addr %x %x", __func__, addr, ret);
+    }
     return;
 }
 void rtl818x_iowrite16(struct rtl8187_priv *priv, UInt16 addr, UInt16 val) {
@@ -400,7 +402,10 @@ void rtl818x_iowrite16(struct rtl8187_priv *priv, UInt16 addr, UInt16 val) {
     theRequest.pData = &buf;
     theRequest.wLength = sizeof(val);
     ret = (*(priv->_interface))->ControlRequest(priv->_interface, 0, &theRequest);
-//    DBNSLog(@">>> 16 addr %x data %x", addr, val);
+	if (ret != kIOReturnSuccess)
+    {
+        DBNSLog(@"%s addr %x %x", __func__, addr, ret);
+    }
     return;
 }
 void rtl818x_iowrite32(struct rtl8187_priv *priv, UInt16 addr, UInt32 val) {
@@ -415,7 +420,10 @@ void rtl818x_iowrite32(struct rtl8187_priv *priv, UInt16 addr, UInt32 val) {
     theRequest.pData = &buf;
     theRequest.wLength = sizeof(val);
     ret = (*(priv->_interface))->ControlRequest(priv->_interface, 0, &theRequest);
-//    DBNSLog(@">>> 32 addr %x data %x", addr, val);
+	if (ret != kIOReturnSuccess)
+    {
+        DBNSLog(@"%s addr %x %x", __func__, addr, ret);
+    }
     return;
 }
 
@@ -584,7 +592,11 @@ static void rtl8225_write_8051(struct rtl8187_priv *priv, UInt8 addr, UInt16 dat
     theRequest.pData = &data;
     theRequest.wLength = sizeof(data);
     ret = (*(priv->_interface))->ControlRequest(priv->_interface, 0, &theRequest);
-//    DBNSLog(@">>>> 16 addr %x data %x", addr, data);
+
+	if (ret != kIOReturnSuccess)
+    {
+        DBNSLog(@"%s addr %x %x", __func__, addr, ret);
+    }
 
 	rtl818x_iowrite16(priv, RTL818X_ADDR_RFPinsOutput, reg80 | (1 << 2));
 	usleep(10);
@@ -1257,9 +1269,11 @@ IOReturn RTL8187Jack::_init() {
     _priv = (struct rtl8187_priv *)malloc(sizeof(struct rtl8187_priv));
     bzero(_priv, sizeof(struct rtl8187_priv));
 
+    _lockDevice();
     rtl8187_probe();
     NICInitialized = true;
     _deviceInit = true;
+    _unlockDevice();
     DBNSLog(@"_init exit");
     return kIOReturnSuccess;
 }
@@ -1389,8 +1403,10 @@ int  RTL8187Jack::rtl8187_probe(void) {
     return 0;
 }
 bool RTL8187Jack::setChannel(UInt16 channel) {
+    _lockDevice();
     rtl8187_set_channel(_priv, channel);
     _channel = channel;
+    _unlockDevice();
     return YES;
 }
 bool RTL8187Jack::getAllowedChannels(UInt16* channels) {
@@ -1406,7 +1422,9 @@ bool RTL8187Jack::startCapture(UInt16 channel) {
     DBNSLog(@"Start capture");
 	if (NICInitialized) {
         //		DBNSLog(@"Done.\n");
+        _lockDevice();
         rtl8187_start(_priv);
+        _unlockDevice();
         setChannel(channel);
 		return true;
 	}
@@ -1419,7 +1437,9 @@ bool RTL8187Jack::stopCapture() {
     //	DBNSLog(@"Stop capture : ");
 	if (NICInitialized) {
         //		DBNSLog(@"Done.\n");
+        _lockDevice();
         rtl8187_stop(_priv);
+        _unlockDevice();
 		return true;
 	}
 	else {
@@ -1428,7 +1448,15 @@ bool RTL8187Jack::stopCapture() {
 	}
 }
 
-bool RTL8187Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len) {
+void RTL8187Jack::_rawFrameReceived(unsigned int len)
+{
+    // _receiveBuffer has the raw 802.11 frame with an rtl8187_rx_hdr appended,
+    // so we just queue the whole thing.  See also: USBJack::_rawFrameReceived().
+    // We get to dissect it in _massagePacket() after it is dequeued.
+    insertFrameIntoQueue(&_receiveBuffer, len, _channel);
+}
+
+bool RTL8187Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel) {
     
     unsigned char* pData = (unsigned char *)inBuf;    
     KFrame *pFrame = (KFrame *)outBuf;
@@ -1466,6 +1494,7 @@ bool RTL8187Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len) {
 	}
     pFrame->ctrl.signal = (UInt8)((100.0 / 65.0) * signal);
     pFrame->ctrl.silence = 0;
+    pFrame->ctrl.channel = channel;
 
 //    dumpFrame(pData, len);
             
@@ -1494,7 +1523,7 @@ int RTL8187Jack::WriteTxDescriptor(void* theFrame, UInt16 length, UInt8 rate) {
 }
 
 bool RTL8187Jack::sendKFrame(KFrame* frame) {
-    UInt8 aData[2364];
+    UInt8 aData[MAX_FRAME_BYTES];
     unsigned int descriptorLength;
     //    DBNSLog(@"sendKFrame %d", size);
     //    dumpFrame(data, size);

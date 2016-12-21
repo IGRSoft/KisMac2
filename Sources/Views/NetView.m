@@ -1,26 +1,30 @@
 /*
-
-        File:			NetView.m
-        Program:		KisMAC
-		Author:			Michael Rossberg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			NetView.m
+ Program:		KisMAC
+ Author:		Michael Ro§berg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "NetView.h"
 #import "MapView.h"
@@ -38,16 +42,45 @@ static NSImage* _networkStrange;
 
 @implementation NetView
 
-- (id)initWithNetwork:(WaveNet*)network {
+- (id)initWithNetwork:(WaveNet*)network
+{
     self = [super init];
     if (self) {
         
-		if (!_networkUnkEnc) _networkUnkEnc = [NSImage imageNamed:@"NetworkUnkEnc.tif"];
-		if (!_networkNoEnc)  _networkNoEnc  = [NSImage imageNamed:@"NetworkNoEnc.tif"];
-		if (!_networkWEP)    _networkWEP    = [NSImage imageNamed:@"NetworkWEP.tif"];
-		if (!_networkWPA)    _networkWPA    = [NSImage imageNamed:@"NetworkWPA.tif"];
-		if (!_networkLEAP)   _networkLEAP   = [NSImage imageNamed:@"NetworkLEAP.tif"];
-		if (!_networkStrange)_networkStrange= [NSImage imageNamed:@"NetworkStrange.tif"];
+        GBStorageController *gbStorage = [GBStorageController sharedControllerForNamespace:kGBStorageDefaultNamespace];
+        
+        if (![gbStorage objectForKeyedSubscript:@"NetworkUnkEnc.tif"])
+        {
+            NSImage *image = [NSImage imageNamed:@"NetworkUnkEnc.tif"];
+            [gbStorage setObject:image forKeyedSubscript:@"NetworkUnkEnc.tif"];
+        }
+        if (![gbStorage objectForKeyedSubscript:@"NetworkNoEnc.tif"])
+        {
+            NSImage *image = [NSImage imageNamed:@"NetworkNoEnc.tif"];
+            [gbStorage setObject:image forKeyedSubscript:@"NetworkNoEnc.tif"];
+        }
+        if (![gbStorage objectForKeyedSubscript:@"NetworkWEP.tif"])
+        {
+            NSImage *image = [NSImage imageNamed:@"NetworkWEP.tif"];
+            [gbStorage setObject:image forKeyedSubscript:@"NetworkWEP.tif"];
+        }
+        if (![gbStorage objectForKeyedSubscript:@"NetworkLEAP.tif"])
+        {
+            NSImage *image = [NSImage imageNamed:@"NetworkLEAP.tif"];
+            [gbStorage setObject:image forKeyedSubscript:@"NetworkLEAP.tif"];
+        }
+        if (![gbStorage objectForKeyedSubscript:@"NetworkStrange.tif"])
+        {
+            NSImage *image = [NSImage imageNamed:@"NetworkStrange.tif"];
+            [gbStorage setObject:image forKeyedSubscript:@"NetworkStrange.tif"];
+        }
+        
+		if (!_networkUnkEnc) _networkUnkEnc = [gbStorage objectForKeyedSubscript:@"NetworkUnkEnc.tif"];
+		if (!_networkNoEnc)  _networkNoEnc  = [gbStorage objectForKeyedSubscript:@"NetworkNoEnc.tif"];
+		if (!_networkWEP)    _networkWEP    = [gbStorage objectForKeyedSubscript:@"NetworkWEP.tif"];
+		if (!_networkWPA)    _networkWPA    = [gbStorage objectForKeyedSubscript:@"NetworkWPA.tif"];
+		if (!_networkLEAP)   _networkLEAP   = [gbStorage objectForKeyedSubscript:@"NetworkLEAP.tif"];
+		if (!_networkStrange)_networkStrange= [gbStorage objectForKeyedSubscript:@"NetworkStrange.tif"];
 		
 		_name = @"<no ssid>";
         
@@ -176,8 +209,11 @@ static NSImage* _networkStrange;
     img = [[NSImage alloc] initWithSize:NSMakeSize(size.width + r + 10, height)];
     [img lockFocus];
     
-    if ([name length]) {
-        [legendPath appendBezierPathWithRect:NSMakeRect(r+5, (height - size.height)/2, size.width, size.height)];
+    CGRect rect = CGRectZero;
+    if ([name length])
+    {
+        rect = NSMakeRect(r+5, (height - size.height)/2, size.width, size.height);
+        [legendPath appendBezierPathWithRect:rect];
         [[[NSColor blackColor] colorWithAlphaComponent:0.75] set];
         [legendPath fill];
         [[[NSColor whiteColor] colorWithAlphaComponent:0.3] set];
@@ -188,7 +224,7 @@ static NSImage* _networkStrange;
         [_name drawAtPoint:NSMakePoint(r+10, (height + 5 - size.height)/2) withAttributes:attrs];
     }
    
-    [_netImg dissolveToPoint:NSMakePoint(0, (height - r)/2) fraction:1.0];
+    [_img drawAtPoint:NSMakePoint(0, (height - r)/2) fromRect:rect operation:NSCompositeSourceOver fraction:1.0];
     
     [img unlockFocus];
     

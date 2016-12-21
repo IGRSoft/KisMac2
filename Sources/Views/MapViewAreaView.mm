@@ -1,26 +1,30 @@
 /*
-        
-        File:			MapViewAreaView.m
-        Program:		KisMAC
-		Author:			Michael Rossberg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			MapViewAreaView.m
+ Program:		KisMAC
+ Author:		Michael Ro§berg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "MapViewAreaView.h"
 #import "MapViewPrivate.h"
@@ -65,9 +69,10 @@
     int qual;
     int **cache;
     int height, width;
-    @autoreleasepool {
-        NSRect rec;
-	NSSize orgSize;
+    @autoreleasepool
+	{
+        NSRect rec = NSZeroRect;
+		NSSize orgSize = NSZeroSize;
         
         NSParameterAssert(networks);
         NSParameterAssert(_mapImage);
@@ -76,7 +81,12 @@
         im = [WaveHelper importController];
 
         networkCount = [networks count];
-        if (networkCount==0) goto exitNoCleanUp;
+		
+        if (networkCount==0)
+		{
+			[im terminateWithCode:[im canceled] ? -1 : 0];
+			return;
+		}
  
         good = [WaveHelper intToColor:[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaColorGood"]];
         bad  = [WaveHelper intToColor:[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaColorBad"]];
@@ -100,7 +110,8 @@
         f = new double* [networkCount];
         c = new int [networkCount];
         
-        for (t=0;t<networkCount;++t) {
+        for (t=0;t<networkCount;++t)
+		{
             network = networks[t];
             coord = [network coordinates];
             c[t] = [coord count];
@@ -116,14 +127,19 @@
             }
         }
         
-        for (x = 0; x < width; ++x) {
-            for (y = 0; y < height; ++y) {
+		bool needBreakProcess = true;
+		
+        for (x = 0; x < width; ++x)
+		{
+            for (y = 0; y < height; ++y)
+			{
                 maxd = 0;
                 xx = x * qual;
                 yy = y * qual;
                 
                 //IDW algorithm with a decline function
-                for (t=0; t < networkCount; ++t) {
+                for (t=0; t < networkCount; ++t)
+				{
                     s = 0;
                     av = 0;
                     for (q=0; q<c[t]; ++q) {
@@ -152,49 +168,57 @@
             }
             
             [im increment];
-            if ([im canceled]) goto exit;
+            if ([im canceled])
+			{
+				needBreakProcess = true;
+			}
         }
         
-	orgSize = [_mapImage size];
-        rec.size = NSMakeSize(orgSize.width / width, orgSize.height / height);
+		if (!needBreakProcess) {
+			orgSize = [_mapImage size];
+			rec.size = NSMakeSize(orgSize.width / width, orgSize.height / height);
+			
+			[_mapImage lockFocus];
+			NS_DURING
+			for (x = 0; x< width; ++x)
+				for (y = 0; y< height; ++y) {
+					i = cache[x][y];
+					if (i==0) continue;
+					
+					a =  (i >> 24) & 0xFF;
+					r =  (i >> 16) & 0xFF;
+					g =  (i >> 8 ) & 0xFF;
+					b =  (i      ) & 0xFF;
+					
+					[[NSColor colorWithCalibratedRed:r/255.0
+											   green:g/255.0
+												blue:b/255.0
+											   alpha:a/255.0] set];
+					rec.origin=NSMakePoint(x * rec.size.width, y * rec.size.height);
+					[NSBezierPath fillRect:rec];
+				}
+			NS_HANDLER
+			//if an error occurs make this invalid...
+			[[NSNotificationCenter defaultCenter] postNotificationName:KisMACAdvNetViewInvalid
+																object:self];
+			NS_ENDHANDLER
+			[_mapImage unlockFocus];
+			[self setNeedsDisplay:YES];
+		}
         
-        [_mapImage lockFocus];
-	NS_DURING
-		for (x = 0; x< width; ++x)
-			for (y = 0; y< height; ++y) {
-				i = cache[x][y];
-				if (i==0) continue;
-				
-				a =  (i >> 24) & 0xFF;
-				r =  (i >> 16) & 0xFF;
-				g =  (i >> 8 ) & 0xFF;
-				b =  (i      ) & 0xFF;
-				
-				[[NSColor colorWithCalibratedRed:r/255.0
-										   green:g/255.0
-											blue:b/255.0
-										   alpha:a/255.0] set];
-				rec.origin=NSMakePoint(x * rec.size.width, y * rec.size.height);
-				[NSBezierPath fillRect:rec];
-			}
-	NS_HANDLER
-		//if an error occurs make this invalid...
-		[[NSNotificationCenter defaultCenter] postNotificationName:KisMACAdvNetViewInvalid
-															object:self];
-	NS_ENDHANDLER
-	[_mapImage unlockFocus];
-	[self setNeedsDisplay:YES];
-        
-exit:
-        for(t=0; t<networkCount; ++t) delete [] f[t];
+        for(t = 0 ; t < networkCount ; ++t)
+		{
+			delete [] f[t];
+		}
         delete [] f;
         delete [] c;
 
-        for (x = 0; x< width; ++x)
+        for (x = 0 ; x < width ; ++x)
+		{
             delete [] cache[x];
+		}
         delete [] cache;
 
-exitNoCleanUp:
         [im terminateWithCode:[im canceled] ? -1 : 0];
     }
 }

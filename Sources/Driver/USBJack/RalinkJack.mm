@@ -138,7 +138,7 @@ IOReturn RalinkJack::_init() {
             ret = RTUSBReadBBPRegister(BBP_Version, &Value);
             if (Value == 0) {
                 DBNSLog(@"This is probably an rt73 chipset, please report your vendor and product id to http://trac.kismac-ng.org");
-                return kIOReturnNoDevice;
+                return ret;
             }
             DBNSLog(@"Read BBP_Version Value = %d\n", Value);
             ++i;
@@ -702,7 +702,7 @@ void RalinkJack::NICInitAsicFromEEPROM()
 			//USHORT	ID;
 			//ID = ((value & 0xff00) >> 8);
 			{
-				unsigned short	temp;
+				unsigned short	temp = 0;
 				unsigned int	j = 0;
 				do
 				{
@@ -1050,7 +1050,7 @@ bool RalinkJack::stopCapture()
 bool RalinkJack::sendKFrame(KFrame *frame) {
     UInt8 *data = frame->data;
     int size = frame->ctrl.len;
-    UInt8 aData[2364];
+    UInt8 aData[MAX_FRAME_BYTES];
     unsigned int descriptorLength;
     descriptorLength = WriteTxDescriptor(aData, size);
     memcpy(aData+descriptorLength, data, size);
@@ -1130,8 +1130,8 @@ int RalinkJack::WriteTxDescriptor(void* theFrame, UInt16 length) {
                 }
             }
         }
-        pTxD->PlcpLengthHigh = length / 256; // 256;
-        pTxD->PlcpLengthLow = length % 256;
+        pTxD->PlcpLengthHigh = length / LAST_BIT; // 256;
+        pTxD->PlcpLengthLow = length % LAST_BIT;
     } else {
         // OFDM - RATE_6, RATE_9, RATE_12, RATE_18, RATE_24, RATE_36, RATE_48, RATE_54
         pTxD->PlcpLengthHigh = length / 64; // 64;      // high 6-bit of total byte count
@@ -1145,7 +1145,7 @@ int RalinkJack::WriteTxDescriptor(void* theFrame, UInt16 length) {
     return sizeof(TXD_STRUC);
 }
 
-bool RalinkJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len){
+bool RalinkJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel){
     unsigned char* pData = (unsigned char *)inBuf;
     KFrame *pFrame = (KFrame *)outBuf;
     PRXD_STRUC pRxD;
@@ -1186,6 +1186,7 @@ bool RalinkJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len){
         pFrame->ctrl.rate = pRxD->BBR0 / 5;
     }
     pFrame->ctrl.len = pRxD->DataByteCnt - 4;
+    pFrame->ctrl.channel = channel;
     
     memcpy(pFrame->data, pData, pFrame->ctrl.len); 
 

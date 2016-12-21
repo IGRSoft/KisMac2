@@ -1,10 +1,29 @@
-//
-//  WavePluginInjectionProbe.m
-//  KisMAC
-//
-//  Created by pr0gg3d on 26/12/08.
-//  Copyright 2008 __MyCompanyName__. All rights reserved.
-//
+/*
+ 
+ File:			WavePluginInjectionProbe.m
+ Program:		KisMAC
+ Author:		pr0gg3d
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "WavePluginInjectionProbe.h"
 
@@ -38,9 +57,12 @@
 	_clientInTest = client;
 
     // Load nib file
-    if (!probeSheet) {
-        if(![NSBundle loadNibNamed:@"injectionProbe" owner:self]) {
-            DBNSLog(@"injectionProbe.nib failed to load!");
+    if (!probeSheet)
+	{
+        if(![[NSBundle mainBundle] loadNibNamed:@"injectionProbe" owner:self topLevelObjects:nil])
+        {
+            DBNSLog(@"injectionProbe.xib failed to load!");
+            
             return NO;
         }
     }
@@ -67,24 +89,43 @@
     [statusRate36 setImage:nil];
     [statusRate48 setImage:nil];
     [statusRate54 setImage:nil];
+	
     [button setTitle:@"Cancel"];
-	if (_clientInTest) {
+	
+	if (_clientInTest)
+	{
 		[textFieldAP setStringValue:[client ID]];
 	} else {
 		[textFieldAP setStringValue:[net BSSID]];
 	}
     [NSApp beginSheet:probeSheet modalForWindow:[WaveHelper mainWindow] modalDelegate:[WaveHelper mainWindow] didEndSelector:nil contextInfo:nil];
     
-    statusOK = [NSImage imageNamed:@"greengem.png"];
-    statusNOK = [NSImage imageNamed:@"redgem.png"];
+    GBStorageController *gbStorage = [GBStorageController sharedControllerForNamespace:kGBStorageDefaultNamespace];
+    
+    if (![gbStorage objectForKeyedSubscript:@"greengem"])
+    {
+        NSImage *image = [NSImage imageNamed:@"greengem"];
+        [gbStorage setObject:image forKeyedSubscript:@"greengem"];
+    }
+    if (![gbStorage objectForKeyedSubscript:@"redgem"])
+    {
+        NSImage *image = [NSImage imageNamed:@"redgem"];
+        [gbStorage setObject:image forKeyedSubscript:@"redgem"];
+    }
+    
+    statusOK = [gbStorage objectForKeyedSubscript:@"greengem"];
+    statusNOK = [gbStorage objectForKeyedSubscript:@"redgem"];
     statusSPIN = [NSImage imageNamed:@"spin.gif"];
     DBNSLog(@"%@", statusSPIN);
+    
     _currentRateEnumerator = [[_driver permittedRates] objectEnumerator];
 //    [self stepTestProbeRequest];
     [self stepTestRTS];
     return YES;
 }
-- (id) imageCellForRate: (NSNumber *)rate {
+
+- (id) imageCellForRate: (NSNumber *)rate
+{
     id imageCell = nil;
     KMRate r = [rate unsignedIntValue];
     switch (r) {
@@ -127,8 +168,8 @@
     }
     return imageCell;
 }
-- (void) stepTestProbeRequest {
-    
+- (void) stepTestProbeRequest
+{
     // Get next rate
     _currentRate = [_currentRateEnumerator nextObject];
     if (_currentRate == nil) {
@@ -173,7 +214,9 @@
     _checks = 0;
     [_driver sendKFrame:&frame howMany:10 atInterval:200 notifyTarget:self notifySelectorString:@"checkResponse"];
 }
-- (void) stepTestRTS {
+
+- (void) stepTestRTS
+{
     
     // Get next rate
     _currentRate = [_currentRateEnumerator nextObject];
@@ -212,9 +255,13 @@
     _checks = 0;
     [_driver sendKFrame:&frame howMany:10 atInterval:200 notifyTarget:self notifySelectorString:@"checkResponse"];
 }
-- (void) checkResponse {
+
+- (void) checkResponse
+{
     NSImageView *imageCell = [self imageCellForRate:_currentRate];
-    if (_catchedPacket == YES) {
+	
+    if (_catchedPacket == YES)
+	{
         [imageCell setImage:statusOK];
     } else {
 		[imageCell setImage:statusNOK];
@@ -222,31 +269,42 @@
 
     [self stepTestRTS];
 }
-- (WavePluginPacketResponse) gotPacket:(WavePacket *)packet fromDriver:(WaveDriver *)driver {
-    
+
+- (WavePluginPacketResponse) gotPacket:(WavePacket *)packet fromDriver:(WaveDriver *)driver
+{
     // Check if packet is received from our driver
     // else ignore it.
     if (driver != _driver)
+	{
         return WavePluginPacketResponseContinue;
-    
+    }
+	
     UInt8 *rawReceiverID = [packet rawReceiverID];
     if (!rawReceiverID)
+	{
         return WavePluginPacketResponseContinue;
-    
-    if (!memcmp(rawReceiverID, _randomSourceMAC, 6)) {
+    }
+	
+    if (!memcmp(rawReceiverID, _randomSourceMAC, 6))
+	{
         DBNSLog(@"Catch Injected packet response from %@ with a signal of %d", [packet stringSenderID], [packet signal]);
         _catchedPacket = YES;
-        return WavePluginPacketResponseCatched;
+        
+		return WavePluginPacketResponseCatched;
     } else {
         return WavePluginPacketResponseContinue;
     }
 }
-- (IBAction) endProbeSheet: (id) sender {
+
+- (IBAction) endProbeSheet: (id) sender
+{
     [NSApp endSheet:probeSheet];
     [probeSheet orderOut:sender];
     [self stopTest];
 }
-- (bool) stopTest {
+
+- (bool) stopTest
+{
     bool stop = [super stopTest];
     if (!stop)
         return NO;
@@ -265,6 +323,7 @@
         _currentRateEnumerator = nil;
     }
     _status = WavePluginIdle;
+	
     return YES;
 }
 

@@ -1,45 +1,50 @@
 /*
-        
-        File:			WaveNet.h
-        Program:		KisMAC
-		Author:			Michael Ro§berg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
-
-#import <Cocoa/Cocoa.h>
+ 
+ File:			WaveNet.h
+ Program:		KisMAC
+ Author:		Michael Ro§berg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "WavePacket.h"
 
-enum {
+enum
+{
     trafficData,
     packetData,
     signalData
 };
 
-enum {
+enum
+{
     chreNone,
     chreChallenge,
     chreResponse,
     chreComplete
 };
 
-struct graphStruct {
+struct graphStruct
+{
     int trafficData[MAX_YIELD_SIZE + 1];
     int packetData[MAX_YIELD_SIZE + 1];
     int signalData[MAX_YIELD_SIZE + 1];
@@ -60,7 +65,7 @@ struct graphStruct {
     
     // Statistical Data
     int					_packets;				//# of packets
-    int					_packetsPerChannel[16];	//how many packets on each channel
+    int					_packetsPerChannel[166];//how many packets on each channel
     int					_dataPackets;			//# of Data packets
     int                 _mgmtPackets;           //# of Management packets
     int                 _ctrlPackets;           //# of Control packets
@@ -182,7 +187,7 @@ struct graphStruct {
 - (NSString *)longitude;
 - (NSString *)elevation;
 
-- (float)dataCount;
+- (double)dataCount;
 - (int)curTraffic;
 - (int)curPackets;
 - (int)curSignal;

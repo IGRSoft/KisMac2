@@ -1,26 +1,30 @@
 /*
-        
-        File:			ScanControllerMenus.m
-        Program:		KisMAC
-		Author:			Michael Rossberg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			ScanControllerMenus.m
+ Program:		KisMAC
+ Author:		Michael Ro§berg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "ScanController.h"
 #import "ScanControllerPrivate.h"
@@ -37,7 +41,6 @@
 #import "MapViewAreaView.h"
 #import "WaveStorageController.h"
 #import "WaveNet.h"
-#import "FSWindow.h"
 #import "InfoController.h"
 #import "PrefsController.h"
 #import "DownloadMapController.h"
@@ -56,17 +59,25 @@
 
 - (IBAction)showPrefs:(id)sender
 {
-    if(!prefsWindow) {
-        if(![NSBundle loadNibNamed:@"Preferences" owner:self]) {
-            DBNSLog(@"Preferences.nib failed to load!");
+    if(!prefsWindow)
+    {
+        if(![[NSBundle mainBundle] loadNibNamed:@"Preferences" owner:self topLevelObjects:nil])
+        {
+            DBNSLog(@"Preferences.xib failed to load!");
+            
             return;
         }
-    } else
+    }
+    else
+    {
         [prefsController refreshUI:self];
+    }
     
     if(![[NSUserDefaults standardUserDefaults] objectForKey:@"NSWindow Frame prefsWindow"])
+    {
         [prefsWindow center];
-
+    }
+    
     [prefsWindow makeKeyAndOrderFront:nil];
 }
 
@@ -101,7 +112,11 @@
 			 }
 			 _refreshGUI = YES;
 			 
-			 [self updateNetworkTable:self complete:YES];
+			 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                 
+                 [self updateNetworkTable:self complete:YES];
+             });
+             
 			 [self refreshScanHierarch];
 			 [_window setDocumentEdited:YES];
 			 
@@ -156,9 +171,13 @@
     [WaveStorageController importFromNetstumbler:filename withContainer:_container andImportController:_importController];
     _refreshGUI = YES;
 
-    [self updateNetworkTable:self complete:YES];
     [self refreshScanHierarch];
     [_window setDocumentEdited:YES];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        
+        [self updateNetworkTable:self complete:YES];
+    });
 }
 
 #pragma mark -
@@ -234,6 +253,7 @@
 			[self showExportFailureDialog];
     }
 }
+
 - (void)performExportWarD:(id)filename
 {
 	[[WaveHelper scanController] checkFilter:self];
@@ -248,6 +268,11 @@
 					   error:NULL];
 	
 	[[WaveHelper scanController] changeSearchValue:self];
+}
+
+- (IBAction)exportToServer:(id)sender
+{
+
 }
 
 - (IBAction)exportMacstumbler:(id)sender
@@ -339,7 +364,8 @@
     NS_DURING
         img  = [[NSImage alloc] initWithData:[_mappingView pdfData]];
         data = [img TIFFRepresentationUsingCompression:NSTIFFCompressionNone factor:0.0];
-        data = [[NSBitmapImageRep imageRepWithData:data] representationUsingType:NSJPEGFileType properties:nil];
+        data = [[NSBitmapImageRep imageRepWithData:data] representationUsingType:NSJPEGFileType
+                                                                      properties:[NSDictionary dictionary]];
             
         [data writeToFile:[filename stringByExpandingTildeInPath] atomically:NO];
         
@@ -358,22 +384,53 @@
 {
 }
 
-- (IBAction)selChannel:(id)sender
+- (IBAction)selChannel:(NSMenuItem *)sender
 {
     WaveDriver *wd;
     NSMutableDictionary *md;
-    int y;
-    int newChannel = [[[sender title] substringFromIndex:8] intValue];
+    
+    NSUInteger newChannel = 0;
+    if (sender.tag == 14)
+    {
+        NSAlert *alert = [NSAlert alertWithMessageText:@"Enter Channel number"
+                                         defaultButton:@"OK"
+                                       alternateButton:@"Cancel"
+                                           otherButton:nil
+                             informativeTextWithFormat:@""];
+        
+        NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 24)];
+        NSNumberFormatter *intFormat = [[NSNumberFormatter alloc] init];
+        [intFormat setFormat:@"#"];
+        [input setFormatter:intFormat];
+        
+        [input setIntValue:15];
+        
+        [alert setAccessoryView:input];
+        NSInteger button = [alert runModal];
+        if (button == NSAlertDefaultReturn)
+        {
+            newChannel = [input intValue];
+        }
+        else
+        {
+            return;
+        }
+    }
+    else
+    {
+        newChannel = [[[sender title] substringFromIndex:8] intValue];
+    }
     
     wd = [WaveHelper driverWithName:_whichDriver];
-    if (!wd) {
+    if (!wd)
+    {
         DBNSLog(@"Error: invalid driver selected (%@)", _whichDriver);
+        
         return;
     }
     
     md = [[wd configuration] mutableCopy];
-    for( y = 1 ; y < 15 ; ++y )
-        md[[NSString stringWithFormat:@"useChannel%.2i",y]] = @((y==newChannel) ? 1 : 0);
+    md[@"useChannels"] = @[@(newChannel)];
   
     [wd setConfiguration: md];
 
@@ -393,16 +450,14 @@
     }
     
     md = [[wd configuration] mutableCopy];
-    if ([[sender title] isEqualToString:NSLocalizedString(@"All FCC/IC Channels (1-11)", "menu item. needs to be the same as in MainMenu.nib")]) {
-        for( y = 1 ; y <= 11 ; ++y)
-            md[[NSString stringWithFormat:@"useChannel%.2i", y]] = @1;
-
-        md[[NSString stringWithFormat:@"useChannel%.2i", 12]] = @0;
-        md[[NSString stringWithFormat:@"useChannel%.2i", 13]] = @0;
-     } else {
-        for( y = 1 ; y <= 13 ; ++y)
-            md[[NSString stringWithFormat:@"useChannel%.2i", y]] = @1;
+    NSMutableArray *chanels = [NSMutableArray array];
+    NSUInteger endPos = ([[sender title] isEqualToString:NSLocalizedString(@"All FCC/IC Channels (1-11)", "menu item. needs to be the same as in MainMenu.nib")]) ? 11 : 13;
+    for( y = 1 ; y <= endPos ; ++y)
+    {
+        [chanels addObject:@(y)];
     }
+    
+    md[@"useChannels"] = chanels;
     
     [wd setConfiguration: md];
     
@@ -498,7 +553,11 @@
     _curNet = nil;
     
     [self refreshScanHierarch];
-    [self updateNetworkTable:self complete:YES];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        
+        [self updateNetworkTable:self complete:YES];
+    });
 }
 
 - (void)reallyWantToDelete:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -507,7 +566,8 @@
     NSMutableArray *temp;
     NSString *mac;
     
-    switch (returnCode) {
+    switch (returnCode)
+    {
     case NSAlertDefaultReturn:
         [self clearNetwork:self];
     case NSAlertOtherReturn:
@@ -540,11 +600,11 @@
 {
 
 	if ([_curNet type] != networkTypeManaged) {
-		[_window showAlertMessage: NSLocalizedString(@"KisMAC can only attack managed networks!", "Error for packet reinjection") title: NSLocalizedString(@"Re-Injection failed", "Error for packet reinjection") button: NULL];
+		[_window showAlertMessage: NSLocalizedString(@"KisMAC can only attack managed networks!", "Error for packet reinjection") title: NSLocalizedString(@"Re-Injection failed", "Error for packet reinjection") button: NSLocalizedString(@"OK", "Alert button OK")];
 		return;
     }
 	if ([_curNet wep] != encryptionTypeWEP && [_curNet wep] != encryptionTypeWEP40) {
-		[_window showAlertMessage: NSLocalizedString(@"You can only reinject into WEP encrypted networks!", "Error for packet reinjection") title: NSLocalizedString(@"Re-Injection failed", "Error for packet reinjection") button: NULL];
+		[_window showAlertMessage: NSLocalizedString(@"You can only reinject into WEP encrypted networks!", "Error for packet reinjection") title: NSLocalizedString(@"Re-Injection failed", "Error for packet reinjection") button: NSLocalizedString(@"OK", "Alert button OK")];
 		return;
     }
 	
@@ -673,7 +733,7 @@
 		{
 			[_window showAlertMessage:NSLocalizedString(@"You have to load a map in order to perform this action", "area mapping failure")
 								title:NSLocalizedString(@"Area mapping failed", "error box title")
-							   button:nil];
+							   button:NSLocalizedString(@"OK", "Alert button OK")];
 			return;
 		}
 		
@@ -722,7 +782,7 @@
 	{
         if (![[WaveHelper mapView] hasValidMap])
 		{
-			[_window showAlertMessage:NSLocalizedString(@"You have to load a map in order to perform this action", "area mapping failure") title:NSLocalizedString(@"Area mapping failed", "error box title") button:nil];
+			[_window showAlertMessage:NSLocalizedString(@"You have to load a map in order to perform this action", "area mapping failure") title:NSLocalizedString(@"Area mapping failed", "error box title") button:NSLocalizedString(@"OK", "Alert button OK")];
 			return;
 		}
         [self stopScan];
@@ -793,9 +853,13 @@
 {
 	if ([_fullscreen state]==NSOffState)
 	{
-		borderlessWindow = [[FSWindow alloc] initWithContentRect:[[NSScreen mainScreen] frame] 
-													   styleMask:(NSTexturedBackgroundWindowMask)
-														backing:NSBackingStoreBuffered defer:YES];
+        if (!borderlessWindow)
+        {
+            borderlessWindow = [[NSWindow alloc] initWithContentRect:[[NSScreen mainScreen] frame]
+                                                           styleMask:(NSTexturedBackgroundWindowMask)
+                                                             backing:NSBackingStoreBuffered defer:YES];
+        }
+    
 		[borderlessWindow setAlphaValue:0];
 		[borderlessWindow setContentView:_mapView];
 		[borderlessWindow makeKeyAndOrderFront:borderlessWindow];
@@ -833,7 +897,8 @@
 			[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
 		}
 		
-		[borderlessWindow close];
+        borderlessWindow = nil;
+        
 		[[WaveHelper mainWindow] makeKeyAndOrderFront:[WaveHelper mainWindow]];
 		[_fullscreen setState:NSOffState];
 	}
@@ -845,7 +910,7 @@
 
 - (IBAction)openWebsiteURL:(id)sender
 {
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://github.com/iKorich/KisMac2"]];
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://github.com/IGRSoft/KisMac2"]];
 }
 
 - (IBAction)openDonateURL:(id)sender

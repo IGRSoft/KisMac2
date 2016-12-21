@@ -1,10 +1,29 @@
-//
-//  WavePluginInjecting.m
-//  KisMAC
-//
-//  Created by pr0gg3d on 27/12/08. 
-//  Copyright 2008 __MyCompanyName__. All rights reserved.
-//
+/*
+ 
+ File:			WavePluginInjecting.h
+ Program:		KisMAC
+ Author:		pr0gg3d
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "WavePluginInjecting.h"
 #import "WaveNet.h"
@@ -14,39 +33,51 @@
 
 @implementation WavePluginInjecting
 
-- (id) initWithDriver:(WaveDriver *)driver {
-    
+- (id) initWithDriver:(WaveDriver *)driver
+{
     self = [super initWithDriver:driver];
     
     if (!self)
+	{
         return nil;
-    
+    }
+	
     _checkInjectedPackets = NO;
     
     return self;
 }
 
-- (BOOL) startTest: (WaveNet *)net {
+- (BOOL) startTest: (WaveNet *)net
+{
     // No vaild network, return
     if (!net)
+	{
         return NO;
+    }
     
-    // A test is already running, return
+	// A test is already running, return
     if (_status == WavePluginRunning)
+	{
         return NO;
-    
+    }
+	
     // Only test managed networks
 //    if ([net type] != networkTypeManaged)
 //        return NO;
     
     // Only test WEP
     if (([net wep] != encryptionTypeWEP) && ([net wep] == encryptionTypeWEP40))
+	{
         return NO;
-    
+    }
+	
     // Load nib file, probeSheet will be assigned by File's Owner (see xib file) method
-    if (!probeSheet) {
-        if(![NSBundle loadNibNamed:@"wepInjection" owner:self]) {
-            DBNSLog(@"wepInjection.nib failed to load!");
+    if (!probeSheet)
+    {
+        if(![[NSBundle mainBundle] loadNibNamed:@"wepInjection" owner:self topLevelObjects:nil])
+		{
+            DBNSLog(@"wepInjection.xib failed to load!");
+            
             return NO;
         }
     }
@@ -71,10 +102,12 @@
     _stopFlag = NO;
     
     [self stepPerformInjection:nil];
+	
     return YES;
 }
 
-- (void) stepPerformInjection: (NSTimer *)timer {
+- (void) stepPerformInjection: (NSTimer *)timer
+{
     int q;
     NSMutableArray *p;
     NSData *f;
@@ -93,7 +126,8 @@
     p = [_networkInTest arpPacketsLog];
 
     // if we haven't... Wait a little more
-    if ([p count] <= 0) {
+    if ([p count] <= 0)
+	{
         [operation setStringValue:@"Waiting for interesting packets..."];
         [progIndicator setIndeterminate:YES];
         [progIndicator startAnimation:self];
@@ -121,7 +155,8 @@
     _injReplies = 0;
     [responses setIntValue:_injReplies];
             
-    if (frame->frame_ctl & IEEE80211_DIR_TODS) {
+    if (frame->frame_ctl & IEEE80211_DIR_TODS)
+	{
         memcpy(_addr1, frame->addr1, 6); //this is the BSSID
         memcpy(_addr2, frame->addr2, 6); //this is the source
         if (memcmp(frame->addr3, "\xff\xff\xff\xff\xff\xff", 6) != 0) {
@@ -215,12 +250,13 @@
     if ([packet type] != IEEE80211_TYPE_DATA)
         return WavePluginPacketResponseContinue;
     
+	bool isBrokenData = false;
     if (aPacketType == 0) {        //do rst handling here
         if ((payloadLength == TCPRST_SIZE) && 
             IS_EQUAL_MACADDR([packet addr1], _addr1) && 
             IS_EQUAL_MACADDR([packet addr2], _addr2) &&
             IS_EQUAL_MACADDR([packet addr3], _addr3)) {
-            goto got;
+            isBrokenData = true;
         }
     } else if (payloadLength == ARP_SIZE || payloadLength == ARP_SIZE_PADDING || payloadLength == ARP_SIZE + 4) {
 
@@ -235,10 +271,12 @@
 			if (IS_BCAST_MACADDR([packet addr1]) || IS_BCAST_MACADDR([packet addr3]))
                 return WavePluginPacketResponseContinue;
 		}		
-		goto got;
+		isBrokenData = true;
     }
-    return WavePluginPacketResponseContinue;
-got:
+	if (!isBrokenData) {
+		return WavePluginPacketResponseContinue;
+	}
+
     ++_injReplies;
     [responses setIntValue:_injReplies];
     [progIndicator setDoubleValue:(double)_injReplies];

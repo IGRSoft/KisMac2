@@ -1,41 +1,35 @@
 /*
-        File:			main.m
-        Program:		KisMAC
-		Author:			Geoffrey Kruse
-		Description:	This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
-
-#import <Cocoa/Cocoa.h>
+ 
+ File:			PrefsClient.h
+ Program:		KisMAC
+ Author:		Geoffrey Kruse
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 int main(int argc, const char *argv[])
 {
-    //setup our own logfile but save the old one for crash reporter
-    NSString * path = [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Logs/KisMAC.log"];
-    NSString * oldLogPath = [NSString stringWithFormat:@"%@.%u", path, 1];
-	
-	NSFileManager *fm = [NSFileManager defaultManager];
-	NSError * error = nil;
-	
-	if ([fm fileExistsAtPath:oldLogPath]) {
-		[fm removeItemAtPath:oldLogPath error:&error];
-	}
-    
-    [fm moveItemAtPath:path toPath: oldLogPath error: &error];
-    
-    freopen([path UTF8String], "w+", stderr);
-    
-    return NSApplicationMain(argc, argv);
+    @autoreleasepool
+    {
+        int retVal = NSApplicationMain(argc, argv);
+        return retVal;
+    }
 }

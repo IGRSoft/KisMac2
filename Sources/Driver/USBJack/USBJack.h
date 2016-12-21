@@ -84,13 +84,14 @@ protected:
     
     bool    _matchingDone;
     
-    enum  deviceTypes {
+    typedef NS_ENUM(NSUInteger, deviceTypes)
+    {
         intersil = 1,
         zydas,
         ralink,
 		rt73,
         rtl8187
-    } deviceType; 
+    };
 
     IOReturn    _sendFrame(UInt8* data, IOByteCount size);
     
@@ -108,15 +109,19 @@ protected:
     bool                _attachDevice();
     static void         _addDevice(void *refCon, io_iterator_t iterator);
     static void         _handleDeviceRemoval(void *refCon, io_iterator_t iterator);
-    static void         _interruptReceived(void *refCon, IOReturn result, unsigned int len);
+    static void         _DeviceNotification(void *refCon, io_service_t service, natural_t messageType, void *messageArgument);
+    static void         _interruptReceived(void *refCon, IOReturn result, void *arg0);
 
     int                 initFrameQueue(void);
     int                 destroyFrameQueue(void);
-    int                 insertFrameIntoQueue(KFrame *f, UInt16 len, UInt16 channel);
+    int                 insertFrameIntoQueue(void *f, UInt16 len, UInt16 channel);
     KFrame *            getFrameFromQueue(UInt16 *len, UInt16 *channel);
     
 	// Method for convert driver native data to KFrame
-    virtual bool        _massagePacket(void *inBuf, void *outBuf, UInt16 len);	
+    virtual bool        _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);	
+
+    // Driver specific packet handler
+    virtual void        _rawFrameReceived(unsigned int len);
 
     static void         _runCFRunLoop(USBJack* me);
   
@@ -125,6 +130,7 @@ protected:
 
 //    SInt32                      _vendorID;
 //    SInt32                      _productID;
+    io_object_t                 _notification;
     
     char * _plistFile;
     bool                        _devicePresent;

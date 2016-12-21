@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
+	<key>CFBundleDisplayName</key>
+	<string>KisMac 2</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -42,15 +44,13 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleGetInfoString</key>
-	<string>KisMAC 0.3, © 2002-2013 Geoffrey Kruse &amp; KisMAC Community (Rewrited by Vitalii Parovishnyk &amp; IGR Software)</string>
+	<string>KisMAC 0.3.4, © 2002-2013 Geoffrey Kruse &amp; KisMAC Community (Rewrited by Vitalii Parovishnyk &amp; IGR Software)</string>
 	<key>CFBundleHelpBookFolder</key>
 	<string>KisMACHelp</string>
 	<key>CFBundleHelpBookName</key>
 	<string>KisMAC Help</string>
-	<key>CFBundleIconFile</key>
-	<string>icon</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.igrsoft.kismac</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -62,7 +62,7 @@
 	<key>CFBundleSignature</key>
 	<string>BIKM</string>
 	<key>CFBundleVersion</key>
-	<string>Alpha 2</string>
+	<string>Alpha 4</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>LSMinimumSystemVersion</key>

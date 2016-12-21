@@ -1,34 +1,35 @@
 /*
-        
-        File:			WaveDriverKismetDrone.m
-        Program:		KisMAC
-		Author:			Geordie Millar
-						themacuser@gmail.com
-						Contains a lot of code from Kismet - 
-						http://kismetwireless.net/
-						
-		Description:	Scan with a Kismet drone (as opposed to kismet server) in KisMac.
-		
-		Details:		Tested with kismet_drone 2006.04.R1 on OpenWRT White Russian RC6 on a Diamond Digital R100
-						(broadcom mini-PCI card, wrt54g capturesource)
-						and kismet_drone 2006.04.R1 on Voyage Linux on a PC Engines WRAP.2E
-						(CM9 mini-PCI card, madwifing)
-                
-		This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			WaveDriverKismetDrone.m
+ Program:		KisMAC
+ Author:		Geordie Millar
+                themacuser@gmail.com
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	Scan with a Kismet drone (as opposed to kismet server) in KisMac.
+ 
+ Details:		Tested with kismet_drone 2006.04.R1 on OpenWRT White Russian RC6 on a Diamond Digital R100
+                (broadcom mini-PCI card, wrt54g capturesource)
+                and kismet_drone 2006.04.R1 on Voyage Linux on a PC Engines WRAP.2E
+                (CM9 mini-PCI card, madwifing)
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "WaveDriverKismetDrone.h"
 #import "ImportController.h"
@@ -37,91 +38,109 @@
 
 @implementation WaveDriverKismetDrone
 
-+ (enum WaveDriverType) type {
++ (enum WaveDriverType) type
+{
     return passiveDriver;
 }
 
-+ (bool) allowsInjection {
++ (BOOL) allowsInjection
+{
     return NO;
 }
 
-+ (bool) wantsIPAndPort {
++ (BOOL) wantsIPAndPort
+{
     return YES;
 }
 
-+ (bool) allowsChannelHopping {
++ (BOOL) allowsChannelHopping
+{
     return NO;
 }
 
-+ (NSString*) description {
++ (NSString*) description
+{
     return NSLocalizedString(@"Kismet Drone (raw packets), passive mode", "long driver description");
 }
 
-+ (NSString*) deviceName {
++ (NSString*) deviceName
+{
     return NSLocalizedString(@"Kismet Drone", "short driver description");
 }
 
 #pragma mark -
 
 
-+ (BOOL)deviceAvailable {
++ (BOOL)deviceAvailable
+{
 	return YES;
 }
 
 
-+ (int) initBackend {
++ (int) initBackend
+{
 	return YES;
 }
 
-+ (bool) loadBackend {
++ (BOOL) loadBackend
+{
 	return YES;
 }
 
-+ (bool) unloadBackend {
++ (BOOL) unloadBackend
+{
 	return YES;
 }
 
 #pragma mark -
 
-- (id)init {
+- (id)init
+{
+    self = [super init];
+    if (!self)  return nil;
+    
 	return self;
 }
 
 #pragma mark -
 
-- (unsigned short) getChannelUnCached {
+- (UInt16) getChannelUnCached
+{
 	return _currentChannel;
 }
 
-- (bool) setChannel:(unsigned short)newChannel {
+- (BOOL) setChannel:(UInt16)newChannel
+{
 	_currentChannel = newChannel;
 	return YES;
 }
 
-- (bool) startCapture:(unsigned short)newChannel {
+- (BOOL) startCapture:(UInt16)newChannel
+{
     return YES;
 }
 
--(bool) stopCapture {
+- (BOOL) stopCapture
+{
 	close(drone_fd);
     return YES;
 }
 
 #pragma mark -
 
--(bool) startedScanning {
-	NSUserDefaults *defs;
-    defs = [NSUserDefaults standardUserDefaults];
-	const char* hostname;
-	unsigned int port;
+- (BOOL) startedScanning
+{
+	NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
+	const char* hostname = 0;
+	unsigned int port = 0;
 
-	int foundhostname=0;
-	int foundport=0;
+	int foundhostname = 0;
+	int foundport = 0;
 	
-	NSArray *activeDrivers;
-	activeDrivers = [defs objectForKey:@"ActiveDrivers"];
+	NSArray *activeDrivers = [defs objectForKey:@"ActiveDrivers"];
 	NSEnumerator *e = [activeDrivers objectEnumerator];
 	NSDictionary *drvr;
+	
 	@try { // todo: not multiple instance safe yet. not a problem currently.
 		while ( (drvr = [e nextObject]) ) {
 			if ([drvr[@"driverID"] isEqualToString:@"WaveDriverKismetDrone"]) {
@@ -135,20 +154,18 @@
 	@catch (NSException * ex) {
 		DBNSLog(@"Exception getting the hostname and port from plist...");
 		DBNSLog(@"Error getting host and port!"); 
-			NSRunCriticalAlertPanel(
-            NSLocalizedString(@"No host/port set to connect to!", "Error dialog title"),
-            NSLocalizedString(@"Check that one is set in the preferences", "LONG desc"),
-            OK, nil, nil);
+			NSRunCriticalAlertPanel(NSLocalizedString(@"No host/port set to connect to!", "Error dialog title"),
+									NSLocalizedString(@"Check that one is set in the preferences", "LONG desc"),
+									OK, nil, nil);
 		return nil;
 	}
 
 	if (foundhostname + foundport < 2) {
 		DBNSLog(@"Error getting the hostname and port from plist...");
 		DBNSLog(@"Error getting host and port!"); 
-		NSRunCriticalAlertPanel(
-           NSLocalizedString(@"No host/port set to connect to!", "Error dialog title"),
-            NSLocalizedString(@"Check that one is set in the preferences", "LONG desc"),
-            OK, nil, nil);
+		NSRunCriticalAlertPanel(NSLocalizedString(@"No host/port set to connect to!", "Error dialog title"),
+								NSLocalizedString(@"Check that one is set in the preferences", "LONG desc"),
+								OK, nil, nil);
 		return nil;
 	}
 
@@ -156,18 +173,17 @@
 		
 	drone_sock.sin_addr.s_addr = ip;
 
-
 	memset(&drone_sock, 0, sizeof(drone_sock));
 	drone_sock.sin_addr.s_addr = ip;
 	drone_sock.sin_family = AF_INET;
 	drone_sock.sin_port = htons(port); // option as well
 	
-	if ((drone_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+	if ((drone_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+	{
         DBNSLog(@"socket() failed %d (%s)\n", errno, strerror(errno));
-			NSRunCriticalAlertPanel(
-            NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-			[NSString stringWithFormat:@"%s",strerror(errno)],
-            OK, nil, nil);
+		NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
+								@"%s",
+								OK, nil, nil, strerror(errno));
 		return nil;
     }
 
@@ -175,22 +191,23 @@
     local_sock.sin_addr.s_addr = htonl(INADDR_ANY);
     local_sock.sin_port = htons(0);
 
-    if (bind(drone_fd, (struct sockaddr *) &local_sock, sizeof(local_sock)) < 0) {
-         DBNSLog(@"bind() failed %d (%s)\n", errno, strerror(errno));
-			NSRunCriticalAlertPanel(
-            NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-			[NSString stringWithFormat:@"%s",strerror(errno)],
-            OK, nil, nil);
+    if (bind(drone_fd, (struct sockaddr *) &local_sock, sizeof(local_sock)) < 0)
+	{
+		DBNSLog(@"bind() failed %d (%s)\n", errno, strerror(errno));
+		NSRunCriticalAlertPanel(
+		NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
+								@"%s",
+								OK, nil, nil, strerror(errno));
         return NULL;
     }
 
     // Connect
-    if (connect(drone_fd, (struct sockaddr *) &drone_sock, sizeof(drone_sock)) < 0) {
-         DBNSLog(@"connect() failed %d (%s)\n", errno, strerror(errno));
-			NSRunCriticalAlertPanel(
-            NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-			[NSString stringWithFormat:@"%s",strerror(errno)],
-            OK, nil, nil);
+    if (connect(drone_fd, (struct sockaddr *) &drone_sock, sizeof(drone_sock)) < 0)
+	{
+		DBNSLog(@"connect() failed %d (%s)\n", errno, strerror(errno));
+		NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
+								@"%s",
+								OK, nil, nil, strerror(errno));
 		return nil;
     }
 
@@ -206,36 +223,39 @@
 
 #pragma mark -
 
-- (KFrame*) nextFrame {
-	KFrame *thisFrame;
+- (KFrame*) nextFrame
+{
+	KFrame *thisFrame = 0;
 	static UInt8 frame[2500];
 	thisFrame = (KFrame*)frame;
 	
-	uint8_t *inbound;
+	uint8_t *inbound = 0;
 	int ret = 0;
 	fd_set rset;
 	struct timeval tm;
 	unsigned int offset = 0;
-		
-	top:;
+	
 	int noValidFrame = 1;
 	
-	while (noValidFrame) {
-	   if (stream_recv_bytes < sizeof(struct stream_frame_header)) {
-			inbound = (uint8_t *) &fhdr;
-			if ((ret = read(drone_fd, &inbound[stream_recv_bytes],
-				 (ssize_t) sizeof(struct stream_frame_header) - stream_recv_bytes)) < 0) {
-				DBNSLog(@"drone read() error getting frame header %d:%s",
-                      errno, strerror(errno));
-                NSRunCriticalAlertPanel(
-                    NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-                    @"Drone read() error getting frame header",
-                    OK, nil, nil);
+	while (noValidFrame)
+	{
+	   if (stream_recv_bytes < sizeof(struct stream_frame_header))
+	   {
+		   inbound = (uint8_t *) &fhdr;
+		   if ((ret = read(drone_fd, &inbound[stream_recv_bytes], (ssize_t) sizeof(struct stream_frame_header) - stream_recv_bytes)) < 0)
+		   {
+				DBNSLog(@"drone read() error getting frame header %d:%s", errno, strerror(errno));
+                NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
+										@"Drone read() error getting frame header",
+										OK, nil, nil);
 			}
 			stream_recv_bytes += ret;
 
 			if (stream_recv_bytes < sizeof(struct stream_frame_header))
-				goto top;
+			{
+				noValidFrame = 1;
+				continue;
+			}
 			
 			// Validate it
 			if (ntohl(fhdr.frame_sentinel) != STREAM_SENTINEL) {
@@ -245,16 +265,18 @@
 				++resyncs;
 
 				if (resyncs > 20) {
-				   DBNSLog(@"too many resync attempts, something is wrong.");
-					NSRunCriticalAlertPanel(
-            NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-			@"Resync attempted too many times.",
-            OK, nil, nil);
+				DBNSLog(@"too many resync attempts, something is wrong.");
+				NSRunCriticalAlertPanel( NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
+															@"Resync attempted too many times.",
+															OK, nil, nil);
 					return NULL;
 				}
 
 				if (resyncing == 1)
-					goto top;
+				{
+					noValidFrame = 1;
+					continue;
+				}
 
 				resyncing = 1;
 				
@@ -264,10 +286,9 @@
 							 "packet stream: %d %s",
 							 errno, strerror(errno));
 							 
-							NSRunCriticalAlertPanel(
-            NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-			@"Write error flushing packet stream",
-            OK, nil, nil);
+							NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
+													@"Write error flushing packet stream",
+													OK, nil, nil);
 				
 					return NULL;
 				}
@@ -276,103 +297,97 @@
 		
 		////////
 		offset = sizeof(struct stream_frame_header);
-		if (fhdr.frame_type == STREAM_FTYPE_VERSION && stream_recv_bytes >= offset && 
-			stream_recv_bytes < offset + sizeof(struct stream_version_packet)) {
-
+		if (fhdr.frame_type == STREAM_FTYPE_VERSION && stream_recv_bytes >= offset && stream_recv_bytes < offset + sizeof(struct stream_version_packet))
+		{
 			inbound = (uint8_t *) &vpkt;
-			if ((ret = read(drone_fd, &inbound[stream_recv_bytes - offset],
-							(ssize_t) sizeof(struct stream_version_packet) - 
-							(stream_recv_bytes - offset))) < 0) {
-
-				DBNSLog(@"drone read() error getting version "
-						 "packet %d:%s", errno, strerror(errno));
+			if ((ret = read(drone_fd, &inbound[stream_recv_bytes - offset], (ssize_t) sizeof(struct stream_version_packet) - (stream_recv_bytes - offset))) < 0)
+			{
+				DBNSLog(@"drone read() error getting version packet %d:%s", errno, strerror(errno));
 				
-						 			NSRunCriticalAlertPanel(
-            NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-			@"Read error getting version",
-            OK, nil, nil);		 
-				
+				NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
+										@"Read error getting version",
+										OK, nil, nil);
 				return NULL;
 			}
 			stream_recv_bytes += ret;
 
 			// Leave if we aren't done
 			if ((stream_recv_bytes - offset) < sizeof(struct stream_version_packet))
-				goto top;
+			{
+				noValidFrame = 1;
+				continue;
+			}
 
 			// Validate
-			if (ntohs(vpkt.drone_version) != STREAM_DRONE_VERSION) {
+			if (ntohs(vpkt.drone_version) != STREAM_DRONE_VERSION)
+			{
 				DBNSLog(@"version mismatch:  Drone sending version %d, "
 						 "expected %d.", ntohs(vpkt.drone_version), STREAM_DRONE_VERSION);
-							NSRunCriticalAlertPanel(
-            NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-			[NSString stringWithFormat:@"version mismatch:  Drone sending version %d, expected %d.", ntohs(vpkt.drone_version), STREAM_DRONE_VERSION],
-            OK, nil, nil);
+				NSRunCriticalAlertPanel( NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
+										@"version mismatch:  Drone sending version %d, expected %d.",
+										OK, nil, nil, ntohs(vpkt.drone_version), STREAM_DRONE_VERSION);
 				return NULL;
 			}
 
 			stream_recv_bytes = 0;
 
-			 DBNSLog(@"debug - version packet valid\n\n");
-		} 
+			DBNSLog(@"debug - version packet valid\n\n");
+		}
 
-	if (fhdr.frame_type == STREAM_FTYPE_PACKET && stream_recv_bytes >= offset &&
-			stream_recv_bytes < offset + sizeof(struct stream_packet_header)) {
-			
+		if (fhdr.frame_type == STREAM_FTYPE_PACKET && stream_recv_bytes >= offset && stream_recv_bytes < offset + sizeof(struct stream_packet_header))
+		{
 			// Bail if we have a frame header too small for a packet of any sort
-			if (ntohl(fhdr.frame_len) <= sizeof(struct stream_packet_header)) {
+			if (ntohl(fhdr.frame_len) <= sizeof(struct stream_packet_header))
+			{
 				DBNSLog(@"frame too small to hold a packet.");
-				NSRunCriticalAlertPanel(
-            NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-			[NSString stringWithFormat:@"Frame too small to hold a packet", ntohs(vpkt.drone_version), STREAM_DRONE_VERSION],
-            OK, nil, nil);
+				NSRunCriticalAlertPanel( NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
+										@"Frame too small to hold a packet",
+										OK, nil, nil, ntohs(vpkt.drone_version), STREAM_DRONE_VERSION);
 				return NULL;
 			}
 
 			inbound = (uint8_t *) &phdr;
-			if ((ret = read(drone_fd, &inbound[stream_recv_bytes - offset],
-							(ssize_t) sizeof(struct stream_packet_header) - 
-							(stream_recv_bytes - offset))) < 0) {
-				DBNSLog(@"drone read() error getting packet "
-						 "header %d:%s", errno, strerror(errno));
+			if ((ret = read(drone_fd, &inbound[stream_recv_bytes - offset], (ssize_t) sizeof(struct stream_packet_header) - (stream_recv_bytes - offset))) < 0) {
+				DBNSLog(@"drone read() error getting packet header %d:%s", errno, strerror(errno));
 				
-				NSRunCriticalAlertPanel(
-            NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-			[NSString stringWithFormat:@"drone read() error getting packet header %d:%s", errno, strerror(errno)],
-            OK, nil, nil);
-						 
+				NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
+										@"drone read() error getting packet header %d:%s",
+										OK, nil, nil, errno, strerror(errno));
 				return NULL;
 			}
 			stream_recv_bytes += ret;
 
 			// Leave if we aren't done
 			if ((stream_recv_bytes - offset) < sizeof(struct stream_packet_header))
-				goto top;
+			{
+				noValidFrame = 1;
+				continue;
+			}
 
-			if (ntohs(phdr.drone_version) != STREAM_DRONE_VERSION) {
-				DBNSLog(@"version mismatch:  Drone sending version %d, "
-						 "expected %d.", ntohs(phdr.drone_version), STREAM_DRONE_VERSION);
-			NSRunCriticalAlertPanel(@"The connection to the Kismet drone failed",
-			[NSString stringWithFormat:@"version mismatch:  Drone sending version %d, expected %d.", ntohs(phdr.drone_version), STREAM_DRONE_VERSION], 
-			OK, nil, nil);
-
-				
+			if (ntohs(phdr.drone_version) != STREAM_DRONE_VERSION)
+			{
+				DBNSLog(@"version mismatch:  Drone sending version %d, expected %d.", ntohs(phdr.drone_version), STREAM_DRONE_VERSION);
+				NSRunCriticalAlertPanel(@"The connection to the Kismet drone failed",
+										@"version mismatch:  Drone sending version %d, expected %d.",
+										OK, nil, nil, ntohs(phdr.drone_version), STREAM_DRONE_VERSION);
 				return NULL;
 			}
 
-			if (ntohl(phdr.caplen) <= 0 || ntohl(phdr.len) <= 0) {
+			if (ntohl(phdr.caplen) <= 0 || ntohl(phdr.len) <= 0)
+			{
 				DBNSLog(@"drone sent us a 0-length packet.");
-				 NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-			@"Drone sent us a zero-length packet",
-            OK, nil, nil);
+				NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
+										@"Drone sent us a zero-length packet",
+										OK, nil, nil);
 				return NULL;
 			}
 
-			if (ntohl(phdr.caplen) > MAX_PACKET_LEN || ntohl(phdr.len) > MAX_PACKET_LEN) {
+			if (ntohl(phdr.caplen) > MAX_PACKET_LEN || ntohl(phdr.len) > MAX_PACKET_LEN)
+			{
 				DBNSLog(@"drone sent us an oversized packet.");
 				NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-			@"Drone sent us an oversized packet",
-            OK, nil, nil);
+										@"Drone sent us an oversized packet",
+										OK, nil, nil);
 				return NULL;
 			}
 			
@@ -383,54 +398,61 @@
 			tm.tv_usec = 0;
 
 			if (select(drone_fd + 1, &rset, NULL, NULL, &tm) <= 0)
-				goto top;
+			{
+				noValidFrame = 1;
+				continue;
+			}
 
 		}
 
 		offset = sizeof(struct stream_frame_header) + sizeof(struct stream_packet_header);
-		if (fhdr.frame_type == STREAM_FTYPE_PACKET && stream_recv_bytes >= offset) {
-
+		if (fhdr.frame_type == STREAM_FTYPE_PACKET && stream_recv_bytes >= offset)
+		{
 			unsigned int plen = (uint32_t) ntohl(phdr.len);
 
 			inbound = (uint8_t *) databuf;
-			if ((ret = read(drone_fd, &inbound[stream_recv_bytes - offset],
-							(ssize_t) plen - (stream_recv_bytes - offset))) < 0) {
-				DBNSLog(@"drone read() error getting packet "
-						 "header %d:%s", errno, strerror(errno));
+			if ((ret = read(drone_fd, &inbound[stream_recv_bytes - offset], (ssize_t) plen - (stream_recv_bytes - offset))) < 0)
+			{
+				DBNSLog(@"drone read() error getting packet header %d:%s", errno, strerror(errno));
 				
-						 NSRunCriticalAlertPanel(
-            NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
-			[NSString stringWithFormat:@"drone read() error getting packet header %d:%s", errno, strerror(errno)],
-            OK, nil, nil);		 
-				
+				NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
+										@"drone read() error getting packet header %d:%s",
+										OK, nil, nil, errno, strerror(errno));
 				return NULL;
 			}
+			
 			stream_recv_bytes += ret;
 
 			if ((stream_recv_bytes - offset) < plen)
-				goto top;
+			{
+				noValidFrame = 1;
+				continue;
+			}
 			
-		thisFrame->ctrl.len = (UInt16) ntohl(phdr.caplen);
-		thisFrame->ctrl.signal = (UInt8) ntohs(phdr.signal);
-		thisFrame->ctrl.channel = (UInt16) phdr.channel;
-		thisFrame->ctrl.rate = (UInt8) ntohl(phdr.datarate);
-    
-        if (thisFrame->ctrl.len > 2364) { // no buffer overflows please
-            thisFrame->ctrl.len = 2364;
-            DBNSLog(@"Captured frame >2500 octets");
-        }
-
-        memcpy(thisFrame->data, databuf, thisFrame->ctrl.len);
-
-        noValidFrame = 0;
-		stream_recv_bytes = 0;
+			thisFrame->ctrl.len = (UInt16) ntohl(phdr.caplen);
+			thisFrame->ctrl.signal = (UInt8) ntohs(phdr.signal);
+			thisFrame->ctrl.channel = (UInt16) phdr.channel;
+			thisFrame->ctrl.rate = (UInt8) ntohl(phdr.datarate);
 		
-		} else {
-			 DBNSLog(@"debug - somehow not a stream packet or too much data...  type %d recv %d\n", fhdr.frame_type, stream_recv_bytes);
+			if (thisFrame->ctrl.len > MAX_FRAME_BYTES)
+			{ // no buffer overflows please
+				thisFrame->ctrl.len = MAX_FRAME_BYTES;
+				DBNSLog(@"Captured frame >2500 octets");
+			}
+
+			memcpy(thisFrame->data, databuf, thisFrame->ctrl.len);
+
+			noValidFrame = 0;
+			stream_recv_bytes = 0;
+		
+		}
+		else
+		{
+			DBNSLog(@"debug - somehow not a stream packet or too much data...  type %d recv %d\n", fhdr.frame_type, stream_recv_bytes);
 		}
 
-		if (fhdr.frame_type != STREAM_FTYPE_PACKET && 
-			fhdr.frame_type != STREAM_FTYPE_VERSION) {
+		if (fhdr.frame_type != STREAM_FTYPE_PACKET && fhdr.frame_type != STREAM_FTYPE_VERSION)
+		{
 			// Bail if we don't know the packet type
 			DBNSLog(@"unknown frame type %d", fhdr.frame_type);
 
@@ -445,6 +467,7 @@
 			return NULL;
 		}
 	}
+	
 	return thisFrame; // finally!
 }
 

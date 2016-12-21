@@ -6,7 +6,6 @@
 //  Copyright 2006 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
 #import "KMCommon.h"
 #import "USBJack.h"
 
@@ -28,7 +27,7 @@ public:
     bool    setChannel(UInt16 channel);
     int     WriteTxDescriptor(WLFrame * theFrame, KMRate kmrate);
     bool    sendKFrame(KFrame *frame);
-    bool    _massagePacket(void *inBuf, void *outBuf, UInt16 len);
+    bool    _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);
     
     IOReturn    _doCommand(enum WLCommandCode cmd, UInt16 param0, UInt16 param1 = 0, UInt16 param2 = 0);
     IOReturn    _doCommandNoWait(enum WLCommandCode cmd, UInt16 param0, UInt16 param1 = 0, UInt16 param2 = 0);

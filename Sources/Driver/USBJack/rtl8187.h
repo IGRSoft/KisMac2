@@ -122,13 +122,14 @@ class RTL8187Jack: public USBJack {
 public:
     
     RTL8187Jack();
-    ~RTL8187Jack();
+    virtual ~RTL8187Jack();
     char *getPlistFile();
     IOReturn _init();
     bool setChannel(UInt16 channel);
     bool startCapture(UInt16 channel);    
     bool getAllowedChannels(UInt16* channels);
-    bool _massagePacket(void *inBuf, void *outBuf, UInt16 len);
+    virtual bool _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);
+    virtual void _rawFrameReceived(unsigned int len);
     bool stopCapture();
     
     int         WriteTxDescriptor(void* theFrame, UInt16 length, UInt8 rate);

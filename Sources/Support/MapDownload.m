@@ -1,26 +1,30 @@
 /*
-        
-        File:			MapDownload.m
-        Program:		KisMAC
-	Author:			Michael Rossberg
-                                mick@binaervarianz.de
-	Description:		KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			MapDownload.m
+ Program:		KisMAC
+ Author:		Michael Roßberg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "MapDownload.h"
 #include <sys/types.h>
@@ -100,13 +104,17 @@ in Safari.");
     sockd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockd == -1) {
         error = @"Socket creation failed!";
-        goto err;
+		DBNSLog(@"%@",error);
+        close(sockd);
+		return nil;
     }
     
     hp = gethostbyname([server UTF8String]);
     if (hp == NULL) {
-        error = NSLocalizedString(@"Could not resolve expedia server", "Download Map Error");;
-        goto err;
+        error = NSLocalizedString(@"Could not resolve expedia server", "Download Map Error");
+		DBNSLog(@"%@",error);
+        close(sockd);
+		return nil;
     }
     ip = *(int *)hp->h_addr_list[0];
 
@@ -120,8 +128,10 @@ in Safari.");
     /* connect to the server */
     status = connect(sockd, (struct sockaddr*)&serv_name, sizeof(serv_name));
     if (status == -1) {
-        error = NSLocalizedString(@"Could not connect to www.expedia.com", "Download Map Error");;
-        goto err;
+        error = NSLocalizedString(@"Could not connect to www.expedia.com", "Download Map Error");
+		DBNSLog(@"%@",error);
+        close(sockd);
+		return nil;
     }
         
     s = [NSString stringWithFormat:@"GET /pub/agent.dll?qscr=mrdt&CenP=%f,%f&Lang=%@&Alti=%d&MapS=0&Size=%d,%d&Offs=0.000000,0 HTTP/1.0\nHost: %@\nCookie: jscript=1\nConnection: close\n\n", 
@@ -134,12 +144,15 @@ in Safari.");
     DBNSLog(@"Reading response from expedia");
     
     bytesread = read(sockd, buf, 2024);
+	
+	bool wasError = false;
     while ((bytesread != -1) && ([s length] < 1100)) {
         if (bytesread==0) {
             ++errcount;
             if (errcount == 60) {
                 error = NSLocalizedString(@"Got no response from expedia. Mapsize too big?", "Download Map Error");
-                goto err;
+                wasError = true;
+				break;
             }
             [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
         } else 
@@ -151,24 +164,30 @@ in Safari.");
         }
         bytesread = read(sockd, buf, 2024);
     }
+	
     close(sockd);
-
-    //DBNSLog(@"Response from expedia %@",s);
+	
+	if (wasError)
+	{
+		DBNSLog(@"%@",error);
+		return nil;
+	}
     
     myMessage = CFHTTPMessageCreateEmpty(kCFAllocatorDefault, FALSE);
     if (!CFHTTPMessageAppendBytes(myMessage, (UInt8*)[s UTF8String], [s length]))
     {
         CFRelease(myMessage);
         error = @"CFTTPResponse Parsing error";
-        close(sockd);
-        goto err;
+        DBNSLog(@"%@",error);
+		return nil;
     }
     
     if (!CFHTTPMessageIsHeaderComplete(myMessage)) 
     {
         CFRelease(myMessage);
         error = @"Incomplete Headers!";
-        goto err;
+		DBNSLog(@"%@",error);
+		return nil;
     }
     
     req = (NSString*)CFBridgingRelease(CFHTTPMessageCopyHeaderFieldValue(myMessage, CFSTR("Location")));
@@ -217,11 +236,6 @@ in Safari.");
     
     CFRelease(myMessage);
     return req;
-    
-err:
-    DBNSLog(@"%@",error);
-    close(sockd);
-    return nil;
 }
 
 - (BOOL)downloadMapFrom:(NSString*)server forPoint:(waypoint)w resolution:(NSSize)size zoomLevel:(int)zoom {
@@ -365,12 +379,12 @@ err:
 			   e = sqrt(1 - pow(b_WGS84,2)/pow(a_WGS84,2));
 			   eprimesqd = pow(e,2)/(1-pow(e,2));
 
-			   S = a_WGS84 * ((1 - pow(e,2)/4 - 3*pow(e,4)/64 - 5*pow(e,6)/256)*rlat - (3*pow(e,2)/8 + 3*pow(e,4)/32 + 45*pow(e,6)/1024)*sin(2*rlat) + (15*pow(e,4)/256 + 45*pow(e,6)/1024)*sin(4*rlat) - (35*pow(e,6)/3072)*sin(6*rlat));
+			   S = a_WGS84 * ((1 - pow(e,2)/4 - 3*pow(e,4)/64 - 5*pow(e,6)/LAST_BIT)*rlat - (3*pow(e,2)/8 + 3*pow(e,4)/32 + 45*pow(e,6)/1024)*sin(2*rlat) + (15*pow(e,4)/LAST_BIT + 45*pow(e,6)/1024)*sin(4*rlat) - (35*pow(e,6)/3072)*sin(6*rlat));
 			   k0 = 0.9996;
 			   K1 = S * k0;
 			   p = (w._long - lon0)*3600/10000;
 
-			   sin1sec = pi/(180*60*60);
+			   sin1sec = M_PI/(180*60*60);
 			   nu = a_WGS84/sqrt(1 - pow(e,2) * pow(sin(rlat),2));
 			   K2 = k0 * pow(sin1sec,2) * nu * sin(rlat) * cos(rlat)*100000000/2;
 			   K3 = k0 * pow(sin1sec,4) * nu * sin(rlat) * pow(cos(rlat),3)/24 * (5 - pow(tan(rlat),2) + 9*eprimesqd*pow(cos(rlat),2) + 4*pow(eprimesqd,2)*pow(cos(rlat),4))*10000000000000000;
@@ -389,7 +403,7 @@ err:
 	   // scalef now equals number of km in approx 68?? (using numpx) px, and we should have a 1200x1200 map image request ready to go
 	   // distance to edge of map = scalef*600/numpx km north AND east
 		// at the moment, mperdeglon is not used, but it still makes sense to calculate it since - in theory - it *should* be used
-		mperdeglon = pi / 180 * (a_WGS84 - (21384*fabs(w._lat)/90)) * cos(rlat);
+		mperdeglon = M_PI / 180 * (a_WGS84 - (21384*fabs(w._lat)/90)) * cos(rlat);
 		mperdeglat = 111132;
 	   // degrees to north/south edge from centre = 1000 * scalef * size.height / 2 / numpx / mperdeglat
 	   // trying my own conversion... may or may not work well

@@ -1,36 +1,36 @@
 /*
-        
-        File:			WavePacket.h
-        Program:		KisMAC
-		Author:			Michael Ro§berg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
+ 
+ File:			WavePacket.h
+ Program:		KisMAC
+ Author:		Michael Ro§berg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
-
-#import <Foundation/Foundation.h>
 #import "KisMAC80211.h"
 #import <sys/time.h>
 
 //#define DEBUG			//This has currently no meaning
 //#define LOGPACKETS		//do not enable unless you know what you are doing
-
-// 1201 = 5 minutes (plus one) for 0.25s interval
-#define MAX_YIELD_SIZE (int)1200
 
 #define MAX_RATE_COUNT 64
 
@@ -53,22 +53,25 @@ struct sBeaconFrame { //at least 12 bytes
     UInt16 capabilities;
 };
 
-typedef enum _networkType {
+typedef NS_ENUM(NSUInteger, networkType)
+{
     networkTypeUnknown      = 0,
     networkTypeAdHoc        = 1,
     networkTypeManaged      = 2,
     networkTypeTunnel       = 3,
     networkTypeProbe        = 4,
     networkTypeLucentTunnel = 5
-} networkType;
+};
 
-typedef enum _wpaNoncePresent {
-    wpaNonceNone,
+typedef NS_ENUM(NSUInteger, wpaNoncePresent)
+{
+    wpaNonceNone = 0,
     wpaNonceANonce,
     wpaNonceSNonce
-} wpaNoncePresent;
+};
 
-typedef enum _encryptionType {
+typedef NS_ENUM(NSUInteger, encryptionType)
+{
     encryptionTypeUnknown   = 0,
     encryptionTypeNone      = 1,
     encryptionTypeWEP       = 2,
@@ -76,14 +79,15 @@ typedef enum _encryptionType {
     encryptionTypeWPA       = 4,
     encryptionTypeLEAP      = 5,
     encryptionTypeWPA2      = 6,    
-} encryptionType;
+};
 
-typedef enum _leapAuthCode {
+typedef NS_ENUM(NSUInteger, leapAuthCode)
+{
     leapAuthCodeChallenge   = 1,
     leapAuthCodeResponse    = 2,
     leapAuthCodeSuccess     = 3,
     leapAuthCodeFailure     = 4    
-} leapAuthCode;
+};
 
 //this represents a packet
 @interface WavePacket : NSObject /*<UKTest>*/ {

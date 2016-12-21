@@ -1,29 +1,33 @@
 /*
-        
-        File:			DownloadMapController.m
-        Program:		KisMAC
-		Author:			Michael Rossberg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			DownloadMapController.m
+ Program:		KisMAC
+ Author:		Michael Roßberg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "DownloadMapController.h"
-#import "ScriptingEngine.h"
+#import "ScanControllerScriptable.h"
 #import "WaveHelper.h"
 
 @implementation DownloadMapController 
@@ -65,13 +69,11 @@
 - (IBAction)okAction:(id)sender {
     waypoint w;
     NSString *server;
-    double tmp;
-    NSMutableDictionary *d;
-    NSAppleEventDescriptor *serv, *lat, *lon, *zoom, *width, *height;
     BOOL map24 = NO;
 
     w._lat  = [_latitude  floatValue] * ([[_nsButton titleOfSelectedItem] isEqualToString:@"N"] ? 1.0 : -1.0);
     w._long = [_longitude floatValue] * ([[_ewButton titleOfSelectedItem] isEqualToString:@"E"] ? 1.0 : -1.0);
+    w._elevation = 0;
     
     if ([[_server titleOfSelectedItem] isEqualToString: NSLocalizedString(@"TerraServer (Satellite)", "menu item, needs to be like in DownloadMap.nib")]) {
         server = @"TerraServer (Satellite)";
@@ -98,24 +100,16 @@
         return;
     }
     
-    serv = [NSAppleEventDescriptor descriptorWithString:server];
-    zoom = [NSAppleEventDescriptor descriptorWithInt32:[[_scale titleOfSelectedItem] intValue]];
-    lat = [NSAppleEventDescriptor descriptorWithDescriptorType:typeIEEE64BitFloatingPoint bytes:&w._lat length:sizeof(double)];
-    lon = [NSAppleEventDescriptor descriptorWithDescriptorType:typeIEEE64BitFloatingPoint bytes:&w._long length:sizeof(double)];
-    tmp = [_height intValue];
-    height = [NSAppleEventDescriptor descriptorWithDescriptorType:typeIEEE64BitFloatingPoint bytes:&tmp length:sizeof(double)];
-    tmp = [_width intValue];
-    width  = [NSAppleEventDescriptor descriptorWithDescriptorType:typeIEEE64BitFloatingPoint bytes:&tmp length:sizeof(double)];
-    
-    d = [NSMutableDictionary dictionaryWithObjectsAndKeys:lat, [NSString stringWithFormat:@"%d", 'KMLa'], lon, [NSString stringWithFormat:@"%d", 'KMLo'], serv, [NSString stringWithFormat:@"%d", keyDirectObject], nil];
-    
-    if ([[_scale titleOfSelectedItem] intValue] != 3 && !map24) d[[NSString stringWithFormat:@"%d", 'KScl']] = zoom;
-    if ([_width  intValue] != 1000 && !map24) d[[NSString stringWithFormat:@"%d", 'KWid']] = width;
-    if ([_height intValue] != 1000 && !map24) d[[NSString stringWithFormat:@"%d", 'KHig']] = height;
+    int scale = ([[_scale titleOfSelectedItem] intValue] != 3 && !map24) ? [[_scale titleOfSelectedItem] intValue] : 1;
+    int width = ([_width  intValue] != 1000 && !map24) ? [_width  intValue] : 0;
+    int height = ([_height  intValue] != 1000 && !map24) ? [_height  intValue] : 0;
     
     [[self window] close];
-
-    [ScriptingEngine selfSendEvent:'KDMp' withArgs:d];
+    
+    [(ScanController*)[NSApp delegate] downloadMapFrom:server
+                                              forPoint:w
+                                            resolution:NSMakeSize(width, height)
+                                             zoomLevel:scale];
 
     NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
     [def setObject:[_scale titleOfSelectedItem] forKey:@"DownloadMapScale"];

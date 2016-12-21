@@ -1,26 +1,30 @@
 /*
-        
-        File:			MapViewPrivate.m
-        Program:		KisMAC
-		Author:			Michael Rossberg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			MapViewPrivate.m
+ Program:		KisMAC
+ Author:		Michael Roßberg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "MapViewPrivate.h"
 #import "MapView.h"
@@ -126,7 +130,7 @@
     } else if (_wp[selWaypoint2]._lat == 0 && _wp[selWaypoint2]._long == 0) {
         [_statusView setVisible:YES];
         [self _setStatus:NSLocalizedString(@"Waypoint 2 is not set!", "map view status")]; 
-    } else if (abs(_point[selWaypoint1].x - _point[selWaypoint2].x) < 5 || abs(_point[selWaypoint1].y - _point[selWaypoint2].y) < 5) {
+    } else if (fabs(_point[selWaypoint1].x - _point[selWaypoint2].x) < 5 || fabs(_point[selWaypoint1].y - _point[selWaypoint2].y) < 5) {
         [_statusView setVisible:YES];
         [self _setStatus:NSLocalizedString(@"The waypoints are too close!", "map view status")]; 
     } else if (fabs(_wp[selWaypoint1]._lat - _wp[selWaypoint2]._lat) < 0.001 || fabs(_wp[selWaypoint1]._long - _wp[selWaypoint2]._long) < 0.001) {
@@ -175,7 +179,8 @@
     [self setNeedsDisplay:_visible];
 }
 
-- (void)_updateGPSStatus:(NSNotification*)note {
+- (void)_updateGPSStatus:(NSNotification*)note
+{
     if ([(NSString*)[note object] compare:_gpsStatus] == NSOrderedSame) return;
 
 	[self _centerCurPos];

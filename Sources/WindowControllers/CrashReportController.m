@@ -1,26 +1,30 @@
 /*
-        
-        File:			CrashReporter.m
-        Program:		KisMAC
-		Author:			Michael Rossberg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			CrashReportController.m
+ Program:		KisMAC
+ Author:		Michael Roßberg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "CrashReportController.h"
 #import <AddressBook/ABAddressBook.h>
@@ -108,35 +112,39 @@ ReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType type, void *c
     CFRelease(request);
 
     // Make sure it succeeded.
+	bool wasError = false;
     if (!_stream) {
         errstr = NSLocalizedString(@"Creating the stream failed.", "Error for Crashreporter");
-        goto error;
+        wasError = true;
     }
     
     // Set the client
-    if (!CFReadStreamSetClient(_stream, kNetworkEvents, ReadStreamClientCallBack, &ctxt)) {
+    if (!wasError && !CFReadStreamSetClient(_stream, kNetworkEvents, ReadStreamClientCallBack, &ctxt)) {
         CFRelease(_stream);
         _stream = NULL;
         errstr = NSLocalizedString(@"Setting the stream's client failed.", "Error for Crashreporter");
-        goto error;
+        wasError = true;
     }
     
+	if (!wasError) {
+		CFReadStreamScheduleWithRunLoop(_stream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
+		
+		// Start the HTTP connection
+		if (!CFReadStreamOpen(_stream)) {
+			CFReadStreamSetClient(_stream, 0, NULL, NULL);
+			CFReadStreamUnscheduleFromRunLoop(_stream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
+			CFRelease(_stream);
+			_stream = NULL;
+			errstr = NSLocalizedString(@"Opening the stream failed.", "Error for Crashreporter");
+			wasError = true;
+		}
+	}
     // Schedule the stream
-    CFReadStreamScheduleWithRunLoop(_stream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
     
-    // Start the HTTP connection
-    if (!CFReadStreamOpen(_stream)) {
-        CFReadStreamSetClient(_stream, 0, NULL, NULL);
-        CFReadStreamUnscheduleFromRunLoop(_stream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
-        CFRelease(_stream);
-        _stream = NULL;
-        errstr = NSLocalizedString(@"Opening the stream failed.", "Error for Crashreporter");
-        goto error;
-    }
-
-    return;
+	if (!wasError) {
+		return;
+	}
     
-error:
     NSBeginCriticalAlertSheet(
         NSLocalizedString(@"Transmittion failed.", "Title for Crashreporter"),
         OK, NULL, NULL, [self window], self, NULL, NULL, NULL,

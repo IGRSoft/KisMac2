@@ -1,26 +1,30 @@
 /*
-        
-        File:			WaveDriverAirportExtreme.m
-        Program:		KisMAC
-		Author:			Michael Rossberg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-	
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			WaveDriverAirportExtreme.m
+ Program:		KisMAC
+ Author:		Michael Roßberg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "WaveDriverAirportExtreme.h"
 #import "ImportController.h"
@@ -29,6 +33,9 @@
 #import "../Core/80211b.h"
 #import <pcap.h>
 #import <CoreWLAN/CoreWLAN.h>
+#import "FCS.h"
+
+static uint32_t checksumErrors = 0;
 
 //stolen from kismet
 // Hack around some headers that don't seem to define all of these
@@ -66,11 +73,11 @@ static pcap_t *_device;
     return passiveDriver;
 }
 
-+ (bool) allowsInjection {
++ (BOOL) allowsInjection {
     return NO;
 }
 
-+ (bool) allowsChannelHopping {
++ (BOOL) allowsChannelHopping {
     return YES;
 }
 
@@ -95,25 +102,13 @@ static pcap_t *_device;
 + (int) initBackend
 {
 	int ret = -1;
-
-    if (NSAppKitVersionNumber < NSAppKitVersionNumber10_5)
-    {
-        DBNSLog(@"MacOS is not 10.5.1! AppKitVersion: %f < NSAppKitVersionNumber10_5", NSAppKitVersionNumber);
     
-        NSRunCriticalAlertPanel(
-                            NSLocalizedString(@"Could not enable Monitor Mode for Airport Extreme.", "Error dialog title"),
-                            NSLocalizedString(@"Incompatible MacOS version! You will need at least MacOS 10.5.1!. Please ensure that you are running Leopard, and have updated to the latest through Software Update.", "Error dialog description"),
-                            OK, nil, nil);
-
-        ret = 2;
-    }
-
 	if ([WaveDriverAirportExtreme deviceAvailable]) ret = 0;
     
     return ret;
 }
 
-+ (bool) loadBackend {
++ (BOOL) loadBackend {
     ImportController *importController;
     int result;
     int x;
@@ -143,7 +138,7 @@ static pcap_t *_device;
     return (result==0);
 }
 
-+ (bool) unloadBackend
++ (BOOL) unloadBackend
 {
 	
 	return YES;
@@ -153,43 +148,54 @@ static pcap_t *_device;
 pcap_dumper_t * dumper;
 - (id)init 
 {
-	NSUserDefaults *defs;
-    NSArray * args;
-    defs = [NSUserDefaults standardUserDefaults];
+	NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
     char err[PCAP_ERRBUF_SIZE];
-    int retErr;
-    BOOL shouldPlayback;
-//    int dataLinks[] = {DLT_PRISM_HEADER, DLT_IEEE802_11, DLT_IEEE802_11_RADIO_AVS, DLT_IEEE802_11_RADIO};
-    int dataLinks[] = {DLT_PRISM_HEADER, DLT_IEEE802_11_RADIO_AVS, DLT_IEEE802_11_RADIO, 0};
-    int i;
+    NSInteger retErr = 0;
+    BOOL shouldPlayback = NO;
+
+    NSInteger dataLinks[] = {DLT_PRISM_HEADER, DLT_IEEE802_11_RADIO_AVS, DLT_IEEE802_11_RADIO, 0};
+    
 	_apeType = APExtTypeBcm;
     
      //get the api based interface for changing channels
-    airportInterface =  [CWInterface interfaceWithName:
-                          [[CWInterface interfaceNames] allObjects][0]];
+    NSString *interfaceName = [[CWInterface interfaceNames] allObjects][0];
+    airportInterface =  [CWInterface interfaceWithName:interfaceName];
     [airportInterface disassociate];
-    CFShow((__bridge CFTypeRef)(airportInterface));
+    
+    DBNSLog(@"Airport Interface: %@", airportInterface);
+    DBNSLog(@"Airport country code: %@", [airportInterface countryCode]);
     
     shouldPlayback = [[defs objectForKey: @"playback-rawdump"] boolValue];
-	
-    if(shouldPlayback) _device = pcap_open_offline([[defs objectForKey: @"rawDumpInFile"] UTF8String], err);
-	else if(!_device)  _device = pcap_open_live([[[CWInterface interfaceNames] allObjects][0] UTF8String], 3000, 1, 2, err);
-    //todo fixme!! if we are playing back, this will be weird
+    const char * deviceName = [interfaceName UTF8String];
+    
+    if (shouldPlayback)
+    {
+        _device = pcap_open_offline([[defs objectForKey: @"rawDumpInFile"] UTF8String], err);
+    }
+	else if(!_device)
+    {
+        _device = pcap_open_live(deviceName, 3000, 1, 2, err);
+    }
+    
 	if (!_device && !shouldPlayback)
     {
-        args = @[@"0777", @"/dev/bpf0", @"/dev/bpf1", @"/dev/bpf2", @"/dev/bpf3"]; 
+        NSArray * args = @[@"0777", @"/dev/bpf0", @"/dev/bpf1", @"/dev/bpf2", @"/dev/bpf3"];
 		if (![[BLAuthentication sharedInstance] executeCommand:@"/bin/chmod" withArgs: args]) return nil;
 		[NSThread sleep:0.5];
 	
-        CFShow((__bridge CFTypeRef)([[CWInterface interfaceNames] allObjects]));
-		_device = pcap_open_live([[[CWInterface interfaceNames] allObjects][0] UTF8String], 3000, 1, 2, err);
+        DBNSLog(@"All Airport Interfaces: %@", [[CWInterface interfaceNames] allObjects]);
+        
+		_device = pcap_open_live(deviceName, 3000, 1, 2, err);
         
 		[[BLAuthentication sharedInstance] executeCommand:@"/bin/chmod" withArgs:args];
 
-		if (!_device) return nil;
+		if (!_device)
+        {
+            return nil;
+        }
     }
     
-    if(shouldPlayback)
+    if (shouldPlayback)
     {
         DLTType = [[defs objectForKey: @"playback-rawdump-dlt"] intValue];
         DBNSLog(@"err returned from pcap open: %s", err);
@@ -197,7 +203,7 @@ pcap_dumper_t * dumper;
     }
     else
     {
-        i = 0;
+        NSInteger i = 0;
         retErr = -1;
         while ((retErr != 0) && (dataLinks[i] != 0)) 
         {
@@ -213,41 +219,46 @@ pcap_dumper_t * dumper;
         else DBNSLog(@"couldn't open dumper");
     }
     
-    if(retErr != 0)
+    if (retErr != 0)
     {
-        DBNSLog(@"Error opening airpot device using pcap_set_datalink()");
+        DBNSLog(@"Error opening airport device using pcap_set_datalink()");
         return nil;
     }
     
-	self=[super init];
-    if(!self) return nil;
+	self = [super init];
+    if(!self)
+    {
+        return nil;
+    }
 
     return self;
 }
 
 #pragma mark -
 
-- (unsigned short) getChannelUnCached 
+- (UInt16) getChannelUnCached 
 {
 	return [[airportInterface wlanChannel] channelNumber];
 }
 
-- (bool) setChannel:(unsigned short)newChannel 
+- (BOOL) setChannel:(UInt16)newChannel
 {
-    bool success = FALSE;
+    BOOL success = NO;
     NSError * error = nil;
 
 	NSSet *channels = [airportInterface supportedWLANChannels];
 	CWChannel *wlanChannel = nil;
 	
-	for (CWChannel *_wlanChannel in channels) {
-		if ([_wlanChannel channelNumber] == newChannel) {
+	for (CWChannel *_wlanChannel in channels)
+    {
+		if ([_wlanChannel channelNumber] == newChannel)
 			wlanChannel = _wlanChannel;
-		}
 	}
-	
-	if (wlanChannel != nil)
-		success = [airportInterface setWLANChannel:wlanChannel error: &error];
+
+	if (wlanChannel == nil)
+        return NO;
+
+    success = [airportInterface setWLANChannel:wlanChannel error: &error];
     
     //this is kindof a hack...  The airport interface may not go completely
     //into monitor mode the first time.  It can be interrupted by a "sw beacon miss"
@@ -257,7 +268,7 @@ pcap_dumper_t * dumper;
     //If it only makes it to "Run" mode, you will see this problem.
     //enable debug output of the driver using the airport utility
     //to see what is happening here.
-    if(!success && wlanChannel)
+    if(!success)
     {
         [airportInterface disassociate];
         pcap_set_datalink(_device, 1);
@@ -265,38 +276,42 @@ pcap_dumper_t * dumper;
         sleep(2);
         success = [airportInterface setWLANChannel:wlanChannel error: &error];
     }
-        
+
     _currentChannel = newChannel;
-    
-    if(!success)
+
+    if(!success && error != nil)
     {
         CFShow((__bridge CFTypeRef)(error));
     }
     return success;
 }
 
-- (bool) startCapture:(unsigned short)newChannel
+- (BOOL) startCapture:(unsigned short)newChannel
 {
-    bool success = FALSE;
+    BOOL success = YES;
     
     //we lave to let go to scan...
     [airportInterface disassociate];
     
+    if (newChannel == 0) newChannel = _firstChannel;
+    [self setChannel:newChannel];
+
     //set dlt
-    success = pcap_set_datalink(_device, DLTType);
+    if (pcap_set_datalink(_device, DLTType) != 0)
+        success = NO;
     
     //sleep here in case it works the first time
     sleep(2);
-    [self setChannel:newChannel];
 
     return success;
 }
 
--(bool) stopCapture
+-(BOOL) stopCapture
 {
-    bool success;
     //restore dlt
-    success = pcap_set_datalink(_device, 1);
+    BOOL success = YES;
+    if (pcap_set_datalink(_device, 1) != 0)
+        success = NO;
     
     return success;
 }
@@ -515,10 +530,23 @@ static u_int ieee80211_mhz2ieee(u_int freq, u_int flags) {
                 break;
             case DLT_IEEE802_11_RADIO_AVS:
                 dataLen = header.caplen - sizeof(avs_80211_1_header);
-                dataLen -= 4;       // Skip fcs?
-                if (dataLen <= 0)
+                const u_char *frame = data + sizeof(avs_80211_1_header);
+
+                if (dataLen <= 4)
                     continue;
-               
+
+                uint32_t crcReceived;
+                memcpy(&crcReceived, &frame[dataLen - 4], 4);
+                uint32_t crc = CRC32_block(frame, dataLen-4, 0xFFFFFFFF);
+                crc ^= 0xFFFFFFFF;
+
+                if ( crc != crcReceived ) {
+                    if ( ++checksumErrors % 1000 == 0 )
+                        DBNSLog(@"%u packets with bad checksum (this packet: 0x%08X received, 0x%08X calculated).\n", checksumErrors, crcReceived, crc);
+                    continue;
+                }
+
+                dataLen -= 4;       // Don't bother copying FCS
                 if(dataLen <= MAX_FRAME_BYTES)
                 {
                     memcpy(f->data, data + sizeof(avs_80211_1_header), dataLen);

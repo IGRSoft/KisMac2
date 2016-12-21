@@ -1,26 +1,30 @@
 /*
-        
-        File:			WaveNetWEPCrack.m
-        Program:		KisMAC
-		Author:			Michael Rossberg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			WEPBruteforceCrackExtension.m
+ Program:		KisMAC
+ Author:		Michael Roßberg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "WaveNetWEPCrack.h"
 #import "WaveHelper.h"
@@ -31,14 +35,11 @@
 
 @implementation WaveNet(WEPBruteforceCrackExtension) 
 
-#define SRET { [[WaveHelper importController] terminateWithCode: 1]; return; }
-#define RET { [[WaveHelper importController] terminateWithCode: -1]; return; }
-#define CHECK { if (_password != nil) RET; if (_isWep != encryptionTypeWEP && _isWep != encryptionTypeWEP40) RET; if ([_packetsLog count] < 8) RET; }
-
-- (void)performBruteforce40bitLow:(NSObject*)obj {
+- (void)performBruteforce40bitLow:(NSObject*)obj
+{
 	@autoreleasepool {
 		unsigned int i, foundCRC, counter, length = 0;
-		unsigned char key[16], currentGuess[16], skeletonStateArray[256], currentStateArray[256];
+		unsigned char key[16], currentGuess[16], skeletonStateArray[LAST_BIT], currentStateArray[LAST_BIT];
 		unsigned char y, z, tmp, xov;
 		const char *data = nil;
 		BOOL isInit;
@@ -52,13 +53,15 @@
 		
 		memset(key,32,16);
 		
-		for (counter = 0; counter < 256; ++counter)
+		for (counter = 0; counter < LAST_BIT; ++counter)
 			skeletonStateArray[counter] = counter;
 		
-		while(YES) {
-			for(i=0;i<[_packetsLog count];++i) {
+		while(YES)
+		{
+			for(i = 0; i < [_packetsLog count]; ++i) {
 				
-				if (!isInit) {
+				if (!isInit)
+				{
 					data = [_packetsLog[i] bytes];
 					length = [(NSData*)_packetsLog[i] length];
 					
@@ -67,10 +70,11 @@
 					if (i==0) isInit = YES;
 				}
 				
-				memcpy(currentStateArray, skeletonStateArray, 256);
+				memcpy(currentStateArray, skeletonStateArray, LAST_BIT);
 				y = z = 0;
 				
-				for (counter = 0; counter < 256; ++counter) {
+				for (counter = 0; counter < LAST_BIT; ++counter)
+				{
 					z = (key[y] + currentStateArray[counter] + z);
 					
 					tmp = currentStateArray[counter];
@@ -80,10 +84,11 @@
 					y = (y + 1) % 8;
 				}
 				
-				foundCRC = 0xFFFFFFFF;
+				foundCRC = BAD_ADDRESS;
 				y = z = 0;
 				
-				for (counter = 4; counter < length; ++counter) {
+				for (counter = 4; counter < length; ++counter)
+				{
 					++y;
 					z = currentStateArray[y] + z;
 					
@@ -96,7 +101,8 @@
 					foundCRC = UPDC32((data[counter] ^ currentStateArray[xov]), foundCRC);
 				}
 				
-				if (foundCRC == 0xdebb20e3) {
+				if (foundCRC == ERROR_FREE_ADDRESS)
+				{
 					memcpy(&currentGuess, &key, 16);
 					isInit = NO;
 				}
@@ -104,59 +110,45 @@
 					break;
 			}
 			
-			if (i < 8) {
-				if (key[3]==32) key[3]=48;
-				else if (key[3]==57) key[3]=65;
-				else if (key[3]==90) key[3]=97;
-				else key[3]++;
-				
-				if (key[3]>122) {
-					key[3]=32;
+			if (i < 8)
+			{
+				for (int i = 3; i <= 7; ++i) {
+					if (key[i] == 32)
+					{
+						key[i] = 48;
+					}
+					else if (key[i] == 57)
+					{
+						key[i] = 65;
+					}
+					else if (key[3] == 90)
+					{
+						key[i] = 97;
+					}
+					else
+					{
+						key[i]++;
+					}
 					
-					if (key[4]==32) key[4]=48;
-					else if (key[4]==57) key[4]=65;
-					else if (key[4]==90) key[4]=97;
-					else key[4]++;
-					
-					if (key[4]>122) {
-						key[4]=32;
-						
-						if (key[5]==32) key[5]=48;
-						else if (key[5]==57) key[5]=65;
-						else if (key[5]==90) key[5]=97;
-						else key[5]++;
-						
-						if (key[5]>122) {
-							key[5]=32;
-							
-							if (key[6]==32) key[6]=48;
-							else if (key[6]==57) key[6]=65;
-							else if (key[6]==90) key[6]=97;
-							else key[6]++;
-							
-							if ([controller canceled]) RET;
-							if (key[6]>122) {
-								key[6]=32;
-								
-								if (key[7]==32) key[7]=48;
-								else if (key[7]==57) key[7]=65;
-								else if (key[7]==90) key[7]=97;
-								else key[7]++;
-								
-								if (key[7]>122) {
-									RET;
-								} else {
-									[controller increment];
-								}
-							}
+					if (key[i] > 122 && i < 7)
+					{
+						key[i] = 32;
+					}
+					else if (i == 7) {
+						if (key[i] > 122) {
+							RET;
+						}
+						else
+						{
+							[controller increment];
 						}
 					}
 				}
-				
 			}
-			else {
+			else
+			{
 				_password = [NSMutableString stringWithFormat:@"%.2X", currentGuess[3]];
-				for (i=4;i<(8);++i)
+				for ( i = 4 ; i <  8 ; ++i )
 					[(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", currentGuess[i]]];
 				
 				SRET;
@@ -165,42 +157,47 @@
 	}
 }
 
-- (void)performBruteforce40bitAlpha:(NSObject*)obj {
+- (void)performBruteforce40bitAlpha:(NSObject*)obj
+{
 	@autoreleasepool {
 		unsigned int i, foundCRC, counter, length = 0;
-		unsigned char key[16], currentGuess[16], skeletonStateArray[256], currentStateArray[256];
+		unsigned char key[16], currentGuess[16], skeletonStateArray[LAST_BIT], currentStateArray[LAST_BIT];
 		unsigned char y, z, tmp, xov;
 		const char *data = nil;
-		BOOL isInit;
-		ImportController *controller;
+		BOOL isInit = false;
 		
 		CHECK;
 		
-		controller = [WaveHelper importController];
+		ImportController *controller = [WaveHelper importController];
 		
-		isInit = false;
+		memset(key, 32, 16);
 		
-		memset(key,32,16);
-		
-		for (counter = 0; counter < 256; ++counter)
+		for (counter = 0; counter < LAST_BIT; ++counter)
+		{
 			skeletonStateArray[counter] = counter;
+		}
 		
-		while(YES) {
-			for(i=0;i<[_packetsLog count];++i) {
-				
+		while(YES)
+		{
+			for(i = 0 ; i < [_packetsLog count] ; ++i)
+			{
 				if (!isInit) {
 					data = [_packetsLog[i] bytes];
 					length = [(NSData*)_packetsLog[i] length];
 					
 					memcpy(key, data, 3);
 					
-					if (i==0) isInit = YES;
+					if (i==0)
+					{
+						isInit = YES;
+					}
 				}
 				
-				memcpy(currentStateArray, skeletonStateArray, 256);
+				memcpy(currentStateArray, skeletonStateArray, LAST_BIT);
 				y = z = 0;
 				
-				for (counter = 0; counter < 256; ++counter) {
+				for (counter = 0; counter < LAST_BIT; ++counter)
+				{
 					z = (key[y] + currentStateArray[counter] + z);
 					
 					tmp = currentStateArray[counter];
@@ -210,10 +207,11 @@
 					y = (y + 1) % 8;
 				}
 				
-				foundCRC = 0xFFFFFFFF;
+				foundCRC = BAD_ADDRESS;
 				y = z = 0;
 				
-				for (counter = 4; counter < length; ++counter) {
+				for (counter = 4; counter < length; ++counter)
+				{
 					++y;
 					z = currentStateArray[y] + z;
 					
@@ -226,68 +224,58 @@
 					foundCRC = UPDC32((data[counter] ^ currentStateArray[xov]), foundCRC);
 				}
 				
-				if (foundCRC == 0xdebb20e3) {
+				if (foundCRC == ERROR_FREE_ADDRESS)
+				{
 					memcpy(&currentGuess, &key, 16);
-					isInit=NO;
+					isInit = NO;
 				}
 				else
+				{
 					break;
+				}
 			}
 			
-			if (i < 8) {
-				
-				if (key[3]==32) key[3]=48;
-				else if (key[3]==57) key[3]=65;
-				else if (key[3]==90) key[3]=97;
-				else key[3]++;
-				
-				if (key[3]>122) {
-					key[3]=32;
+			if (i < 8)
+			{
+				for (int i = 3; i <= 7; ++i) {
+					if (key[i] == 32)
+					{
+						key[i] = 48;
+					}
+					else if (key[i] == 57)
+					{
+						key[i] = 65;
+					}
+					else if (key[3] == 90)
+					{
+						key[i] = 97;
+					}
+					else
+					{
+						key[i]++;
+					}
 					
-					if (key[4]==32) key[4]=48;
-					else if (key[4]==57) key[4]=65;
-					else if (key[4]==90) key[4]=97;
-					else key[4]++;
-					
-					if (key[4]>122) {
-						key[4]=32;
-						
-						if (key[5]==32) key[5]=48;
-						else if (key[5]==57) key[5]=65;
-						else if (key[5]==90) key[5]=97;
-						else key[5]++;
-						
-						if (key[5]>122) {
-							key[5]=32;
-							
-							if (key[6]==32) key[6]=48;
-							else if (key[6]==57) key[6]=65;
-							else if (key[6]==90) key[6]=97;
-							else key[6]++;
-							
-							if ([controller canceled]) RET;
-							if (key[6]>122) {
-								key[6]=32;
-								
-								if (key[7]==32) key[7]=48;
-								else if (key[7]==57) key[7]=65;
-								else if (key[7]==90) key[7]=97;
-								else key[7]++;
-								
-								if (key[7]>122) {
-									RET;
-								} else {
-									[controller increment];
-								}
-							}
+					if (key[i] > 122 && i < 7)
+					{
+						key[i] = 32;
+					}
+					else if (i == 7) {
+						if (key[i] > 122) {
+							RET;
+						}
+						else
+						{
+							[controller increment];
 						}
 					}
 				}
 			}
 			else {
 				_password = [NSMutableString stringWithFormat:@"%.2X", currentGuess[3]];
-				for (i=4;i<(8);++i)
+				for (i = 4 ; i < 8 ; ++i)
+				{
 					[(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", currentGuess[i]]];
+				}
 				
 				SRET;
 			}
@@ -297,10 +285,11 @@
 	}
 }
 
-- (void)performBruteforce40bitAll:(NSObject*)obj {
+- (void)performBruteforce40bitAll:(NSObject*)obj
+{
 	@autoreleasepool {
 		unsigned int i, foundCRC, counter, length = 0;
-		unsigned char key[16], currentGuess[16], skeletonStateArray[256], currentStateArray[256];
+		unsigned char key[16], currentGuess[16], skeletonStateArray[LAST_BIT], currentStateArray[LAST_BIT];
 		unsigned char y, z, tmp, xov;
 		const char *data = nil;
 		BOOL isInit;
@@ -312,11 +301,12 @@
 		
 		isInit = false;
 		
-		memset(key,32,16);
+		memset(key, 32, 16);
 		
-		for (counter = 0; counter < 256; ++counter)
+		for (counter = 0; counter < LAST_BIT; ++counter)
+		{
 			skeletonStateArray[counter] = counter;
-		
+		}
 		while(YES) {
 			for(i=0;i<[_packetsLog count];++i) {
 				
@@ -329,10 +319,10 @@
 					if (i==0) isInit = YES;
 				}
 				
-				memcpy(currentStateArray, skeletonStateArray, 256);
+				memcpy(currentStateArray, skeletonStateArray, LAST_BIT);
 				y = z = 0;
 				
-				for (counter = 0; counter < 256; ++counter) {
+				for (counter = 0; counter < LAST_BIT; ++counter) {
 					z = (key[y] + currentStateArray[counter] + z);
 					
 					tmp = currentStateArray[counter];
@@ -342,7 +332,7 @@
 					y = (y + 1) % 8;
 				}
 				
-				foundCRC = 0xFFFFFFFF;
+				foundCRC = BAD_ADDRESS;
 				y = z = 0;
 				
 				for (counter = 4; counter < length; ++counter) {
@@ -358,7 +348,8 @@
 					foundCRC = UPDC32((data[counter] ^ currentStateArray[xov]), foundCRC);
 				}
 				
-				if (foundCRC == 0xdebb20e3) {
+				if (foundCRC == ERROR_FREE_ADDRESS)
+				{
 					memcpy(&currentGuess, &key, 16);
 					isInit=NO;
 				}
@@ -407,9 +398,11 @@
 
 #define KEYLENGTH 5
 #define KEYNUM 4
-- (void)performBruteforceNewsham:(NSObject*)obj {
+
+- (void)performBruteforceNewsham:(NSObject*)obj
+{
 	@autoreleasepool {
-		unsigned char key[KEYNUM][KEYLENGTH + 3], skeletonStateArray[256], currentStateArray[256];
+		unsigned char key[KEYNUM][KEYLENGTH + 3], skeletonStateArray[LAST_BIT], currentStateArray[LAST_BIT];
 		unsigned int i, foundCRC, counter, length = 0;
 		unsigned char y, z, tmp, xov, j, curGuess[16];
 		unsigned int w, x, q, selKey;
@@ -440,28 +433,36 @@
 				key[i][x+3] = q >> 16;
 			}
 		}
-		w=0;
+		w = 0;
 		
-		for (counter = 0; counter < 256; ++counter)
+		for (counter = 0; counter < LAST_BIT; ++counter)
+		{
 			skeletonStateArray[counter] = counter;
+		}
 		
-		while(true) {
-			for(i=0;i<[_packetsLog count];++i) {
-				
-				if (!isInit) {
+		while(true)
+		{
+			for( i = 0 ; i < [_packetsLog count] ; ++i )
+			{
+				if (!isInit)
+				{
 					data = [_packetsLog[i] bytes];
 					length = [(NSData*)_packetsLog[i] length];
 					
 					selKey = data[3] & 0x03;
 					memcpy(&key[selKey][0], data, 3);
 					
-					if (i==0) isInit = YES;
+					if (i == 0)
+					{
+						isInit = YES;
+					}
 				}
 				
-				memcpy(currentStateArray, skeletonStateArray, 256);
+				memcpy(currentStateArray, skeletonStateArray, LAST_BIT);
 				y = z = 0;
 				
-				for (counter = 0; counter < 256; ++counter) {
+				for (counter = 0; counter < LAST_BIT; ++counter)
+				{
 					z = (key[selKey][y] + currentStateArray[counter] + z);
 					
 					tmp = currentStateArray[counter];
@@ -471,10 +472,11 @@
 					y = (y + 1) % 8;
 				}
 				
-				foundCRC = 0xFFFFFFFF;
+				foundCRC = BAD_ADDRESS;
 				y = z = 0;
 				
-				for (counter = 4; counter < length; ++counter) {
+				for (counter = 4; counter < length; ++counter)
+				{
 					++y;
 					z = currentStateArray[y] + z;
 					
@@ -487,7 +489,8 @@
 					foundCRC = UPDC32((data[counter] ^ currentStateArray[xov]), foundCRC);
 				}
 				
-				if (foundCRC == 0xdebb20e3) {
+				if (foundCRC == ERROR_FREE_ADDRESS)
+				{
 					memcpy(&curGuess, &key[selKey][0], 8);
 					isInit=NO;
 				}
@@ -495,13 +498,19 @@
 					break;
 			}
 			
-			if (i < 8) {
+			if (i < 8)
+			{
 				while (++w & 0x80808080);
-				if (w>0x1000000) RET;
 				
-				if (((char*)(&w))[1]!=j) {
-					j=((char*)(&w))[1];
-					if ([controller canceled]) RET;
+				if (w > 0x1000000) RET;
+				
+				if (((char*)(&w))[1]!=j)
+				{
+					j = ((char*)(&w))[1];
+					if ([controller canceled])
+					{
+						RET;
+					}
 					[controller increment];
 				}
 				q = w;
@@ -526,7 +535,9 @@
 			} else {
 				_password = [NSMutableString stringWithFormat:@"%.2X", curGuess[3]];
 				for (i=4;i<(8);++i)
+				{
 					[(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", curGuess[i]]];
+				}
 				
 				[(NSMutableString*)_password appendString:[NSString stringWithFormat:@" for Key %d", selKey]];
 				

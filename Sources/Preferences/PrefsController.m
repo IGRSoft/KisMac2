@@ -1,25 +1,30 @@
 /*
-        
-        File:			PrefsController.m
-        Program:		KisMAC
-	Author:			Michael Thole
-	Description:		KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
+ 
+ File:			PrefsController.m
+ Program:		KisMAC
+ Author:		Michael Thole
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
 #import "PrefsController.h"
 #import "KisMACNotifications.h"
 #import "PrefsWindow.h"
@@ -63,7 +68,8 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
 
 @implementation PrefsController
 
-- (id)init {
+- (id)init
+{
 	self = [super init];
 	
     prefsToolbar=[[NSToolbar alloc] initWithIdentifier:@"prefsToolbar"];
@@ -83,7 +89,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @"Scanning Options",
                    self,
                    @selector(setImage:),
-                   [NSImage imageNamed:@"NSApplicationIcon"],
+                   [NSImage imageNamed:@"preferences-scan"],
                    @selector(changeView:),
                    nil);
     defaultToolbarItem = toolbarItems[@"Scanning"];
@@ -97,7 +103,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @"Traffic View Options",
                    self,
                    @selector(setImage:),
-                   [NSImage imageNamed:@"traffic"],
+                   [NSImage imageNamed:@"preferences-graph"],
                    @selector(changeView:),
                    nil);
 
@@ -110,7 +116,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @"Filter Options for Data Capture",
                    self,
                    @selector(setImage:),
-                   [NSImage imageNamed:@"filter"],
+                   [NSImage imageNamed:@"preferences-filter"],
                    @selector(changeView:),
                    nil);
 
@@ -124,7 +130,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @"Sounds and Speech Options",
                    self,
                    @selector(setImage:),
-                   [NSImage imageNamed:@"Sound"],
+                   [NSImage imageNamed:@"preferences-sound"],
                    @selector(changeView:),
                    nil);
 
@@ -137,7 +143,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @"Wireless Card Driver",
                    self,
                    @selector(setImage:),
-                   [NSImage imageNamed:@"driver"],
+                   [NSImage imageNamed:@"preferences-driver"],
                    @selector(changeView:),
                    nil);
 
@@ -150,7 +156,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @"GPS Options",
                    self,
                    @selector(setImage:),
-                   [NSImage imageNamed:@"gps"],
+                   [NSImage imageNamed:@"preferences-gps"],
                    @selector(changeView:),
                    nil);
     nibNamesDict[@"Map"] = @"PrefsMap";
@@ -162,7 +168,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
                    @"Mapping Options",
                    self,
                    @selector(setImage:),
-                   [NSImage imageNamed:@"map"],
+                   [NSImage imageNamed:@"preferences-map"],
                    @selector(changeView:),
                    nil);
 	
@@ -184,7 +190,8 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
     return self;
 }
 
-- (void)awakeFromNib {
+- (void)awakeFromNib
+{
     [prefsWindow setTitle:@"KisMAC Preferences"];
     [prefsWindow setToolbar:prefsToolbar];
     [prefsWindow center];
@@ -207,8 +214,10 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
 
     // TODO make this more error proof
 
-    if(currentToolbarItem == sender) {
+    if(currentToolbarItem == sender)
+    {
         [currentClient updateUI];
+        
         return;
     }
     
@@ -216,11 +225,14 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
 
     if (currentClient&&(![currentClient updateDictionary])) return;
     
-    for(i = 0 ; i < count ; ++i) {
-        if([[itemsArray[i] itemIdentifier] isEqualToString:[sender itemIdentifier]]) {
+    for(i = 0 ; i < count ; ++i)
+    {
+        if([[itemsArray[i] itemIdentifier] isEqualToString:[sender itemIdentifier]])
+        {
             nibName = nibNamesDict[[itemsArray[i] itemIdentifier]];
             className = classNamesDict[[itemsArray[i] itemIdentifier]];
             currentToolbarItem = sender;
+            
             break;
         }
     }
@@ -232,7 +244,7 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
     currentClient = [[[[NSBundle mainBundle] classNamed:className] alloc] init];
     [currentClient setController:defaults];
     
-    [NSBundle loadNibNamed:nibName owner:currentClient];
+    [[NSBundle mainBundle] loadNibNamed:nibName owner:currentClient topLevelObjects:nil];
 
     controlBox = [currentClient controlBox];
     controlBoxFrame = controlBox != nil ? [controlBox frame] : NSZeroRect;
@@ -241,7 +253,8 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
     newWindowHeight = NSHeight(controlBoxFrame) + 10;
     newWindowHeight += NSHeight([[prefsToolbar _toolbarView] frame]);
     //newWindowHeight += 43;
-    newWindowFrame = [NSWindow frameRectForContentRect:NSMakeRect(NSMinX(windowFrame), NSMaxY(windowFrame) - newWindowHeight, NSWidth(windowFrame), newWindowHeight) styleMask:[prefsWindow styleMask]];
+    newWindowFrame = [NSWindow frameRectForContentRect:NSMakeRect(NSMinX(windowFrame), NSMaxY(windowFrame) - newWindowHeight, NSWidth(windowFrame), newWindowHeight)
+                                             styleMask:[prefsWindow styleMask]];
     [prefsWindow setFrame:newWindowFrame display:YES animate:[prefsWindow isVisible]];    
     [controlBox setFrameOrigin:NSMakePoint(floor((NSWidth([contentView frame]) - NSWidth(controlBoxFrame)) / 2.0),
                                            floor(NSHeight([contentView frame]) - NSHeight(controlBoxFrame)))];
@@ -255,11 +268,13 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
 #pragma mark -
 
 
-- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar {
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
+{
     return @[@"Scanning", @"Filter", @"Sounds", @"Driver", @"GPS", @"Map", @"Traffic", @"Advanced"];
 }
 
-- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar {
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
+{
     return [self toolbarDefaultItemIdentifiers:toolbar];
 }
 
@@ -293,60 +308,75 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
         [newItem setMinSize:[[item view] bounds].size];
         [newItem setMaxSize:[[item view] bounds].size];
     }
+    
     return newItem;
 }
 
 #pragma mark -
 
-- (id)objectForKey:(NSString*)key {
+- (id)objectForKey:(NSString*)key
+{
     id object = changesDict[key];
-    if(object) return object;
+    if(object)
+    {
+        return object;
+    }
     
     object = [defaults objectForKey:key];
-    if(!object) DBNSLog(@"Error: -[PrefsController objectForKey:%@] returning NULL!", key);
+    if(!object)
+    {
+        DBNSLog(@"Error: -[PrefsController objectForKey:%@] returning NULL!", key);
+    }
+    
     return object;
 }
 
-- (void)setObject:(id)object forKey:(NSString*)key {
+- (void)setObject:(id)object forKey:(NSString*)key
+{
     changesDict[key] = object;
 }
 
-- (NSWindow*)window {
+- (NSWindow*)window
+{
     return prefsWindow;
 }
 
 #pragma mark -
 
-- (IBAction)refreshUI:(id)sender {
+- (IBAction)refreshUI:(id)sender
+{
     [currentClient updateUI];
 }
 
 - (IBAction)clickOk:(id)sender
 {
-    if (![currentClient updateDictionary]) return;
+    if (![currentClient updateDictionary])
+    {
+        return;
+    }
     
     [prefsWindow close];
     [changesDict removeAllObjects];
     [currentClient updateUI];
 }
 
-- (IBAction)clickCancel:(id)sender {
+- (IBAction)clickCancel:(id)sender
+{
     [prefsWindow close];
     [changesDict removeAllObjects];
     [currentClient updateUI];
 }
 
-- (BOOL)windowShouldClose:(id)sender {
+- (BOOL)windowShouldClose:(id)sender
+{
     return [currentClient updateDictionary];
 }
 
-- (void)windowWillClose:(NSNotification *)aNotification {
+- (void)windowWillClose:(NSNotification *)aNotification
+{
     [currentClient updateDictionary];
     [defaults synchronize];
     [[NSNotificationCenter defaultCenter] postNotificationName:KisMACUserDefaultsChanged object:self];
 }
-
-#pragma mark -
-
 
 @end

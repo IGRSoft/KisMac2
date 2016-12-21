@@ -1,31 +1,34 @@
 /*
-        
-        File:			WaveContainer.m
-        Program:		KisMAC
-		Author:			Michael Rossberg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			WaveNetEntry.m
+ Program:		KisMAC
+ Author:		Michael Ro§berg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "WaveContainer.h"
 #import "WaveHelper.h"
 #import "KisMACNotifications.h"
-#import "quicksort.h"
 #import "WaveNet.h"
 
 //TODO make _idList binary search compatible 
@@ -148,7 +151,7 @@ UInt32 hashForMAC(const UInt8* val) {
         add = ([_idList[entry].net wep] == _viewCrypto);
         break;
     default:
-        NSLog(@"invalid view. this is a bug and shall never happen\n");
+        DBNSLog(@"invalid view. this is a bug and shall never happen\n");
     }
     
 	/*if (entry > 0) {
@@ -279,12 +282,12 @@ UInt32 hashForMAC(const UInt8* val) {
     switch (challengeResponseStatus) {
         case chreResponse:
         case chreChallenge:
-            return @"orangegem.png";
+            return @"orangegem";
         case chreComplete:
-            return @"greengem.png";
+            return @"greengem";
         case chreNone:
         default:
-            return @"redgem.png";
+            return @"redgem";
     }
 }
 
@@ -323,7 +326,7 @@ UInt32 hashForMAC(const UInt8* val) {
 			return @"lucent tunnel";
 		default:
 			return @"Unknown";
-			NSLog(@"Invalid net type %i, WTF?", type);
+			DBNSLog(@"Invalid net type %@, WTF?", @(type));
 	}
 }
 
@@ -353,7 +356,7 @@ UInt32 hashForMAC(const UInt8* val) {
         _viewCrypto = [val intValue];
         break;
     default:
-        NSLog(@"invalid viewtype. this is a bug and shall never happen!\n");
+        DBNSLog(@"invalid viewtype. this is a bug and shall never happen!\n");
     }
     [self refreshView];
 }
@@ -412,12 +415,12 @@ UInt32 hashForMAC(const UInt8* val) {
     e = [data objectEnumerator];
     while ((n = [e nextObject])) {
         if (![n isMemberOfClass:[WaveNet class]]) {
-            NSLog(@"Could not load legacy data, because it is bad!");
+            DBNSLog(@"Could not load legacy data, because it is bad!");
             return NO;
         }
         
         if (_netCount == MAXNETS) {
-            NSLog(@"Loaded more networks, but could not add them since you reached MAXNETS. Please recompile with a higher value");
+            DBNSLog(@"Loaded more networks, but could not add them since you reached MAXNETS. Please recompile with a higher value");
             return YES;
         }
         
@@ -442,7 +445,7 @@ UInt32 hashForMAC(const UInt8* val) {
 		{
 			if (![n isKindOfClass:[NSDictionary class]])
 			{
-				NSLog(@"Could not load data, because it is bad!");
+				DBNSLog(@"Could not load data, because it is bad!");
 				return NO;
 			}
 			n = [[WaveNet alloc] initWithDataDictionary:n];
@@ -452,7 +455,7 @@ UInt32 hashForMAC(const UInt8* val) {
         
         if (_netCount == MAXNETS)
 		{
-            NSLog(@"Loaded more networks, but could not add them since you reached MAXNETS. Please recompile with a higher value");
+            DBNSLog(@"Loaded more networks, but could not add them since you reached MAXNETS. Please recompile with a higher value");
             return YES;
         }
         
@@ -481,12 +484,12 @@ UInt32 hashForMAC(const UInt8* val) {
 	{
         if (![n isMemberOfClass:[WaveNet class]])
 		{
-            NSLog(@"Could not load legacy data, because it is bad!");
+            DBNSLog(@"Could not load legacy data, because it is bad!");
             return NO;
         }
         
         if (_netCount == MAXNETS) {
-            NSLog(@"Loaded more networks, but could not add them since you reached MAXNETS. Please recompile with a higher value");
+            DBNSLog(@"Loaded more networks, but could not add them since you reached MAXNETS. Please recompile with a higher value");
             return YES;
         }
         
@@ -520,7 +523,7 @@ UInt32 hashForMAC(const UInt8* val) {
 		{
 			if (![n isMemberOfClass:[NSDictionary class]])
 			{
-				NSLog(@"Could not load data, because it is bad!");
+				DBNSLog(@"Could not load data, because it is bad!");
 				return NO;
 			}
 			n = [[WaveNet alloc] initWithDataDictionary:n];
@@ -530,13 +533,11 @@ UInt32 hashForMAC(const UInt8* val) {
         
         if (_netCount == MAXNETS)
 		{
-            NSLog(@"Loaded more networks, but could not add them since you reached MAXNETS. Please recompile with a higher value");
-			CFRetain((__bridge CFTypeRef)(n));
+            DBNSLog(@"Loaded more networks, but could not add them since you reached MAXNETS. Please recompile with a higher value");
             return YES;
         }
         
         net = [self netForKey:[n rawID]];
-        CFRetain((__bridge CFTypeRef)(n));
         
         if (!net) 
         {
@@ -680,20 +681,21 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 		ws.ascend = ascend ? 1 : -1;
 		ws.idList = _idList;
 		
-		if ([ident isEqualToString:@"channel"])         qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)channelSort);
-		else if ([ident isEqualToString:@"primaryChannel"])         qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)primaryChannelSort);
-		else if ([ident isEqualToString:@"id"])         qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)idSort);
-		else if ([ident isEqualToString:@"bssid"])      qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)bssidSort);
-		else if ([ident isEqualToString:@"ssid"])       qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)ssidSort);
-		else if ([ident isEqualToString:@"wep"])        qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)wepSort);
-		else if ([ident isEqualToString:@"type"])       qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)typeSort);
-		else if ([ident isEqualToString:@"signal"])     qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)signalSort);
-		else if ([ident isEqualToString:@"maxsignal"])  qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)maxSignalSort);
-		else if ([ident isEqualToString:@"avgsignal"])  qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)avgSignalSort);
-		else if ([ident isEqualToString:@"packets"])    qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)packetsSort);
-		else if ([ident isEqualToString:@"data"])       qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)dataSort);
-		else if ([ident isEqualToString:@"lastseen"])   qsort_kismac(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)lastSeenSort);
-		else NSLog(@"Unknown sorting column. This is a bug and should never happen.");
+		if ([ident isEqualToString:@"channel"])				qsort_r(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)channelSort);
+		else if ([ident isEqualToString:@"primaryChannel"])	qsort_r(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)primaryChannelSort);
+		else if ([ident isEqualToString:@"id"])				qsort_r(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)idSort);
+		else if ([ident isEqualToString:@"bssid"])			qsort_r(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)bssidSort);
+		else if ([ident isEqualToString:@"ssid"])			qsort_r(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)ssidSort);
+		else if ([ident isEqualToString:@"wep"])			qsort_r(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)wepSort);
+		else if ([ident isEqualToString:@"type"])			qsort_r(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)typeSort);
+		else if ([ident isEqualToString:@"signal"])			qsort_r(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)signalSort);
+		else if ([ident isEqualToString:@"maxsignal"])		qsort_r(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)maxSignalSort);
+		else if ([ident isEqualToString:@"avgsignal"])		qsort_r(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)avgSignalSort);
+		else if ([ident isEqualToString:@"packets"])		qsort_r(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)packetsSort);
+		else if ([ident isEqualToString:@"data"])			qsort_r(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)dataSort);
+		else if ([ident isEqualToString:@"lastseen"])		qsort_r(_sortedList, _sortedCount, sizeof(unsigned int), &ws, (SORTFUNC)lastSeenSort);
+		
+		else DBNSLog(@"Unknown sorting column. This is a bug and should never happen.");
 		
 		[_sortLock unlock];
 	}];
@@ -733,7 +735,7 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 		else
 		{
 			[_sortLock unlock];
-			NSLog(@"Unknown sorting column. This is a bug and should never happen.");
+			DBNSLog(@"Unknown sorting column. This is a bug and should never happen.");
 			return;
 		}
 		
@@ -802,58 +804,65 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 - (unsigned int) findNetwork:(const unsigned char*)ID
 {
     unsigned int i, lentry;
-    unsigned int entry = 0xFFFFFFFF;
+    unsigned int entry = BAD_ADDRESS;
     unsigned int l = 0;
     
     
     //see if it is filtered
     if ([self IDFiltered:ID])
-		return 0xFFFFFFFF;
-
+    {
+		return BAD_ADDRESS;
+    }
     
     //lookup the net in the hashtable
     l = hashForMAC(ID);
     lentry = l;
     
-    i=_lookup[l];
+    i = _lookup[l];
     while (i!=LOOKUPSIZE)
 	{
-        if (memcmp(ID, _idList[i].ID, 6)==0) {
+        if (memcmp(ID, _idList[i].ID, 6) == 0)
+        {
             entry = i;
             break;
         }
+        
         l = (l + 1) % LOOKUPSIZE;
-        i=_lookup[l];
+        i = _lookup[l];
     }
             
-    if (entry==0xFFFFFFFF)
+    if (entry == BAD_ADDRESS)
 	{
         //the net does not exist - add it
         
         if (_netCount == MAXNETS)
 		{
-            NSLog(@"Found network, but could not add it since you reached MAXNETS. Please recompile with a higher value");
-            return 0xFFFFFFFF;
+            DBNSLog(@"Found network, but could not add it since you reached MAXNETS. Please recompile with a higher value");
+            return BAD_ADDRESS;
         }
         
         ++_netCount;
         entry = _netCount - 1;
         memcpy(&_idList[entry].ID, ID, 6);
-		WaveNet *net = [[WaveNet alloc] initWithID:entry];
-		if ([[net SSID] isEqualToString:@"<no ssid>"])
-		{
-			_idList[entry].net = net;
-			CFRetain((__bridge CFTypeRef)(_idList[entry].net));
-			_lookup[l] = entry;
-			
-			[self addNetToView:entry];
-			
-			[[NSNotificationCenter defaultCenter] postNotificationName:KisMACNetworkAdded object:self];
-		}
-		else
-		{
-			DBNSLog(@"Incorrect network");
-		}
+        
+        @autoreleasepool
+        {
+            WaveNet *net = [[WaveNet alloc] initWithID:entry];
+            if ([[net SSID] isEqualToString:@"<no ssid>"])
+            {
+                _idList[entry].net = net;
+                CFRetain((__bridge CFTypeRef)(_idList[entry].net));
+                _lookup[l] = entry;
+                
+                [self addNetToView:entry];
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:KisMACNetworkAdded object:self];
+            }
+            else
+            {
+                DBNSLog(@"Incorrect network");
+            }
+        }
     }
     
     if (l != lentry)
@@ -879,10 +888,14 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 		return YES;
     
     entry = [self findNetwork:ID];
-    if (entry == 0xFFFFFFFF)
-		return NO;                          //the object is filtered...
     
-    @synchronized(_idList[entry].net) {
+    if (entry == BAD_ADDRESS)
+    {
+		return NO;                          //the object is filtered...
+    }
+    
+    @synchronized(_idList[entry].net)
+    {
 		[_idList[entry].net parsePacket:p withSound:live];		//add the packet to the network
 		_idList[entry].changed = YES;
     }
@@ -917,7 +930,7 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 	}
 	
     entry = [self findNetwork: macData];
-    if (entry == 0xFFFFFFFF) return NO;                          //the object is filtered...
+    if (entry == BAD_ADDRESS) return NO;                          //the object is filtered...
     
 	@synchronized(_idList[entry].net)
     {
@@ -989,11 +1002,13 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 {
     unsigned int i;
 
-	for(i = 0 ; i < _netCount ; ++i) {
+	for(i = 0 ; i < _netCount ; ++i)
+    {
 		WaveNet *w = _idList[i].net;
 		@synchronized(w)
 		{
-			if ([w noteFinishedSweep:graphLength]) {
+			if ([w noteFinishedSweep:graphLength])
+            {
 				//make sure this is going to be updated
 				_idList[i].changed = YES;
 			}
@@ -1011,7 +1026,7 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
 {
     unsigned int nxt;
     
-    if (lastRow==0xFFFFFFFF)
+    if (lastRow == BAD_ADDRESS)
 		nxt=0;
     else
 		nxt = lastRow + 1;
@@ -1027,7 +1042,7 @@ typedef int (*SORTFUNC)(void *, const void *, const void *);
         ++nxt;
     }
 
-    return 0xFFFFFFFF;
+    return BAD_ADDRESS;
 }
 #pragma mark -
 

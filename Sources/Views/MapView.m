@@ -1,26 +1,30 @@
 /*
-        
-        File:			MapView.m
-        Program:		KisMAC
-		Author:			Michael Roßberg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			MapView.m
+ Program:		KisMAC
+ Author:		Michael Roßberg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "MapView.h"
 #import "WaveHelper.h"
@@ -41,7 +45,8 @@
 
 @implementation MapView
 
-- (void)awakeFromNib {
+- (void)awakeFromNib
+{
     _mapImage = nil;
     _wp[0]._lat  = 0; _wp[0]._long = 0;
     _wp[1]._lat  = 0; _wp[1]._long = 0;
@@ -86,6 +91,10 @@
 	_zoomFact = 1.0 / (ZOOMFACT * ZOOMFACT * ZOOMFACT * ZOOMFACT);
 	[self _alignNetworks];
     [self setNeedsDisplay:YES];
+    
+    _wayPoint = [[WayPoint alloc] initWithWindowNibName:@"WayPointDialog"];
+    [[_wayPoint window] setFrameUsingName:@"aKisMAC_WayPoint"];
+    [[_wayPoint window] setFrameAutosaveName:@"aKisMAC_WayPoint"];
 }
 
 #pragma mark -
@@ -115,7 +124,8 @@
     [data writeToFile:[mapName stringByAppendingPathComponent:@"map.pdf"] atomically:NO];
 #else
     data = [_orgImage TIFFRepresentation];
-	data = [[NSBitmapImageRep imageRepWithData:data] representationUsingType:NSPNGFileType properties:nil];
+	data = [[NSBitmapImageRep imageRepWithData:data] representationUsingType:NSPNGFileType
+                                                                  properties:[NSDictionary dictionary]];
     [data writeToFile:[mapName stringByAppendingPathComponent:@"map.png"] atomically:NO];
 #endif
 
@@ -409,19 +419,24 @@
     if (NSPointInRect(p, [_controlPanel frame])) [_controlPanel mouseMovedToPoint:p];
 }
 
-- (void)mouseDown:(NSEvent *)theEvent {
+- (void)mouseDown:(NSEvent *)theEvent
+{
     BOOL keepOn = YES;
     NSPoint p;
-    WayPoint *wayPoint;
     waypoint w;
     
     p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    if (NSPointInRect(p, [_controlPanel frame])) {
+    if (NSPointInRect(p, [_controlPanel frame]))
+    {
         [_controlPanel mouseDownAtPoint:p];
+        
         return;
     }
     
-    if (_selmode >= selShowCurPos) return;
+    if (_selmode >= selShowCurPos)
+    {
+        return;
+    }
     
     _old = _point[_selmode];
     
@@ -437,11 +452,8 @@
         case NSLeftMouseUp:
             keepOn = NO;
             
-            wayPoint = [[WayPoint alloc] initWithWindowNibName:@"WayPointDialog"];
-            [[wayPoint window] setFrameUsingName:@"aKisMAC_WayPoint"];
-            [[wayPoint window] setFrameAutosaveName:@"aKisMAC_WayPoint"];
-            
-            if (_selmode == selCurPos) {
+            if (_selmode == selCurPos)
+            {
                 // calculate current point for setting the current position
                 NS_DURING
                     w._long = _wp[1]._long - (_point[1].x - p.x) / (_point[1].x - _point[2].x) * (_wp[1]._long - _wp[2]._long);
@@ -451,14 +463,16 @@
                     w._lat  = 0.0;
                 NS_ENDHANDLER
                 _point[selCurPos] = INVALIDPOINT;
-            } else {// set the waypoints with current coordinates
+            } else
+            {
+                // set the waypoints with current coordinates
                 w=[[WaveHelper gpsController] currentPoint];
             }
                    
-            [wayPoint setWaypoint:w];
-            [wayPoint setMode:_selmode];
-            [wayPoint setPoint:p];
-            [wayPoint showWindow:self];
+            [_wayPoint setWaypoint:w];
+            [_wayPoint setMode:_selmode];
+            [_wayPoint setPoint:p];
+            [_wayPoint showWindow:self];
             p = _old;
         case NSLeftMouseDragged:
             _point[_selmode] = p;

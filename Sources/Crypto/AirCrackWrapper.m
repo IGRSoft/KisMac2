@@ -1,28 +1,30 @@
 /*
-        
-        File:			AirCrackWrapper.m
-        Program:		KisMAC
-		Author:			Michael Rossberg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    Most parts of this file are based on aircrack by Christophe Devine.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			AirCrackWrapper.m
+ Program:		KisMAC
+ Author:		Michael Roßberg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "AirCrackWrapper.h"
 #import "WaveHelper.h"
@@ -85,7 +87,8 @@ int safe_write( int fd, void *buf, size_t len )
     return( sum );
 }
 
-- (id)init {
+- (id)init
+{
     self = [super init];
     if (!self) return nil;
 	NSUserDefaults *defs;
@@ -108,26 +111,30 @@ int safe_write( int fd, void *buf, size_t len )
     }
       
     nb_ivs = 0;
-    if (! ( ivbuf = (unsigned char *) malloc( 5 * 256 * 256 * 256 ) ) ) {
+    if (! ( ivbuf = (unsigned char *) malloc( 5 * LAST_BIT * LAST_BIT * LAST_BIT ) ) ) {
         return nil;
     }
     
     return self;
 }
 
-- (void)setKeyID:(int)keyID {
+- (void)setKeyID:(int)keyID
+{
     keyid = keyID;
 }
 
-- (void)setKeyLen:(int)keyLen {
+- (void)setKeyLen:(int)keyLen
+{
     weplen = keyLen;
 }
 
-- (NSData*)key {
+- (NSData*)key
+{
     return key;
 }
 
-- (void)setIVs:(NSData*)ivs {
+- (void)setIVs:(NSData*)ivs
+{
     NSParameterAssert(ivs);
     NSParameterAssert([ivs length] % 5 == 0);
     
@@ -138,10 +145,11 @@ int safe_write( int fd, void *buf, size_t len )
 
 /* each child performs the attacks over nb_ivs / nfork */
 
-- (void)calc_votes:(NSNumber*)c {
+- (void)calc_votes:(NSNumber*)c
+{
     unsigned long xv, min, max;
-    unsigned char R[256], jj[256];
-    unsigned char S[256], Si[256];
+    unsigned char R[LAST_BIT], jj[LAST_BIT];
+    unsigned char S[LAST_BIT], Si[LAST_BIT];
     unsigned char K[16];
 
     unsigned char io1, o1, io2, o2;
@@ -155,287 +163,294 @@ int safe_write( int fd, void *buf, size_t len )
     min = 5 * ( ( (     child ) * nb_ivs ) / nfork );
     max = 5 * ( ( ( 1 + child ) * nb_ivs ) / nfork );
 
-    for( i = 0; i < 256; ++i )
-        R[i] = i;
+    for( i = 0; i < LAST_BIT; ++i )
+	{
+		R[i] = i;
+	}
 
-wait_for_master:
-
-    if( safe_read( mc_pipe[child][0], buf, 14 ) != 14 )
-    {
-        //perror( "in calc_votes: read()" );
-        return;
-    }
-
-    B = (int) buf[0];
-    q = 3 + B;
-
-    memcpy( K + 3, buf + 1, 13 );
-    memset( votes, 0, sizeof( votes ) );
-
-    /*
-     *                        JABBERWOCKY
-     */
-
-    for( xv = min; xv < max; xv += 5 )
-    {
-        memcpy( K, &ivbuf[xv], 3 );
-        memcpy( S,  R, 256 );
-        memcpy( Si, R, 256 );
-
-        /*
-         *      `Twas brillig, and the slithy toves
-         *        Did gyre and gimble in the wabe:
-         *         All mimsy were the borogoves,
-         *          And the mome raths outgrabe.
-         */
-
-        if( weplen == 13 )
+    BOOL process = YES;
+	while (process)
+	{
+		if( safe_read( mc_pipe[child][0], buf, 14 ) != 14 )
+		{
+			//perror( "in calc_votes: read()" );
+            process = NO;
+		}
+		
+        if (process)
         {
-            for( i = j = 0; i < q; ++i )
+            B = (int) buf[0];
+            q = 3 + B;
+            
+            memcpy( K + 3, buf + 1, 13 );
+            memset( votes, 0, sizeof( votes ) );
+            
+            /*
+             *                        JABBERWOCKY
+             */
+            
+            for( xv = min; xv < max; xv += 5 )
             {
-                jj[i] = j = ( j + S[i] + K[i & 15] ) & 0xFF;
-                SWAP( S[i], S[j] );
-            }
-        }
-
-        if( weplen == 5 )
-        {
-            for( i = j = 0; i < q; i++ )
-            {
-                jj[i] = j = ( j + S[i] + K[i & 7] ) & 0xFF;
-                SWAP( S[i], S[j] );
-            }
-        }
-
-        /*
-         *      Beware the Jabberwock, my son!
-         *        The jaws that bite, the claws that catch!
-         *      Beware the Jubjub bird, and shun
-         *        The frumious Bandersnatch!
-         */
-
-        i = q; do { i--; SWAP(Si[i],Si[jj[i]]); } while( i != 0 );
-
-        o1 = ivbuf[xv + 3] ^ 0xAA; io1 = Si[o1]; S1 = S[1];
-        o2 = ivbuf[xv + 4] ^ 0xAA; io2 = Si[o2]; S2 = S[2];
-        Sq = S[q]; dq = Sq + jj[q - 1];
-
-        if( S2 == 0 )
-        {
-            if( ( S1 == 2 ) && ( o1 == 2 ) )
-            {
-                Kq = 1 - dq; votes[A_neg][Kq]++;
-                Kq = 2 - dq; votes[A_neg][Kq]++;
-            }
-            else if( o2 == 0 )
-            {
-                Kq = 2 - dq; votes[A_neg][Kq]++;
-            }
-        }
-        else
-        {
-            if( ( o2 == 0 ) && ( Sq == 0 ) )
-            {
-                Kq = 2 - dq; votes[A_u15][Kq]++;
-            }
-        }
-
-        /*
-         *      He took his vorpal sword in hand:
-         *        Long time the manxome foe he sought --
-         *      So rested he by the Tumtum tree,
-         *        And stood awhile in thought.
-         */
-
-        if( ( S1 == 1 ) && ( o1 == S2 ) )
-        {
-            Kq = 1 - dq; votes[A_neg][Kq]++;
-            Kq = 2 - dq; votes[A_neg][Kq]++;
-        }
-
-        if( ( S1 == 0 ) && ( S[0] == 1 ) && ( o1 == 1 ) )
-        {
-            Kq = 0 - dq; votes[A_neg][Kq]++;
-            Kq = 1 - dq; votes[A_neg][Kq]++;
-        }
-
-        if( S1 == q )
-        {
-            if( o1 == q )
-            {
-                Kq = Si[0] - dq; votes[A_s13][Kq]++;
-            }
-            else if( ( ( 1 - q - o1 ) & 0xff ) == 0 )
-            {
-                Kq = io1 - dq; votes[A_u13_1][Kq]++;
-            }
-            else if( io1 < q )
-            {
-                jq = Si[( io1 - q ) & 0xff];
-
-                if( jq != 1 )
+                memcpy( K, &ivbuf[xv], 3 );
+                memcpy( S,  R, LAST_BIT );
+                memcpy( Si, R, LAST_BIT );
+                
+                /*
+                 *      `Twas brillig, and the slithy toves
+                 *        Did gyre and gimble in the wabe:
+                 *         All mimsy were the borogoves,
+                 *          And the mome raths outgrabe.
+                 */
+                
+                if( weplen == 13 )
                 {
-                    Kq = jq - dq; votes[A_u5_1][Kq]++;
+                    for( i = j = 0; i < q; ++i )
+                    {
+                        jj[i] = j = ( j + S[i] + K[i & 15] ) & 0xFF;
+                        SWAP( S[i], S[j] );
+                    }
                 }
-            }
-        }
-
-        /*
-         *      And, as in uffish thought he stood,
-         *        The Jabberwock, with eyes of flame,
-         *      Came whiffling through the tulgey wood,
-         *        And burbled as it came!
-         */
-
-        if( ( io1 == 2 ) && ( S[q] == 1 ) )
-        {
-            Kq = 1 - dq; votes[A_u5_2][Kq]++;
-        }
-
-        if( S[q] == q )
-        {
-            if( ( S1 == 0 ) && ( o1 == q ) )
-            {
-                Kq = 1 - dq; votes[A_u13_2][Kq]++;
-            }
-            else if( ( ( ( 1 - q - S1 ) & 0xff ) == 0 ) && ( o1 == S1 ) )
-            {
-                Kq = 1 - dq; votes[A_u13_3][Kq]++;
-            }
-            else if( ( S1 >= ( ( -q ) & 0xff ) )
-                     && ( ( ( q + S1 - io1 ) & 0xff ) == 0 ) )
-            {
-                Kq = 1 - dq; votes[A_u5_3][Kq]++;
-            }
-        }
-
-        /*
-         *      One, two! One, two! And through and through
-         *        The vorpal blade went snicker-snack!
-         *      He left it dead, and with its head
-         *        He went galumphing back.
-         */
-
-        if( ( S1 < q ) && ( ( ( S1 + S[S1] - q ) & 0xFF ) == 0 )  &&
-            ( io1 != 1 ) && ( io1 != S[S1] ) )
-        {
-            Kq = io1 - dq; votes[A_s5_1][Kq]++;
-        }
-
-        if( ( S1 > q ) && ( ( ( S2 + S1 - q ) & 0xff ) == 0 ) )
-        {
-            if( o2 == S1 )
-            {
-                jq = Si[(S1 - S2) & 0xFF];
-
-                if( ( jq != 1 ) && ( jq != 2 ) )
+                
+                if( weplen == 5 )
                 {
-                    Kq = jq - dq; votes[A_s5_2][Kq]++;
+                    for( i = j = 0; i < q; i++ )
+                    {
+                        jj[i] = j = ( j + S[i] + K[i & 7] ) & 0xFF;
+                        SWAP( S[i], S[j] );
+                    }
                 }
-            }
-            else if( o2 == ( ( 2 - S2 ) & 0xFF ) )
-            {
-                jq = io2;
-
-                if( ( jq != 1 ) && ( jq != 2 ) )
+                
+                /*
+                 *      Beware the Jabberwock, my son!
+                 *        The jaws that bite, the claws that catch!
+                 *      Beware the Jubjub bird, and shun
+                 *        The frumious Bandersnatch!
+                 */
+                
+                i = q; do { i--; SWAP(Si[i],Si[jj[i]]); } while( i != 0 );
+                
+                o1 = ivbuf[xv + 3] ^ 0xAA; io1 = Si[o1]; S1 = S[1];
+                o2 = ivbuf[xv + 4] ^ 0xAA; io2 = Si[o2]; S2 = S[2];
+                Sq = S[q]; dq = Sq + jj[q - 1];
+                
+                if( S2 == 0 )
                 {
-                    Kq = jq - dq; votes[A_s5_3][Kq]++;
-                }
-            }
-        }
-
-        /*
-         *      And, has thou slain the Jabberwock?
-         *        Come to my arms, my beamish boy!
-         *      O frabjous day! Callooh! Callay!'
-         *        He chortled in his joy.
-         */
-
-        if( ( S[1] != 2 ) && ( S[2] != 0 ) )
-        {
-            J2 = S[1] + S[2];
-
-            if( J2 < q )
-            {
-                t2 = S[J2] + S[2];
-
-                if( ( t2 == q ) && ( io2 != 1 ) && ( io2 != 2 )
-                    && ( io2 != J2 ) )
-                {
-                    Kq = io2 - dq; votes[A_s3][Kq]++;
-                }
-            }
-        }
-
-        /*
-         *      `Twas brillig, and the slithy toves
-         *        Did gyre and gimble in the wabe:
-         *         All mimsy were the borogoves,
-         *          And the mome raths outgrabe.
-         */
-
-        if( S1 == 2 )
-        {
-            if( q == 4 )
-            {
-                if( o2 == 0 )
-                {
-                    Kq = Si[0] - dq; votes[A_4_s13][Kq]++;
+                    if( ( S1 == 2 ) && ( o1 == 2 ) )
+                    {
+                        Kq = 1 - dq; votes[A_neg][Kq]++;
+                        Kq = 2 - dq; votes[A_neg][Kq]++;
+                    }
+                    else if( o2 == 0 )
+                    {
+                        Kq = 2 - dq; votes[A_neg][Kq]++;
+                    }
                 }
                 else
                 {
-                    if( ( jj[1] == 2 ) && ( io2 == 0 ) )
+                    if( ( o2 == 0 ) && ( Sq == 0 ) )
                     {
-                        Kq = Si[254] - dq; votes[A_4_u5_1][Kq]++;
+                        Kq = 2 - dq; votes[A_u15][Kq]++;
                     }
-                    if( ( jj[1] == 2 ) && ( io2 == 2 ) )
+                }
+                
+                /*
+                 *      He took his vorpal sword in hand:
+                 *        Long time the manxome foe he sought --
+                 *      So rested he by the Tumtum tree,
+                 *        And stood awhile in thought.
+                 */
+                
+                if( ( S1 == 1 ) && ( o1 == S2 ) )
+                {
+                    Kq = 1 - dq; votes[A_neg][Kq]++;
+                    Kq = 2 - dq; votes[A_neg][Kq]++;
+                }
+                
+                if( ( S1 == 0 ) && ( S[0] == 1 ) && ( o1 == 1 ) )
+                {
+                    Kq = 0 - dq; votes[A_neg][Kq]++;
+                    Kq = 1 - dq; votes[A_neg][Kq]++;
+                }
+                
+                if( S1 == q )
+                {
+                    if( o1 == q )
                     {
-                        Kq = Si[255] - dq; votes[A_4_u5_2][Kq]++;
+                        Kq = Si[0] - dq; votes[A_s13][Kq]++;
+                    }
+                    else if( ( ( 1 - q - o1 ) & 0xff ) == 0 )
+                    {
+                        Kq = io1 - dq; votes[A_u13_1][Kq]++;
+                    }
+                    else if( io1 < q )
+                    {
+                        jq = Si[( io1 - q ) & 0xff];
+                        
+                        if( jq != 1 )
+                        {
+                            Kq = jq - dq; votes[A_u5_1][Kq]++;
+                        }
+                    }
+                }
+                
+                /*
+                 *      And, as in uffish thought he stood,
+                 *        The Jabberwock, with eyes of flame,
+                 *      Came whiffling through the tulgey wood,
+                 *        And burbled as it came!
+                 */
+                
+                if( ( io1 == 2 ) && ( S[q] == 1 ) )
+                {
+                    Kq = 1 - dq; votes[A_u5_2][Kq]++;
+                }
+                
+                if( S[q] == q )
+                {
+                    if( ( S1 == 0 ) && ( o1 == q ) )
+                    {
+                        Kq = 1 - dq; votes[A_u13_2][Kq]++;
+                    }
+                    else if( ( ( ( 1 - q - S1 ) & 0xff ) == 0 ) && ( o1 == S1 ) )
+                    {
+                        Kq = 1 - dq; votes[A_u13_3][Kq]++;
+                    }
+                    else if( ( S1 >= ( ( -q ) & 0xff ) )
+                            && ( ( ( q + S1 - io1 ) & 0xff ) == 0 ) )
+                    {
+                        Kq = 1 - dq; votes[A_u5_3][Kq]++;
+                    }
+                }
+                
+                /*
+                 *      One, two! One, two! And through and through
+                 *        The vorpal blade went snicker-snack!
+                 *      He left it dead, and with its head
+                 *        He went galumphing back.
+                 */
+                
+                if( ( S1 < q ) && ( ( ( S1 + S[S1] - q ) & 0xFF ) == 0 )  &&
+                   ( io1 != 1 ) && ( io1 != S[S1] ) )
+                {
+                    Kq = io1 - dq; votes[A_s5_1][Kq]++;
+                }
+                
+                if( ( S1 > q ) && ( ( ( S2 + S1 - q ) & 0xff ) == 0 ) )
+                {
+                    if( o2 == S1 )
+                    {
+                        jq = Si[(S1 - S2) & 0xFF];
+                        
+                        if( ( jq != 1 ) && ( jq != 2 ) )
+                        {
+                            Kq = jq - dq; votes[A_s5_2][Kq]++;
+                        }
+                    }
+                    else if( o2 == ( ( 2 - S2 ) & 0xFF ) )
+                    {
+                        jq = io2;
+                        
+                        if( ( jq != 1 ) && ( jq != 2 ) )
+                        {
+                            Kq = jq - dq; votes[A_s5_3][Kq]++;
+                        }
+                    }
+                }
+                
+                /*
+                 *      And, has thou slain the Jabberwock?
+                 *        Come to my arms, my beamish boy!
+                 *      O frabjous day! Callooh! Callay!'
+                 *        He chortled in his joy.
+                 */
+                
+                if( ( S[1] != 2 ) && ( S[2] != 0 ) )
+                {
+                    J2 = S[1] + S[2];
+                    
+                    if( J2 < q )
+                    {
+                        t2 = S[J2] + S[2];
+                        
+                        if( ( t2 == q ) && ( io2 != 1 ) && ( io2 != 2 )
+                           && ( io2 != J2 ) )
+                        {
+                            Kq = io2 - dq; votes[A_s3][Kq]++;
+                        }
+                    }
+                }
+                
+                /*
+                 *      `Twas brillig, and the slithy toves
+                 *        Did gyre and gimble in the wabe:
+                 *         All mimsy were the borogoves,
+                 *          And the mome raths outgrabe.
+                 */
+                
+                if( S1 == 2 )
+                {
+                    if( q == 4 )
+                    {
+                        if( o2 == 0 )
+                        {
+                            Kq = Si[0] - dq; votes[A_4_s13][Kq]++;
+                        }
+                        else
+                        {
+                            if( ( jj[1] == 2 ) && ( io2 == 0 ) )
+                            {
+                                Kq = Si[254] - dq; votes[A_4_u5_1][Kq]++;
+                            }
+                            if( ( jj[1] == 2 ) && ( io2 == 2 ) )
+                            {
+                                Kq = Si[255] - dq; votes[A_4_u5_2][Kq]++;
+                            }
+                        }
+                    }
+                    else if( ( q > 4 ) && ( ( S[4] + 2 ) == q ) &&
+                            ( io2 != 1 ) && ( io2 != 4 ) )
+                    {
+                        Kq = io2 - dq; votes[A_u5_4][Kq]++;
                     }
                 }
             }
-            else if( ( q > 4 ) && ( ( S[4] + 2 ) == q ) &&
-                     ( io2 != 1 ) && ( io2 != 4 ) )
+            
+            if( safe_write( cm_pipe[child][1], votes, sizeof( votes ) ) !=
+               sizeof( votes ) )
             {
-                Kq = io2 - dq; votes[A_u5_4][Kq]++;
+                perror( "in calc_votes: write()" );
+                
+                process = NO;
             }
         }
-    }
-
-    if( safe_write( cm_pipe[child][1], votes, sizeof( votes ) ) !=
-                                              sizeof( votes ) )
-    {
-        perror( "in calc_votes: write()" );
-        return;
-    }
-
-    goto wait_for_master;
+	}
 }
 
 /* routine that tests if a potential key is valid */
--(BOOL) check_wepkey {
+- (BOOL) check_wepkey
+{
     unsigned char K[16];
-    unsigned char S[256];
-    unsigned char R[256];
+    unsigned char S[LAST_BIT];
+    unsigned char R[LAST_BIT];
     unsigned char x1, x2;
-    unsigned long xv;
-    int i, j, n, match;
-
-    match = 0;
+    unsigned long xv = 0;
+    int i, j, n, match = 0;
 
     memcpy( K + 3, wepkey, weplen );
 
-    for( i = 0; i < 256; ++i )
+    for( i = 0; i < LAST_BIT; ++i )
+	{
         R[i] = i;
+	}
 
     for( n = 0; n < 16; ++n )
     {
         xv = 5 * ( rand() % nb_ivs );
 
         memcpy( K, &ivbuf[xv], 3 );
-        memcpy( S, R, 256 );
+        memcpy( S, R, LAST_BIT );
 
-        for( i = j = 0; i < 256; ++i )
+        for( i = j = 0; i < LAST_BIT; ++i )
         {
             j = ( j + S[i] + K[i & (2 + weplen)]) & 0xFF;
             SWAP( S[i], S[j] );
@@ -475,11 +490,11 @@ int cmp_votes( const void *bs1, const void *bs2 )
 
 /* this routine computes the average votes and recurses */
 
-#define VOTESIZE (N_ATTACKS * 256)
-- (BOOL)do_wep_crack:(int) B {
+- (BOOL)do_wep_crack:(int) B
+{
     int child, i, n, *vi;
 
-    for( i = 0; i < 256; ++i )
+    for( i = 0; i < LAST_BIT; ++i )
     {
         wpoll[B][i].index = i;
         wpoll[B][i].votes = 0;
@@ -515,13 +530,13 @@ int cmp_votes( const void *bs1, const void *bs2 )
         vi = (int *) buffer;
 
         for( n = 0; n < N_ATTACKS; ++n )
-            for( i = 0; i < 256; ++i, ++vi )
+            for( i = 0; i < LAST_BIT; ++i, ++vi )
                 _votes[B][n][i] += *vi;
     }
 
     /* compute the average vote and reject the unlikely keybytes */
 
-    for( i = 0; i < 256; ++i )
+    for( i = 0; i < LAST_BIT; ++i )
     {
         for( n = 0; n < N_ATTACKS; ++n )
         {
@@ -539,11 +554,11 @@ int cmp_votes( const void *bs1, const void *bs2 )
 
     /* sort the votes, highest ones first */
 
-    qsort( wpoll[B], 256, sizeof( struct byte_stat ), cmp_votes );
+    qsort( wpoll[B], LAST_BIT, sizeof( struct byte_stat ), cmp_votes );
 
     /* see how far we should go based on the number of votes */
 
-    for( fudge[B] = 1; fudge[B] < 256; fudge[B]++ )
+    for( fudge[B] = 1; fudge[B] < LAST_BIT; fudge[B]++ )
         if( wpoll[B][fudge[B]].votes < wpoll[B][0].votes / ffact )
             break;
 
@@ -565,7 +580,10 @@ int cmp_votes( const void *bs1, const void *bs2 )
             weplen = 5;
 
             if([self check_wepkey])
-                goto keyfound;
+			{
+				key = [NSData dataWithBytes:wepkey length:weplen];
+                return YES;
+			}
 
             weplen = 13;
         }
@@ -577,7 +595,6 @@ int cmp_votes( const void *bs1, const void *bs2 )
             /* last keybyte reached, so check if wepkey is valid */
 
             if ([self check_wepkey] == YES) {
-            keyfound:
                 key = [NSData dataWithBytes:wepkey length:weplen];
                 return YES;
             }
@@ -587,7 +604,8 @@ int cmp_votes( const void *bs1, const void *bs2 )
     return NO;
 }
 
-- (BOOL)attack {
+- (BOOL)attack
+{
     int i;
     
     _im = [WaveHelper importController];
@@ -604,7 +622,8 @@ int cmp_votes( const void *bs1, const void *bs2 )
 
     BOOL ret = [self do_wep_crack:0];
     
-    for( i = 0; i < nfork; ++i) {
+    for( i = 0; i < nfork; ++i)
+	{
         close( mc_pipe[i][1] );
         close( mc_pipe[i][0] );
         close( cm_pipe[i][1] );
@@ -614,7 +633,8 @@ int cmp_votes( const void *bs1, const void *bs2 )
     return ret;
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
     free(ivbuf);
     ivbuf = NULL;
 }

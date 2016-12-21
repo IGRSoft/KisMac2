@@ -1,26 +1,30 @@
 /*
-        
-        File:			80211b.h
-        Program:		KisMAC
-		Author:			Michael Rossberg
-						mick@binaervarianz.de
-		Description:	KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ 
+ File:			80211b.h
+ Program:		KisMAC
+ Author:		Michael Ro§berg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #include "libkern/OSByteOrder.h"
 
@@ -147,7 +151,7 @@ typedef struct _special_set {
     UInt16	wi_port;
     UInt16	wi_beaconint;
     UInt16	wi_ssidlen;
-    char	wi_ssid[256];
+    char	wi_ssid[LAST_BIT];
     char	wi_mac[6];
 } special_set;    
 
@@ -213,6 +217,13 @@ typedef struct _frameLEAP {
 #define	IEEE80211_SUBTYPE_ACTION		OSSwapBigToHostConstInt16(0xd000)
 
 /* control subtypes */
+// These two were defined in 802.11ac
+#define	IEEE80211_SUBTYPE_BEAMFORM_POLL	OSSwapBigToHostConstInt16(0x4000)
+#define	IEEE80211_SUBTYPE_VHT_NDP_ANNOUNCE OSSwapBigToHostConstInt16(0x5000)
+
+// This was defined in 802.11n
+#define	IEEE80211_SUBTYPE_CONTROL_WRAPPER  OSSwapBigToHostConstInt16(0x7000)
+
 #define	IEEE80211_SUBTYPE_BLOCK_ACK_REQ	OSSwapBigToHostConstInt16(0x8000)
 #define	IEEE80211_SUBTYPE_BLOCK_ACK		OSSwapBigToHostConstInt16(0x9000)
 #define	IEEE80211_SUBTYPE_PS_POLL		OSSwapBigToHostConstInt16(0xa000)

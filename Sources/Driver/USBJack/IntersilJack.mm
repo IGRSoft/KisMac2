@@ -199,7 +199,7 @@ IOReturn IntersilJack::_reset() {
 bool IntersilJack::sendKFrame(KFrame *frame) {
     WLFrame *frameDescriptor;
 	UInt8 kmrate;
-    UInt8 aData[2364];
+    UInt8 aData[MAX_FRAME_BYTES];
     IOByteCount pktsize;
     int descriptorLength;
     UInt8 *data = frame->data;
@@ -246,7 +246,8 @@ bool IntersilJack::sendKFrame(KFrame *frame) {
     frameDescriptor = (WLFrame*)aData;
 	kmrate = frame->ctrl.tx_rate;
     descriptorLength = WriteTxDescriptor(frameDescriptor, kmrate);
-    
+    DBNSLog(@"descriptorLength = %d", descriptorLength);
+	
     // Copy header
     memcpy(aData + sizeof(WLPrismHeader), data, headerLength);
     
@@ -268,7 +269,7 @@ bool IntersilJack::sendKFrame(KFrame *frame) {
     return YES;
 }
 
-bool IntersilJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len) {
+bool IntersilJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 /* channel */) {
     unsigned char* pData = (unsigned char *)inBuf;
     WLFrame *head = (WLFrame *)pData;
     KFrame *f = (KFrame *)outBuf;

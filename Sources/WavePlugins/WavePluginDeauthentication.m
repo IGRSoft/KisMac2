@@ -1,10 +1,29 @@
-//
-//  WavePluginDeauthentication.m
-//  KisMAC
-//
-//  Created by pr0gg3d on 27/12/08.
-//  Copyright 2008 __MyCompanyName__. All rights reserved.
-//
+/*
+ 
+ File:			WavePluginDeauthentication.m
+ Program:		KisMAC
+ Author:		pr0gg3d
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #import "WavePluginDeauthentication.h"
 #import "KisMAC80211.h"
@@ -14,16 +33,22 @@
 #import "../Core/80211b.h"
 
 @implementation WavePluginDeauthentication
-- (id) initWithDriver:(WaveDriver *)driver andContainer:(WaveContainer *)container{
+
+- (id) initWithDriver:(WaveDriver *)driver andContainer:(WaveContainer *)container
+{
     self = [super initWithDriver:driver];
     if (!self)
+	{
         return nil;
-    
+    }
+	
     _container = container;
-    return self;
+    
+	return self;
 }
 
-- (bool) startTest: (WaveNet *)net atInterval:(int)interval {
+- (bool) startTest: (WaveNet *)net atInterval:(int)interval
+{
     KFrame kframe;
     struct ieee80211_deauth *deauth = (struct ieee80211_deauth *)(kframe.data);
     
@@ -32,12 +57,15 @@
     unsigned int i;
     
     if ([net type] != networkTypeManaged )
+	{
         return NO;
-    
+    }
     // Check if we have a valid BSSID
     if(sscanf([[net BSSID] UTF8String], "%x:%x:%x:%x:%x:%x", &tmp[0], &tmp[1], &tmp[2], &tmp[3], &tmp[4], &tmp[5]) < 6)
+	{
         return NO;
-    
+    }
+	
     // zeroize frame
     memset(&kframe,0,sizeof(KFrame));
     
@@ -68,33 +96,44 @@
 			 atInterval:interval];
 	
     if (interval != 0)
+	{
         _status = WavePluginRunning;
-    
+    }
+	
     return YES;
 }
-- (WavePluginPacketResponse) gotPacket:(WavePacket *)packet fromDriver:(WaveDriver *)driver {
-    if (_deauthing && [packet toDS]) {
+
+- (WavePluginPacketResponse) gotPacket:(WavePacket *)packet fromDriver:(WaveDriver *)driver
+{
+    if (_deauthing && [packet toDS])
+	{
         if (![_container IDFiltered:[packet rawSenderID]] && ![_container IDFiltered:[packet rawBSSID]])
+		{
             [self deauthenticateClient:[packet rawSenderID]
 					inNetworkWithBSSID:[packet rawBSSID]];
-        
+        }
     }
+	
     return WavePluginPacketResponseContinue; 
 }
 
-- (void) setDeauthingAll:(BOOL)deauthing {
+- (void) setDeauthingAll:(BOOL)deauthing
+{
     DBNSLog(@"DEAUTH ALL %d", deauthing);
     _deauthing = deauthing;
 }
 
-- (bool) deauthenticateClient:(UInt8*)client inNetworkWithBSSID:(UInt8*)bssid {
+- (bool) deauthenticateClient:(UInt8*)client inNetworkWithBSSID:(UInt8*)bssid
+{
     KFrame kframe;
     struct ieee80211_deauth *frame = (struct ieee80211_deauth *)(kframe.data);
     
 	// We need to have valid client and bssid
     if (!client || !bssid)
+	{
         return NO;
-        
+	}
+	
     // Zeroize frame
     memset(&kframe,0,sizeof(frame));
     
@@ -122,13 +161,19 @@
     return YES;
 }
 
-- (bool) stopTest {
+- (bool) stopTest
+{
     bool stop = [super stopTest];
     if (!stop)
+	{
         return NO;
-    _deauthing = FALSE;
+	}
+    
+	_deauthing = FALSE;
     [_driver stopSendingFrames];
     _status = WavePluginIdle;
-    return YES;
+    
+	return YES;
 }
+
 @end

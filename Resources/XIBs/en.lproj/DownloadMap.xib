@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <development version="6300" identifier="xcode"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="DownloadMapController">
+            <connections>
+                <outlet property="_cancelButton" destination="65" id="67"/>
+                <outlet property="_ewButton" destination="59" id="68"/>
+                <outlet property="_height" destination="30" id="69"/>
+                <outlet property="_latitude" destination="46" id="70"/>
+                <outlet property="_longitude" destination="47" id="71"/>
+                <outlet property="_nsButton" destination="57" id="72"/>
+                <outlet property="_okButton" destination="64" id="73"/>
+                <outlet property="_scale" destination="43" id="74"/>
+                <outlet property="_server" destination="8" id="75"/>
+                <outlet property="_width" destination="33" id="76"/>
+                <outlet property="window" destination="6" id="66"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application"/>
+        <window title="Download Map" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="aKisMAC_DownloadMaps" animationBehavior="default" id="6" userLabel="Window">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="141" y="358" width="297" height="282"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1024" height="746"/>
+            <value key="minSize" type="size" width="213" height="107"/>
+            <view key="contentView" id="5">
+                <rect key="frame" x="0.0" y="0.0" width="297" height="282"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <popUpButton verticalHuggingPriority="750" id="8">
+                        <rect key="frame" x="17" y="237" width="263" height="26"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                        <popUpButtonCell key="cell" type="push" title="&lt;Select a Server&gt;" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="12" id="109">
+                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <menu key="menu" title="OtherViews" id="9">
+                                <items>
+                                    <menuItem title="&lt;Select a Server&gt;" state="on" id="12"/>
+                                    <menuItem title="Census Bureau Maps (United States)" id="100"/>
+                                    <menuItem title="Expedia (United States)" id="10"/>
+                                    <menuItem title="Expedia (Europe)" id="103"/>
+                                    <menuItem title="Map24" id="94"/>
+                                    <menuItem title="Street-Directory.com.au" id="104"/>
+                                    <menuItem title="TerraServer (Satellite)" id="101"/>
+                                    <menuItem title="TerraServer (Map)" id="102"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                        <connections>
+                            <action selector="selectOtherServer:" target="-2" id="97"/>
+                            <outlet property="nextKeyView" destination="43" id="105"/>
+                        </connections>
+                    </popUpButton>
+                    <box title="Image Size" id="20">
+                        <rect key="frame" x="120" y="144" width="157" height="90"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <view key="contentView">
+                            <rect key="frame" x="2" y="2" width="153" height="71"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textField verticalHuggingPriority="750" id="28">
+                                    <rect key="frame" x="127" y="44" width="35" height="17"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="110">
+                                        <font key="font" metaFont="system"/>
+                                        <string key="title">px
+</string>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField verticalHuggingPriority="750" id="29">
+                                    <rect key="frame" x="11" y="44" width="114" height="17"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="111">
+                                        <font key="font" metaFont="system"/>
+                                        <string key="title">Height:
+
+</string>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField verticalHuggingPriority="750" id="30">
+                                    <rect key="frame" x="70" y="42" width="52" height="22"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="right" title="1024" drawsBackground="YES" id="112">
+                                        <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="0" negativeFormat="-0" hasThousandSeparators="NO" thousandSeparator="," id="99">
+                                            <attributedString key="attributedStringForZero">
+                                                <fragment content="0"/>
+                                            </attributedString>
+                                            <decimal key="minimum" value="0"/>
+                                            <decimal key="maximum" value="10000"/>
+                                        </numberFormatter>
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                    <connections>
+                                        <outlet property="nextKeyView" destination="33" id="79"/>
+                                    </connections>
+                                </textField>
+                                <textField verticalHuggingPriority="750" id="31">
+                                    <rect key="frame" x="127" y="14" width="35" height="17"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="113">
+                                        <font key="font" metaFont="system"/>
+                                        <string key="title">px
+</string>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField verticalHuggingPriority="750" id="32">
+                                    <rect key="frame" x="11" y="14" width="114" height="17"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="114">
+                                        <font key="font" metaFont="system"/>
+                                        <string key="title">Width:
+
+:
+
+</string>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField verticalHuggingPriority="750" id="33">
+                                    <rect key="frame" x="70" y="12" width="52" height="22"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="right" title="1200" drawsBackground="YES" id="115">
+                                        <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="0" negativeFormat="-0" hasThousandSeparators="NO" thousandSeparator="," id="45">
+                                            <attributedString key="attributedStringForZero">
+                                                <fragment content="0"/>
+                                            </attributedString>
+                                            <decimal key="minimum" value="0"/>
+                                            <decimal key="maximum" value="10000"/>
+                                        </numberFormatter>
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                    <connections>
+                                        <outlet property="nextKeyView" destination="46" id="80"/>
+                                    </connections>
+                                </textField>
+                            </subviews>
+                            <animations/>
+                        </view>
+                        <animations/>
+                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <font key="titleFont" metaFont="cellTitle"/>
+                    </box>
+                    <box title="Center Location" id="35">
+                        <rect key="frame" x="17" y="47" width="260" height="95"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <view key="contentView">
+                            <rect key="frame" x="2" y="2" width="256" height="76"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textField verticalHuggingPriority="750" id="36">
+                                    <rect key="frame" x="6" y="45" width="114" height="17"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="116">
+                                        <font key="font" metaFont="system"/>
+                                        <string key="title">Latitude:
+
+</string>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField verticalHuggingPriority="750" id="37">
+                                    <rect key="frame" x="6" y="15" width="114" height="17"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="117">
+                                        <font key="font" metaFont="system"/>
+                                        <string key="title">Longitude:
+
+:</string>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField verticalHuggingPriority="750" id="46">
+                                    <rect key="frame" x="83" y="43" width="91" height="22"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="right" title="0,000000" drawsBackground="YES" id="118">
+                                        <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="0.000000" negativeFormat="-0.000000" hasThousandSeparators="NO" thousandSeparator="," id="48">
+                                            <attributedString key="attributedStringForZero">
+                                                <fragment content="0,000000"/>
+                                            </attributedString>
+                                            <decimal key="minimum" value="0"/>
+                                            <decimal key="maximum" value="90"/>
+                                        </numberFormatter>
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                    <connections>
+                                        <outlet property="nextKeyView" destination="57" id="81"/>
+                                    </connections>
+                                </textField>
+                                <textField verticalHuggingPriority="750" id="47">
+                                    <rect key="frame" x="83" y="13" width="91" height="22"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="right" title="0,000000" drawsBackground="YES" id="119">
+                                        <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="0.000000" negativeFormat="-0.000000" hasThousandSeparators="NO" thousandSeparator="," id="49">
+                                            <attributedString key="attributedStringForZero">
+                                                <fragment content="0,000000"/>
+                                            </attributedString>
+                                            <decimal key="minimum" value="0"/>
+                                            <decimal key="maximum" value="180"/>
+                                        </numberFormatter>
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                    <connections>
+                                        <outlet property="nextKeyView" destination="59" id="83"/>
+                                    </connections>
+                                </textField>
+                                <popUpButton verticalHuggingPriority="750" id="57">
+                                    <rect key="frame" x="179" y="41" width="69" height="26"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
+                                    <popUpButtonCell key="cell" type="push" title="N" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="53" id="120">
+                                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                        <menu key="menu" title="OtherViews" id="55">
+                                            <items>
+                                                <menuItem title="N" state="on" id="53"/>
+                                                <menuItem title="S" id="56"/>
+                                            </items>
+                                        </menu>
+                                    </popUpButtonCell>
+                                    <connections>
+                                        <outlet property="nextKeyView" destination="47" id="82"/>
+                                    </connections>
+                                </popUpButton>
+                                <popUpButton verticalHuggingPriority="750" id="59">
+                                    <rect key="frame" x="179" y="9" width="69" height="26"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
+                                    <popUpButtonCell key="cell" type="push" title="E" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="61" id="121">
+                                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                        <menu key="menu" title="OtherViews" id="60">
+                                            <items>
+                                                <menuItem title="E" state="on" id="61"/>
+                                                <menuItem title="W" id="58"/>
+                                            </items>
+                                        </menu>
+                                    </popUpButtonCell>
+                                    <connections>
+                                        <outlet property="nextKeyView" destination="65" id="84"/>
+                                    </connections>
+                                </popUpButton>
+                            </subviews>
+                            <animations/>
+                        </view>
+                        <animations/>
+                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <font key="titleFont" metaFont="cellTitle"/>
+                    </box>
+                    <textField verticalHuggingPriority="750" id="38">
+                        <rect key="frame" x="17" y="194" width="107" height="17"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Zoom factor:" id="122">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <popUpButton verticalHuggingPriority="750" id="43">
+                        <rect key="frame" x="39" y="162" width="70" height="26"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                        <popUpButtonCell key="cell" type="push" title="3" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="40" id="123">
+                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <menu key="menu" title="OtherViews" id="41">
+                                <items>
+                                    <menuItem title="1" id="39"/>
+                                    <menuItem title="2" id="42"/>
+                                    <menuItem title="3" state="on" id="40"/>
+                                    <menuItem title="4" id="90"/>
+                                    <menuItem title="5" id="91"/>
+                                    <menuItem title="6" id="106"/>
+                                    <menuItem title="7" id="107"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                        <connections>
+                            <outlet property="nextKeyView" destination="30" id="78"/>
+                        </connections>
+                    </popUpButton>
+                    <button verticalHuggingPriority="750" id="64">
+                        <rect key="frame" x="199" y="12" width="84" height="32"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="124">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="okAction:" target="-2" id="87"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" id="65">
+                        <rect key="frame" x="115" y="12" width="84" height="32"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="125">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="cancelAction:" target="-2" id="88"/>
+                            <outlet property="nextKeyView" destination="64" id="85"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <animations/>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="89"/>
+                <outlet property="initialFirstResponder" destination="8" id="86"/>
+            </connections>
+        </window>
+    </objects>
+</document>

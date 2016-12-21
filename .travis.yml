@@ -1,0 +1,6 @@
+language: objective-c
+osx_image: xcode6.4
+xcode_workspace: KisMac2.xcworkspace
+xcode_scheme: KisMac2
+xcode_sdk: macosx10.10
+before_install: git submodule update --init --recursive

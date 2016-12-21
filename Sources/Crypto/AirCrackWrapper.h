@@ -1,29 +1,30 @@
 /*
-        
-        File:			AirCrackWrapper.h
-        Program:		KisMAC
-	Author:			Michael Rossberg
-				mick@binaervarianz.de
-	Description:		KisMAC is a wireless stumbler for MacOS X.
-                
-        This file is part of KisMAC.
-
-    Most parts of this file are based on aircrack by Christophe Devine.
-
-    KisMAC is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2,
-    as published by the Free Software Foundation;
-
-    KisMAC is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with KisMAC; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
-#import <Cocoa/Cocoa.h>
+ 
+ File:			AirCrackWrapper.h
+ Program:		KisMAC
+ Author:		Michael Roßberg
+                mick@binaervarianz.de
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
+ Description:	KisMAC is a wireless stumbler for MacOS X.
+ 
+ This file is part of KisMAC.
+ 
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
+ KisMAC is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License, version 2,
+ as published by the Free Software Foundation;
+ 
+ KisMAC is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with KisMAC; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #define SWAP(x,y) { unsigned char tmp = x; x = y; y = tmp; }
 
@@ -71,11 +72,11 @@ enum KoreK_attacks
     unsigned char *ivbuf;           /* buffer for the unique IVs    */
     unsigned long nb_ivs;           /* number of elements in ivbuf  */
     unsigned long tried;            /* total # of keys tried so far */
-    int mc_pipe[256][2];            /* master->child control pipe   */ 
-    int cm_pipe[256][2];            /* child->master results pipe   */
+    int mc_pipe[LAST_BIT][2];            /* master->child control pipe   */
+    int cm_pipe[LAST_BIT][2];            /* child->master results pipe   */
     int fudge[13];                  /* bruteforce level (1 to 256)  */
     int depth[13];                  /* how deep we are in the fudge */
-    int _votes[13][N_ATTACKS][256];
+    int _votes[13][N_ATTACKS][LAST_BIT];
 
     ImportController *_im;
     
@@ -83,7 +84,7 @@ enum KoreK_attacks
     {
         int index;
         int votes;
-    }   wpoll[13][256];             /* FMS + Korek attacks: stats.  */
+    }   wpoll[13][LAST_BIT];             /* FMS + Korek attacks: stats.  */
 }
 
 - (void)setKeyID:(int)keyID;

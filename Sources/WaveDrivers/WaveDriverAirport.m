@@ -2,14 +2,19 @@
  
  File:			WaveDriverAirport.m
  Program:		KisMAC
- Author:			Geoffrey Kruse
+ Author:		Geofrey Kruse
+ Changes:       Vitalii Parovishnyk(1012-2015)
+ 
  Description:	KisMAC is a wireless stumbler for MacOS X.
  
  This file is part of KisMAC.
  
+ Most parts of this file are based on aircrack by Christophe Devine.
+ 
  KisMAC is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License, version 2,
  as published by the Free Software Foundation;
+ 
  KisMAC is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -111,7 +116,7 @@ static WaveDriverAirport * staticInstance = nil;
 
 #pragma mark -
 //apple knows best, ask api if wireless is available
-+ (bool) loadBackend
++ (BOOL) loadBackend
 {
     NSSet * availableInterfaces;
     
@@ -120,7 +125,7 @@ static WaveDriverAirport * staticInstance = nil;
     return ([availableInterfaces count] > 0);
 }
 
-+ (bool) unloadBackend
++ (BOOL) unloadBackend
 {
     return YES;
 }
@@ -150,13 +155,13 @@ static WaveDriverAirport * staticInstance = nil;
 	return;
 }
 
-- (bool)joinBSSID:(UInt8*) bssid withPassword:(NSString*)passwd;
+- (BOOL)joinBSSID:(UInt8*) bssid withPassword:(NSString*)passwd;
 {
     CWNetwork * netToJoin;
     NSError * error = nil;
     NSEnumerator * enumerator;
-    bool foundNet = NO;
-    bool success = NO;
+    BOOL foundNet = NO;
+    BOOL success = NO;
 	
     if(nil == networks)
     {
