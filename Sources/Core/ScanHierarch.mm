@@ -42,7 +42,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
 //TODO document this
 
 //creates a new item
-- (id)initWithName:(NSString *)name type:(int)newType parent:(ScanHierarch *)obj 
+- (id)initWithName:(NSString *)name type:(NSInteger)newType parent:(ScanHierarch *)obj 
          container:(WaveContainer*)container identkey:(NSString*)idkey 
 {
     self = [super init];
@@ -58,7 +58,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
     return self;
 }
 
-+ (ScanHierarch *) rootItem:(WaveContainer*)container index:(int)idx
++ (ScanHierarch *) rootItem:(WaveContainer*)container index:(NSInteger)idx
 {
     switch (idx)
     {
@@ -83,11 +83,11 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
 
 - (void) setContainer:(WaveContainer*)container
 {
-    unsigned int i;
+    NSUInteger i;
     
 	_container = container;
     
-    for (i=0;i<[children count];++i)
+    for (i = 0; i < [children count]; ++i)
         [children[i] setContainer:container];
 }
 
@@ -103,10 +103,10 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
 
 - (void)updateKey 
 {
-    int *v, h, i;
-    unsigned int b, d, u;
-    bool found, addedItem;
-    int c[14];
+    NSInteger *v, h, i;
+    NSUInteger b, d, u;
+    BOOL found, addedItem;
+    NSInteger c[14];
     NSString *tmp, *ident;
     NSMutableArray *a;
     WaveNet *n;
@@ -117,9 +117,9 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
     { //channel root item
         for(b=0;b<14;++b) c[b]=0;
         
-        for (u=0; u<[_container count]; ++u)
+        for (u = 0; u < [_container count]; ++u)
         {
-            v=[[_container netAtIndex:u] packetsPerChannel];
+            v = [[_container netAtIndex:u] packetsPerChannel];
             if (v) for(b=0;b<=14;++b) c[b]+=v[b];
         }
         
@@ -137,7 +137,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
                 if (!found)
                 { 
                     // add a new item
-                    tmp=[NSString stringWithFormat:@"%.2i",h];
+                    tmp=[NSString stringWithFormat:@"%.2li",(long)h];
                     [children addObject:[[ScanHierarch alloc] initWithName:tmp type:20+h parent:self
                                                                  container:_container identkey:@""]];
                     addedItem = YES;
@@ -321,17 +321,17 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
     return aIdentKey;
 }
 
-- (int)type 
+- (NSInteger)type 
 {
     return aType;
 }
 
-- (ScanHierarch *)childAtIndex:(int)n
+- (ScanHierarch *)childAtIndex:(NSInteger)n
 {
     return [self children][n];
 }
 
-- (int)numberOfChildren 
+- (NSInteger)numberOfChildren 
 {
     NSArray * tmp = [self children];
     if (tmp == IsALeafNode)
@@ -354,7 +354,7 @@ static ScanHierarch *rootItem3 = nil;	//root item ssids
 
 - (void)deleteKey
 {
-    int d;
+    NSInteger d;
     if (children != IsALeafNode)
         for (d=[children count]-1;d>=0;d--) 
         {

@@ -38,7 +38,7 @@ IOReturn RalinkJack::_init() {
     unsigned long			Index = 0;
 	unsigned short			temp = 0;
 	unsigned char			Value = 0xff;
-	unsigned int			i = 0;
+	NSUInteger			i = 0;
     IOReturn                ret = kIOReturnSuccess;
     
     if(!_attachDevice()){
@@ -194,7 +194,7 @@ IOReturn	RalinkJack::RTUSB_VendorRequest(UInt8 direction,
                         UInt16 wIndex, 
                         void *pData,
                         UInt16 wLength,
-                        bool swap) {
+                        BOOL swap) {
     
     IOReturn ret;
     
@@ -286,7 +286,7 @@ IOReturn	RalinkJack::RTUSBReadBBPRegister(unsigned char Id,
 {
 	PHY_CSR7_STRUC	PhyCsr7;
 	unsigned short			temp;
-	unsigned int			i = 0;
+	NSUInteger			i = 0;
     IOReturn ret;
     
 	PhyCsr7.value				= 0;
@@ -325,7 +325,7 @@ IOReturn	RalinkJack::RTUSBWriteBBPRegister(unsigned char Id,
 {
 	PHY_CSR7_STRUC	PhyCsr7;
 	unsigned short	temp = 0;
-	unsigned int	i = 0;
+	NSUInteger	i = 0;
 
 	do
 	{
@@ -355,7 +355,7 @@ IOReturn	RalinkJack::RTUSBWriteBBPRegister(unsigned char Id,
 IOReturn	RalinkJack::RTUSBWriteRFRegister(unsigned long Value)
 {
 	PHY_CSR10_STRUC	PhyCsr10;
-	unsigned int			i = 0;
+	NSUInteger			i = 0;
     
 	do
 	{
@@ -564,7 +564,7 @@ IOReturn	RalinkJack::RTUSBReadEEPROM(unsigned short Offset,
 void	RalinkJack::NICReadEEPROMParameters()
 {
 	USHORT		i = 0;
-	int			value = 0;
+	NSInteger			value = 0;
     unsigned char PermanentAddress[ETH_LENGTH_OF_ADDRESS] = {0, 0, 0, 0, 0, 0};
 	EEPROM_ANTENNA_STRUC	Antenna;//blue
     //	EEPROM_VERSION_STRUC	Version;
@@ -615,7 +615,7 @@ void	RalinkJack::NICReadEEPROMParameters()
 */	
 	//CountryRegion byte offset = 0x35
 	value = EEPROMDefaultValue[2] >> 8;
-	DBNSLog(@"  CountryRegion= 0x%x \n",value);
+	DBNSLog(@"  CountryRegion= 0x%@ \n", @(value));
 /*
 	if ((value >= 0) && (value <= 7))
 	{
@@ -703,7 +703,7 @@ void RalinkJack::NICInitAsicFromEEPROM()
 			//ID = ((value & 0xff00) >> 8);
 			{
 				unsigned short	temp = 0;
-				unsigned int	j = 0;
+				NSUInteger	j = 0;
 				do
 				{
 					RTUSBReadMACRegister(PHY_CSR8, &temp);
@@ -884,7 +884,7 @@ void RalinkJack::NICInitAsicFromEEPROM()
 	DBNSLog(@"<-- NICInitAsicFromEEPROM\n");
 }
 
-bool RalinkJack::setChannel(UInt16 channel){
+BOOL RalinkJack::setChannel(UInt16 channel){
 	ULONG R3;
 	UCHAR index;
     
@@ -1024,7 +1024,7 @@ bool RalinkJack::setChannel(UInt16 channel){
 	
 }
 
-bool RalinkJack::getAllowedChannels(UInt16* channels) {
+BOOL RalinkJack::getAllowedChannels(UInt16* channels) {
     if (!_devicePresent) return false;
     if (!_deviceInit) return false;
     
@@ -1033,36 +1033,36 @@ bool RalinkJack::getAllowedChannels(UInt16* channels) {
     return true;
 }
 
-bool RalinkJack::startCapture(UInt16 channel) {
+BOOL RalinkJack::startCapture(UInt16 channel) {
     setChannel(channel);
     RTUSBWriteMACRegister(MAC_CSR20, 0x0002); //turn on led
     RTUSBWriteMACRegister(TXRX_CSR2, 0x0046/*0x0046*/); //enable monitor mode?
     return true;   
 }
 
-bool RalinkJack::stopCapture()
+BOOL RalinkJack::stopCapture()
 {
     RTUSBWriteMACRegister(MAC_CSR20, 0x0000); //turn off led
     RTUSBWriteMACRegister(TXRX_CSR2, 0xffff); //disable rx
     return true;
 }
 
-bool RalinkJack::sendKFrame(KFrame *frame) {
+BOOL RalinkJack::sendKFrame(KFrame *frame) {
     UInt8 *data = frame->data;
-    int size = frame->ctrl.len;
+    NSInteger size = frame->ctrl.len;
     UInt8 aData[MAX_FRAME_BYTES];
-    unsigned int descriptorLength;
+    NSUInteger descriptorLength;
     descriptorLength = WriteTxDescriptor(aData, size);
     memcpy(aData+descriptorLength, data, size);
     //send the frame
-    if (_sendFrame(aData, size + descriptorLength) != kIOReturnSuccess)
+    if (_sendFrame(aData, IOByteCount(size + descriptorLength)) != kIOReturnSuccess)
         return NO;
     return YES;
 }
 void    RalinkJack::RTMPDescriptorEndianChange(unsigned char *  pData, unsigned long DescriptorType) {
-    int size = (DescriptorType == TYPE_TXD) ? TXD_SIZE : RXD_SIZE;
-    int i;
-	int _size = size/4;
+    NSInteger size = (DescriptorType == TYPE_TXD) ? TXD_SIZE : RXD_SIZE;
+    NSInteger i;
+	NSInteger _size = size/4;
     for (i=1; i<_size; ++i) {
         /*
          * Handle IV and EIV with little endian
@@ -1081,9 +1081,9 @@ void    RalinkJack::RTMPDescriptorEndianChange(unsigned char *  pData, unsigned 
     *(unsigned long *)pData = SWAP32(*(unsigned long *)pData);  // Word 0; this must be swapped last
 }
 
-int RalinkJack::WriteTxDescriptor(void* theFrame, UInt16 length) {
+NSInteger RalinkJack::WriteTxDescriptor(void* theFrame, UInt16 length) {
     
-    unsigned int Residual;
+    NSUInteger Residual;
     TXD_STRUC *pTxD;
     pTxD = (TXD_STRUC *)theFrame;
     
@@ -1145,7 +1145,7 @@ int RalinkJack::WriteTxDescriptor(void* theFrame, UInt16 length) {
     return sizeof(TXD_STRUC);
 }
 
-bool RalinkJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel){
+BOOL RalinkJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel){
     unsigned char* pData = (unsigned char *)inBuf;
     KFrame *pFrame = (KFrame *)outBuf;
     PRXD_STRUC pRxD;

@@ -159,7 +159,7 @@
 
 - (BOOL)stopScan
 {
-    bool result;
+    BOOL result;
     
 	[self stopActiveAttacks];
     result=[scanner stopScanning];
@@ -374,7 +374,8 @@
 {
     NSParameterAssert(filename);
     filename = [filename standardPath];
-    [self showBusy:@selector(performExportKML:) withArg:filename];
+    SEL performExportKMLSelector = NSSelectorFromString(@"performExportKML:");
+    [self showBusy:performExportKMLSelector withArg:filename];
     if (_asyncFailure)
     {
         [self showExportFailureDialog];
@@ -383,7 +384,7 @@
     return !_asyncFailure;
 }
 
-- (BOOL)downloadMapFrom:(NSString*)server forPoint:(waypoint)w resolution:(NSSize)size zoomLevel:(int)zoom
+- (BOOL)downloadMapFrom:(NSString*)server forPoint:(waypoint)w resolution:(NSSize)size zoomLevel:(NSInteger)zoom
 {
     NSImage *map;
     MapDownload *md;
@@ -513,7 +514,7 @@
 
 - (BOOL)selectNetworkWithBSSID:(NSString*)BSSID
 {
-    int i;
+    NSInteger i;
     
     NSParameterAssert(BSSID);
     
@@ -533,7 +534,7 @@
 {
     NSParameterAssert(index);
     
-    int i = [index intValue];
+    NSInteger i = [index intValue];
     
     if (i < [_container count])
     {
@@ -546,7 +547,7 @@
     return NO;
 }
 
-- (int) networkCount
+- (NSInteger) networkCount
 {
     return [_container count];
 }
@@ -615,7 +616,9 @@ if ([[_curNet cryptedPacketsLog] count] < 8) return NO; \
     [self startCrackDialogWithTitle:NSLocalizedString(@"Bruteforce attack against WEP-40...", "busy dialog")];
     [_importController setMax:LAST_BIT];
     
-    [NSThread detachNewThreadSelector:@selector(performBruteforce40bitAll:) toTarget:_curNet withObject:nil];
+    [NSThread detachNewThreadSelector:@selector(performBruteforce40bitAll:)
+                             toTarget:_curNet
+                           withObject:nil];
     
     return YES;
 }
@@ -627,7 +630,10 @@ if ([[_curNet cryptedPacketsLog] count] < 8) return NO; \
     _crackType = 2;
 	[self startCrackDialogWithTitle:NSLocalizedString(@"Wordlist attack against WEP-Apple40...", "busy dialog")];
     
-    [NSThread detachNewThreadSelector:@selector(performWordlist40bitApple:) toTarget:_curNet withObject:[wordlist standardPath]];
+    SEL performWordlist40bitAppleSelector = NSSelectorFromString(@"performWordlist40bitApple:");
+    [NSThread detachNewThreadSelector:performWordlist40bitAppleSelector
+                             toTarget:_curNet
+                           withObject:[wordlist standardPath]];
     
     return YES;
 }
@@ -639,7 +645,10 @@ if ([[_curNet cryptedPacketsLog] count] < 8) return NO; \
     _crackType = 2;
 	[self startCrackDialogWithTitle:NSLocalizedString(@"Wordlist attack against WEP-Apple104...", "busy dialog")];
     
-    [NSThread detachNewThreadSelector:@selector(performWordlist104bitApple:) toTarget:_curNet withObject:[wordlist standardPath]];
+    SEL performWordlist104bitAppleSelector = NSSelectorFromString(@"performWordlist104bitApple:");
+    [NSThread detachNewThreadSelector:performWordlist104bitAppleSelector
+                             toTarget:_curNet
+                           withObject:[wordlist standardPath]];
     
     return YES;
 }
@@ -651,7 +660,10 @@ if ([[_curNet cryptedPacketsLog] count] < 8) return NO; \
 	_crackType = 2;
     [self startCrackDialogWithTitle:NSLocalizedString(@"Wordlist attack against WEP-MD5...", "busy dialog")];
     
-    [NSThread detachNewThreadSelector:@selector(performWordlist104bitMD5:) toTarget:_curNet withObject:[wordlist standardPath]];
+    SEL performWordlist104bitMD5Selector = NSSelectorFromString(@"performWordlist104bitMD5:");
+    [NSThread detachNewThreadSelector:performWordlist104bitMD5Selector
+                             toTarget:_curNet
+                           withObject:[wordlist standardPath]];
     
     return YES;
 }
@@ -669,7 +681,10 @@ if ([[_curNet cryptedPacketsLog] count] < 8) return NO; \
     _crackType = 3;
     [self startCrackDialogWithTitle:NSLocalizedString(@"Wordlist attack against WPA-PSK...", "busy dialog")];
     
-    [NSThread detachNewThreadSelector:@selector(performWordlistWPA:) toTarget:_curNet withObject:[wordlist standardPath]];
+    SEL performWordlistWPASelector = NSSelectorFromString(@"performWordlistWPA:");
+    [NSThread detachNewThreadSelector:performWordlistWPASelector
+                             toTarget:_curNet
+                           withObject:[wordlist standardPath]];
     
     return YES;
 }
@@ -685,12 +700,15 @@ if ([[_curNet cryptedPacketsLog] count] < 8) return NO; \
     _crackType = 4;
     [self startCrackDialogWithTitle:NSLocalizedString(@"Wordlist attack against LEAP...", "busy dialog")];
     
-    [NSThread detachNewThreadSelector:@selector(performWordlistLEAP:) toTarget:_curNet withObject:[wordlist standardPath]];
+    SEL performWordlistLEAPSelector = NSSelectorFromString(@"performWordlistLEAP:");
+    [NSThread detachNewThreadSelector:performWordlistLEAPSelector
+                             toTarget:_curNet
+                           withObject:[wordlist standardPath]];
     
     return YES;
 }
 
-- (BOOL)weakSchedulingAttackForKeyLen:(int)keyLen andKeyID:(int)keyID
+- (BOOL)weakSchedulingAttackForKeyLen:(NSInteger)keyLen andKeyID:(NSInteger)keyID
 {
     if (_importOpen) return NO;
     if (_curNet==nil) return NO;
@@ -700,12 +718,15 @@ if ([[_curNet cryptedPacketsLog] count] < 8) return NO; \
     if (keyLen != 13 || keyLen != 5 || keyLen != 0xFFFFFF) return NO;
     if (keyID < 0 || keyID > 3) return NO;
     
-    int arg = (keyLen << 8) | keyID;
+    NSInteger arg = (keyLen << 8) | keyID;
     
 	_crackType = 1;
     [self startCrackDialogWithTitle:NSLocalizedString(@"Weak scheduling attack...", "busy dialog") stopScan:NO];
     
-    [NSThread detachNewThreadSelector:@selector(performCrackWEPWeakforKeyIDAndLen:) toTarget:_curNet withObject:@(arg)];
+    SEL performCrackWEPWeakforKeyIDAndLenSelector = NSSelectorFromString(@"performCrackWEPWeakforKeyIDAndLen:");
+    [NSThread detachNewThreadSelector:performCrackWEPWeakforKeyIDAndLenSelector
+                             toTarget:_curNet
+                           withObject:@(arg)];
     
     return YES;
 }

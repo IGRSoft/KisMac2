@@ -517,7 +517,7 @@ NSInteger ss(char* inp, char* outp)
     return x;
 }
 
-- (BOOL)gps_parse:(NSInteger) fd
+- (BOOL)gps_parse:(int)fd
 {
     NSInteger len, valid, x=0;
     static NSInteger q = 0;
@@ -826,7 +826,7 @@ NSInteger ss(char* inp, char* outp)
     return YES;
 }
 
-- (BOOL)gpsd_parse:(NSInteger) fd
+- (BOOL)gpsd_parse:(int) fd
 {
     NSInteger len, valid, numsat, veldir;
     char gpsbuf[MAX_GPSBUF_LEN];
@@ -1078,7 +1078,7 @@ NSInteger ss(char* inp, char* outp)
 
 
 
-- (void)continousParse:(NSInteger) fd
+- (void)continousParse:(int) fd
 {
     NSDate *date;
     NSUInteger i = 0;
@@ -1099,7 +1099,7 @@ NSInteger ss(char* inp, char* outp)
     }
 }
 
-- (void)continousParseGPSd:(NSInteger) fd
+- (void)continousParseGPSd:(int) fd
 {
     NSDate *date;
     NSUInteger i = 0;
@@ -1240,7 +1240,7 @@ NSInteger ss(char* inp, char* outp)
 
 - (void)gpsThreadGPSd:(id)object
 {
-    NSInteger sockd;
+    int sockd;
     struct sockaddr_in serv_name;
     NSInteger status;
     struct hostent *hp;
@@ -1291,7 +1291,7 @@ NSInteger ss(char* inp, char* outp)
                         break;
                     }
                     
-                    ip = *(NSInteger *)hp->h_addr_list[0];
+                    ip = *hp->h_addr_list[0];
                 }
                 
                 /* server address */
@@ -1345,7 +1345,7 @@ NSInteger ss(char* inp, char* outp)
 
 - (void)stop
 {
-    NSInteger fd;
+    int fd;
     _gpsShallRun = NO;
     _gpsdReconnect = NO;
     

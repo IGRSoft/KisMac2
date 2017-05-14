@@ -30,19 +30,19 @@
 {
     NSURL *_url;
     NSDictionary *_postVariables;
-    bool _inProgress;
-    bool _reportErrors;
-    int  _errorCode;
+    BOOL _inProgress;
+    BOOL _reportErrors;
+    NSInteger  _errorCode;
     
     CFReadStreamRef _stream;
 }
 
-- (id)initWithURL:(NSURL*)url andPostVariables:(NSDictionary*)postVariables reportErrors:(bool)reportErrors;
+- (id)initWithURL:(NSURL*)url andPostVariables:(NSDictionary*)postVariables reportErrors:(BOOL)reportErrors;
 
-- (void)setReportErrors:(bool)reportErrors;
-- (bool)setURL:(NSURL*) url;
-- (bool)setPostVariables:(NSDictionary*)postVariables;
-- (bool)execute;
-- (bool)working;
-- (int)errorCode;
+- (void)setReportErrors:(BOOL)reportErrors;
+- (BOOL)setURL:(NSURL*) url;
+- (BOOL)setPostVariables:(NSDictionary*)postVariables;
+- (BOOL)execute;
+- (BOOL)working;
+- (NSInteger)errorCode;
 @end

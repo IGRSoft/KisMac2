@@ -62,7 +62,7 @@
 #pragma mark Test control
 #pragma mark -
 
-- (bool) startTest
+- (BOOL) startTest
 {
     // Checks if test is idle, otherwise return a problem
     if (_status != WavePluginIdle)
@@ -76,7 +76,7 @@
 	return YES;
 }
 
-- (bool) stopTest
+- (BOOL) stopTest
 {
     // Checks if test is running, otherwise ignore
     if (_status != WavePluginRunning)

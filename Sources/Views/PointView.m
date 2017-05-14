@@ -32,13 +32,13 @@
 
 @implementation PointView
 
-- (void)_genCacheForSize:(int)size
+- (void)_genCacheForSize:(NSInteger)size
 {
     NSRect q;
     NSColor *c = [WaveHelper intToColor:[[NSUserDefaults standardUserDefaults] objectForKey:@"CurrentPositionColor"]];
     NSBezierPath *x;
-    float z;
-    int w;
+    CGFloat z;
+    NSInteger w;
     
     if (size < 8) w = size / 2;
     else w = 4;
@@ -48,7 +48,7 @@
     q.origin.y = (_frame.size.height - size) / 2;
     
     for (z=w; z>=-w; z--) {
-        [[c blendedColorWithFraction:(((float)fabsf(z))/w) ofColor:[NSColor clearColor]] set];
+        [[c blendedColorWithFraction:(((CGFloat)fabs(z))/w) ofColor:[NSColor clearColor]] set];
         x=[NSBezierPath bezierPathWithOvalInRect:q];
         [x setLineWidth:1.5];
         [x stroke];
@@ -60,7 +60,7 @@
 }
 
 - (void)setupViewForFrame {
-    float r1=1, r2=10, x1, y1;
+    CGFloat r1=1, r2=10, x1, y1;
     NSAffineTransform *t;
 
     _way1=[NSBezierPath bezierPath];
@@ -115,7 +115,7 @@
 }
 
 - (id)init {
-    int i;
+    NSInteger i;
     self = [super init];
     if (!self) return nil;
     
@@ -161,8 +161,8 @@
 #pragma mark -
 - (void)animationThread:(id)object {
     BOOL e = NO;
-    int scale = 35;
-    int wp = 0;
+    NSInteger scale = 35;
+    NSInteger wp = 0;
     @autoreleasepool {
     
         if([_animLock tryLock]) {

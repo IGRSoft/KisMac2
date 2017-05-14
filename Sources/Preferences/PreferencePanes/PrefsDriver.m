@@ -43,8 +43,8 @@
 - (void)updateDrivers
 {
     NSArray *drivers;
-    int i = 0;
-    unsigned int j;
+    NSInteger i = 0;
+    NSUInteger j;
     NSString *s;
     Class c;
     
@@ -80,7 +80,7 @@
 - (Class) getCurrentDriver
 {
     NSDictionary *d;
-    int i = [_driverTable selectedRow];
+    NSInteger i = [_driverTable selectedRow];
     
     if (i < 0)
         return Nil;
@@ -91,7 +91,7 @@
 
 - (NSDictionary*) getCurrentSettings
 {
-    int i = [_driverTable selectedRow];
+    NSInteger i = [_driverTable selectedRow];
     
     if ( i < 0 ) return nil;
     
@@ -100,14 +100,14 @@
 
 - (void) updateSettings
 {
-    bool enableAll = NO;
-    bool enableChannel = NO;
-    bool enableInjection = NO;
-    bool enableDumping = NO;
-    bool enableIPAndPort = NO;
+    BOOL enableAll = NO;
+    BOOL enableChannel = NO;
+    BOOL enableInjection = NO;
+    BOOL enableDumping = NO;
+    BOOL enableIPAndPort = NO;
     Class driverClass;
     NSDictionary *d = nil;
-    unsigned int x, y;
+    NSUInteger x, y;
     
     [_frequence setFloatValue:[[controller objectForKey:@"frequence"] floatValue]];
     
@@ -238,7 +238,7 @@
     NSMutableArray *a;
     WaveDriver *wd;
     NSInteger i = [_driverTable selectedRow];
-    unsigned int x, y;
+    NSUInteger x, y;
     
     [controller setObject:@([_frequence     floatValue])    forKey:@"frequence"];
     if (i < 0)
@@ -328,12 +328,12 @@
 
 #pragma mark -
 
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
     return [[controller objectForKey:@"ActiveDrivers"] count];
 }
 
-- (id) tableView:(NSTableView *) aTableView objectValueForTableColumn:(NSTableColumn *) aTableColumn row:(int) rowIndex
+- (id) tableView:(NSTableView *) aTableView objectValueForTableColumn:(NSTableColumn *) aTableColumn row:(NSInteger) rowIndex
 {
     return [NSClassFromString([controller objectForKey:@"ActiveDrivers"][rowIndex][@"driverID"]) description];
 }
@@ -343,7 +343,7 @@
     [self updateSettings];
 }
 
-- (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(int)row
+- (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row
 {
     return [self updateInternalSettings:YES];
 }
@@ -440,7 +440,7 @@ static NSSet *GetValid5GHzChannels()
 
 - (IBAction)selRemoveDriver:(id)sender
 {
-    int i;
+    NSInteger i;
     NSMutableArray *drivers;
     
     i = [_driverTable selectedRow];

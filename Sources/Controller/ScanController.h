@@ -27,6 +27,8 @@
  */
 
 
+#import <IOKit/IOKitLib.h>
+
 typedef NS_ENUM(NSInteger, __availableTabs)
 {
     tabInvalid = -1,
@@ -51,23 +53,21 @@ typedef NS_ENUM(NSInteger, __availableTabs)
 @class GPSInfoController;
 @class DownloadMapController;
 
-io_connect_t  root_port;    // a reference to the Root Power Domain IOService
-
 //This is the main class. it basically provides an interface between the base and the gui
 @interface ScanController : NSObject
 {
     NSString            *_fileName;             //filename for the currently open capture
     WaveNet             *_curNet;               //the currently selected network
-    int                 _selectedRow;
+    NSInteger           _selectedRow;
     __availableTabs     _visibleTab;            //which tab visible?
-    bool                aNetHierarchVisible;
-    bool                aOurDriver;             //did we load the driver?
-    bool                _scanning;              //are we scanning?
-    bool                _detailsPaneVisibile;   //is the details drawer visible
-    bool                _doModal;
-    bool                _refreshGUI;
-    bool                _saveFilteredOnly;
-	bool				_refreshGPS;			// Does GPS need refresh?
+    BOOL                aNetHierarchVisible;
+    BOOL                aOurDriver;             //did we load the driver?
+    BOOL                _scanning;              //are we scanning?
+    BOOL                _detailsPaneVisibile;   //is the details drawer visible
+    BOOL                _doModal;
+    BOOL                _refreshGUI;
+    BOOL                _saveFilteredOnly;
+	BOOL				_refreshGPS;			// Does GPS need refresh?
     
     NSRect              _zoomToRect;
     
@@ -76,18 +76,18 @@ io_connect_t  root_port;    // a reference to the Root Power Domain IOService
     NSModalSession      aMS;
     NSOpenPanel         *aOP;
     NSString            *_whichDriver;
-    int                 _activeDriversCount;
+    NSInteger           _activeDriversCount;
     
     NSString            *_lastSorted;           //name of the last sorted column
-    bool                _ascending;             //are we sorting in ascending mode?
+    BOOL                _ascending;             //are we sorting in ascending mode?
     
     ImportController    *_importController;
-    int                 _importOpen;
+    NSInteger           _importOpen;
     NSDrawer            *_detailsDrawer;			//the details drawer
 
-    int _crackType;				//weak or bruteforce, just to show the right error message
+    NSInteger _crackType;				//weak or bruteforce, just to show the right error message
     SEL _busyFunction;
-    bool _asyncFailure;
+    BOOL _asyncFailure;
 	NSString *_lastError;
     NSString *_activeAttackNetID;
 	NSOperationQueue *queue;

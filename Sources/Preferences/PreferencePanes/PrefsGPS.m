@@ -98,7 +98,7 @@
     io_iterator_t serialIterator;
     io_object_t sdev;
     NSMutableArray *a = [NSMutableArray array];
-    bool found;
+    BOOL found;
     
     [aGPSSel removeAllItems];
     [_tripmateMode setState: [[controller objectForKey:@"GPSTripmate"] boolValue] ? NSOnState : NSOffState];
@@ -203,11 +203,11 @@
     [_gpsdPort validateEditing];
     [_gpsdHost validateEditing];
     
-    [controller setObject:[NSNumber numberWithInt:[_noFix indexOfSelectedItem]]
+    [controller setObject:@([_noFix indexOfSelectedItem])
                    forKey:@"GPSNoFix"];
-    [controller setObject:[NSNumber numberWithInt:[_traceOp indexOfSelectedItem]]
+    [controller setObject:@([_traceOp indexOfSelectedItem])
                    forKey:@"GPSTrace"];
-    [controller setObject:[NSNumber numberWithBool:[_tripmateMode state]==NSOnState]
+    [controller setObject:@([_tripmateMode state] == NSOnState)
                    forKey:@"GPSTripmate"];
     [controller setObject:@([_gpsdPort intValue])
                    forKey:@"GPSDaemonPort"];
@@ -227,11 +227,11 @@
     }
     else if (sender == _noFix)
     {
-        [controller setObject:[NSNumber numberWithInt:[_noFix indexOfSelectedItem]] forKey:@"GPSNoFix"];
+        [controller setObject:@([_noFix indexOfSelectedItem]) forKey:@"GPSNoFix"];
     }
     else if (sender == _traceOp)
     {
-        [controller setObject:[NSNumber numberWithInt:[_traceOp indexOfSelectedItem]] forKey:@"GPSTrace"];
+        [controller setObject:@([_traceOp indexOfSelectedItem]) forKey:@"GPSTrace"];
     }
     else if (sender == _tripmateMode)
     {

@@ -75,7 +75,7 @@ struct pointCoords {
 }
 
 - (BOOL)addTrace:(NSMutableArray*)trace {
-	int i, j;
+	NSInteger i, j;
 	id obj;
 	BIValuePair *vp;
 	const struct pointCoords *pL;
@@ -119,9 +119,9 @@ struct pointCoords {
 	struct pointCoords *pL;
 	NSArray *subtrace;
 	NSMutableArray *a;
-	int i, j;
+	NSInteger i, j;
 	NSMutableData *coord;
-	unsigned int c = [_trace count];
+	NSUInteger c = [_trace count];
 	
 	if (c == 0) return nil;
 	
@@ -151,7 +151,7 @@ struct pointCoords {
     MapView *m;
     NSBezierPath *b;
     NSPoint p2;
-    int i, j;
+    NSInteger i, j;
     NSArray *tour;
     NSColor *color = [WaveHelper intToColor:[[NSUserDefaults standardUserDefaults] objectForKey:@"TraceColor"]];
     NSAffineTransform *t;

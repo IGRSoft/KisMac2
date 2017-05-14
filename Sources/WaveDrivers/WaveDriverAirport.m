@@ -28,7 +28,7 @@
 #import "WaveDriverAirport.h"
 #import "WaveHelper.h"
 
-static int AirPortInstances = 0;
+static NSInteger AirPortInstances = 0;
 static WaveDriverAirport * staticInstance = nil;
 
 @implementation WaveDriverAirport
@@ -82,7 +82,7 @@ static WaveDriverAirport * staticInstance = nil;
     return staticInstance;
 }
 
-+(int) airportInstanceCount
++(NSInteger) airportInstanceCount
 {
     return AirPortInstances;
 }
@@ -178,7 +178,7 @@ static WaveDriverAirport * staticInstance = nil;
 			for (NSUInteger i = 0; i < 6; ++i) {
 				NSString* part = [macString substringWithRange:NSMakeRange(i * 3, 2)];
 				NSScanner* scanner = [NSScanner scannerWithString:part];
-				unsigned int data = 0;
+				unsigned data = 0;
 				if (![scanner scanHexInt:&data]) {
 					data = 0;
 				}

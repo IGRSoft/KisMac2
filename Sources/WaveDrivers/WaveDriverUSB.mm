@@ -202,8 +202,8 @@
 		SEL selector = NSSelectorFromString(sel);
 		id target = d[@"target"];
 		NSThread *thr = d[@"thread"];
-		int howMany = [howM intValue];
-		DBNSLog(@"doInj HowMany %d", howMany);
+		NSInteger howMany = [howM intValue];
+		DBNSLog(@"doInj HowMany %@", @(howMany));
 		if (howMany == -1) {
 			while(_transmitting) {
 				_driver->sendKFrame(f);
@@ -222,7 +222,7 @@
 	}
 }
 
--(BOOL) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval notifyTarget:(id)target notifySelectorString:(NSString *)selector {
+-(BOOL) sendKFrame:(KFrame *)f howMany:(NSInteger)howMany atInterval:(NSInteger)interval notifyTarget:(id)target notifySelectorString:(NSString *)selector {
     NSThread *thr = [NSThread currentThread];
     if (howMany != 0) {
         NSData *data = [NSData dataWithBytes:f length:sizeof(KFrame)];
@@ -230,7 +230,7 @@
         NSDictionary *d = [[NSDictionary alloc] initWithObjectsAndKeys: data, @"data", howM, @"howMany", thr, @"thread", target, @"target", selector, @"selector", nil];
         [self stopSendingFrames];
         _transmitting = YES;
-        _interval = (float)interval / 1000.0;
+        _interval = (CGFloat)interval / 1000.0;
         [NSThread detachNewThreadSelector:@selector(doInjection:) toTarget:self withObject:d];
     } else {
         _driver->sendKFrame(f);
@@ -245,7 +245,7 @@
     return YES;
 }
 
--(BOOL) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval {
+-(BOOL) sendKFrame:(KFrame *)f howMany:(NSInteger)howMany atInterval:(NSInteger)interval {
     return [self sendKFrame:f howMany:howMany atInterval:interval notifyTarget:nil notifySelectorString:nil];
 }
 -(BOOL) stopSendingFrames {

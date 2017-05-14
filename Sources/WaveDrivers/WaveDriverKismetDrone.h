@@ -119,33 +119,33 @@ typedef NS_ENUM(NSInteger, encoding_type)
 
 struct packet_parm
 {
-    int fuzzy_crypt;
-	int fuzzy_decode;
+    NSInteger fuzzy_crypt;
+	NSInteger fuzzy_decode;
 };
 
 typedef struct kis_packet
 {
-    unsigned int len;		// The amount of data we've actually got
-    unsigned int caplen;	// The amount of data originally captured
+    NSUInteger len;		// The amount of data we've actually got
+    NSUInteger caplen;	// The amount of data originally captured
     struct timeval ts;          // Capture timestamp
-    int quality;                // Signal quality
-    int signal;                 // Signal strength
-    int noise;                  // Noise level
-    int error;                  // Capture source told us this was a bad packet
-    int channel;                // Hardware receive channel, if the drivers tell us
-    int modified;               // Has moddata been populated?
+    NSInteger quality;                // Signal quality
+    NSInteger signal;                 // Signal strength
+    NSInteger noise;                  // Noise level
+    NSInteger error;                  // Capture source told us this was a bad packet
+    NSInteger channel;                // Hardware receive channel, if the drivers tell us
+    NSInteger modified;               // Has moddata been populated?
     uint8_t *data;              // Raw packet data
     uint8_t *moddata;           // Modified packet data
     char sourcename[32];        // Name of the source that generated the data
 	carrier_type carrier;       // Signal carrier
 	encoding_type encoding;     // Signal encoding
-    int datarate;               // Data rate in units of 100 kbps
-    float gps_lat;              // GPS coordinates
-    float gps_lon;
-    float gps_alt;
-    float gps_spd;
-    float gps_heading;
-    int gps_fix;
+    NSInteger datarate;               // Data rate in units of 100 kbps
+    CGFloat gps_lat;              // GPS coordinates
+    CGFloat gps_lon;
+    CGFloat gps_alt;
+    CGFloat gps_spd;
+    CGFloat gps_heading;
+    NSInteger gps_fix;
     struct packet_parm parm;           // Parameters from the packet source that trickle down
 } kismet_packet;
 
@@ -235,18 +235,18 @@ typedef NS_ENUM(NSUInteger, protocol_info_type)
 
 typedef struct
 {
-    unsigned int : 8 __attribute__ ((packed));
-    unsigned int : 8 __attribute__ ((packed));
+    NSUInteger : 8 __attribute__ ((packed));
+    NSUInteger : 8 __attribute__ ((packed));
 
-    unsigned int : 8 __attribute__ ((packed));
-    unsigned int : 1 __attribute__ ((packed));
-    unsigned int level1 : 1 __attribute__ ((packed));
-    unsigned int igmp_forward : 1 __attribute__ ((packed));
-    unsigned int nlp : 1 __attribute__ ((packed));
-    unsigned int level2_switching : 1 __attribute__ ((packed));
-    unsigned int level2_sourceroute : 1 __attribute__ ((packed));
-    unsigned int level2_transparent : 1 __attribute__ ((packed));
-    unsigned int level3 : 1 __attribute__ ((packed));
+    NSUInteger : 8 __attribute__ ((packed));
+    NSUInteger : 1 __attribute__ ((packed));
+    NSUInteger level1 : 1 __attribute__ ((packed));
+    NSUInteger igmp_forward : 1 __attribute__ ((packed));
+    NSUInteger nlp : 1 __attribute__ ((packed));
+    NSUInteger level2_switching : 1 __attribute__ ((packed));
+    NSUInteger level2_sourceroute : 1 __attribute__ ((packed));
+    NSUInteger level2_transparent : 1 __attribute__ ((packed));
+    NSUInteger level3 : 1 __attribute__ ((packed));
 } cdp_capabilities;
 
 #if BYTE_ORDER == BIG_ENDIAN
@@ -271,7 +271,7 @@ typedef struct
     uint8_t timestamp[8];
 
     // This field must be converted to host-endian before being used
-    unsigned int beacon : 16 __attribute__ ((packed));
+    NSUInteger beacon : 16 __attribute__ ((packed));
 
     unsigned short agility : 1 __attribute__ ((packed));
     unsigned short pbcc : 1 __attribute__ ((packed));
@@ -283,7 +283,7 @@ typedef struct
     unsigned short ibss : 1 __attribute__ ((packed));
     unsigned short ess : 1 __attribute__ ((packed));
 
-    unsigned int coordinator : 8 __attribute__ ((packed));
+    NSUInteger coordinator : 8 __attribute__ ((packed));
 
 } fixed_parameters;
 
@@ -310,7 +310,7 @@ typedef struct
     uint8_t timestamp[8];
 
     // This field must be converted to host-endian before being used
-    unsigned int beacon : 16 __attribute__ ((packed));
+    NSUInteger beacon : 16 __attribute__ ((packed));
 
     unsigned short ess : 1 __attribute__ ((packed));
     unsigned short ibss : 1 __attribute__ ((packed));
@@ -322,7 +322,7 @@ typedef struct
     unsigned short pbcc : 1 __attribute__ ((packed));
     unsigned short agility : 1 __attribute__ ((packed));
 
-    unsigned int coordinator : 8 __attribute__ ((packed));
+    NSUInteger coordinator : 8 __attribute__ ((packed));
 } fixed_parameters;
 #endif
 
@@ -355,7 +355,7 @@ typedef struct
     cdp_packet cdp;
     char netbios_source[17];
     protocol_netbios_type nbtype;
-    int prototype_extra;
+    NSInteger prototype_extra;
 } proto_info;
 
 typedef NS_ENUM(NSUInteger, turbocell_type)
@@ -371,44 +371,44 @@ typedef struct {
     packet_type type;
     packet_sub_type subtype;
     uint16_t qos; 
-    int corrupt;
-    int reason_code;
+    NSInteger corrupt;
+    NSInteger reason_code;
     struct timeval ts;
-    int quality;
-    int signal;
-    int noise;
+    NSInteger quality;
+    NSInteger signal;
+    NSInteger noise;
     char ssid[SSID_SIZE+1];
-    int ssid_len;
+    NSInteger ssid_len;
     char sourcename[32];
     distribution_type distrib;
-	int crypt_set;
-    int fuzzy;
-    int ess;
-    int channel;
-    int encrypted;
-    int decoded;
-    int interesting;
+	NSInteger crypt_set;
+    NSInteger fuzzy;
+    NSInteger ess;
+    NSInteger channel;
+    NSInteger encrypted;
+    NSInteger decoded;
+    NSInteger interesting;
     carrier_type carrier;
     encoding_type encoding;
-    int datarate;
+    NSInteger datarate;
     mac_addr source_mac;
     mac_addr dest_mac;
     mac_addr bssid_mac;
-    int beacon;
+    NSInteger beacon;
     char beacon_info[SSID_SIZE+1];
-    unsigned int header_offset;
+    NSUInteger header_offset;
     proto_info proto;
     double maxrate;
     uint64_t timestamp;
-    int sequence_number;
-    int frag_number;
-    int duration;
-    int datasize;
-    int turbocell_nid;
+    NSInteger sequence_number;
+    NSInteger frag_number;
+    NSInteger duration;
+    NSInteger datasize;
+    NSInteger turbocell_nid;
     turbocell_type turbocell_mode;
-    int turbocell_sat;
-    float gps_lat, gps_lon, gps_alt, gps_spd, gps_heading;
-    int gps_fix;
+    NSInteger turbocell_sat;
+    CGFloat gps_lat, gps_lon, gps_alt, gps_spd, gps_heading;
+    NSInteger gps_fix;
     uint32_t ivset;
 } packet_info;
 
@@ -416,10 +416,10 @@ typedef struct {
 {
     struct sockaddr_in drone_sock, local_sock;
 	int drone_fd;
-	int valid;
-    int resyncs;	
-    unsigned int resyncing;
-    unsigned int stream_recv_bytes;
+	NSInteger valid;
+    NSInteger resyncs;	
+    NSUInteger resyncing;
+    NSUInteger stream_recv_bytes;
 	struct stream_frame_header fhdr;
 	struct stream_version_packet vpkt;
 	struct stream_packet_header phdr;

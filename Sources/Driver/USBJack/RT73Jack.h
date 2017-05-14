@@ -135,7 +135,7 @@ public:
     
     IOReturn    RTUSBWriteMACRegister(
                                       unsigned short	Offset,
-                                      unsigned long	Value);
+                                      uint32_t	Value);
     
     IOReturn	RTUSBReadMACRegister(
                                      USHORT	Offset,
@@ -150,7 +150,7 @@ public:
                                       unsigned char	Value);
     
     IOReturn	RTUSBWriteRFRegister(
-                                     unsigned long	Value);
+                                     uint32_t	Value);
     
     IOReturn	RTUSBReadEEPROM(
                                 unsigned short	Offset,
@@ -167,57 +167,57 @@ public:
     void	NICReadEEPROMParameters();
     void	NICInitAsicFromEEPROM();
     
-    bool setChannel(UInt16 channel);
-    bool getAllowedChannels(UInt16* channels);
-    bool startCapture(UInt16 channel);
-    bool stopCapture();
+    BOOL setChannel(UInt16 channel);
+    BOOL getAllowedChannels(UInt16* channels);
+    BOOL startCapture(UInt16 channel);
+    BOOL stopCapture();
     
-    bool _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);
+    BOOL _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);
 
-    int         WriteTxDescriptor(void* theFrame, UInt16 length, UInt8 rate);
-    bool        sendKFrame(KFrame *frame);
+    NSInteger         WriteTxDescriptor(void* theFrame, UInt16 length, UInt8 rate);
+    BOOL        sendKFrame(KFrame *frame);
     IOReturn    _sendFrame(UInt8* data, IOByteCount size);
     
     void RTMPDescriptorEndianChange(unsigned char *  pData, unsigned long DescriptorType);
-    void WriteBackToDescriptor(unsigned char *Dest, unsigned char *Src, bool DoEncrypt, unsigned long DescriptorType);
+    void WriteBackToDescriptor(unsigned char *Dest, unsigned char *Src, BOOL DoEncrypt, unsigned long DescriptorType);
     void   RTUSBWriteTxDescriptor(
             void *pptxd,
             unsigned char CipherAlg,
             unsigned char KeyTable,
             unsigned char KeyIdx,
-            bool Ack,
-            bool Fragment,
-            bool InsTimestamp,
+            BOOL Ack,
+            BOOL Fragment,
+            BOOL InsTimestamp,
             unsigned char RetryMode,
             unsigned char Ifs,
-            unsigned int Rate,
-            unsigned long Length,
+            NSUInteger Rate,
+            uint32_t Length,
             unsigned char QueIdx,
             unsigned char PID,
-            bool bAfterRTSCTS);
+            BOOL bAfterRTSCTS);
     UInt32 currentRate;
 
 private:
         
-        //    int temp;
+        //    NSInteger temp;
         //    unsigned short	EEPROMDefaultValue[NUM_EEPROM_BBP_PARMS];
         //    unsigned short	EEPROMBBPTuningParameters[NUM_EEPROM_BBP_TUNING_PARMS];
         //    RT73_BBP_TUNING_PARAMETERS_STRUC	RT73_BBPTuningParameters;
         //    unsigned char	RfType;
         
-        bool	NICInitialized;
+        BOOL	NICInitialized;
     
     unsigned char	PermanentAddress[ETH_LENGTH_OF_ADDRESS];
 	CHANNEL_TX_POWER	TxPower[MAX_NUM_OF_CHANNELS];	// Store Tx power value for all channels.
 	unsigned long	EepromVersion;	// byte 0: version, byte 1: revision, byte 2~3: unused
 	unsigned short	EEPROMDefaultValue[NUM_EEPROM_BBP_PARMS];
-	bool 	bAutoTxAgcA;				// Enable driver auto Tx Agc control
+	BOOL 	bAutoTxAgcA;				// Enable driver auto Tx Agc control
 	unsigned char		TssiRefA;					// Store Tssi reference value as 25 tempature.	
 	unsigned char		TssiPlusBoundaryA[5];		// Tssi boundary for increase Tx power to compensate.
 	unsigned char		TssiMinusBoundaryA[5];		// Tssi boundary for decrease Tx power to compensate.
 	unsigned char		TxAgcStepA;					// Store Tx TSSI delta increment / decrement value
 	char		TxAgcCompensateA;			// Store the compensation (TxAgcStep * (idx-1))
-	bool 	bAutoTxAgcG;				// Enable driver auto Tx Agc control
+	BOOL 	bAutoTxAgcG;				// Enable driver auto Tx Agc control
 	unsigned char		TssiRefG;					// Store Tssi reference value as 25 tempature.	
 	unsigned char		TssiPlusBoundaryG[5];		// Tssi boundary for increase Tx power to compensate.
 	unsigned char		TssiMinusBoundaryG[5];		// Tssi boundary for decrease Tx power to compensate.

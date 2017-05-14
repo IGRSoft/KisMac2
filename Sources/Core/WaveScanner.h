@@ -91,7 +91,7 @@
 - (NSString *)tryToInject:(WaveNet *)net;
 - (void) setDeauthingAll:(BOOL)deauthing;
 - (BOOL) authFloodNetwork:(WaveNet *)net;
-- (BOOL) deauthenticateNetwork:(WaveNet *)net atInterval:(int)interval;
+- (BOOL) deauthenticateNetwork:(WaveNet *)net atInterval:(NSInteger)interval;
 - (BOOL) beaconFlood;
 - (BOOL) stopSendingFrames;
 - (BOOL) injectionTest: (WaveNet *)net withClient: (WaveClient *)client;

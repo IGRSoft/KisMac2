@@ -69,7 +69,7 @@ typedef NS_ENUM(NSUInteger, selmode)
     NSPoint             _old;
     NSPoint             _point[3];
     NSPoint             _center;
-    float               _zoomFact;
+    CGFloat               _zoomFact;
     
     selmode             _selmode;
     
@@ -87,7 +87,7 @@ typedef NS_ENUM(NSUInteger, selmode)
 
 - (BOOL)setMap:(NSImage*)map;
 - (BOOL)hasValidMap;
-- (BOOL)setWaypoint:(int)which toPoint:(NSPoint)point atCoordinate:(waypoint)coord;
+- (BOOL)setWaypoint:(NSInteger)which toPoint:(NSPoint)point atCoordinate:(waypoint)coord;
 - (void)setVisible:(BOOL)visible;
 - (BOOL)setCurrentPostionToLatitude:(double)lat andLongitude:(double)lon;
 

@@ -38,7 +38,7 @@
     [aProgressBar startAnimation:self];
 }
 
--(void)setMax:(float)max 
+-(void)setMax:(CGFloat)max 
 {
     [aProgressBar setIndeterminate:NO];
     [aProgressBar setMinValue:0.0];
@@ -57,7 +57,7 @@
     [aProgressBar stopAnimation: self];
 }
 
-- (bool)canceled {
+- (BOOL)canceled {
     return _canceled;
 }
 
@@ -75,7 +75,7 @@
     [aCancel setEnabled:NO];
 }
 
-- (void)terminateWithCode:(int)code {
+- (void)terminateWithCode:(NSInteger)code {
     [[[self window] sheetParent] endSheet:[self window] returnCode:code];
 }
 
@@ -83,7 +83,7 @@
     _isFullyInititialized = YES;
 }
 
-- (void)closeWindow:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo 
+- (void)closeWindow:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo 
 {
     [aProgressBar stopAnimation: self];
     [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.3]];

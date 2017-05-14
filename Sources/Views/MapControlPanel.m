@@ -40,7 +40,7 @@
 @implementation MapControlPanel
 
 - (id)init {
-    int i, x, y;
+    NSInteger i, x, y;
     self = [super init];
     if (!self) return nil;
     
@@ -57,7 +57,7 @@
 }
 
 - (void)setRestrictedMode:(BOOL)restricedMode {
-    int x, y;
+    NSInteger x, y;
 	NSPoint p;
 	p = [self location];
 	
@@ -90,8 +90,8 @@
 	}
 }
 
-- (int)itemAtPoint:(NSPoint)p {
-    int x, y, i;
+- (NSInteger)itemAtPoint:(NSPoint)p {
+    NSInteger x, y, i;
     p.x -= _frame.origin.x;
     p.y -= _frame.origin.y;
         
@@ -114,12 +114,12 @@
 }
 
 - (void)mouseMovedToPoint:(NSPoint)p {
-	int i = [self itemAtPoint:p];
+	NSInteger i = [self itemAtPoint:p];
 	[_items[i] mouseEntered:_frame.origin];
 }
 
 - (void)mouseDownAtPoint:(NSPoint)p {
-	int i = [self itemAtPoint:p];
+	NSInteger i = [self itemAtPoint:p];
 	[_items[i] mouseClicked:_frame.origin];
     
     switch(i) {
@@ -145,7 +145,7 @@
 }
 
 - (void)slide:(BOOL)visible {
-	int i;
+	NSInteger i;
 
 	if (_restrictedMode) {
 		[_items[3] slide:visible forParentLocation:_frame.origin];

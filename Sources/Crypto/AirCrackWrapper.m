@@ -33,7 +33,7 @@
 #include <sys/sysctl.h>
 
 #import <unistd.h>
-int coeff_attacks[4][N_ATTACKS] =
+NSInteger coeff_attacks[4][N_ATTACKS] =
 {
     { 15, 13, 12, 12, 12, 5, 5, 5, 3, 4, 3, 4, 3, 13, 4, 4, 0 },
     { 15, 13, 12, 12, 12, 5, 5, 5, 0, 0, 0, 0, 3, 13, 4, 4, 0 },
@@ -45,9 +45,9 @@ int coeff_attacks[4][N_ATTACKS] =
 @implementation AirCrackWrapper
 
 /* safe I/O routines */
-int safe_read( int fd, void *buf, size_t len )
+NSInteger safe_read( int fd, void *buf, size_t len )
 {
-    int n;
+    NSInteger n;
     size_t sum = 0;
     char  *off = (char *) buf;
 
@@ -66,9 +66,9 @@ int safe_read( int fd, void *buf, size_t len )
     return( sum );
 }
 
-int safe_write( int fd, void *buf, size_t len )
+NSInteger safe_write( int fd, void *buf, size_t len )
 {
-    int n;
+    NSInteger n;
     size_t sum = 0;
     char  *off = (char *) buf;
 
@@ -103,7 +103,7 @@ int safe_write( int fd, void *buf, size_t len )
     nfork  =  1;										/* number of forks      */
 
     //find number of processors and setup the same number of cracking threads
-    int value;
+    NSInteger value;
     size_t valSize = sizeof(value);
     if (sysctlbyname ("hw.activecpu", &value, &valSize, NULL, 0) == 0){
         nfork  =  value;        
@@ -118,12 +118,12 @@ int safe_write( int fd, void *buf, size_t len )
     return self;
 }
 
-- (void)setKeyID:(int)keyID
+- (void)setKeyID:(NSInteger)keyID
 {
     keyid = keyID;
 }
 
-- (void)setKeyLen:(int)keyLen
+- (void)setKeyLen:(NSInteger)keyLen
 {
     weplen = keyLen;
 }
@@ -157,8 +157,8 @@ int safe_write( int fd, void *buf, size_t len )
     unsigned char S1, S2, J2, t2;
     unsigned char buf[14];    /* buffer for reading packets   */
    
-    int child = [c intValue];
-    int i, j, B, votes[N_ATTACKS][256];
+    NSInteger child = [c intValue];
+    NSInteger i, j, B, votes[N_ATTACKS][256];
 
     min = 5 * ( ( (     child ) * nb_ivs ) / nfork );
     max = 5 * ( ( ( 1 + child ) * nb_ivs ) / nfork );
@@ -179,7 +179,7 @@ int safe_write( int fd, void *buf, size_t len )
 		
         if (process)
         {
-            B = (int) buf[0];
+            B = (NSInteger) buf[0];
             q = 3 + B;
             
             memcpy( K + 3, buf + 1, 13 );
@@ -434,7 +434,7 @@ int safe_write( int fd, void *buf, size_t len )
     unsigned char R[LAST_BIT];
     unsigned char x1, x2;
     unsigned long xv = 0;
-    int i, j, n, match = 0;
+    NSInteger i, j, n, match = 0;
 
     memcpy( K + 3, wepkey, weplen );
 
@@ -490,9 +490,9 @@ int cmp_votes( const void *bs1, const void *bs2 )
 
 /* this routine computes the average votes and recurses */
 
-- (BOOL)do_wep_crack:(int) B
+- (BOOL)do_wep_crack:(NSInteger) B
 {
-    int child, i, n, *vi;
+    NSInteger child, i, n, *vi;
 
     for( i = 0; i < LAST_BIT; ++i )
     {
@@ -527,7 +527,7 @@ int cmp_votes( const void *bs1, const void *bs2 )
             return NO;
         }
 
-        vi = (int *) buffer;
+        vi = (NSInteger *) buffer;
 
         for( n = 0; n < N_ATTACKS; ++n )
             for( i = 0; i < LAST_BIT; ++i, ++vi )
@@ -606,12 +606,12 @@ int cmp_votes( const void *bs1, const void *bs2 )
 
 - (BOOL)attack
 {
-    int i;
+    NSInteger i;
     
     _im = [WaveHelper importController];
     
     NSParameterAssert(nb_ivs > 8);
-    srand( time( NULL ) );
+    srand( (unsigned)time( NULL ) );
 
     for( i = 0; i < nfork; ++i) {
         pipe( mc_pipe[i] );

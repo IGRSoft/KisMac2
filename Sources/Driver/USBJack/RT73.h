@@ -2233,7 +2233,7 @@ UCHAR	NUM_OF_5225_CHNL = (sizeof(RF5225RegTable) / sizeof(RTMP_RF_REGS));
      unsigned char			BBPR17LowSensitivity;
      unsigned char			BBPR17MidSensitivity;
      unsigned char			RSSIToDbmOffset;
-     bool			LargeCurrentRSSI;
+     BOOL			LargeCurrentRSSI;
  }
  RT73_BBP_TUNING_PARAMETERS_STRUC, *PRT73_BBP_TUNING_PARAMETERS_STRUC;
  */

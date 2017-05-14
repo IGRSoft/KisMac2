@@ -91,19 +91,19 @@ typedef NS_ENUM(NSUInteger, leapAuthCode)
 
 //this represents a packet
 @interface WavePacket : NSObject /*<UKTest>*/ {
-    int _signal;            // current signal strength
-    int _channel;           // well the channel
-    int  _primaryChannel;   // Primary channel
-    int _type;			//type 0=management 1=control 2=data
-    int _subtype;		//deprending on type, WARNING might be little endian
+    NSInteger _signal;            // current signal strength
+    NSInteger _channel;           // well the channel
+    NSInteger  _primaryChannel;   // Primary channel
+    NSInteger _type;			//type 0=management 1=control 2=data
+    NSInteger _subtype;		//deprending on type, WARNING might be little endian
     
     networkType    _netType;    //0=unknown, 1=ad-hoc, 2=managed, 3=tunnel
     encryptionType _isWep;      //0=unknown, 1=disabled, 2=enabled
     leapAuthCode   _leapCode;
     
-    bool _isToDS;		//to access point?
-    bool _isFrDS;		//from access point?
-    bool _isEAP;
+    BOOL _isToDS;		//to access point?
+    BOOL _isFrDS;		//from access point?
+    BOOL _isEAP;
 
     NSString		*_SSID;
     NSMutableArray	*_SSIDs;
@@ -120,11 +120,11 @@ typedef NS_ENUM(NSUInteger, leapAuthCode)
     UInt8* _frame;                  // 80211 frame
     UInt8 *_payload;                // Payload
 
-    int _length;                    // Length of 80211 frame
-    int _headerLength;              // Length of 80211 header
-    int _payloadLength;				// Length of payload
+    NSInteger _length;                    // Length of 80211 frame
+    NSInteger _headerLength;              // Length of 80211 header
+    NSInteger _payloadLength;				// Length of payload
 
-    int _revelsKeyByte;         //-2 = no idea
+    NSInteger _revelsKeyByte;         //-2 = no idea
 
     UInt8 _addr1[ETH_ALEN];
     UInt8 _addr2[ETH_ALEN];
@@ -132,31 +132,31 @@ typedef NS_ENUM(NSUInteger, leapAuthCode)
     UInt8 _addr4[ETH_ALEN];
     
     //WPA stuff
-    int _wpaKeyCipher;
+    NSInteger _wpaKeyCipher;
     wpaNoncePresent _nonce;
 }
 
 //input function
-- (bool)parseFrame:(KFrame*) f;
+- (BOOL)parseFrame:(KFrame*) f;
 
-- (int)length;          // Length of 80211 frame
-- (int)payloadLength;   // Length of payload
-- (int)signal;
-- (int)channel;
-- (int)type;
-- (int)subType;
-- (int)primaryChannel;
-- (bool)fromDS;
-- (bool)toDS;
+- (NSInteger)length;          // Length of 80211 frame
+- (NSInteger)payloadLength;   // Length of payload
+- (NSInteger)signal;
+- (NSInteger)channel;
+- (NSInteger)type;
+- (NSInteger)subType;
+- (NSInteger)primaryChannel;
+- (BOOL)fromDS;
+- (BOOL)toDS;
 - (encryptionType)wep;
 - (networkType)netType;
 - (UInt8*)payload;      // payload
 - (UInt8*)frame;
-- (int)isResolved;	//for wep cracking 
+- (NSInteger)isResolved;	//for wep cracking 
 - (NSString*)SSID;
 - (NSArray*)SSIDs;
 - (UInt8)getRates:(UInt8*)rates;
-- (bool)isCorrectSSID;
+- (BOOL)isCorrectSSID;
 
 - (UInt8*)rawSenderID;
 - (NSString*)stringSenderID;
@@ -164,10 +164,10 @@ typedef NS_ENUM(NSUInteger, leapAuthCode)
 - (NSString*)stringReceiverID;
 - (UInt8*)rawBSSID;
 - (NSString*)BSSIDString;
-- (bool)BSSID:(UInt8*)bssid;
-- (bool)ID:(UInt8*)ident;
+- (BOOL)BSSID:(UInt8*)bssid;
+- (BOOL)ID:(UInt8*)ident;
 - (NSString*)IDString;	//gives a unique for each net, bssid is not useful
-- (bool)isEAPPacket;
+- (BOOL)isEAPPacket;
 - (struct timeval *)creationTime;
 
 // IP handling by Dylan Neild
@@ -183,14 +183,14 @@ typedef NS_ENUM(NSUInteger, leapAuthCode)
 - (UInt8*)addr4;
 
 //WPA handling
-- (bool)isWPAKeyPacket;
+- (BOOL)isWPAKeyPacket;
 - (wpaNoncePresent)wpaCopyNonce:(UInt8*)destNonce;
-- (int)wpaKeyCipher;
+- (NSInteger)wpaKeyCipher;
 - (NSData*)eapolMIC;
 - (NSData*)eapolData;
 
 //LEAP handling
-- (bool)isLEAPKeyPacket;
+- (BOOL)isLEAPKeyPacket;
 - (leapAuthCode)leapCode;
 - (NSString*)username;
 - (NSData*)challenge;

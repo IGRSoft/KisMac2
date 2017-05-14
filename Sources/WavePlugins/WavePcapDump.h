@@ -30,11 +30,11 @@
 
 @interface WavePcapDump : WavePlugin
 {
-    int _dumpFilter;
+    NSInteger _dumpFilter;
     pcap_dumper_t* _f;
     pcap_t* _p;
 }
 
-- (id) initWithDriver:(WaveDriver *)wd andDumpFilter:(int)dumpfilter;
+- (id) initWithDriver:(WaveDriver *)wd andDumpFilter:(NSInteger)dumpfilter;
 
 @end

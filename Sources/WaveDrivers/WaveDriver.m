@@ -383,12 +383,12 @@ char WaveDrivers [][30] =
 #pragma mark Sending frame
 #pragma mark
 
--(BOOL) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval
+-(BOOL) sendKFrame:(KFrame *)f howMany:(NSInteger)howMany atInterval:(NSInteger)interval
 {
     return NO;
 }
 
--(BOOL) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval notifyTarget:(id)target notifySelectorString:(NSString *)selector
+-(BOOL) sendKFrame:(KFrame *)f howMany:(NSInteger)howMany atInterval:(NSInteger)interval notifyTarget:(id)target notifySelectorString:(NSString *)selector
 {
     return NO;
 }

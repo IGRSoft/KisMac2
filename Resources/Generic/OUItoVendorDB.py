@@ -36,7 +36,7 @@ def downloadFile(fileurl, filename):
 	response = urllib2.urlopen(request)
 	# Retrieve file size
 	metainfo = response.info()
-	filesize =  int(metainfo.getheaders("Content-Length")[0])
+	filesize =  NSInteger(metainfo.getheaders("Content-Length")[0])
 	#print metainfo
 	xcodePrint('Downloading file: %s Size: %s' % (filename, filesize))
 
@@ -52,7 +52,7 @@ def downloadFile(fileurl, filename):
 		downloaded += len(buffer)
 
 		# show progress each 10% completed
-		progress = int((downloaded * 100.0 / filesize) / 10)
+		progress = NSInteger((downloaded * 100.0 / filesize) / 10)
 		if (latest_progress != progress):
 			latest_progress = progress
 			xcodePrint('%s%%' % (progress * 10))

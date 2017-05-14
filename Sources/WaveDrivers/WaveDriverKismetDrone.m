@@ -77,7 +77,7 @@
 }
 
 
-+ (int) initBackend
++ (NSInteger) initBackend
 {
 	return YES;
 }
@@ -128,14 +128,14 @@
 
 #pragma mark -
 
-- (BOOL) startedScanning
+- (BOOL)startedScanning
 {
 	NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
 	const char* hostname = 0;
-	unsigned int port = 0;
+	NSUInteger port = 0;
 
-	int foundhostname = 0;
-	int foundport = 0;
+	NSInteger foundhostname = 0;
+	NSInteger foundport = 0;
 	
 	NSArray *activeDrivers = [defs objectForKey:@"ActiveDrivers"];
 	NSEnumerator *e = [activeDrivers objectEnumerator];
@@ -157,7 +157,7 @@
 			NSRunCriticalAlertPanel(NSLocalizedString(@"No host/port set to connect to!", "Error dialog title"),
 									NSLocalizedString(@"Check that one is set in the preferences", "LONG desc"),
 									OK, nil, nil);
-		return nil;
+		return NO;
 	}
 
 	if (foundhostname + foundport < 2) {
@@ -166,7 +166,7 @@
 		NSRunCriticalAlertPanel(NSLocalizedString(@"No host/port set to connect to!", "Error dialog title"),
 								NSLocalizedString(@"Check that one is set in the preferences", "LONG desc"),
 								OK, nil, nil);
-		return nil;
+		return NO;
 	}
 
 	UInt32 ip = inet_addr(hostname);
@@ -184,7 +184,7 @@
 		NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
 								@"%s",
 								OK, nil, nil, strerror(errno));
-		return nil;
+		return NO;
     }
 
 	local_sock.sin_family = AF_INET;
@@ -198,7 +198,7 @@
 		NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
 								@"%s",
 								OK, nil, nil, strerror(errno));
-        return NULL;
+        return NO;
     }
 
     // Connect
@@ -208,7 +208,7 @@
 		NSRunCriticalAlertPanel(NSLocalizedString(@"The connection to the Kismet drone failed", "Error dialog title"),
 								@"%s",
 								OK, nil, nil, strerror(errno));
-		return nil;
+		return NO;
     }
 
     valid = 1;
@@ -230,12 +230,12 @@
 	thisFrame = (KFrame*)frame;
 	
 	uint8_t *inbound = 0;
-	int ret = 0;
+	NSInteger ret = 0;
 	fd_set rset;
 	struct timeval tm;
-	unsigned int offset = 0;
+	NSUInteger offset = 0;
 	
-	int noValidFrame = 1;
+	NSInteger noValidFrame = 1;
 	
 	while (noValidFrame)
 	{
@@ -408,7 +408,7 @@
 		offset = sizeof(struct stream_frame_header) + sizeof(struct stream_packet_header);
 		if (fhdr.frame_type == STREAM_FTYPE_PACKET && stream_recv_bytes >= offset)
 		{
-			unsigned int plen = (uint32_t) ntohl(phdr.len);
+			NSUInteger plen = (uint32_t) ntohl(phdr.len);
 
 			inbound = (uint8_t *) databuf;
 			if ((ret = read(drone_fd, &inbound[stream_recv_bytes - offset], (ssize_t) plen - (stream_recv_bytes - offset))) < 0)
@@ -448,7 +448,7 @@
 		}
 		else
 		{
-			DBNSLog(@"debug - somehow not a stream packet or too much data...  type %d recv %d\n", fhdr.frame_type, stream_recv_bytes);
+			DBNSLog(@"debug - somehow not a stream packet or too much data...  type %@ recv %@\n", @(fhdr.frame_type), @(stream_recv_bytes));
 		}
 
 		if (fhdr.frame_type != STREAM_FTYPE_PACKET && fhdr.frame_type != STREAM_FTYPE_VERSION)
@@ -457,7 +457,7 @@
 			DBNSLog(@"unknown frame type %d", fhdr.frame_type);
 
 			// debug
-			unsigned int x = 0;
+			NSUInteger x = 0;
 			while (x < sizeof(struct stream_frame_header)) {
 				printf("%02X ", ((uint8_t *) &fhdr)[x]);
 				++x;

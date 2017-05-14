@@ -111,7 +111,7 @@
     if(sender == aVoices)
     {
         [self playVoice:sender];
-        [controller setObject:[NSNumber numberWithInt:[sender indexOfSelectedItem]] forKey:@"Voice"];
+        [controller setObject:@([sender indexOfSelectedItem]) forKey:@"Voice"];
     }
     else if(sender == aWEPSounds)
     {

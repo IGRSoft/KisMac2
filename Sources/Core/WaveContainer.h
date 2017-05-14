@@ -45,36 +45,36 @@
 typedef struct WaveNetEntry
 {
     unsigned char ID[6];
-    bool changed;
+    BOOL changed;
     __unsafe_unretained WaveNet* net;
 
 } WaveNetEntry;
 
 @interface WaveContainer : NSObject <NSFastEnumeration> {
-    int _order;
-    bool _dropAll;
-    bool _ascend;
+    NSInteger _order;
+    BOOL _dropAll;
+    BOOL _ascend;
     NSLock *_sortLock;
     
-    int _viewType;
-    int _viewChannel;
-    int _viewCrypto;
+    NSInteger _viewType;
+    NSInteger _viewChannel;
+    NSInteger _viewCrypto;
     
     NSString *_viewSSID;
     NSString *_filterString;
 	NSString *_filterType;
 	
     WaveNetEntry *_idList;
-    unsigned int _sortedList[MAXNETS + 1];
-    unsigned int _lookup[LOOKUPSIZE];
+    NSUInteger _sortedList[MAXNETS + 1];
+    NSUInteger _lookup[LOOKUPSIZE];
     
-    //unsigned int _cache[MAXCACHE + 1];
-    unsigned char _filter[MAXFILTER + 1][6];
+    //NSUInteger _cache[MAXCACHE + 1];
+    UInt8 _filter[MAXFILTER + 1][6];
     
-    unsigned int _netCount;
-    unsigned int _sortedCount;
-    unsigned int _cacheSize;
-    unsigned int _filterCount;
+    NSUInteger _netCount;
+    NSUInteger _sortedCount;
+    NSUInteger _cacheSize;
+    NSUInteger _filterCount;
     
     NSArray *_netFields;
     NSMutableArray *_displayedNetFields;
@@ -86,42 +86,42 @@ typedef struct WaveNetEntry
 - (void)updateSettings:(NSNotification*)note;
 
 //for loading and saving
-- (bool) loadLegacyData:(NSDictionary*)data;
-- (bool) loadData:(NSArray*)data;
-- (bool) importLegacyData:(NSDictionary*)data;
-- (bool) importData:(NSArray*)data;
-- (NSArray*) dataToSave;
+- (BOOL)loadLegacyData:(NSDictionary *)data;
+- (BOOL)loadData:(NSArray *)data;
+- (BOOL)importLegacyData:(NSDictionary *)data;
+- (BOOL)importData:(NSArray *)data;
+- (NSArray *)dataToSave;
 
 //for view filtering
-- (void) refreshView;
-- (void) setViewType:(int)type value:(id)val;
-- (void) setFilterType:(NSString*)filter; 
-- (void) setFilterString:(NSString*)filter;
-- (NSString*) getImageForChallengeResponse:(int)challengeResponseStatus;
-- (NSString*) getStringForEncryptionType:(encryptionType)encryption; 
-- (NSString*) getStringForNetType:(networkType)type;
+- (void)refreshView;
+- (void)setViewType:(NSInteger)type value:(id)val;
+- (void)setFilterType:(NSString *)filter;
+- (void)setFilterString:(NSString *)filter;
+- (NSString *)getImageForChallengeResponse:(NSInteger)challengeResponseStatus;
+- (NSString *)getStringForEncryptionType:(encryptionType)encryption;
+- (NSString *)getStringForNetType:(networkType)type;
 
 //for sorting
-- (void) sortByColumn:(NSString*)ident order:(bool)ascend;
-- (void) sortWithShakerByColumn:(NSString*)ident order:(bool)ascend;
+- (void)sortByColumn:(NSString *)ident order:(BOOL)ascend;
+- (void)sortWithShakerByColumn:(NSString *)ident order:(BOOL)ascend;
 
 //for adding data
-- (BOOL) IDFiltered:(const unsigned char*)ID;
-- (bool) addPacket:(WavePacket*)p liveCapture:(bool)live;
-- (bool) addAppleAPIData:(CWNetwork*)net;
-- (bool) addNetwork:(WaveNet*)net;
+- (BOOL)IDFiltered:(const UInt8 *)ID;
+- (BOOL)addPacket:(WavePacket *)p liveCapture:(BOOL)live;
+- (BOOL)addAppleAPIData:(CWNetwork *)net;
+- (BOOL)addNetwork:(WaveNet *)net;
 
-- (unsigned int) count;
-- (WaveNet*) netAtIndex:(unsigned int) index;
-- (WaveNet*) netForKey:(unsigned char*) ID;
-- (NSMutableArray*) allNets;
+- (NSUInteger)count;
+- (WaveNet *)netAtIndex:(NSUInteger)index;
+- (WaveNet *)netForKey:(UInt8 *)ID;
+- (NSMutableArray*)allNets;
 
-- (void) scanUpdate:(int)graphLength;
-- (void) ackChanges;
-- (unsigned int) nextChangedRow:(unsigned int)lastRow;
+- (void)scanUpdate:(NSInteger)graphLength;
+- (void)ackChanges;
+- (NSUInteger)nextChangedRow:(NSUInteger)lastRow;
 
-- (void) clearAllEntries;
-- (void) clearEntry:(WaveNet*)net;
-- (void) clearAllBrokenEntries;
+- (void)clearAllEntries;
+- (void)clearEntry:(WaveNet *)net;
+- (void)clearAllBrokenEntries;
 
 @end

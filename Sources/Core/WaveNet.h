@@ -45,9 +45,9 @@ enum
 
 struct graphStruct
 {
-    int trafficData[MAX_YIELD_SIZE + 1];
-    int packetData[MAX_YIELD_SIZE + 1];
-    int signalData[MAX_YIELD_SIZE + 1];
+    NSInteger trafficData[MAX_YIELD_SIZE + 1];
+    NSInteger packetData[MAX_YIELD_SIZE + 1];
+    NSInteger signalData[MAX_YIELD_SIZE + 1];
 };
 
 @class NetView;
@@ -56,92 +56,92 @@ struct graphStruct
 @class ImportController;
 
 @interface WaveNet : NSObject /*<UKTest>*/ {
-    int					_netID;					//network ID
-    int					_maxSignal;				//biggest signal ever
-    int					_curSignal;				//current signal
-    int					_channel;				//last channel
-    int					_primaryChannel;        //channel which is broadcasted by AP
-    networkType			_type;                  //0=unknown, 1=ad-hoc, 2=managed, 3=tunnel 4=probe 5=lucent tunnel
+    NSInteger					_netID;					//network ID
+    NSInteger					_maxSignal;				//biggest signal ever
+    NSInteger					_curSignal;				//current signal
+    NSInteger					_channel;				//last channel
+    NSInteger					_primaryChannel;        //channel which is broadcasted by AP
+    networkType                 _type;                  //0=unknown, 1=ad-hoc, 2=managed, 3=tunnel 4=probe 5=lucent tunnel
     
     // Statistical Data
-    int					_packets;				//# of packets
-    int					_packetsPerChannel[166];//how many packets on each channel
-    int					_dataPackets;			//# of Data packets
-    int                 _mgmtPackets;           //# of Management packets
-    int                 _ctrlPackets;           //# of Control packets
+    NSInteger                   _packets;				//# of packets
+    NSInteger					_packetsPerChannel[166];//how many packets on each channel
+    NSInteger					_dataPackets;			//# of Data packets
+    NSInteger                   _mgmtPackets;           //# of Management packets
+    NSInteger                   _ctrlPackets;           //# of Control packets
     
-    double				_bytes;                 //bytes, float because of size
-    int					graphLength;
-    struct graphStruct *graphData;
+    double                      _bytes;                 //bytes, CGFloat because of size
+    NSInteger					graphLength;
+    struct graphStruct          *graphData;
     
-    encryptionType		_isWep;                 //0=unknown, 1=disabled, 2=enabled 3=40-bit 4-WPA .....
-    UInt8				_IV[3];				    //last iv
-    UInt8				_rawID[6];			    //our id
-    UInt8				_rawBSSID[6];			//our bssid
-	UInt8				_rateCount;
-	UInt8				_rates[MAX_RATE_COUNT];
-    bool				_gotData;
-    bool				_firstPacket;
-    bool				_liveCaptured;
-	bool				_graphInit;
-	NSDictionary		*_cache;
-    bool				_cacheValid;
+    encryptionType              _isWep;                 //0=unknown, 1=disabled, 2=enabled 3=40-bit 4-WPA .....
+    UInt8                       _IV[3];				    //last iv
+    UInt8                       _rawID[6];			    //our id
+    UInt8                       _rawBSSID[6];			//our bssid
+	UInt8                       _rateCount;
+	UInt8                       _rates[MAX_RATE_COUNT];
+    BOOL                        _gotData;
+    BOOL                        _firstPacket;
+    BOOL                        _liveCaptured;
+	BOOL                        _graphInit;
+	NSDictionary                *_cache;
+    BOOL                        _cacheValid;
 
     NSRecursiveLock *_dataLock;
     
-    NetView*  _netView;
-    NSString* aLat;
-    NSString* aLong;
-    NSString* aElev;
-    NSString *_crackErrorString;
+    NetView                 *_netView;
+    NSString                *aLat;
+    NSString                *aLong;
+    NSString                *aElev;
+    NSString                *_crackErrorString;
 
-    NSString *_SSID;
-	NSArray  *_SSIDs;
-    NSString* _BSSID;
-    NSString* _IPAddress;
-    NSString* _vendor;
-    NSString* _password;
-    NSString* aComment;
-    NSString* _ID;
-    NSDate* _date;		//current date
-    NSDate* aFirstDate;
-    NSMutableArray* _packetsLog;    //array with a couple of packets to calculate checksum
-    NSMutableArray* _ARPLog;        //array with a couple of packets to do reinjection attack
-    NSMutableArray* _ACKLog;        //array with a couple of packets to do reinjection attack
-    NSMutableDictionary* aClients;
-    NSMutableArray* aClientKeys;
-    NSMutableDictionary* _coordinates;
-    WaveWeakContainer *_ivData[4];       //one for each key id
+    NSString                *_SSID;
+	NSArray                 *_SSIDs;
+    NSString                *_BSSID;
+    NSString                *_IPAddress;
+    NSString                *_vendor;
+    NSString                *_password;
+    NSString                *aComment;
+    NSString                *_ID;
+    NSDate                  *_date;		//current date
+    NSDate                  *aFirstDate;
+    NSMutableArray          *_packetsLog;    //array with a couple of packets to calculate checksum
+    NSMutableArray          *_ARPLog;        //array with a couple of packets to do reinjection attack
+    NSMutableArray          *_ACKLog;        //array with a couple of packets to do reinjection attack
+    NSMutableDictionary     *aClients;
+    NSMutableArray          *aClientKeys;
+    NSMutableDictionary     *_coordinates;
+    WaveWeakContainer       *_ivData[4];       //one for each key id
     
-    int _challengeResponseStatus;
+    NSInteger               _challengeResponseStatus;
     
-    NSColor* _graphColor;	// display color in TrafficView
-    int recentTraffic;
-    int recentPackets;
-    int recentSignal;
-    int curPackets;		// for setting graphData
-    int curTraffic;		// for setting graphData
-    int curTrafficData;		// for setting graphData
-    int curPacketData;		// for setting graphData
-    int curSignalData;		// for setting graphData
-    int _avgTime;               // how many seconds are take for average?
-    ImportController *_im;
+    NSColor                 *_graphColor;	// display color in TrafficView
+    NSInteger               recentTraffic;
+    NSInteger               recentPackets;
+    NSInteger               recentSignal;
+    NSInteger               curPackets;		// for setting graphData
+    NSInteger               curTraffic;		// for setting graphData
+    NSInteger               curTrafficData;		// for setting graphData
+    NSInteger               curPacketData;		// for setting graphData
+    NSInteger               curSignalData;		// for setting graphData
+    NSInteger               _avgTime;               // how many seconds are take for average?
+    ImportController        *_im;
 
 /*	PRGA Snarf */
-	int _authState;
+	NSInteger _authState;
 		
 }
 
-- (id)initWithID:(int)netID;
-- (id)initWithNetstumbler:(const char*)buf andDate:(NSString*)date;
+- (id)initWithID:(NSInteger)netID;
+- (id)initWithNetstumbler:(const char *)buf andDate:(NSString *)date;
 - (id)initWithDataDictionary:(NSDictionary*)dict;
-- (void)mergeWithNet:(WaveNet*)net;
+- (void)mergeWithNet:(WaveNet *)net;
 
-- (void)updateSettings:(NSNotification*)note;
+- (void)updateSettings:(NSNotification *)note;
 
-- (bool)noteFinishedSweep:(int)num;
-- (NSColor*)graphColor;
-- (void)setGraphColor:(NSColor*)newColor;
+- (BOOL)noteFinishedSweep:(NSInteger)num;
+- (NSColor *)graphColor;
+- (void)setGraphColor:(NSColor *)newColor;
 - (NSComparisonResult)compareSignalTo:(id)net;
 - (NSComparisonResult)comparePacketsTo:(id)net;
 - (NSComparisonResult)compareTrafficTo:(id)net;
@@ -150,15 +150,15 @@ struct graphStruct
 - (NSDictionary*)dataDictionary;
 
 - (struct graphStruct)graphData;
-- (NSDictionary*)getClients;
-- (NSArray*)getClientKeys;
+- (NSDictionary *)getClients;
+- (NSArray *)getClientKeys;
 - (void)setVisible:(BOOL)visible;
 
 - (encryptionType)wep;
 - (NSString *)ID;
 - (NSString *)BSSID;
 - (NSString *)SSID;
-- (bool)isCorrectSSID;
+- (BOOL)isCorrectSSID;
 - (NSArray *)SSIDs;
 - (NSString *)rawSSID;
 - (NSString *)date;
@@ -166,61 +166,62 @@ struct graphStruct
 - (NSString *)firstDate;
 - (NSDate *)firstSeenDate;
 - (NSString *)getIP;
-- (NSString*)data;
-- (NSString*)getVendor;
-- (NSString*)rates;
-- (NSArray*)cryptedPacketsLog;      //a couple of encrypted packets
-- (NSMutableArray*)arpPacketsLog;	//a couple of reinject packets
-- (NSMutableArray*)ackPacketsLog;	//a couple of reinject packets
-- (NSString*)key;
-- (NSString*)lastIV;
-- (NSString*)comment;
-- (void)setComment:(NSString*)comment;
+- (NSString *)data;
+- (NSString *)getVendor;
+- (NSString *)rates;
+- (NSArray *)cryptedPacketsLog;      //a couple of encrypted packets
+- (NSMutableArray *)arpPacketsLog;	//a couple of reinject packets
+- (NSMutableArray *)ackPacketsLog;	//a couple of reinject packets
+- (NSString *)key;
+- (NSString *)lastIV;
+- (NSString *)comment;
+- (void)setComment:(NSString *)comment;
 - (NSDictionary*)coordinates;
-- (WaveWeakContainer *__strong*)ivData;
+- (WaveWeakContainer *__strong *)ivData;
 - (BOOL)passwordAvailable;
-- (int)challengeResponseStatus;
+- (NSInteger)challengeResponseStatus;
 
-- (NSDictionary*)cache;
+- (NSDictionary *)cache;
 
 - (NSString *)latitude;
 - (NSString *)longitude;
 - (NSString *)elevation;
 
 - (double)dataCount;
-- (int)curTraffic;
-- (int)curPackets;
-- (int)curSignal;
-- (int)maxSignal;
-- (int)avgSignal;
-- (int)channel;
-- (int)originalChannel;
+- (NSInteger)curTraffic;
+- (NSInteger)curPackets;
+- (NSInteger)curSignal;
+- (NSInteger)maxSignal;
+- (NSInteger)avgSignal;
+- (NSInteger)channel;
+- (NSInteger)originalChannel;
 - (networkType)type;
 
 // Packet Statistics
-- (int)packets;
-- (int)uniqueIVs;
-- (int)dataPackets;
-- (int)mgmtPackets;
-- (int)ctrlPackets;
+- (NSInteger)packets;
+- (NSInteger)uniqueIVs;
+- (NSInteger)dataPackets;
+- (NSInteger)mgmtPackets;
+- (NSInteger)ctrlPackets;
 
-- (int*)packetsPerChannel;
-- (void)setNetID:(int)netID;
-- (int)netID;
-- (UInt8*)rawBSSID;
-- (UInt8*)rawID;
-- (bool)liveCaptured;
+- (NSInteger*)packetsPerChannel;
+- (void)setNetID:(NSInteger)netID;
+- (NSInteger)netID;
+- (UInt8 *)rawBSSID;
+- (UInt8 *)rawID;
+- (BOOL)liveCaptured;
 
-- (bool)joinNetwork;
+- (BOOL)joinNetwork;
 
-- (void)parsePacket:(WavePacket*) w withSound:(bool)sound;
-- (void)parseAppleAPIData:(CWNetwork*)info;
+- (void)parsePacket:(WavePacket*)w withSound:(BOOL)sound;
+- (void)parseAppleAPIData:(CWNetwork *)info;
 
-- (void)sortByColumn:(NSString*)ident order:(bool)ascend;
+- (void)sortByColumn:(NSString *)ident order:(BOOL)ascend;
 
-- (int)capturedEAPOLKeys;
-- (int)capturedLEAPKeys;
+- (NSInteger)capturedEAPOLKeys;
+- (NSInteger)capturedLEAPKeys;
 
 - (NSString*)crackError;
 - (NSString*)asciiKey;
+
 @end

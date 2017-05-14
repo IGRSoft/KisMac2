@@ -33,14 +33,14 @@
     NSString *_ID, *_vendor;
     NSString * _IPAddress;
     NSDate *_date;
-    int _curSignal;
-    float _receivedBytes;
-    float _sentBytes;
-    bool _changed;
+    NSUInteger _curSignal;
+    CGFloat _receivedBytes;
+    CGFloat _sentBytes;
+    BOOL _changed;
     
     //WPA
     NSData *_aNonce, *_sNonce, *_MIC, *_packet;
-    int _wpaKeyCipher;
+    NSUInteger _wpaKeyCipher;
     
     //LEAP
     NSData *_leapChallenge, *_leapResponse;
@@ -59,9 +59,9 @@
 - (NSString *)date;
 - (NSString *)getIPAddress;
 
-- (float)receivedBytes;
-- (float)sentBytes;
-- (int)curSignal;
+- (CGFloat)receivedBytes;
+- (CGFloat)sentBytes;
+- (NSUInteger)curSignal;
 - (NSDate *)rawDate;
 
 
@@ -72,7 +72,7 @@
 - (NSData *)eapolPacket;
 - (NSData *)rawID;
 - (BOOL) eapolDataAvailable;
-- (int) wpaKeyCipher;
+- (NSUInteger) wpaKeyCipher;
 
 //LEAP stuff
 - (NSData *)leapChallenge;

@@ -29,10 +29,10 @@
 #import "BIImageView.h"
 
 typedef struct {
-    float red;
-    float green;
-    float blue;
-    float alpha;
+    CGFloat red;
+    CGFloat green;
+    CGFloat blue;
+    CGFloat alpha;
 } col;
 
 typedef struct {
@@ -45,15 +45,15 @@ typedef struct {
     colState    _current;
     colState    _delta;
     colState    _target;
-	float		_slideScale;
+	CGFloat		_slideScale;
     NSLock      *_zoomLock;
     NSLock      *_slideLock;
     NSTimer     *_timeout;
-	int			_index;
+	NSInteger			_index;
 	NSPoint		_parentLocation;
 }
 
-- (id)initForID:(int)i;
+- (id)initForID:(NSInteger)i;
 - (void)slide:(BOOL)visible forParentLocation:(NSPoint)parentLocation;
 - (void)mouseEntered:(NSPoint)parentLocation;
 - (void)mouseClicked:(NSPoint)parentLocation;

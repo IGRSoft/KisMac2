@@ -37,8 +37,8 @@
     
     [_scale  selectItemWithTitle:[def stringForKey:@"DownloadMapScale"]];
     [_server selectItemWithTitle:[def stringForKey:@"DownloadMapServer"]];
-    [_width  setIntValue:[def integerForKey:@"DownloadMapWidth"]];
-    [_height setIntValue:[def integerForKey:@"DownloadMapHeight"]];
+    [_width  setIntegerValue:[def integerForKey:@"DownloadMapWidth"]];
+    [_height setIntegerValue:[def integerForKey:@"DownloadMapHeight"]];
     [_nsButton selectItemWithTitle:[def stringForKey:@"DownloadMapNS"]];
     [_ewButton selectItemWithTitle:[def stringForKey:@"DownloadMapEW"]];
     [_latitude  setFloatValue:[def floatForKey:@"DownloadMapLatitude"]];
@@ -100,9 +100,9 @@
         return;
     }
     
-    int scale = ([[_scale titleOfSelectedItem] intValue] != 3 && !map24) ? [[_scale titleOfSelectedItem] intValue] : 1;
-    int width = ([_width  intValue] != 1000 && !map24) ? [_width  intValue] : 0;
-    int height = ([_height  intValue] != 1000 && !map24) ? [_height  intValue] : 0;
+    NSInteger scale = ([[_scale titleOfSelectedItem] intValue] != 3 && !map24) ? [[_scale titleOfSelectedItem] intValue] : 1;
+    NSInteger width = ([_width  intValue] != 1000 && !map24) ? [_width  intValue] : 0;
+    NSInteger height = ([_height  intValue] != 1000 && !map24) ? [_height  intValue] : 0;
     
     [[self window] close];
     

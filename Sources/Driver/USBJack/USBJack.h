@@ -46,10 +46,10 @@ struct __frameRingSlot {
 };
 
 struct __frameRing {
-    unsigned int readIdx;
-    unsigned int writeIdx;
-    unsigned int received;
-    unsigned int dropped;
+    NSUInteger readIdx;
+    NSUInteger writeIdx;
+    NSUInteger received;
+    NSUInteger dropped;
     struct __frameRingSlot slots[RING_SLOT_NUM];
 };
 
@@ -57,17 +57,17 @@ struct __frameRing {
 
 class USBJack {
 public:
-    virtual bool    startCapture(UInt16 channel);
-    virtual bool    stopCapture();
-    virtual bool    getChannel(UInt16* channel);
-    virtual bool    getAllowedChannels(UInt16* channel);
-    virtual bool    setChannel(UInt16 channel);
+    virtual BOOL    startCapture(UInt16 channel);
+    virtual BOOL    stopCapture();
+    virtual BOOL    getChannel(UInt16* channel);
+    virtual BOOL    getAllowedChannels(UInt16* channel);
+    virtual BOOL    setChannel(UInt16 channel);
 
-    bool            devicePresent();
-    bool            deviceMatched();
+    BOOL            devicePresent();
+    BOOL            deviceMatched();
     
     KFrame *receiveFrame();
-    virtual bool    sendKFrame(KFrame* data);
+    virtual BOOL    sendKFrame(KFrame* data);
     
     void    startMatching();
     virtual IOReturn    _init();
@@ -75,14 +75,14 @@ public:
     virtual ~USBJack();
     
 protected:
-    bool    run();
-    bool    stopRun();
+    BOOL    run();
+    BOOL    stopRun();
     
-    int kInterruptPipe;
-    int kOutPipe;
-    int kInPipe; 
+    NSInteger kInterruptPipe;
+    NSInteger kOutPipe;
+    NSInteger kInPipe; 
     
-    bool    _matchingDone;
+    BOOL    _matchingDone;
     
     typedef NS_ENUM(NSUInteger, deviceTypes)
     {
@@ -98,7 +98,7 @@ protected:
     virtual IOReturn    _reset();
     
     virtual char *      getPlistFile() = 0;
-    bool                loadPropertyList();
+    BOOL                loadPropertyList();
     
     void                _lockDevice();
     void                _unlockDevice();
@@ -106,40 +106,40 @@ protected:
     IOReturn            _configureAnchorDevice(IOUSBDeviceInterface197 **dev);
     IOReturn            _findInterfaces(IOUSBDeviceInterface197 **dev);
     
-    bool                _attachDevice();
+    BOOL                _attachDevice();
     static void         _addDevice(void *refCon, io_iterator_t iterator);
     static void         _handleDeviceRemoval(void *refCon, io_iterator_t iterator);
     static void         _DeviceNotification(void *refCon, io_service_t service, natural_t messageType, void *messageArgument);
     static void         _interruptReceived(void *refCon, IOReturn result, void *arg0);
 
-    int                 initFrameQueue(void);
-    int                 destroyFrameQueue(void);
-    int                 insertFrameIntoQueue(void *f, UInt16 len, UInt16 channel);
+    NSInteger                 initFrameQueue(void);
+    NSInteger                 destroyFrameQueue(void);
+    NSInteger                 insertFrameIntoQueue(void *f, UInt16 len, UInt16 channel);
     KFrame *            getFrameFromQueue(UInt16 *len, UInt16 *channel);
     
 	// Method for convert driver native data to KFrame
-    virtual bool        _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);	
+    virtual BOOL        _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);	
 
     // Driver specific packet handler
-    virtual void        _rawFrameReceived(unsigned int len);
+    virtual void        _rawFrameReceived(NSUInteger len);
 
     static void         _runCFRunLoop(USBJack* me);
   
     IOUSBDeviceInterface197 **_foundDevices[10];
-    int         _numDevices;
+    NSInteger         _numDevices;
 
 //    SInt32                      _vendorID;
 //    SInt32                      _productID;
     io_object_t                 _notification;
     
     char * _plistFile;
-    bool                        _devicePresent;
-    bool                        _deviceInit;
-    bool                        _deviceMatched;
+    BOOL                        _devicePresent;
+    BOOL                        _deviceInit;
+    BOOL                        _deviceMatched;
 
-    bool                        _stayUp;
-    bool                        _isSending;
-    bool                        _isEnabled;
+    BOOL                        _stayUp;
+    BOOL                        _isSending;
+    BOOL                        _isEnabled;
     SInt16                      _firmwareType;
     
     CFRunLoopRef                _runLoop;

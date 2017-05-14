@@ -302,7 +302,7 @@ typedef struct _BBP_TUNING_PARAMETERS_STRUC
 	UCHAR			BBPR17LowSensitivity;
 	UCHAR			BBPR17MidSensitivity;
 	UCHAR			RSSIToDbmOffset;
-	bool			LargeCurrentRSSI;
+	BOOL			LargeCurrentRSSI;
 }
 BBP_TUNING_PARAMETERS_STRUC, *PBBP_TUNING_PARAMETERS_STRUC;
 */

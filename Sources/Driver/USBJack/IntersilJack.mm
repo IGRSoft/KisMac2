@@ -8,10 +8,10 @@
 
 #import "IntersilJack.h"
 
-#define wlcDeviceGone   (int)0xe000404f
+#define wlcDeviceGone   (IOReturn)0xe000404f
 #define align64(a)      (((a)+63)&~63)
 
-bool IntersilJack::startCapture(UInt16 channel) {
+BOOL IntersilJack::startCapture(UInt16 channel) {
     if (!_devicePresent) return false;
     if (!_deviceInit) return false;
     
@@ -41,7 +41,7 @@ bool IntersilJack::startCapture(UInt16 channel) {
     return true;
 }
 
-bool IntersilJack::stopCapture() {
+BOOL IntersilJack::stopCapture() {
 _channel = 0;
 
 if (!_devicePresent) return false;
@@ -55,7 +55,7 @@ if (_doCommand(wlcMonitorOff, 0) != kIOReturnSuccess) {
 return true;
 }
 
-bool IntersilJack::getChannel(UInt16* channel) {
+BOOL IntersilJack::getChannel(UInt16* channel) {
     if (!_devicePresent) return false;
     if (!_deviceInit) return false;
     
@@ -68,7 +68,7 @@ bool IntersilJack::getChannel(UInt16* channel) {
     return true;
 }
 
-bool IntersilJack::getAllowedChannels(UInt16* channels) {
+BOOL IntersilJack::getAllowedChannels(UInt16* channels) {
     if (!_devicePresent) return false;
     if (!_deviceInit) return false;
     
@@ -80,7 +80,7 @@ bool IntersilJack::getAllowedChannels(UInt16* channels) {
     return true;
 }
 
-bool IntersilJack::setChannel(UInt16 channel) {
+BOOL IntersilJack::setChannel(UInt16 channel) {
     if (!_devicePresent) return false;
     if (!_deviceInit) return false;
     
@@ -114,7 +114,7 @@ char *IntersilJack::getPlistFile()
 IOReturn IntersilJack::_init() {
     WLIdentity ident;
     WLHardwareAddress macAddr;
-    int i; 
+    NSInteger i; 
     
     if(!_attachDevice()){
         DBNSLog(@"Device could not be opened");
@@ -150,7 +150,7 @@ IOReturn IntersilJack::_init() {
 }
 
 IOReturn IntersilJack::_reset() {
-    int i;
+    NSInteger i;
     
     if (_doCommand(wlcInit, 0) != kIOReturnSuccess) {
         DBNSLog(@"IntersilJack::_reset: _doCommand(wlcInit, 0) failed\n");
@@ -196,14 +196,14 @@ IOReturn IntersilJack::_reset() {
     return kIOReturnSuccess;
 }
 
-bool IntersilJack::sendKFrame(KFrame *frame) {
+BOOL IntersilJack::sendKFrame(KFrame *frame) {
     WLFrame *frameDescriptor;
 	UInt8 kmrate;
     UInt8 aData[MAX_FRAME_BYTES];
     IOByteCount pktsize;
-    int descriptorLength;
+    NSInteger descriptorLength;
     UInt8 *data = frame->data;
-    int size = frame->ctrl.len;
+    NSInteger size = frame->ctrl.len;
     
     struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)data;
     UInt16 type = (hdr->frame_ctl & IEEE80211_TYPE_MASK);
@@ -246,7 +246,7 @@ bool IntersilJack::sendKFrame(KFrame *frame) {
     frameDescriptor = (WLFrame*)aData;
 	kmrate = frame->ctrl.tx_rate;
     descriptorLength = WriteTxDescriptor(frameDescriptor, kmrate);
-    DBNSLog(@"descriptorLength = %d", descriptorLength);
+    DBNSLog(@"descriptorLength = %@", @(descriptorLength));
 	
     // Copy header
     memcpy(aData + sizeof(WLPrismHeader), data, headerLength);
@@ -269,7 +269,7 @@ bool IntersilJack::sendKFrame(KFrame *frame) {
     return YES;
 }
 
-bool IntersilJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 /* channel */) {
+BOOL IntersilJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 /* channel */) {
     unsigned char* pData = (unsigned char *)inBuf;
     WLFrame *head = (WLFrame *)pData;
     KFrame *f = (KFrame *)outBuf;
@@ -356,7 +356,7 @@ bool IntersilJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 
     return true;
 }
 
-int IntersilJack::WriteTxDescriptor(WLFrame * theFrame, KMRate kmrate){
+NSInteger IntersilJack::WriteTxDescriptor(WLFrame * theFrame, KMRate kmrate){
 	UInt8 rate;
     theFrame->txControl=NSSwapHostShortToLittle(0x08 | _TX_RETRYSTRAT_SET(3)| _TX_CFPOLL_SET(1) | _TX_TXEX_SET(0) | _TX_TXOK_SET(0) | _TX_MACPORT_SET(0));
 	switch (kmrate) {
@@ -406,7 +406,7 @@ IOReturn IntersilJack::_getIdentity(WLIdentity* wli) {
     
     return kIOReturnSuccess;
 }
-int      IntersilJack::_getFirmwareType() {
+NSInteger      IntersilJack::_getFirmwareType() {
     UInt16 card_id;
     UInt32 size = 8;
     UInt8 d[8];
@@ -480,7 +480,7 @@ IOReturn IntersilJack::_doCommandNoWait(enum WLCommandCode cmd, UInt16 param0, U
     
     return kr;
 }
-IOReturn IntersilJack::_getRecord(UInt16 rid, void* buf, UInt32* n, bool swapBytes) {
+IOReturn IntersilJack::_getRecord(UInt16 rid, void* buf, UInt32* n, BOOL swapBytes) {
     UInt32  readLength = 0;
     
     if (!_devicePresent) return kIOReturnError;
@@ -519,7 +519,7 @@ IOReturn IntersilJack::_getRecord(UInt16 rid, void* buf, UInt32* n, bool swapByt
     
     return kIOReturnSuccess;
 }
-IOReturn IntersilJack::_setRecord(UInt16 rid, const void* buf, UInt32 n, bool swapBytes) {
+IOReturn IntersilJack::_setRecord(UInt16 rid, const void* buf, UInt32 n, BOOL swapBytes) {
     UInt32      numBytes;
     UInt16      status;
     
@@ -589,15 +589,15 @@ IOReturn IntersilJack::_setValue(UInt16 rid, UInt16 v) {
 IOReturn IntersilJack::_writeWaitForResponse(UInt32 size) {
     IOReturn kr;
     struct timespec to;
-    int error;
-    int calls = 0;
+    NSInteger error;
+    NSInteger calls = 0;
     
     to.tv_nsec = 0;
     
     do {
         kr = (*_interface)->WritePipe(_interface, kOutPipe, &_outputBuffer, size);
         if (kr != kIOReturnSuccess) {
-            if (kr==wlcDeviceGone) _devicePresent = false;
+            if (kr == wlcDeviceGone) _devicePresent = false;
             else DBNSLog(@"IntersilJack::unable to write to USB Device(%08x)\n", kr);
             return kr;
         }

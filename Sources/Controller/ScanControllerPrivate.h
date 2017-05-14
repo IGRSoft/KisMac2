@@ -34,7 +34,7 @@
 
 - (void)updateChannelMenu;
 
-- (void)menuSetEnabled:(bool)a menu:(NSMenu*)menu;
+- (void)menuSetEnabled:(BOOL)a menu:(NSMenu*)menu;
 - (void)selectNet:(WaveNet*)net;
 
 - (void)changedViewTo:(__availableTabs)tab contentView:(NSView*)view;
@@ -44,7 +44,7 @@
 - (void)startCrackDialog;
 - (void)startCrackDialogWithTitle:(NSString*)title stopScan:(BOOL)stopScan;
 - (void)startCrackDialogWithTitle:(NSString*)title;
-- (bool)startActiveAttack;
+- (BOOL)startActiveAttack;
 - (void)stopActiveAttacks;
 
 - (void)clearAreaMap;

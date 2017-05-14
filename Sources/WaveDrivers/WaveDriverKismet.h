@@ -39,15 +39,15 @@
 
 
 @interface WaveDriverKismet : WaveDriver {
-	int fd;
-	int sockd;
+	NSInteger fd;
+	NSInteger sockd;
     struct sockaddr_in serv_name;
-    int status;
+    NSInteger status;
     struct hostent *hp;
     UInt32 ip;
-	int port;
+	NSInteger port;
 	const char *hostname;
 }
 
-+ (int) kismetInstanceCount;
++ (NSInteger) kismetInstanceCount;
 @end

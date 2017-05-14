@@ -101,7 +101,7 @@
 			 [self stopScan];
 			 _refreshGUI = NO;
 			 
-			 int i;
+			 NSInteger i;
 			 KismetXMLImporter *myImporter =  [[KismetXMLImporter alloc] init];
 			 for (i = 0; i < [[aOP URLs] count]; ++i)
 			 {
@@ -441,7 +441,7 @@
 {
     WaveDriver *wd;
     NSMutableDictionary *md;
-    int y;
+    NSInteger y;
     
     wd = [WaveHelper driverWithName:_whichDriver];
     if (!wd) {
@@ -560,7 +560,7 @@
     });
 }
 
-- (void)reallyWantToDelete:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)reallyWantToDelete:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
     NSUserDefaults *sets;
     NSMutableArray *temp;
@@ -701,7 +701,7 @@
 #pragma mark MAP MENU
 #pragma mark -
 
-- (void)showAreaDone:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)showAreaDone:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
     _importOpen--;
 	NSParameterAssert(_importOpen == 0);
@@ -753,7 +753,7 @@
    }
 }
 
-- (void)showAreaAllDone:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)showAreaAllDone:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
     _importOpen--;
 	NSParameterAssert(_importOpen == 0);
@@ -776,7 +776,7 @@
 - (IBAction)showAllNetArea:(id)sender
 {
     NSMutableArray *a;
-    unsigned int i;
+    NSUInteger i;
     
     if ([sender state] == NSOffState)
 	{
@@ -865,7 +865,7 @@
 		[borderlessWindow makeKeyAndOrderFront:borderlessWindow];
 		[borderlessWindow setLevel:kCGStatusWindowLevel + 1];	
 		
-		int i;
+		NSInteger i;
 		for ( i = 0; i < 10 ; ++i)
 		{
 			[borderlessWindow setAlphaValue:[borderlessWindow alphaValue] + 0.1];
@@ -891,7 +891,7 @@
 		
 		[NSMenu setMenuBarVisible:YES];
 		
-		int i;
+		NSInteger i;
 		for (i=0; i<10; ++i) {
 			[borderlessWindow setAlphaValue:[borderlessWindow alphaValue] - 0.1];
 			[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
@@ -961,7 +961,7 @@
 {
     @autoreleasepool
 	{
-        int i;
+        NSInteger i;
         
         for (i = 0 ; i < 1500 ; ++i)
 		{
@@ -1009,7 +1009,7 @@
 - (IBAction)debugTestWPAHashingFunction:(id)sender
 {
     UInt8 output[40];
-    int i, j;
+    NSInteger i, j;
     NSMutableString *ms;
     
     if (!wpaTestPasswordHash()) DBNSLog(@"WPA hash test failed");
@@ -1021,7 +1021,7 @@
     for (i = 0 ; i < WPA_PMK_LENGTH ; ++i)
 	{
         j = output[i];
-        [ms appendFormat:@"%.2x", j];
+        [ms appendFormat:@"%.2lx", (long)j];
     }
 	
     DBNSLog(@"Testvector 1 returned: %@", ms);
@@ -1032,7 +1032,7 @@
     for (i = 0; i < WPA_PMK_LENGTH ; ++i)
 	{
         j = output[i];
-        [ms appendFormat:@"%.2x", j];
+        [ms appendFormat:@"%.2lx", (long)j];
     }
 	
     DBNSLog(@"Testvector 2 returned: %@", ms);

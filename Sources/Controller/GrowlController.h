@@ -36,36 +36,36 @@
 + (void)notifyGrowlOpenNetwork:(NSString *)notname
                           SSID:(NSString *)SSID
                          BSSID:(NSString *)BSSID
-                        signal:(int)signal
-                       channel:(int)channel;
+                        signal:(NSUInteger)signal
+                       channel:(NSUInteger)channel;
 
 + (void)notifyGrowlUnknownNetwork:(NSString *)notname
                              SSID:(NSString *)SSID
                             BSSID:(NSString *)BSSID
-                           signal:(int)signal
-                          channel:(int)channel;
+                           signal:(NSUInteger)signal
+                          channel:(NSUInteger)channel;
 
 + (void)notifyGrowlLEAPNetwork:(NSString *)notname
                           SSID:(NSString *)SSID
                          BSSID:(NSString *)BSSID
-                        signal:(int)signal
-                       channel:(int)channel;
+                        signal:(NSUInteger)signal
+                       channel:(NSUInteger)channel;
 
 + (void)notifyGrowlWEPNetwork:(NSString *)notname
                          SSID:(NSString *)SSID
                         BSSID:(NSString *)BSSID
-                       signal:(int)signal
-                      channel:(int)channel;
+                       signal:(NSUInteger)signal
+                      channel:(NSUInteger)channel;
 
 + (void)notifyGrowlWPANetwork:(NSString *)notname
                          SSID:(NSString *)SSID
                         BSSID:(NSString *)BSSID
-                       signal:(int)signal
-                      channel:(int)channel;
+                       signal:(NSUInteger)signal
+                      channel:(NSUInteger)channel;
 
 + (void)notifyGrowlProbeRequest:(NSString *)notname
                           BSSID:(NSString *)BSSID
-                         signal:(int)signal;
+                         signal:(NSUInteger)signal;
 
 + (void)notifyGrowlStartScan;
 + (void)notifyGrowlStopScan;

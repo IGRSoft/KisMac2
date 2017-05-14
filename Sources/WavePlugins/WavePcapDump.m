@@ -33,7 +33,7 @@
 
 @implementation WavePcapDump
 
-- (id) initWithDriver:(WaveDriver *)wd andDumpFilter:(int)dumpFilter {
+- (id) initWithDriver:(WaveDriver *)wd andDumpFilter:(NSInteger)dumpFilter {
     self = [super initWithDriver:wd];
     
     if (!self)
@@ -42,7 +42,7 @@
     _dumpFilter = dumpFilter;
     NSString* path;
     char err[PCAP_ERRBUF_SIZE];
-    int i;
+    NSInteger i;
     _f = NULL;
     _p = NULL;
 
@@ -62,7 +62,7 @@
 													 locale:nil];
         while ([[NSFileManager defaultManager] fileExistsAtPath: path]) 
         {
-            path = [[NSString stringWithFormat:@"%@.%u", dumpDestination, i] stringByExpandingTildeInPath];
+            path = [[NSString stringWithFormat:@"%@.%@", dumpDestination, @(i)] stringByExpandingTildeInPath];
             path = [[NSDate date] descriptionWithCalendarFormat:path
 													   timeZone:nil
 														 locale:nil];
@@ -96,7 +96,7 @@
         ((_dumpFilter==2) && ([packet type] == IEEE80211_TYPE_DATA)) || 
         ((_dumpFilter==3) && ([packet isResolved]!=-1)) ) {
         memcpy(&h.ts, [packet creationTime], sizeof(struct timeval));
-        h.len = h.caplen = [packet length];
+        h.len = h.caplen = (bpf_u_int32)[packet length];
         pcap_dump((u_char*)_f, &h, (u_char*)[packet frame]);
     }
     

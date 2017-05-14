@@ -58,14 +58,14 @@
     NSEnumerator	*_currentRateEnumerator;
     NSNumber		*_currentRate;
     NSTimer			*_timer;
-    bool			_catchedPacket;
+    BOOL			_catchedPacket;
     
     UInt8 _randomSourceMAC[6];
     UInt8 _checks;
 
 }
 
-- (bool) startTest: (WaveNet *)net withClient:(WaveClient *)client;
+- (BOOL) startTest: (WaveNet *)net withClient:(WaveClient *)client;
 - (void) stepTestProbeRequest;
 - (void) stepTestRTS;
 - (void) checkResponse;

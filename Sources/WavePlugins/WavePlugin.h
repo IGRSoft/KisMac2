@@ -45,15 +45,15 @@ typedef NS_ENUM(NSUInteger, WavePluginPacketResponse)
 {
     WavePluginStatus	_status;
     WaveDriver			*_driver;
-    bool				_stopFlag;
+    BOOL				_stopFlag;
     
     WaveNet				*_networkInTest;
 }
 
 - (id) initWithDriver:(WaveDriver *)driver;
-- (bool) startTest;
+- (BOOL) startTest;
 - (WavePluginStatus) status;
-- (bool) stopTest;
+- (BOOL) stopTest;
 - (WavePluginPacketResponse) gotPacket:(WavePacket *)packet fromDriver:(WaveDriver *)driver;
 
 @end

@@ -48,7 +48,7 @@
 {
     NSUserDefaults *sets;
     NSArray *a;
-    unsigned int x, c, lc;
+    NSUInteger x, c, lc;
     NSMenuItem *mi;
     WaveDriver *wd;
     WaveDriver *actWD = nil;
@@ -63,10 +63,12 @@
     _activeDriversCount = 0;
     
     a = [WaveHelper getWaveDrivers];
+    
+    SEL selDriverSelector = NSSelectorFromString(@"selDriver:");
     if ([a count] == 0)
 	{
         mi = (NSMenuItem*)[aChannelMenu insertItemWithTitle:NSLocalizedString(@"(No driver loaded)", "menu item")
-													 action:@selector(selDriver:)
+													 action:selDriverSelector
 											  keyEquivalent:@""
 													atIndex:0];
         [mi setEnabled:NO];
@@ -91,7 +93,7 @@
         {
             wd = a[x];
             mi = (NSMenuItem*)[aChannelMenu insertItemWithTitle:[wd deviceName]
-														 action:@selector(selDriver:)
+														 action:selDriverSelector
 												  keyEquivalent:@""
 														atIndex:0];
             ++_activeDriversCount;
@@ -155,9 +157,9 @@
     }
 }
 
-- (void)menuSetEnabled:(bool)a menu:(NSMenu*)menu
+- (void)menuSetEnabled:(BOOL)a menu:(NSMenu*)menu
 {
-    int x;
+    NSInteger x;
     
     [menu setAutoenablesItems:a];
     for ( x = 0 ; x < [menu numberOfItems] ; ++x )
@@ -172,7 +174,7 @@
 - (void)updatePrefs:(NSNotification*)note
 {
     NSUserDefaults *sets;
-    int x;
+    NSInteger x;
     NSString* key;
     
     sets=[NSUserDefaults standardUserDefaults];
@@ -293,9 +295,9 @@
 
 #pragma mark -
 
-- (void)crackDone:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)crackDone:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
-	int i;
+	NSInteger i;
 	
     _importOpen--;
 	NSParameterAssert(_importOpen == 0);
@@ -421,7 +423,7 @@
     [self startCrackDialogWithTitle:NSLocalizedString(@"Cracking...", "default status string for crack dialog") stopScan:YES];
 }
 
-- (bool)startActiveAttack
+- (BOOL)startActiveAttack
 {
     WaveDriver *wd;
     

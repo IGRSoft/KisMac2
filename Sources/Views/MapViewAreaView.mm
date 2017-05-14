@@ -55,7 +55,7 @@
 
 - (void)makeCache:(NSArray*)networks {
     double xx, yy, s, a, r, g, b, d, av, sens, maxd;
-    int *c, q, t, networkCount, i, x, y;
+    NSInteger *c, q, t, networkCount, i, x, y;
     double **f;
     NSPoint p;
     NSDictionary *coord;
@@ -66,9 +66,9 @@
     NSSize imgSize;
     ImportController *im;
     WaveNet *network;
-    int qual;
-    int **cache;
-    int height, width;
+    NSInteger qual;
+    NSInteger **cache;
+    NSInteger height, width;
     @autoreleasepool
 	{
         NSRect rec = NSZeroRect;
@@ -91,24 +91,24 @@
         good = [WaveHelper intToColor:[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaColorGood"]];
         bad  = [WaveHelper intToColor:[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaColorBad"]];
         sens = [[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaSensitivity"] intValue];
-        qual = (int)(101.0 - sqrt(([[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaQuality"] floatValue])*1000.0));
+        qual = (NSInteger)(101.0 - sqrt(([[[NSUserDefaults standardUserDefaults] objectForKey:@"NetAreaQuality"] floatValue])*1000.0));
         zoom = [self getPixelPerDegreeNoZoom];
         imgSize = [_mapImage size];
         
-        width = (unsigned int)(imgSize.width );
+        width = (NSUInteger)(imgSize.width );
         width = (width - (width % qual)) / qual +1;
-        height= (unsigned int)(imgSize.height);
+        height= (NSUInteger)(imgSize.height);
         height= (height- (height% qual)) / qual +1;
         [im setMax:width];
         
-        cache = new int* [width];
+        cache = new NSInteger* [width];
         for (x=0; x<width; ++x) {
-            cache[x] = new int[height];
+            cache[x] = new NSInteger[height];
             for (t=0; t<height; ++t) cache[x][t]=0;
         }
         
         f = new double* [networkCount];
-        c = new int [networkCount];
+        c = new NSInteger [networkCount];
         
         for (t=0;t<networkCount;++t)
 		{
@@ -127,7 +127,7 @@
             }
         }
         
-		bool needBreakProcess = true;
+		BOOL needBreakProcess = true;
 		
         for (x = 0; x < width; ++x)
 		{
@@ -159,10 +159,10 @@
                 
                 if (maxd>0.1) {
                     col = [bad blendedColorWithFraction:(maxd / sens) ofColor:good];
-                    i  = (unsigned int)floor([col alphaComponent] * 255.0 * (maxd < 1.1 ? (maxd-0.1) : 1.0)) << 24;
-                    i |= (unsigned int)floor([col redComponent]   * 255) << 16;
-                    i |= (unsigned int)floor([col greenComponent] * 255) << 8;
-                    i |= (unsigned int)floor([col blueComponent]  * 255);
+                    i  = (NSUInteger)floor([col alphaComponent] * 255.0 * (maxd < 1.1 ? (maxd-0.1) : 1.0)) << 24;
+                    i |= (NSUInteger)floor([col redComponent]   * 255) << 16;
+                    i |= (NSUInteger)floor([col greenComponent] * 255) << 8;
+                    i |= (NSUInteger)floor([col blueComponent]  * 255);
                     cache[x][y] = i;
                 }  else cache[x][y] = 0;
             }

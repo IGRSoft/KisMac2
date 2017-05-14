@@ -84,7 +84,7 @@
         );
 }
 
-- (void)saveDialogDone:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(SEL)overrideFunction
+- (void)saveDialogDone:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(SEL)overrideFunction
 {
     switch (returnCode)
     {
@@ -134,7 +134,8 @@
 {
     if ((sender != self) && (![self.scanController isSaved]))
     {
-        [self showWantToSaveDialog:@selector(new:)];
+        SEL newSelector = NSSelectorFromString(@"new:");
+        [self showWantToSaveDialog:newSelector];
         
         return;
     }
@@ -204,7 +205,7 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 for (int i = 0; i < [[op URLs] count]; ++i)
+			 for (NSInteger i = 0; i < [[op URLs] count]; ++i)
              {
                  [self.scanController importKisMAC:[[op URLs][i] path]];
 			 }
@@ -239,7 +240,7 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 for (int i = 0; i < [[op URLs] count]; ++i)
+			 for (NSInteger i = 0; i < [[op URLs] count]; ++i)
              {
                  [self.scanController importPCAP:[[op URLs][i] path]];
 			 }
@@ -386,7 +387,7 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 for (int i = 0; i < [[op URLs] count]; ++i)
+			 for (NSInteger i = 0; i < [[op URLs] count]; ++i)
              {
                  [self.scanController wordlist40bitApple:[[op URLs][i] path]];
              }
@@ -410,7 +411,7 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 for (int i = 0; i < [[op URLs] count]; ++i)
+			 for (NSInteger i = 0; i < [[op URLs] count]; ++i)
              {
                  [self.scanController wordlist104bitApple:[[op URLs][i] path]];
              }
@@ -434,7 +435,7 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 for (int i = 0; i < [[op URLs] count]; ++i)
+			 for (NSInteger i = 0; i < [[op URLs] count]; ++i)
              {
                  [self.scanController wordlist104bitMD5:[[op URLs][i] path]];
              }
@@ -484,7 +485,7 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 for (int i = 0; i < [[op URLs] count]; ++i)
+			 for (NSInteger i = 0; i < [[op URLs] count]; ++i)
              {
                  [self.scanController wordlistWPA:[[op URLs][i] path]];
              }
@@ -524,7 +525,7 @@
 	 {
 		 if (result == NSFileHandlingPanelOKButton)
 		 {
-			 for (int i = 0; i < [[op URLs] count]; ++i)
+			 for (NSInteger i = 0; i < [[op URLs] count]; ++i)
              {
                  [self.scanController wordlistLEAP:[[op URLs][i] path]];
              }

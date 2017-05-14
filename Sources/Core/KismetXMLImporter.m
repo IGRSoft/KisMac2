@@ -88,11 +88,11 @@
     }
     else if([elementName isEqualToString:@"BSSID"])
     {
-        unsigned int ID[6];
+        NSUInteger ID[6];
         sscanf([currentStringValue UTF8String],
-               "%2X:%2X:%2X:%2X:%2X:%2X",
+               "%2lX:%2lX:%2lX:%2lX:%2lX:%2lX",
                &ID[0], &ID[1], &ID[2], &ID[3], &ID[4], &ID[5]);
-        [currentNet setValue: [NSString stringWithFormat:@"%2X%2X%2X%2X%2X%2X", 
+        [currentNet setValue: [NSString stringWithFormat:@"%2lX%2lX%2lX%2lX%2lX%2lX",
                                ID[0], ID[1],ID[2], ID[3], ID[4], ID[5]] forKey:@"ID"];
         //DBNSLog(@"Net Found BSSID = %@", currentStringValue);
         [currentNet setValue: currentStringValue forKey:@"BSSID"];

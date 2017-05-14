@@ -49,13 +49,13 @@
 - (BOOL)importImageForMap:(NSString*)filename;
 - (BOOL)importPCAP:(NSString*)filename;
 - (BOOL)exportKML:(NSString*)filename;
-- (BOOL)downloadMapFrom:(NSString*)server forPoint:(waypoint)w resolution:(NSSize)size zoomLevel:(int)zoom;
+- (BOOL)downloadMapFrom:(NSString*)server forPoint:(waypoint)w resolution:(NSSize)size zoomLevel:(NSInteger)zoom;
 - (BOOL)save:(NSString*)filename;
 - (BOOL)saveAs:(NSString*)filename;
 
 - (BOOL)selectNetworkWithBSSID:(NSString*)BSSID;
 - (BOOL)selectNetworkAtIndex:(NSNumber*)index;
-- (int) networkCount;
+- (NSInteger) networkCount;
 
 - (BOOL)isBusy;
 
@@ -70,8 +70,6 @@
 - (BOOL)wordlistWPA:(NSString*)wordlist;
 - (BOOL)wordlistLEAP:(NSString*)wordlist;
 
-- (BOOL)weakSchedulingAttackForKeyLen:(int)keyLen andKeyID:(int)keyID;
+- (BOOL)weakSchedulingAttackForKeyLen:(NSInteger)keyLen andKeyID:(NSInteger)keyID;
 
 @end
-
-BOOL saveAllNets;

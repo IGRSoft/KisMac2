@@ -63,7 +63,7 @@ struct eeprom_93cx6 {
 	void (*register_read)(struct eeprom_93cx6 *eeprom);
 	void (*register_write)(struct eeprom_93cx6 *eeprom);
 
-	int width;
+	NSInteger width;
 
 	char reg_data_in;
 	char reg_data_out;

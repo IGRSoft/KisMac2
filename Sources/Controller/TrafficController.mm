@@ -76,12 +76,12 @@
     
     /* color wheel permutation */
     NSMutableArray *tempColor = [NSMutableArray array];
-    for (int x = 0; x <= 32; ++x)
+    for (NSInteger x = 0; x <= 32; ++x)
     {
-        float hue=0.0;
-        for (int i = 2; i <= 32; i = i*2)
+        CGFloat hue=0.0;
+        for (NSInteger i = 2; i <= 32; i = i*2)
         {
-            if ( (x % i) >= (i/2) ) hue += 1.0/ (float)i;
+            if ( (x % i) >= (i/2) ) hue += 1.0/ (CGFloat)i;
         }
         [tempColor addObject:[NSColor colorWithDeviceHue:hue saturation:1 brightness:1 alpha:0.9]];
     }
@@ -107,7 +107,7 @@
 
     // default to 30-second interval
     scanInterval = [_scanner scanInterval];
-    maxLength = (int)(30.0 / scanInterval);
+    maxLength = (NSInteger)(30.0 / scanInterval);
     [self setTimeLength:_intervalButton];
     [self setCurrentMode:_modeButton];
     
@@ -139,7 +139,7 @@
     [[NSUserDefaults standardUserDefaults] setInteger:[sender indexOfSelectedItem]
                                                forKey:@"GraphTimeInterval"];
 
-    maxLength = (int)ceil([[sender selectedItem] tag] / scanInterval);
+    maxLength = (NSInteger)ceil([[sender selectedItem] tag] / scanInterval);
     gridNeedsRedrawn = YES;
     
     [self performSelectorOnMainThread:@selector(resized:) withObject:nil waitUntilDone:YES];
@@ -184,21 +184,30 @@
 
 - (void)updateDataForRect:(NSRect)rect
 {
-    int i, current;
-    unsigned int j;
+    NSInteger i, current;
+    NSUInteger j;
     
 	allNets = [_container allNets];
     
     // order networks by signal value
     switch(currentMode) {
         case trafficData:
-            [allNets sortUsingSelector:@selector(compareRecentTrafficTo:)];
+        {
+            SEL compareRecentTrafficToSelector = NSSelectorFromString(@"compareRecentTrafficTo:");
+            [allNets sortUsingSelector:compareRecentTrafficToSelector];
+        }
             break;
         case packetData:
-            [allNets sortUsingSelector:@selector(compareRecentPacketsTo:)];
+        {
+            SEL compareRecentPacketsToSelector = NSSelectorFromString(@"compareRecentPacketsTo:");
+            [allNets sortUsingSelector:compareRecentPacketsToSelector];
+        }
             break;
         case signalData:
-            [allNets sortUsingSelector:@selector(compareRecentSignalTo:)];
+        {
+            SEL compareRecentSignalToSelector = NSSelectorFromString(@"compareRecentSignalTo:");
+            [allNets sortUsingSelector:compareRecentSignalToSelector];
+        }
             break;
     }
 
@@ -221,7 +230,7 @@
     }
 
     aMaximum = 0;
-    memset(buffer, 0, MAX_YIELD_SIZE * sizeof(int));
+    memset(buffer, 0, MAX_YIELD_SIZE * sizeof(NSInteger));
 
     // find the biggest point on our graph
     for (i = 0 ; i < length ; ++i)
@@ -293,13 +302,13 @@
 
 - (void)drawGridInRect:(NSRect)rect
 {
-    static float lastVScale = 0.0;
+    static CGFloat lastVScale = 0.0;
     static NSRect lastRect = NSZeroRect;
     NSMutableArray *a;
-    int i = 0;
-    int count = 0;
-    int multiple = 0;
-    float curY, curX;
+    NSInteger i = 0;
+    NSInteger count = 0;
+    NSInteger multiple = 0;
+    CGFloat curY, curX;
     
     if(lastVScale == vScale && NSEqualRects(lastRect,rect)
        && !gridNeedsRedrawn)
@@ -313,7 +322,7 @@
     lastRect = rect;
     a = [NSMutableArray array];
     
-    count = (int)ceil(rect.size.height / stepy);
+    count = (NSInteger)ceil(rect.size.height / stepy);
     if(count >= 20)
     {
         multiple = 2;		// show a line each 1kb
@@ -337,7 +346,7 @@
     }
     multiple = 0;
 
-    count = (int)ceil(rect.size.width / stepx);
+    count = (NSInteger)ceil(rect.size.width / stepx);
     if(count >= 60)
     {
         multiple = 12;		// show a line each minute
@@ -382,8 +391,8 @@
 //TODO: rewrite that shit!
 - (void)drawGraphInRect:(NSRect)rect
 {
-    int i, *ptr;
-    unsigned int n;
+    NSInteger i, *ptr;
+    NSUInteger n;
     BIGLGraphView *curView;
     NSMutableArray *a;
     
@@ -399,8 +408,8 @@
     for (n = 0 ; n < [allNets count] ; ++n)
     {
         WaveNet* net = allNets[n];
-        float width = rect.size.width;
-        float height;
+        CGFloat width = rect.size.width;
+        CGFloat height;
         
         switch(currentMode) {
             case trafficData:
@@ -431,7 +440,7 @@
         {
             height = buffer[i] * vScale;
             if (height > rect.size.height) height = rect.size.height;
-            [a addObject:@(width - (((float)(length - i)) * stepx))];
+            [a addObject:@(width - (((CGFloat)(length - i)) * stepx))];
             [a addObject:@(height)];
         }
         i--;
@@ -442,7 +451,7 @@
         
         if (![net graphColor])
         {
-            static int colorCount = 0;
+            static NSInteger colorCount = 0;
             [net setGraphColor:colorArray[colorCount % [colorArray count]]];
             ++colorCount;
         }
@@ -465,8 +474,8 @@
 - (void)drawGridLabelForRect:(NSRect)rect
 {
     // draws the text, giving a numerical value to the graph
-    unsigned int j;
-    int current = 0, max = 0;
+    NSUInteger j;
+    NSInteger current = 0, max = 0;
     NSMutableDictionary* attrs = [[NSMutableDictionary alloc] init];
     NSFont* textFont = [NSFont fontWithName:@"Monaco" size:12];
     NSString *zeroStr, *currentStr, *maxStr;
@@ -478,22 +487,22 @@
             switch(currentMode)
             {
                 case trafficData:
-                    current += (int)([(WaveNet*)allNets[j] graphData].trafficData[length - 2 + offset]  / scanInterval);
+                    current += (NSInteger)([(WaveNet*)allNets[j] graphData].trafficData[length - 2 + offset]  / scanInterval);
                     break;
                 case packetData:
-                    current += (int)([(WaveNet*)allNets[j] graphData].packetData[length - 2 + offset]);
+                    current += (NSInteger)([(WaveNet*)allNets[j] graphData].packetData[length - 2 + offset]);
                     break;
                 case signalData:
-                    current += (int)([(WaveNet*)allNets[j] graphData].signalData[length - 2 + offset]);
+                    current += (NSInteger)([(WaveNet*)allNets[j] graphData].signalData[length - 2 + offset]);
                     break;
             }
         }
     }
 
     if (currentMode==trafficData)
-        max = (int)(aMaximum * 1.1 / scanInterval);
+        max = (NSInteger)(aMaximum * 1.1 / scanInterval);
     else
-        max = (int)(aMaximum * 1.1);
+        max = (NSInteger)(aMaximum * 1.1);
     
     attrs[NSFontAttributeName] = textFont;
     attrs[NSForegroundColorAttributeName] = [NSColor colorWithCalibratedRed:96.0/255.0
@@ -536,8 +545,8 @@
 - (void)drawLegendForRect:(NSRect)rect
 {
     NSImage * image;
-    unsigned int i;
-    float width = 0, height = 0;
+    NSUInteger i;
+    CGFloat width = 0, height = 0;
     NSBezierPath* legendPath = [[NSBezierPath alloc] init];
     NSMutableDictionary* attrs = [[NSMutableDictionary alloc] init];
     NSFont* textFont = [NSFont fontWithName:@"Monaco" size:12];
@@ -579,7 +588,7 @@
         //make sure there is a color
         if (![net graphColor])
         {
-            static int colorCount = 0;
+            static NSInteger colorCount = 0;
             [net setGraphColor:colorArray[colorCount % [colorArray count]]];
             ++colorCount;
         }
@@ -609,22 +618,22 @@
     return nil;
 }
 
-- (NSString*)stringForBytes:(int)bytes
+- (NSString*)stringForBytes:(NSInteger)bytes
 {
     if(bytes < 1024)
-        return [NSString stringWithFormat:@"%d bps",bytes];
+        return [NSString stringWithFormat:@"%@ bps", @(bytes)];
     else
-        return [NSString stringWithFormat:@"%.2f kbps",(float)bytes / 1024];
+        return [NSString stringWithFormat:@"%.2f kbps",(CGFloat)bytes / 1024];
 }
 
-- (NSString*)stringForPackets:(int)bytes
+- (NSString*)stringForPackets:(NSInteger)bytes
 {
-    return [NSString stringWithFormat:@"%d %@", bytes, NSLocalizedString(@"packets/sec", "label of traffic view")];
+    return [NSString stringWithFormat:@"%@ %@", @(bytes), NSLocalizedString(@"packets/sec", "label of traffic view")];
 }
 
-- (NSString*)stringForSignal:(int)bytes
+- (NSString*)stringForSignal:(NSInteger)bytes
 {
-    return [NSString stringWithFormat:@"%d %@", bytes, NSLocalizedString(@"signal", "label of traffic view")];
+    return [NSString stringWithFormat:@"%@ %@", @(bytes), NSLocalizedString(@"signal", "label of traffic view")];
 }
 
 #pragma mark -
@@ -634,10 +643,10 @@
 {
     @autoreleasepool
     {
-        int i;
-        int fps = 30;
-        int frames = (int)floor((float)fps * scanInterval);
-        float delta = (dvScale - vScale) / (float)frames;
+        NSInteger i;
+        NSInteger fps = 30;
+        NSInteger frames = (NSInteger)floor((CGFloat)fps * scanInterval);
+        CGFloat delta = (dvScale - vScale) / (CGFloat)frames;
 
         if([zoomLock tryLock])
         {

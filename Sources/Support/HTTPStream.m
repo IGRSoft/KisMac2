@@ -48,7 +48,7 @@
     return self;
 }
 
-- (id)initWithURL:(NSURL*)url andPostVariables:(NSDictionary*)postVariables reportErrors:(bool)reportErrors {
+- (id)initWithURL:(NSURL*)url andPostVariables:(NSDictionary*)postVariables reportErrors:(BOOL)reportErrors {
     self = [self init];
     if (!self) return nil;
     
@@ -64,33 +64,33 @@
 
 #pragma mark -
 
-- (bool)setURL:(NSURL*) url {
+- (BOOL)setURL:(NSURL*) url {
     NSAssert(!_inProgress, @"Stream already working");
     
 	_url = url;
     return YES;
 }
 
-- (bool)setPostVariables:(NSDictionary*)postVariables {
+- (BOOL)setPostVariables:(NSDictionary*)postVariables {
     NSAssert(!_inProgress, @"Stream already working");
     
 	_postVariables = postVariables;
     return YES;
 }
 
-- (bool)working {
+- (BOOL)working {
     return _inProgress;
 }
 
-- (int)errorCode {
+- (NSInteger)errorCode {
     return _errorCode;
 }
 
-- (void)setReportErrors:(bool)reportErrors {
+- (void)setReportErrors:(BOOL)reportErrors {
     _reportErrors = reportErrors;
 }
 
-- (bool)execute 
+- (BOOL)execute 
 {
     NSEnumerator *e;
     NSString *var;
@@ -101,9 +101,9 @@
     CFHTTPMessageRef myMessage = CFHTTPMessageCreateEmpty(kCFAllocatorDefault, FALSE);
     int sockd;
     struct sockaddr_in serv_name;
-    int status;
+    NSInteger status;
     struct hostent *hp;
-    u_long ip;
+    in_addr_t ip;
     
     NSAssert(!_inProgress, @"Stream already working");
     NSAssert(_url, @"URL not set");
@@ -143,7 +143,7 @@
 		}
 		else
 		{
-			ip = *(int *)hp->h_addr_list[0];
+			ip = *hp->h_addr_list[0];
 			
 			/* server address */
 			serv_name.sin_family = AF_INET;
@@ -168,7 +168,7 @@
 				}
 				else
 				{
-					bool needBreakProcess = false;
+					BOOL needBreakProcess = false;
 					
 					while (!CFHTTPMessageIsHeaderComplete(myMessage))
 					{

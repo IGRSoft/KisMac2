@@ -34,7 +34,7 @@
     NSArray * networks;
 }
 
-+ (int) airportInstanceCount;
++ (NSInteger) airportInstanceCount;
 +(WaveDriverAirport*)sharedInstance;
 
 - (BOOL)joinBSSID:(UInt8*) bssid withPassword:(NSString*)passwd;

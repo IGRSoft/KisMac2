@@ -99,9 +99,9 @@ static pcap_t *_device;
 }
 
 // return 0 for success, 1 for error, 2 for self handled error
-+ (int) initBackend
++ (NSInteger) initBackend
 {
-	int ret = -1;
+	NSInteger ret = -1;
     
 	if ([WaveDriverAirportExtreme deviceAvailable]) ret = 0;
     
@@ -110,8 +110,8 @@ static pcap_t *_device;
 
 + (BOOL) loadBackend {
     ImportController *importController;
-    int result;
-    int x;
+    NSInteger result;
+    NSInteger x;
         
     do {
         importController = [[ImportController alloc] initWithWindowNibName:@"Import"];
@@ -153,7 +153,7 @@ pcap_dumper_t * dumper;
     NSInteger retErr = 0;
     BOOL shouldPlayback = NO;
 
-    NSInteger dataLinks[] = {DLT_PRISM_HEADER, DLT_IEEE802_11_RADIO_AVS, DLT_IEEE802_11_RADIO, 0};
+    int dataLinks[] = {DLT_PRISM_HEADER, DLT_IEEE802_11_RADIO_AVS, DLT_IEEE802_11_RADIO, 0};
     
 	_apeType = APExtTypeBcm;
     

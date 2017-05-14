@@ -39,14 +39,14 @@
  */ 
 
 void fast_hmac_md5 (
-    const unsigned char *text, int text_len, 
-    unsigned char *key, int key_len,
+    const unsigned char *text, NSInteger text_len, 
+    unsigned char *key, NSInteger key_len,
     void * digest) 
 { 
     md5_context context;
     unsigned char k_ipad[65]; /* inner padding - key XORd with ipad */
     unsigned char k_opad[65]; /* outer padding - key XORd with opad */
-    int i;
+    NSInteger i;
     
     /*
      * the HMAC_MD5 transform looks like: 
@@ -82,14 +82,14 @@ void fast_hmac_md5 (
 } 
 
 void hmac_md5 (
-    const unsigned char *text, int text_len, 
-    unsigned char *key, int key_len,
+    const unsigned char *text, NSInteger text_len, 
+    unsigned char *key, NSInteger key_len,
     void * digest) 
 { 
     md5_context context;
     unsigned char k_ipad[65]; /* inner padding - key XORd with ipad */
     unsigned char k_opad[65]; /* outer padding - key XORd with opad */
-    int i;
+    NSInteger i;
     
     /* if key is longer than 64 bytes reset it to key=MD5(key) */ 
     if (key_len > 64) { 
@@ -141,11 +141,11 @@ void hmac_md5 (
     //memcpy(digest, context.digest, 16);
 } 
 
-void fast_hmac_sha1( unsigned char *text, int text_len, unsigned char *key, int key_len, unsigned char *digest) {
+void fast_hmac_sha1( unsigned char *text, NSInteger text_len, unsigned char *key, NSInteger key_len, unsigned char *digest) {
     sha1_context context;
     unsigned char k_ipad[65]; /* inner padding - key XORd with ipad */ 
     unsigned char k_opad[65]; /* outer padding - key XORd with opad */
-    int i; 
+    NSInteger i; 
     
     /* 
      * the HMAC_SHA1 transform looks like: 
@@ -180,14 +180,14 @@ void fast_hmac_sha1( unsigned char *text, int text_len, unsigned char *key, int 
 }
 
 
-void hmac_sha1( unsigned char *text, int text_len, 
-    unsigned char *key, int key_len,
+void hmac_sha1( unsigned char *text, NSInteger text_len, 
+    unsigned char *key, NSInteger key_len,
     unsigned char *digest) 
 {
     sha1_context context;
     unsigned char k_ipad[65]; /* inner padding - key XORd with ipad */ 
     unsigned char k_opad[65]; /* outer padding - key XORd with opad */
-    int i; 
+    NSInteger i; 
     
     /* if key is longer than 64 bytes reset it to key=SHA1(key) */
     if (key_len > 64) { 
@@ -247,27 +247,27 @@ void hmac_sha1( unsigned char *text, int text_len,
 void F(
     char *password,
     const unsigned char *ssid,
-    int ssidlength,
-    int iterations,
-    int count,
+    NSInteger ssidlength,
+    NSInteger iterations,
+    NSInteger count,
     unsigned char *output) 
 {
     unsigned char digest[36], 
     digest1[SHA_DIGEST_LENGTH];
-    int i, j; 
+    NSInteger i, j; 
     
     for(i = 0; i < strlen(password); ++i) {
         assert((password[i] >= 32) && (password[i] <= 126));
     }
     
-    /* U1 = PRF(P, S || int(i)) */ 
+    /* U1 = PRF(P, S || NSInteger(i)) */ 
     memcpy(digest, ssid, ssidlength);
     digest[ssidlength] = (unsigned char)((count>>24) & 0xff);   
     digest[ssidlength+1] = (unsigned char)((count>>16) & 0xff); 
     digest[ssidlength+2] = (unsigned char)((count>>8) & 0xff);
     digest[ssidlength+3] = (unsigned char)(count & 0xff); 
     hmac_sha1(digest, ssidlength+4, 
-        (unsigned char*) password, (int) strlen(password), 
+        (unsigned char*) password, (NSInteger) strlen(password), 
         digest1);
     
     /* output = U1 */ 
@@ -276,13 +276,13 @@ void F(
     for (i = 1; i < iterations; ++i) {
         /* Un = PRF(P, Un-1) */ 
         hmac_sha1(digest1, SHA_DIGEST_LENGTH,
-            (unsigned char*) password, (int) strlen(password), 
+            (unsigned char*) password, (NSInteger) strlen(password), 
             digest); 
     
         memcpy(digest1, digest, SHA_DIGEST_LENGTH); 
     
         /* output = output xor Un */ 
-        for (j = 0; j < SHA_DIGEST_LENGTH; ++i) {
+        for (j = 0; j < SHA_DIGEST_LENGTH; ++j) {
             output[j] ^= digest[j]; 
         }
     }
@@ -295,10 +295,10 @@ void F(
  * output must be 40 octets in length and outputs 256 bits of key   
 */
 
-int wpaPasswordHash ( 
+NSInteger wpaPasswordHash ( 
     char *password,
     const unsigned char *ssid, 
-    int ssidlength, 
+    NSInteger ssidlength, 
     unsigned char *output) 
 { 
     if ((strlen(password) > 63) || (ssidlength > 32))
@@ -320,15 +320,15 @@ int wpaPasswordHash (
  */
 
 void PRF(
-    unsigned char *key, int key_len,
-    unsigned char *prefix, int prefix_len,
-    unsigned char *data, int data_len,
-    unsigned char *output, int len) 
+    unsigned char *key, NSInteger key_len,
+    unsigned char *prefix, NSInteger prefix_len,
+    unsigned char *data, NSInteger data_len,
+    unsigned char *output, NSInteger len) 
 { 
-    int i;
+    NSInteger i;
     unsigned char input[1024]; /* concatenated input */ 
-    int currentindex = 0;
-    int total_len;
+    NSInteger currentindex = 0;
+    NSInteger total_len;
     
     memcpy(input, prefix, prefix_len);
     input[prefix_len] = 0; /* single octet 0 */
@@ -379,7 +379,7 @@ void generatePTK512(UInt8* ptk, UInt8* pmk, const UInt8* anonce, const UInt8* sn
 
 #pragma mark -
 
-bool wpaTestPasswordHash() {
+BOOL wpaTestPasswordHash() {
     unsigned char out[80];
     
     wpaPasswordHash("password", (UInt8*)"IEEE", 4, out);

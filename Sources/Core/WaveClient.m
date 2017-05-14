@@ -287,15 +287,15 @@
 
 #pragma mark -
 
-- (float)receivedBytes {
+- (CGFloat)receivedBytes {
     return _receivedBytes;
 }
 
-- (float)sentBytes {
+- (CGFloat)sentBytes {
     return _sentBytes;
 }
 
-- (int)curSignal {
+- (NSUInteger)curSignal {
     @synchronized(self) {
         if ([_date compare:[NSDate dateWithTimeIntervalSinceNow:0.5]]==NSOrderedDescending) _curSignal=0;
     }
@@ -336,20 +336,20 @@
     }
 }
 
-- (int)wpaKeyCipher {
+- (NSUInteger)wpaKeyCipher {
     return _wpaKeyCipher;
 }
 
 - (NSData *)rawID {
     UInt8   ID8[6];
-    int     ID32[6];
-    int i;
+    NSUInteger     ID32[6];
+    NSUInteger i;
     
     if (!_ID) return nil;
 
     @synchronized(self) {
     
-        if (sscanf([_ID UTF8String], "%2X:%2X:%2X:%2X:%2X:%2X", &ID32[0], &ID32[1], &ID32[2], &ID32[3], &ID32[4], &ID32[5]) != 6) return nil;
+        if (sscanf([_ID UTF8String], "%2lX:%2lX:%2lX:%2lX:%2lX:%2lX", &ID32[0], &ID32[1], &ID32[2], &ID32[3], &ID32[4], &ID32[5]) != 6) return nil;
     }
     
     for (i = 0; i < 6; ++i)

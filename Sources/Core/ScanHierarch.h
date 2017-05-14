@@ -35,12 +35,12 @@
     WaveContainer *_container;
     NSString *aNameString;
     NSString *aIdentKey;
-    int aType;
+    NSInteger aType;
     ScanHierarch *parent;
     NSMutableArray *children;
 }
 
-+ (ScanHierarch *) rootItem:(WaveContainer*)container index:(int)idx;
++ (ScanHierarch *) rootItem:(WaveContainer*)container index:(NSInteger)idx;
 + (void) updateTree;
 + (void) clearAllItems;
 
@@ -48,9 +48,9 @@
 
 - (NSComparisonResult)compare:(ScanHierarch *)aHier;
 - (NSComparisonResult)caseInsensitiveCompare:(ScanHierarch *)aHier;
-- (int)numberOfChildren;			// Returns -1 for leaf nodes
-- (ScanHierarch *)childAtIndex:(int)n;		// Invalid to call on leaf nodes
-- (int)type;
+- (NSInteger)numberOfChildren;			// Returns -1 for leaf nodes
+- (ScanHierarch *)childAtIndex:(NSInteger)n;		// Invalid to call on leaf nodes
+- (NSInteger)type;
 - (NSString *)nameString;
 - (NSString *)identKey;
 @end

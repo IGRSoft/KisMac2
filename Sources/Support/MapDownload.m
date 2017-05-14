@@ -49,25 +49,25 @@
 
 #pragma mark -
 
-- (NSString*)urlFromExpedia:(NSString*)server language:(NSString*)lang forPoint:(waypoint)w resolution:(NSSize)size zoomLevel:(int)zoom {
+- (NSString*)urlFromExpedia:(NSString*)server language:(NSString*)lang forPoint:(waypoint)w resolution:(NSSize)size zoomLevel:(NSInteger)zoom {
     NSString *req = nil, *error = nil;
-    int scale;
-    float expediaFactorW, expediaFactorH;
+    NSInteger scale;
+    CGFloat expediaFactorW, expediaFactorH;
     int sockd;
     struct sockaddr_in serv_name;
     char buf[2024];
-    int status;
+    NSInteger status;
     struct hostent *hp;
-    u_long ip;
-    int bytesread;
+    in_addr_t ip;
+    NSInteger bytesread;
     NSString *s;
-    int errcount = 0;
+    NSInteger errcount = 0;
     CFHTTPMessageRef myMessage;
     
     scale = 6 - zoom;
     /*
     req = [NSString stringWithFormat:@"http://%@/pub/agent.dll?qscr=mrdt&CenP=%f,%f&Lang=%@&Alti=%d&MapS=0&Size=%d,%d&Offs=0.000000,0", 
-        server, w._lat, w._long, lang, scale, (int)size.width, (int)size.height];
+        server, w._lat, w._long, lang, scale, (NSInteger)size.width, (NSInteger)size.height];
     
     NSDictionary *dic;
     NSHTTPCookieStorage *cookiestore;
@@ -116,14 +116,14 @@ in Safari.");
         close(sockd);
 		return nil;
     }
-    ip = *(int *)hp->h_addr_list[0];
+    ip = *hp->h_addr_list[0];
 
     /* server address */ 
     serv_name.sin_family = AF_INET;
     serv_name.sin_addr.s_addr = ip;
     serv_name.sin_port = htons(80);
     
-    DBNSLog(@"Connecting to expedia (%s, %lu)",inet_ntoa(serv_name.sin_addr), ip);
+    DBNSLog(@"Connecting to expedia (%s, %@)", inet_ntoa(serv_name.sin_addr), @(ip));
     
     /* connect to the server */
     status = connect(sockd, (struct sockaddr*)&serv_name, sizeof(serv_name));
@@ -134,8 +134,8 @@ in Safari.");
 		return nil;
     }
         
-    s = [NSString stringWithFormat:@"GET /pub/agent.dll?qscr=mrdt&CenP=%f,%f&Lang=%@&Alti=%d&MapS=0&Size=%d,%d&Offs=0.000000,0 HTTP/1.0\nHost: %@\nCookie: jscript=1\nConnection: close\n\n", 
-        w._lat, w._long, lang, scale, (int)size.width, (int)size.height, server];
+    s = [NSString stringWithFormat:@"GET /pub/agent.dll?qscr=mrdt&CenP=%f,%f&Lang=%@&Alti=%@&MapS=0&Size=%@,%@&Offs=0.000000,0 HTTP/1.0\nHost: %@\nCookie: jscript=1\nConnection: close\n\n", 
+        w._lat, w._long, lang, @(scale), @(size.width), @(size.height), server];
 
     DBNSLog(@"Sending request to expedia");
     write(sockd, [s UTF8String], [s length]);
@@ -145,7 +145,7 @@ in Safari.");
     
     bytesread = read(sockd, buf, 2024);
 	
-	bool wasError = false;
+	BOOL wasError = false;
     while ((bytesread != -1) && ([s length] < 1100)) {
         if (bytesread==0) {
             ++errcount;
@@ -238,20 +238,20 @@ in Safari.");
     return req;
 }
 
-- (BOOL)downloadMapFrom:(NSString*)server forPoint:(waypoint)w resolution:(NSSize)size zoomLevel:(int)zoom {
+- (BOOL)downloadMapFrom:(NSString*)server forPoint:(waypoint)w resolution:(NSSize)size zoomLevel:(NSInteger)zoom {
     NSString *req;
-    int scale,zone;
-    float scalef;
+    NSInteger scale,zone;
+    CGFloat scalef;
        double utme,utmn,K1,K2,K3,K4,K5,p,S,k0,sin1sec,nu,eprimesqd,e,rlat = 0.0,mperdeglat,mperdeglon,numpx,lon0;
 
     
-    if ((int)size.width == 0) { size.width = 1000; }
-    if ((int)size.height == 0) { size.height = 1000; }
+    if ((NSInteger)size.width == 0) { size.width = 1000; }
+    if ((NSInteger)size.height == 0) { size.height = 1000; }
     if (zoom == 0) { zoom = 3; }
     if ((![server isEqualToString:@"Street-Directory.com.au"]) && (zoom > 5)) zoom = 5;
 	
     if (!server) return NO;
-    if ((int)size.height < 0 || (int)size.width < 0 || (int)size.height > 10000 || (int)size.width > 10000) return NO;
+    if ((NSInteger)size.height < 0 || (NSInteger)size.width < 0 || (NSInteger)size.height > 10000 || (NSInteger)size.width > 10000) return NO;
     if (w._lat > 90 || w._lat < -90 || w._long < -180 || w._long > 180) return NO;
     if (zoom > 7 || zoom < 1) return NO;
     
@@ -265,17 +265,17 @@ in Safari.");
 
     if ([server isEqualToString:@"TerraServer (Satellite)"]) {
         scale = 16 - zoom;
-        req = [NSString stringWithFormat:@"http://terraserver-usa.com/GetImageArea.ashx?t=1&s=%d&lon=%f&lat=%f&w=%d&h=%d", scale, w._long, w._lat, (int)size.width, (int)size.height];
+        req = [NSString stringWithFormat:@"http://terraserver-usa.com/GetImageArea.ashx?t=1&s=%@&lon=%f&lat=%f&w=%@&h=%@", @(scale), w._long, w._lat, @(size.width), @(size.height)];
     } else if ([server isEqualToString:@"TerraServer (Map)"]) {
         scale = 16 - zoom;
-        req = [NSString stringWithFormat:@"http://terraserver-usa.com/GetImageArea.ashx?t=2&s=%d&lon=%f&lat=%f&w=%d&h=%d", scale, w._long, w._lat, (int)size.width, (int)size.height];
+        req = [NSString stringWithFormat:@"http://terraserver-usa.com/GetImageArea.ashx?t=2&s=%@&lon=%f&lat=%f&w=%@&h=%@", @(scale), w._long, w._lat, @(size.width), @(size.height)];
     } else if ([server isEqualToString:@"Expedia (United States)"]) {
         req = [self urlFromExpedia:@"www.expedia.com" language:@"0409USA" forPoint:w resolution:size zoomLevel:zoom];
     } else if ([server isEqualToString:@"Expedia (Europe)"]) {
         req = [self urlFromExpedia:@"www.expedia.de" language:@"EUR0407" forPoint:w resolution:size zoomLevel:zoom];
     } else if ([server isEqualToString:@"Map24"]) {
         size = NSMakeSize(1000,1000);
-        req = [NSString stringWithFormat:@"http://maptp.map24.com/map24/cgi?locid0=tmplocid0&wx0=%f&wy0=%f&iw=%d&ih=%d&mid=MAP24", w._long * 60.0, w._lat * 60.0, (int)size.width, (int)size.height];    
+        req = [NSString stringWithFormat:@"http://maptp.map24.com/map24/cgi?locid0=tmplocid0&wx0=%f&wy0=%f&iw=%@&ih=%@&mid=MAP24", w._long * 60.0, w._lat * 60.0, @(size.width), @(size.height)];
   
         _p1.x = size.width;
         _p1.y = size.height;
@@ -289,8 +289,8 @@ in Safari.");
     } else if ([server isEqualToString:@"Census Bureau Maps (United States)"]) {
         scalef = zoom;
         
-        req = [NSString stringWithFormat:@"http://tiger.census.gov/cgi-bin/mapper/map.gif?&lat=%f&lon=%f&ht=%f&wid=%f&conf=mapnew.con&iht=%d&iwd=%d",
-            w._lat, w._long, 0.065/scalef, 0.180/scalef, (int)size.height, (int)size.width];
+        req = [NSString stringWithFormat:@"http://tiger.census.gov/cgi-bin/mapper/map.gif?&lat=%f&lon=%f&ht=%f&wid=%f&conf=mapnew.con&iht=%@&iwd=%@",
+            w._lat, w._long, 0.065/scalef, 0.180/scalef, @(size.height), @(size.width)];
     } else if ([server isEqualToString:@"Street-Directory.com.au"]) {
         size = NSMakeSize(1200,1200);
         
@@ -335,7 +335,7 @@ in Safari.");
 							   DBNSLog(@"Warning Invalid Zoom Size!");
 							   NSBeep();
 			   }
-			   req = [NSString stringWithFormat:@"http://www.street-directory.com.au/sd_new/genmap.cgi?x=%f&y=%f&sizex=%d&sizey=%d&level=%d&star=&circle=", w._long, w._lat, (int)size.width, (int)size.height, zoom];    
+			   req = [NSString stringWithFormat:@"http://www.street-directory.com.au/sd_new/genmap.cgi?x=%f&y=%f&sizex=%@&sizey=%@&level=%@&star=&circle=", w._long, w._lat, @(size.width), @(size.height), @(zoom)];
 	   } else {
 	   // use Tasmania scale factors, eastings and northings (UTM zone 55)
 			   switch (zoom) {
@@ -374,7 +374,7 @@ in Safari.");
 			   else zone = floor(w._long/6)+31;
 			   lon0 = zone * 6 - 183;
 
-			   DBNSLog(@"UTM zone %d, central meridian %d", zone, (int)lon0);
+			   DBNSLog(@"UTM zone %@, central meridian %@", @(zone), @(lon0));
 
 			   e = sqrt(1 - pow(b_WGS84,2)/pow(a_WGS84,2));
 			   eprimesqd = pow(e,2)/(1-pow(e,2));
@@ -398,7 +398,7 @@ in Safari.");
 			   utme = K4*p + K5*pow(p,3) + 500000;
 
 			   // I hope those formulae are right... if not, someone in Tasmania can fix them
-			   req = [NSString stringWithFormat:@"http://www.street-directory.com.au/sd_new/tas_genmap.cgi?x=%f&y=%f&sizex=%d&sizey=%d&level=%d&star=&circle=", utme, utmn, (int)size.width, (int)size.height, zoom];    
+			   req = [NSString stringWithFormat:@"http://www.street-directory.com.au/sd_new/tas_genmap.cgi?x=%f&y=%f&sizex=%@&sizey=%@&level=%@&star=&circle=", utme, utmn, @(size.width), @(size.height), @(zoom)];
 	   }
 	   // scalef now equals number of km in approx 68?? (using numpx) px, and we should have a 1200x1200 map image request ready to go
 	   // distance to edge of map = scalef*600/numpx km north AND east

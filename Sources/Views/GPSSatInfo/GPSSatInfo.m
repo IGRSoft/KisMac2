@@ -47,8 +47,8 @@
 	NSRect r;
 	NSBezierPath *bp;
 	NSColor *color;
-	int currentsat,strength,prn;
-	bool used;
+	NSInteger currentsat,strength,prn;
+	BOOL used;
 
 	bp = [NSBezierPath bezierPathWithRect:[self bounds]];
 	[[NSColor colorWithCalibratedRed:0.3 green:0.3 blue:0.3 alpha:1] set];
@@ -69,11 +69,11 @@
 		}
 		
 		if (prn > 0 && prn < 10) {
-		[[NSString stringWithFormat:@"%i",prn] drawAtPoint:NSMakePoint((((currentsat - 1) * 18) + 14),-2) withAttributes:attr];
+		[[NSString stringWithFormat:@"%@", @(prn)] drawAtPoint:NSMakePoint((((currentsat - 1) * 18) + 14),-2) withAttributes:attr];
 		}
 		
 		if (prn >= 10) {
-		[[NSString stringWithFormat:@"%i",prn] drawAtPoint:NSMakePoint((((currentsat - 1) * 18) + 11),-2) withAttributes:attr];
+		[[NSString stringWithFormat:@"%@", @(prn)] drawAtPoint:NSMakePoint((((currentsat - 1) * 18) + 11),-2) withAttributes:attr];
 		}
 		
 		[color set];
@@ -82,7 +82,7 @@
 	}
 }
 
-- (int)getPRNForSat:(int)sat {
+- (NSInteger)getPRNForSat:(NSInteger)sat {
 	if (sat == 1) {
 		return sat1_prn;
 	} else if (sat == 2) {
@@ -112,7 +112,7 @@
 	}
 }
 
-- (void)setPRNForSat:(int)sat PRN:(int)prn {
+- (void)setPRNForSat:(NSInteger)sat PRN:(NSInteger)prn {
 	if (sat == 1) {
 		 sat1_prn = prn;
 	} else if (sat == 2) {
@@ -140,7 +140,7 @@
 	}
 }
 
-- (int)getUsedForSat:(int)sat {
+- (NSInteger)getUsedForSat:(NSInteger)sat {
 	if (sat == 1) {
 		return sat1_used;
 	} else if (sat == 2) {
@@ -169,7 +169,7 @@
     return 0;
 }
 
-- (void)setUsedForSat:(int)sat used:(int)used {
+- (void)setUsedForSat:(NSInteger)sat used:(NSInteger)used {
 	if (sat == 1) {
 		 sat1_used = used;
 	} else if (sat == 2) {
@@ -198,7 +198,7 @@
 }
 
 
-- (int)getSignalForSat:(int)sat {
+- (NSInteger)getSignalForSat:(NSInteger)sat {
 	if (sat == 1) {
 		return sat1_strength;
 	} else if (sat == 2) {
@@ -227,7 +227,7 @@
     return 0;
 }
 
-- (int)setSignalForSat:(int)sat signal:(int)signal {
+- (NSInteger)setSignalForSat:(NSInteger)sat signal:(NSInteger)signal {
 	if (sat == 1) {
 		sat1_strength = signal;
 	} else if (sat == 2) {

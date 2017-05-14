@@ -60,23 +60,23 @@ void WirelessCryptMD5(char const *str, unsigned char *key);
 
 }
 
-+ (bool)runScript:(NSString*)script;
-+ (bool)runScript:(NSString*)script withArguments:(NSArray*)args;
++ (BOOL)runScript:(NSString*)script;
++ (BOOL)runScript:(NSString*)script withArguments:(NSArray*)args;
 
-+ (NSString*) bytesToString:(float) bytes;
++ (NSString*) bytesToString:(CGFloat)bytes;
 + (NSString*) urlEncodeString:(NSString*)string;
 + (NSString*) vendorForMAC:(NSString*)MAC;
-+ (NSString*) hexEncode:(UInt8*)data length:(int)len;
++ (NSString*) hexEncode:(UInt8*)data length:(NSUInteger)len;
 + (NSString *) macToString:(UInt8*)m;
 
-+ (void)speakSentence:(CFStringRef)cSentence withVoice:(int)voice;
-+ (bool)isServiceAvailable:(char*)service;
++ (void)speakSentence:(CFStringRef)cSentence withVoice:(NSUInteger)voice;
++ (BOOL)isServiceAvailable:(char*)service;
 
-+ (int)chan2freq:(int)channel;
-+ (int)freq2chan:(int)frequency;
++ (NSUInteger)chan2freq:(NSUInteger)channel;
++ (NSUInteger)freq2chan:(NSUInteger)frequency;
 
-+ (bool)unloadAllDrivers;
-+ (bool)loadDrivers;
++ (BOOL)unloadAllDrivers;
++ (BOOL)loadDrivers;
 + (NSArray*) getWaveDrivers;
 + (WaveDriver*) injectionDriver;
 + (WaveDriver*) driverWithName:(NSString*) s;
@@ -103,11 +103,11 @@ void WirelessCryptMD5(char const *str, unsigned char *key);
 
 + (ImportController*) importController;
 + (void) setImportController:(ImportController*)im;
-+ (NSMutableArray*) getProbeArrayForID:(char*)ident;
++ (NSMutableArray*) getProbeArrayForID:(char *)ident;
 
 + (void)addDictionary:(NSDictionary*)s toDictionary:(NSMutableDictionary*)d;
 
-+ (int)showCouldNotInstaniciateDialog:(NSString*)driverName;
++ (NSInteger)showCouldNotInstaniciateDialog:(NSString*)driverName;
 
 /* packet utilities */
 + (NSString*)frameControlToString:(UInt16)fc;

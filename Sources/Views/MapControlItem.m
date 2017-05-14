@@ -88,7 +88,7 @@ NSColor* col2NSColor(col c) {
     return [NSColor colorWithDeviceRed:c.red green:c.green blue:c.blue alpha:c.alpha];
 }
 
-col delta(col c1, col c2, int speed) {
+col delta(col c1, col c2, NSInteger speed) {
     col c;
     c.red   = (c1.red   - c2.red)   / speed;
     c.green = (c1.green - c2.green) / speed;
@@ -99,7 +99,7 @@ col delta(col c1, col c2, int speed) {
 
 @implementation MapControlItem
 
-- (void)_drawFrameForIndex:(int)index {
+- (void)_drawFrameForIndex:(NSInteger)index {
     NSBezierPath *b = [NSBezierPath bezierPath];
     NSAffineTransform *trans;
 	
@@ -179,7 +179,7 @@ col delta(col c1, col c2, int speed) {
     [self setImage:img];
 }
 
-- (id)initForID:(int)i {
+- (id)initForID:(NSInteger)i {
     self = [self init];
     if (!self) return nil;
     
@@ -251,8 +251,9 @@ col delta(col c1, col c2, int speed) {
 	f.origin.x += _parentLocation.x;
 	f.origin.y += _parentLocation.y;
 	
-        if([_zoomLock tryLock]) {
-            while(YES) {
+        if ([_zoomLock tryLock]) {
+            BOOL isActive = YES;
+            while (isActive) {
                 didSomething = NO;
 			ADJUSTX(fill);
 			ADJUSTX(border);

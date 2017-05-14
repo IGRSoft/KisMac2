@@ -186,7 +186,7 @@ static NSImage* _networkStrange;
 }
 
 - (NSImage*)generateImage {
-    float r = 15;
+    CGFloat r = 15;
     NSBezierPath *legendPath = [NSBezierPath bezierPath];
     NSFont* textFont = [NSFont fontWithName:@"Monaco" size:12];
     NSMutableDictionary* attrs = [NSMutableDictionary dictionary];
@@ -205,7 +205,7 @@ static NSImage* _networkStrange;
         size.width+=10;
     }
     
-    float height = fmax(r, size.height);
+    CGFloat height = fmax(r, size.height);
     img = [[NSImage alloc] initWithSize:NSMakeSize(size.width + r + 10, height)];
     [img lockFocus];
     

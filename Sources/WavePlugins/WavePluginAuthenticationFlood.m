@@ -33,7 +33,7 @@
 
 @implementation WavePluginAuthenticationFlood
 
-- (bool) startTest:(WaveNet*)net {
+- (BOOL) startTest:(WaveNet*)net {
     
     KFrame *kframe = &_authFrame;
     struct ieee80211_auth *frame = (struct ieee80211_auth *)(kframe->data);
@@ -91,7 +91,7 @@
     return;
 }
 
-- (bool) stopTest {
+- (BOOL) stopTest {
     _stopFlag = YES;
     return YES;
 }

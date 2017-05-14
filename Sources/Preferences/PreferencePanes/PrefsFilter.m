@@ -36,27 +36,27 @@
 - (NSString *)makeValidMACAddress:(NSString *)challenge
 {
     const char *c;
-    int tmp[6];
+    NSInteger tmp[6];
     NSString *mac = [[challenge stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
     
     if ([mac length]<11) return nil;
     if ([mac length]>17) return nil;
         
     c = [mac UTF8String];
-    if (sscanf(c,"%2X:%2X:%2X:%2X:%2X:%2X", &tmp[0], &tmp[1], &tmp[2], &tmp[3], &tmp[4], &tmp[5]) != 6) return nil;
+    if (sscanf(c,"%2lX:%2lX:%2lX:%2lX:%2lX:%2lX", &tmp[0], &tmp[1], &tmp[2], &tmp[3], &tmp[4], &tmp[5]) != 6) return nil;
     
-    return [NSString stringWithFormat:@"%.2X%.2X%.2X%.2X%.2X%.2X", tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5]]; 
+    return [NSString stringWithFormat:@"%.2lX%.2lX%.2lX%.2lX%.2lX%.2lX", tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5]];
 }
 
 - (NSString *)makeMAC:(NSString *)mac
 {
     const char *c;
-    int tmp[6];
+    NSInteger tmp[6];
 
     c = [mac UTF8String];
-    if (sscanf(c,"%2X%2X%2X%2X%2X%2X", &tmp[0], &tmp[1], &tmp[2], &tmp[3], &tmp[4], &tmp[5]) != 6) return @"invalid MAC";
+    if (sscanf(c,"%2lX%2lX%2lX%2lX%2lX%2lX", &tmp[0], &tmp[1], &tmp[2], &tmp[3], &tmp[4], &tmp[5]) != 6) return @"invalid MAC";
     
-    return [NSString stringWithFormat:@"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X", tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5]];
+    return [NSString stringWithFormat:@"%.2lX:%.2lX:%.2lX:%.2lX:%.2lX:%.2lX", tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5]];
 }
 
 - (void)updateUI

@@ -44,22 +44,22 @@
 	IBOutlet NSTextField* _hdop_field;
 	IBOutlet GPSSatInfo* _satinfo;
 	
-	float _vel;
-	float _velFactor;
-	float _maxvel;
+	CGFloat _vel;
+	CGFloat _velFactor;
+	CGFloat _maxvel;
 	
-	float _alt;
-	float _altFactor;
-	float _maxalt;
+	CGFloat _alt;
+	CGFloat _altFactor;
+	CGFloat _maxalt;
 	
-	int _haveFix;
+	NSInteger _haveFix;
 }
 - (void)setShowMenu:(NSMenuItem *)menu;
-- (void)updateDataNS:(double)ns EW:(double)ew ELV:(double)elv numSats:(int)sats HDOP:(double)hdop VEL:(float)vel;
+- (void)updateDataNS:(double)ns EW:(double)ew ELV:(double)elv numSats:(NSInteger)sats HDOP:(double)hdop VEL:(CGFloat)vel;
 - (IBAction)updateSpeed:(id)sender;
 - (IBAction)updateAlt:(id)sender;
 - (IBAction)resetPeak:(id)sender;
-- (void)updateSatPRNForSat:(int)sat prn:(int)prn;
-- (void)updateSatSignalStrength:(int)sat signal:(int)signal;
-- (void)updateSatUsed:(int)sat used:(int)used;
+- (void)updateSatPRNForSat:(NSInteger)sat prn:(NSInteger)prn;
+- (void)updateSatSignalStrength:(NSInteger)sat signal:(NSInteger)signal;
+- (void)updateSatUsed:(NSInteger)sat used:(NSInteger)used;
 @end

@@ -28,9 +28,9 @@
 
 @interface ImportController : NSWindowController <NSWindowDelegate>
 {
-    bool _canceled;
-    bool _animate;
-    bool _isFullyInititialized;
+    BOOL _canceled;
+    BOOL _animate;
+    BOOL _isFullyInititialized;
     
     IBOutlet NSWindow* aWindow;
     IBOutlet NSProgressIndicator* aProgressBar;
@@ -40,11 +40,11 @@
 }
 
 - (IBAction)cancelAction:(id)sender;
-- (void)setMax:(float)max;
+- (void)setMax:(CGFloat)max;
 - (void)increment;
 - (void)stopAnimation;
-- (bool)canceled;
-- (void)terminateWithCode:(int)code;
+- (BOOL)canceled;
+- (void)terminateWithCode:(NSInteger)code;
 - (void)setTitle:(NSString*)title;
 - (void)setStatusField:(NSString*)status;
 @end

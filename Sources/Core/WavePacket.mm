@@ -34,7 +34,7 @@
 
 #define AMOD(x, y) ((x) % (y) < 0 ? ((x) % (y)) + (y) : (x) % (y))
 
-bool is8021xPacket(const UInt8* fileData) {
+BOOL is8021xPacket(const UInt8* fileData) {
     if (fileData[0] == 0xAA &&
         fileData[1] == 0xAA &&
         fileData[2] == 0x03 &&
@@ -52,8 +52,8 @@ bool is8021xPacket(const UInt8* fileData) {
 @implementation WavePacket
 
 //scans through variable length fields for ssid
--(void) parseTaggedData:(unsigned char*) packet length:(int) length {
-    int len;
+-(void) parseTaggedData:(unsigned char*) packet length:(NSInteger) length {
+    NSInteger len;
 	UInt32 *vendorID;
     char ssid[LAST_BIT];
 	
@@ -148,8 +148,8 @@ bool is8021xPacket(const UInt8* fileData) {
 }
 
 //this initializes the structure with a raw frame
-- (bool)parseFrame:(KFrame*) f {
-    int i;
+- (BOOL)parseFrame:(KFrame*) f {
+    NSInteger i;
     NSMutableArray *ar;
 	
     struct ieee80211_hdr *hdr1;
@@ -214,7 +214,7 @@ bool is8021xPacket(const UInt8* fileData) {
     _channel = f->ctrl.channel;
     
     // TODO: Determine frame rx rate
-//    DBNSLog(@"rx_rate %d", f->ctrl.rate);
+//    DBNSLog(@"rx_rate %@", f->ctrl.rate);
     
     // Depending on the frame type we have to figure
     // the length of the header and payload
@@ -244,7 +244,7 @@ bool is8021xPacket(const UInt8* fileData) {
     // Determine various aspect of frame
     switch(_type) {
         case IEEE80211_TYPE_DATA:               //Data Frames
-            //DBNSLog(@"rx_rate %d", f->ctrl.rate);
+            //DBNSLog(@"rx_rate %@", f->ctrl.rate);
             if (_isToDS && _isFrDS) {
                 _netType = networkTypeTunnel;   //what can i say? it is a tunnel
             } else {
@@ -298,7 +298,7 @@ bool is8021xPacket(const UInt8* fileData) {
                 case IEEE80211_SUBTYPE_BEAMFORM_POLL:
                     break;
                 default:
-                    DBNSLog(@"%d %d", _type, _subtype);
+                    DBNSLog(@"%@ %@", @(_type), @(_subtype));
                     return NO;
             }
             break;
@@ -349,7 +349,7 @@ bool is8021xPacket(const UInt8* fileData) {
             }
             break;
         default:
-            DBNSLog(@"%d %d", _type, _subtype);
+            DBNSLog(@"%@ %@", @(_type), @(_subtype));
             return NO;
     }
 	if ((memcmp(_addr2, "\x00\x90\xd0\xf8\x99\x00", 6) == 0) && (_type == IEEE80211_TYPE_DATA)) {
@@ -452,7 +452,7 @@ bool is8021xPacket(const UInt8* fileData) {
         return nil;
     return [WaveHelper macToString:mac];
 }
-- (bool) isSenderEqualTo: (UInt8 *)senderID {
+- (BOOL) isSenderEqualTo: (UInt8 *)senderID {
 	UInt8* mac;
 	mac = [self rawSenderID];
 	
@@ -499,7 +499,7 @@ bool is8021xPacket(const UInt8* fileData) {
         return nil;
     return [WaveHelper macToString:mac];
 }
-- (bool) isReceiverEqualTo: (UInt8 *)receiverID {
+- (BOOL) isReceiverEqualTo: (UInt8 *)receiverID {
 	UInt8* mac;
 	mac = [self rawReceiverID];
 	
@@ -556,7 +556,7 @@ bool is8021xPacket(const UInt8* fileData) {
         return @"<no bssid>";
     return [WaveHelper macToString:mac];
 }
-- (bool) isBSSIDEqualTo: (UInt8 *)BSSID {
+- (BOOL) isBSSIDEqualTo: (UInt8 *)BSSID {
 	UInt8* mac;
 	mac = [self rawBSSID];
 	
@@ -569,7 +569,7 @@ bool is8021xPacket(const UInt8* fileData) {
         return YES;
     return NO;
 }
-- (bool)BSSID:(UInt8*)bssid {
+- (BOOL)BSSID:(UInt8*)bssid {
 	UInt8* mac;
 	mac = [self rawBSSID];
 	
@@ -578,7 +578,7 @@ bool is8021xPacket(const UInt8* fileData) {
 	
     return YES;
 }
-- (bool)ID:(UInt8*)netid {
+- (BOOL)ID:(UInt8*)netid {
     UInt8 *m = nil;
 
     switch (_type) {
@@ -641,31 +641,31 @@ bool is8021xPacket(const UInt8* fileData) {
 
 #pragma mark -
 
-- (int)signal {
+- (NSInteger)signal {
     return _signal;
 }
-- (int)length {
+- (NSInteger)length {
     return _length;
 }
-- (int)payloadLength {
+- (NSInteger)payloadLength {
     return _payloadLength;
 }
-- (int)channel {
+- (NSInteger)channel {
     return _channel;
 }
-- (int)primaryChannel {
+- (NSInteger)primaryChannel {
     return _primaryChannel;
 }
-- (int)type {
+- (NSInteger)type {
     return _type;
 }
-- (int)subType {
+- (NSInteger)subType {
     return _subtype;
 }
-- (bool)fromDS {
+- (BOOL)fromDS {
     return _isFrDS;
 }
-- (bool)toDS {
+- (BOOL)toDS {
     return _isToDS;
 }
 - (encryptionType)wep {
@@ -680,7 +680,7 @@ bool is8021xPacket(const UInt8* fileData) {
 - (NSArray*)SSIDs {
     return _SSIDs;
 }
-- (bool)isCorrectSSID {
+- (BOOL)isCorrectSSID {
 	NSString *ssid = [self SSID];
 	if (ssid && [ssid length]
 		&& ![ssid isEqualToString:NSLocalizedString(@"<tunnel>", "the ssid for tunnels")]
@@ -704,7 +704,7 @@ bool is8021xPacket(const UInt8* fileData) {
 - (UInt8*) frame {
     return _frame;
 }
-- (bool)isEAPPacket {
+- (BOOL)isEAPPacket {
     return _isEAP;
 }
 - (struct timeval *)creationTime {
@@ -715,7 +715,7 @@ bool is8021xPacket(const UInt8* fileData) {
 
 //which keybyte will be reveled by this packet
 //-1 if none
-- (int)isResolved {
+- (NSInteger)isResolved {
     if (_revelsKeyByte != -2) return _revelsKeyByte;
     
     if ((_isWep!=encryptionTypeWEP && _isWep!=encryptionTypeWEP40) || (_type!=IEEE80211_TYPE_DATA) || (_payloadLength<9)) {
@@ -723,8 +723,8 @@ bool is8021xPacket(const UInt8* fileData) {
         return _revelsKeyByte;
     }
         
-    int a = (_payload[0] + _payload[1]) % LAST_BIT;
-    int b = AMOD((_payload[0] + _payload[1]) - _payload[2], LAST_BIT);
+    NSInteger a = (_payload[0] + _payload[1]) % LAST_BIT;
+    NSInteger b = AMOD((_payload[0] + _payload[1]) - _payload[2], LAST_BIT);
 
     for(UInt8 B = 0; B < 13; ++B) {
       if((((0 <= a && a < B) ||
@@ -745,7 +745,7 @@ bool is8021xPacket(const UInt8* fileData) {
     _revelsKeyByte = -1;
     return _revelsKeyByte;
 }
-- (int)isResolved2 {
+- (NSInteger)isResolved2 {
     unsigned char sum, k;
     
     if ((_isWep!=encryptionTypeWEP && _isWep!=encryptionTypeWEP40) || (_type!=IEEE80211_TYPE_DATA) || (_payloadLength<9)) return -1;
@@ -779,7 +779,7 @@ bool is8021xPacket(const UInt8* fileData) {
 
 // These Methods are internal methods... not for external use.
 
-int detectLLCAndSNAP(UInt8 *fileData, int fileLength) {
+NSInteger detectLLCAndSNAP(UInt8 *fileData, NSInteger fileLength) {
     if (fileLength < 8)	
         return FALSE;
     else {
@@ -797,13 +797,13 @@ int detectLLCAndSNAP(UInt8 *fileData, int fileLength) {
             return FALSE;
     }
 }
-int detectIPVersion(UInt8 *fileData, int fileLength) {
+NSInteger detectIPVersion(UInt8 *fileData, NSInteger fileLength) {
     if (fileLength < 9)
         return -1;
     else 
         return (fileData[8] >> 4);
 }
-int detectIPHeaderLength(UInt8 *fileData, int fileLength) {
+NSInteger detectIPHeaderLength(UInt8 *fileData, NSInteger fileLength) {
     
     unsigned char shiftLeft;
     
@@ -815,11 +815,11 @@ int detectIPHeaderLength(UInt8 *fileData, int fileLength) {
         return (shiftLeft >> 4);
     }
 }
-int verifyIPv4Checksum(UInt8 *fileData, int fileLength) {
+NSInteger verifyIPv4Checksum(UInt8 *fileData, NSInteger fileLength) {
 	
     long computedChecksum;
     //unsigned char *dataPointer;
-    int i, headerLength, headerLoop;
+    NSInteger i, headerLength, headerLoop;
     
     headerLength = detectIPHeaderLength(fileData, fileLength);
     headerLoop = (headerLength * 4); 
@@ -841,7 +841,7 @@ int verifyIPv4Checksum(UInt8 *fileData, int fileLength) {
             return FALSE;
     }	
 }
-int isValidPacket(UInt8 *fileData, int fileLength) {
+NSInteger isValidPacket(UInt8 *fileData, NSInteger fileLength) {
     if (detectLLCAndSNAP(fileData, fileLength) == TRUE) {
         // frame probably contains data. 
         
@@ -941,7 +941,7 @@ int isValidPacket(UInt8 *fileData, int fileLength) {
 #pragma mark WPA stuff
 #pragma mark -
 
-- (bool)isWPAKeyPacket {
+- (BOOL)isWPAKeyPacket {
     if (!_isEAP)
         return NO;
         
@@ -969,7 +969,7 @@ int isValidPacket(UInt8 *fileData, int fileLength) {
          return NO; //this is not interesting
     
     _wpaKeyCipher = flags & WPA_FLAG_KEYCIPHER_MASK;
-    DBNSLog(@"WPA Cipher %x", _wpaKeyCipher);
+    DBNSLog(@"WPA Cipher %@", @(_wpaKeyCipher));
     switch (flags & (WPA_FLAG_MIC | WPA_FLAG_ACK | WPA_FLAG_INSTALL)) {
         case WPA_FLAG_ACK:  //only ack set
             DBNSLog(@"frame1");
@@ -993,7 +993,7 @@ int isValidPacket(UInt8 *fileData, int fileLength) {
     
     return YES;
 }
-- (int)wpaKeyCipher {
+- (NSInteger)wpaKeyCipher {
     return _wpaKeyCipher;
 }
 - (wpaNoncePresent)wpaCopyNonce:(UInt8*)destNonce {
@@ -1030,12 +1030,12 @@ int isValidPacket(UInt8 *fileData, int fileLength) {
 #pragma mark LEAP stuff
 #pragma mark -
 
-- (bool)isLEAPKeyPacket {
+- (BOOL)isLEAPKeyPacket {
     if (!_isEAP)
         return NO;
     frame8021x  *f;
     frameLEAP   *l;
-    int         userLength;
+    NSInteger         userLength;
     
     f = (frame8021x*)(_payload+8);
     l = (frameLEAP*) &f->data;

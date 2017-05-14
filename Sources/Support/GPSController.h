@@ -45,7 +45,7 @@ struct _position
     NSInteger _onNoFix;
     BOOL      _debugEnabled;
     NSInteger _linesRead;
-    NSInteger _serialFD;
+    int       _serialFD;
     NSInteger _veldir;
     CGFloat   _velkt;
     CGFloat   _maxvel;
@@ -83,7 +83,7 @@ struct _position
 - (NSString*)status;
 - (void)setCurrentPointNS:(double)ns EW:(double)ew ELV:(double)elv;
 
-- (waypoint) currentPoint;
+- (waypoint)currentPoint;
 - (void)stop;
 
 - (void)writeDebugOutput:(BOOL)enable;

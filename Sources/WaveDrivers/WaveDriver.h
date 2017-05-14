@@ -106,8 +106,8 @@ enum WaveDriverType
 -(BOOL) stoppedScanning;
 
 // for packet injection
--(BOOL) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval;
--(BOOL) sendKFrame:(KFrame *)f howMany:(int)howMany atInterval:(int)interval notifyTarget:(id)target notifySelectorString:(NSString *)selector;
+-(BOOL) sendKFrame:(KFrame *)f howMany:(NSInteger)howMany atInterval:(NSInteger)interval;
+-(BOOL) sendKFrame:(KFrame *)f howMany:(NSInteger)howMany atInterval:(NSInteger)interval notifyTarget:(id)target notifySelectorString:(NSString *)selector;
 -(BOOL) stopSendingFrames;
 
 //for the cards that support this

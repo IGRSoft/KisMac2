@@ -135,7 +135,7 @@ typedef UInt8 WirelessKey[13]; // For use with WirelessEncrypt
  *
  *  Returns 1 if a wireless interface is available, 0 otherwise
  */
-extern int WirelessIsAvailable(void);
+extern NSInteger WirelessIsAvailable(void);
 
 /*
  *  WirelessAttach()
@@ -303,7 +303,7 @@ extern WIErr WirelessJoinWEP(
  *
  *  WirelessKey myKey;
  *  WirelessEncrypt(@"password", &myKey, 1);
- *  for(int i=0; i <= 12; i++)
+ *  for(NSInteger i=0; i <= 12; i++)
  *  	printf("%.2X ", myKey[i]);
  *
  */
@@ -429,6 +429,6 @@ extern WIErr WirelessHCF_GetInfo(
  WirelessSetKey
  */
 
-extern WIErr WirelessPrivate(WirelessContextPtr inContext,void* in_ptr,int in_bytes,void* out_ptr,int  out_bytes);
+extern WIErr WirelessPrivate(WirelessContextPtr inContext,void* in_ptr,NSInteger in_bytes,void* out_ptr,NSInteger  out_bytes);
 
 #endif // __APPLE_80211__

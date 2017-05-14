@@ -112,7 +112,7 @@ ReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType type, void *c
     CFRelease(request);
 
     // Make sure it succeeded.
-	bool wasError = false;
+	BOOL wasError = false;
     if (!_stream) {
         errstr = NSLocalizedString(@"Creating the stream failed.", "Error for Crashreporter");
         wasError = true;
@@ -224,7 +224,7 @@ ReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType type, void *c
 }
 
 
-- (void)terminateit:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo 
+- (void)terminateit:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo 
 {
     [self denyAction:nil];
 }

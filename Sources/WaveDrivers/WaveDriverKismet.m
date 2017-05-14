@@ -41,7 +41,7 @@
 #include <unistd.h>
 #include "80211b.h"
 
-static int KismetInstances = 0;
+static NSInteger KismetInstances = 0;
 
 @implementation WaveDriverKismet
 
@@ -54,7 +54,7 @@ static int KismetInstances = 0;
     return self;
 }
 
-+(int) kismetInstanceCount {
++(NSInteger) kismetInstanceCount {
     return KismetInstances;
 }
 
@@ -104,8 +104,8 @@ static int KismetInstances = 0;
 		return nil;
 	}
 	
-	int foundhostname=0;
-	int foundport=0;
+	NSInteger foundhostname=0;
+	NSInteger foundport=0;
 	
 	NSArray *a;
 	a = [defs objectForKey:@"ActiveDrivers"];
@@ -161,10 +161,10 @@ static int KismetInstances = 0;
 #pragma mark -
 
 - (NSArray*) networksInRange {
-	int len,i,j,flags,t,signalint;
-	int usenetarray = 0;
+	NSInteger len,i,j,flags,t,signalint;
+	NSInteger usenetarray = 0;
 	char netbuf[2048];
-	unsigned int bssidbyte;
+	NSUInteger bssidbyte;
 	char bssidstring[6];
 	NSString *netrcvd, *name;
 	NSArray *netarray,*rcvd,*rcvd2,*rcvd3,*bssidar;
@@ -182,7 +182,7 @@ static int KismetInstances = 0;
     netbuf[len] = 0;
 	netrcvd = @(netbuf);
 	rcvd2 = [netrcvd componentsSeparatedByString:@"\n"]; // split packet into lines
-	int arrayCount = [rcvd2 count];
+	NSInteger arrayCount = [rcvd2 count];
 	for (i = 0; i < arrayCount; ++i) { // iterate through each line - 1 line = 1 network
 		@try {
 				netrcvd = rcvd2[i]; // put the current object into netrcvd
@@ -191,15 +191,15 @@ static int KismetInstances = 0;
 				if ([rcvd3[0] isEqualToString:@"*NETWORK:"]) { // if this is a line specifying a new network
 					bssidar = [rcvd3[1] componentsSeparatedByString:@":"]; // get the BSSID
 					
-					for (j=0; j<6; ++i) {
+					for (j = 0; j < 6; ++j) {
 						sscanf([bssidar[j] UTF8String], "%x", &bssidbyte); // convert it from ascii 12:34:56 into raw binary
 						bssidstring[j] = bssidbyte;
 					}
 					
 					bssid = [NSData dataWithBytes:bssidstring length:6];					// bssid, simple enough
-					signalint = [rcvd3[4] intValue];							// signal level, as an int
+					signalint = [rcvd3[4] intValue];							// signal level, as an NSInteger
 					if (signalint > 1000 || signalint < 0) { signalint = 0; }				// sometimes it comes through as an invalid number
-					signal = @(signalint);							// signal level as NSNumber, you can't put int into array
+					signal = @(signalint);							// signal level as NSNumber, you can't put NSInteger into array
 					noise = @0;										// this is only subtracted from signal, not needed
 					channel = @([rcvd3[6] intValue]);	// channel...
 					

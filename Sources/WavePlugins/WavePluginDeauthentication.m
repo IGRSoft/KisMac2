@@ -47,21 +47,21 @@
 	return self;
 }
 
-- (bool) startTest: (WaveNet *)net atInterval:(int)interval
+- (BOOL) startTest: (WaveNet *)net atInterval:(NSInteger)interval
 {
     KFrame kframe;
     struct ieee80211_deauth *deauth = (struct ieee80211_deauth *)(kframe.data);
     
-    int tmp[6];
+    NSInteger tmp[6];
     UInt8 x[6];
-    unsigned int i;
+    NSUInteger i;
     
     if ([net type] != networkTypeManaged )
 	{
         return NO;
     }
     // Check if we have a valid BSSID
-    if(sscanf([[net BSSID] UTF8String], "%x:%x:%x:%x:%x:%x", &tmp[0], &tmp[1], &tmp[2], &tmp[3], &tmp[4], &tmp[5]) < 6)
+    if(sscanf([[net BSSID] UTF8String], "%lx:%lx:%lx:%lx:%lx:%lx", &tmp[0], &tmp[1], &tmp[2], &tmp[3], &tmp[4], &tmp[5]) < 6)
 	{
         return NO;
     }
@@ -123,7 +123,7 @@
     _deauthing = deauthing;
 }
 
-- (bool) deauthenticateClient:(UInt8*)client inNetworkWithBSSID:(UInt8*)bssid
+- (BOOL) deauthenticateClient:(UInt8*)client inNetworkWithBSSID:(UInt8*)bssid
 {
     KFrame kframe;
     struct ieee80211_deauth *frame = (struct ieee80211_deauth *)(kframe.data);
@@ -161,9 +161,9 @@
     return YES;
 }
 
-- (bool) stopTest
+- (BOOL) stopTest
 {
-    bool stop = [super stopTest];
+    BOOL stop = [super stopTest];
     if (!stop)
 	{
         return NO;

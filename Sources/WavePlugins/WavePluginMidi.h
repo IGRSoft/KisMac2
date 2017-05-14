@@ -32,8 +32,8 @@
 
 }
 
-- (void)openChannel2:(int)note;
-- (void)playChord:(int)	note;
+- (void)openChannel2:(NSInteger)note;
+- (void)playChord:(NSInteger)	note;
 - (void)closeChannel;
 + (void)setTrackString:(NSString*)cs;
 + (void)setTrackStringClient:(NSString*)cs;

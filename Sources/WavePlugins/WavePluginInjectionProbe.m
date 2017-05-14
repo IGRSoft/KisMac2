@@ -36,9 +36,9 @@
 
 @implementation WavePluginInjectionProbe
 
-- (bool) startTest: (WaveNet *)net withClient:(WaveClient *)client 
+- (BOOL) startTest: (WaveNet *)net withClient:(WaveClient *)client 
 {
-    int i;
+    NSInteger i;
     
     // No vaild network, return
     if (!net)
@@ -183,7 +183,7 @@
     DBNSLog(@"Try to inject at %@", _currentRate);
     
     // sends some broadcast probes to see if card is ok
-    int frameSize = sizeof(struct ieee80211_probe_request) + 18;
+    NSInteger frameSize = sizeof(struct ieee80211_probe_request) + 18;
     
     // Allocate a frame to host probe_request and 18 bytes of info_elements (only rates)
     KFrame frame;
@@ -230,7 +230,7 @@
     DBNSLog(@"Try to inject at %@", _currentRate);
     
     // sends some RTS frame to see if card is ok
-    int frameSize = sizeof(struct ieee80211_rts);
+    NSInteger frameSize = sizeof(struct ieee80211_rts);
     
     // Allocate a frame to host RTS
     KFrame frame;
@@ -287,7 +287,7 @@
 	
     if (!memcmp(rawReceiverID, _randomSourceMAC, 6))
 	{
-        DBNSLog(@"Catch Injected packet response from %@ with a signal of %d", [packet stringSenderID], [packet signal]);
+        DBNSLog(@"Catch Injected packet response from %@ with a signal of %@", [packet stringSenderID], @([packet signal]));
         _catchedPacket = YES;
         
 		return WavePluginPacketResponseCatched;
@@ -303,9 +303,9 @@
     [self stopTest];
 }
 
-- (bool) stopTest
+- (BOOL) stopTest
 {
-    bool stop = [super stopTest];
+    BOOL stop = [super stopTest];
     if (!stop)
         return NO;
 	[_driver stopSendingFrames];

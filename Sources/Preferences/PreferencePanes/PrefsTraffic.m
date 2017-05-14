@@ -51,11 +51,11 @@
 {
     if(sender == _showSSID)
     {
-        [controller setObject:[NSNumber numberWithInt:[_showSSID state]] forKey:@"TrafficViewShowSSID"];
+        [controller setObject:@([_showSSID state]) forKey:@"TrafficViewShowSSID"];
     }
     else if(sender == _showBSSID)
     {
-        [controller setObject:[NSNumber numberWithInt:[_showBSSID state]] forKey:@"TrafficViewShowBSSID"];
+        [controller setObject:@([_showBSSID state]) forKey:@"TrafficViewShowBSSID"];
     }
     else if(sender == _avgSignalTime)
     {

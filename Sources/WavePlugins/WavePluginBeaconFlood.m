@@ -31,7 +31,7 @@
 
 @implementation WavePluginBeaconFlood
 
-- (bool) startTest {
+- (BOOL) startTest {
     KFrame *kframe = &_beaconFrame;
     struct ieee80211_probe_beacon *beacon = (struct ieee80211_probe_beacon *)(kframe->data);
     UInt8 *infoPtr = (UInt8 *)(beacon->info_element);
@@ -90,7 +90,7 @@
     return;
 }
 
--(bool) stopTest {
+-(BOOL) stopTest {
     return [super stopTest];
 }
 

@@ -40,7 +40,7 @@ struct clientData {
     const UInt8 *data;
     UInt32 dataLen;
     __unsafe_unretained NSString *clientID;
-    int wpaKeyCipher;
+    NSInteger wpaKeyCipher;
 };
 
 #pragma mark-
@@ -89,11 +89,11 @@ void prepared_hmac_sha1(const sha1_context *k_ipad, const sha1_context *k_opad, 
 #pragma mark optimized WPA password -> PMK mapping
 #pragma mark -
 
-void fastF(unsigned char *password, int pwdLen, const unsigned char *ssid, int ssidlength, const sha1_context *ipadContext, const sha1_context *opadContext, int count, unsigned char output[40])
+void fastF(unsigned char *password, NSInteger pwdLen, const unsigned char *ssid, NSInteger ssidlength, const sha1_context *ipadContext, const sha1_context *opadContext, NSInteger count, unsigned char output[40])
 {
     unsigned char digest[64], digest1[64];
     
-    /* U1 = PRF(P, S || int(i)) */ 
+    /* U1 = PRF(P, S || NSInteger(i)) */ 
     memcpy(digest1, ssid, ssidlength);
     digest1[ssidlength]   = 0;   
     digest1[ssidlength+1] = 0; 
@@ -105,31 +105,31 @@ void fastF(unsigned char *password, int pwdLen, const unsigned char *ssid, int s
     /* output = U1 */ 
     memcpy(output, digest, SHA_DIGEST_LENGTH);
 
-	int j;
-    for (int i = 1; i < 4096; ++i) {
+	NSInteger j;
+    for (NSInteger i = 1; i < 4096; ++i) {
         /* Un = PRF(P, Un-1) */ 
         prepared_hmac_sha1(ipadContext, opadContext, digest); 
     
         j = 0;
         /* output = output xor Un */
-        ((int*)output)[j] ^= ((int*)digest)[j]; ++j;
-        ((int*)output)[j] ^= ((int*)digest)[j]; ++j;
-        ((int*)output)[j] ^= ((int*)digest)[j]; ++j;
-        ((int*)output)[j] ^= ((int*)digest)[j]; ++j;
-        ((int*)output)[j] ^= ((int*)digest)[j];
+        ((NSInteger*)output)[j] ^= ((NSInteger*)digest)[j]; ++j;
+        ((NSInteger*)output)[j] ^= ((NSInteger*)digest)[j]; ++j;
+        ((NSInteger*)output)[j] ^= ((NSInteger*)digest)[j]; ++j;
+        ((NSInteger*)output)[j] ^= ((NSInteger*)digest)[j]; ++j;
+        ((NSInteger*)output)[j] ^= ((NSInteger*)digest)[j];
     }
 } 
 
 
-void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidlength, unsigned char output[40])
+void fastWP_passwordHash(char *password, const unsigned char *ssid, NSInteger ssidlength, unsigned char output[40])
 {
     unsigned char k_ipad[65]; /* inner padding - key XORd with ipad */ 
     unsigned char k_opad[65]; /* outer padding - key XORd with opad */
     sha1_context ipadContext, opadContext;
-    int pwdLen = strlen(password);
+    NSInteger pwdLen = strlen(password);
     
     /* XOR key with ipad and opad values */ 
-    for (int i = 0; i < pwdLen; ++i) {
+    for (NSInteger i = 0; i < pwdLen; ++i) {
         k_ipad[i] = password[i] ^ 0x36; 
         k_opad[i] = password[i] ^ 0x5c;
     } 
@@ -153,7 +153,7 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
     char wrd[100];
     const char *ssid = 0;
     FILE* fptr = NULL;
-    unsigned int i, j, words, ssidLength, keys, curKey;
+    NSUInteger i, j, words, ssidLength, keys, curKey;
     UInt8 pmk[40], ptk[64], digest[16];
     struct clientData *c;
     WaveClient *wc;
@@ -215,7 +215,7 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
                 }
 
                 c[curKey].data          = [[wc eapolPacket] bytes];
-                c[curKey].dataLen       = [[wc eapolPacket] length];
+                c[curKey].dataLen       = (UInt32)[[wc eapolPacket] length];
                 c[curKey].mic           = [[wc eapolMIC]    bytes];
                 c[curKey].clientID      = [wc ID];
                 c[curKey].wpaKeyCipher  = [wc wpaKeyCipher];
@@ -230,7 +230,7 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
     ssid = [_SSID UTF8String];
     ssidLength = [_SSID lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
   
-    float theTime, prevTime = clock() / (float)CLK_TCK;
+    CGFloat theTime, prevTime = clock() / (CGFloat)CLK_TCK;
 	
     while(![im canceled] && !feof(fptr))
     {
@@ -259,8 +259,8 @@ void fastWP_passwordHash(char *password, const unsigned char *ssid, int ssidleng
 
         if (words % 500 == 0)
         {
-            theTime =clock() / (float)CLK_TCK;
-            [im setStatusField:[NSString stringWithFormat:@"%d words tested    %.2f/second", words, 500.0 / (theTime - prevTime)]];
+            theTime =clock() / (CGFloat)CLK_TCK;
+            [im setStatusField:[NSString stringWithFormat:@"%@ words tested    %.2f/second", @(words), 500.0 / (theTime - prevTime)]];
             prevTime = theTime;
         }
         

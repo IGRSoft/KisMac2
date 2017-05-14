@@ -80,7 +80,7 @@ USBJack::~USBJack() {
     pthread_cond_destroy(&_wait_cond);
 }
 
-bool USBJack::loadPropertyList()
+BOOL USBJack::loadPropertyList()
 {
     CFStringRef ref;
     CFStringRef plistFile = CFStringCreateWithCString(kCFAllocatorDefault, getPlistFile(), kCFStringEncodingASCII);
@@ -108,18 +108,18 @@ IOReturn USBJack::_init() {
     return kIOReturnError;  //this method MUST be overridden
 }
 
-bool USBJack::getChannel(UInt16* channel) {
+BOOL USBJack::getChannel(UInt16* channel) {
     *channel = _channel;
     return true;   //this method MUST be overridden
 }
-bool USBJack::setChannel(UInt16 channel) {
+BOOL USBJack::setChannel(UInt16 channel) {
     return false;   //this method MUST be overridden
 }
 
-bool USBJack::startCapture(UInt16 channel) {
+BOOL USBJack::startCapture(UInt16 channel) {
     return false;   //this method MUST be overridden
 }
-bool USBJack::stopCapture() {
+BOOL USBJack::stopCapture() {
     return false;   //this method MUST be overridden
 }
 
@@ -213,20 +213,20 @@ KFrame *USBJack::receiveFrame()
     }
 }
 
-bool USBJack::sendKFrame(KFrame *data) {
+BOOL USBJack::sendKFrame(KFrame *data) {
     // Override in subclasses
     return NO;
 }
 
-bool USBJack::getAllowedChannels(UInt16* channels) {
+BOOL USBJack::getAllowedChannels(UInt16* channels) {
     return false;   //this method MUST be overridden
 }
 
 
-bool USBJack::devicePresent() {
+BOOL USBJack::devicePresent() {
     return _devicePresent;
 }
-bool USBJack::deviceMatched() {
+BOOL USBJack::deviceMatched() {
     return _deviceMatched;
 }
 
@@ -278,11 +278,11 @@ void  USBJack::_unlockDevice() {
 void USBJack::_interruptReceived(void *refCon, IOReturn result, void *arg0)
 {
     USBJack             *me = (USBJack*) refCon;
-    unsigned int        len = (unsigned int)(size_t)arg0;
+    NSUInteger        len = (NSUInteger)(size_t)arg0;
     IOReturn                    kr;
 
 //    DBNSLog(@"Interrupt Received %d", len);
-	bool needBreakProcess = false;
+	BOOL needBreakProcess = false;
 	
     if (kIOReturnSuccess != result) {
         if (result == (IOReturn)0xe00002ed)
@@ -328,7 +328,7 @@ void USBJack::_interruptReceived(void *refCon, IOReturn result, void *arg0)
 }
 
 // Default packet check/queuing.
-void USBJack::_rawFrameReceived(unsigned int len)
+void USBJack::_rawFrameReceived(NSUInteger len)
 {
     UInt32 type = NSSwapLittleShortToHost(_receiveBuffer.type);
     if (_USB_ISRXFRM(type))
@@ -369,7 +369,7 @@ void USBJack::_rawFrameReceived(unsigned int len)
     }
 }
 
-bool USBJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 /* channel */) {
+BOOL USBJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 /* channel */) {
     return true;         //override if needed
 }
 
@@ -377,16 +377,16 @@ bool USBJack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 /* ch
 # pragma mark Internal Packet Queue
 # pragma mark -
 
-int USBJack::initFrameQueue(void) {
+NSInteger USBJack::initFrameQueue(void) {
     _frameRing = (struct __frameRing *)calloc(1, sizeof(struct __frameRing));
     memset(_frameRing, 0, sizeof(struct __frameRing));
     return 0;
 }
-int USBJack::destroyFrameQueue(void) {
+NSInteger USBJack::destroyFrameQueue(void) {
     free(_frameRing);
     return 0;
 }
-int USBJack::insertFrameIntoQueue(void *f, UInt16 len, UInt16 channel)  {
+NSInteger USBJack::insertFrameIntoQueue(void *f, UInt16 len, UInt16 channel)  {
     struct __frameRingSlot *slot = nil;
     
     if(_frameRing)
@@ -403,7 +403,7 @@ int USBJack::insertFrameIntoQueue(void *f, UInt16 len, UInt16 channel)  {
             //        DBNSLog(@"Dropped packet, ring full");
             _frameRing->dropped++;
             if (_frameRing->dropped % 100 == 0)
-                DBNSLog(@"Dropped %d", _frameRing->dropped);
+                DBNSLog(@"Dropped %@", @(_frameRing->dropped));
             return 0;
         }
         //make sure f exists, otherwise we crash and burn
@@ -490,7 +490,7 @@ IOReturn USBJack::_findInterfaces(IOUSBDeviceInterface197 **dev) {
     UInt8			intfClass;
     UInt8			intfSubClass;
     UInt8			intfNumEndpoints;
-    int				pipeRef;
+    NSInteger				pipeRef;
     CFRunLoopSourceRef		runLoopSource;
     BOOL                        error;
     
@@ -519,7 +519,7 @@ IOReturn USBJack::_findInterfaces(IOUSBDeviceInterface197 **dev) {
         res = (*plugInInterface)->QueryInterface(plugInInterface, CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID220), (void**) &intf);
         (*plugInInterface)->Release(plugInInterface);			// done with this
         if (res || !intf) {
-            DBNSLog(@"couldn't create an IOUSBInterfaceInterface (%08x)\n", (int) res);
+            DBNSLog(@"couldn't create an IOUSBInterfaceInterface (%08x)\n", res);
             break;
         }
         
@@ -568,12 +568,12 @@ IOReturn USBJack::_findInterfaces(IOUSBDeviceInterface197 **dev) {
             
             kr2 = (*intf)->GetPipeProperties(intf, pipeRef, &direction, &number, &transferType, &maxPacketSize, &interval);
             if (kIOReturnSuccess != kr) {
-                DBNSLog(@"unable to get properties of pipe %d (%08x)\n", pipeRef, kr2);
+                DBNSLog(@"unable to get properties of pipe %@ (%08x)\n", @(pipeRef), kr2);
                 (void) (*intf)->USBInterfaceClose(intf);
                 (void) (*intf)->Release(intf);
                 break;
             } else {
-                DBNSLog(@"%d %d", pipeRef, direction);
+                DBNSLog(@"%@ %@", @(pipeRef), @(direction));
                 error = false;
                 if (direction == kUSBIn && transferType == kUSBBulk) kInPipe = pipeRef;
                 else if (direction == kUSBOut && transferType == kUSBBulk) kOutPipe = pipeRef;
@@ -581,7 +581,7 @@ IOReturn USBJack::_findInterfaces(IOUSBDeviceInterface197 **dev) {
                 else DBNSLog(@"Found unknown interface, ignoring");
             
                 if (error) {
-                    DBNSLog(@"unable to properties of pipe %d are not as expected!\n", pipeRef);
+                    DBNSLog(@"unable to properties of pipe %@ are not as expected!\n", @(pipeRef));
                     (void) (*intf)->USBInterfaceClose(intf);
                     (void) (*intf)->Release(intf);
                     break;
@@ -680,7 +680,7 @@ IOReturn USBJack::_findInterfaces(IOUSBDeviceInterface197 **dev) {
     
     return kr;
 }
-bool USBJack::_attachDevice() {
+BOOL USBJack::_attachDevice() {
     kern_return_t		kr;
     IOUSBDeviceInterface197    **dev;
     
@@ -759,7 +759,7 @@ void USBJack::_addDevice(void *refCon, io_iterator_t iterator) {
         res = (*plugInInterface)->QueryInterface(plugInInterface, CFUUIDGetUUIDBytes(kIOUSBDeviceInterfaceID197), (void**)&dev);
         (*plugInInterface)->Release(plugInInterface);			// done with this
         if (res || !dev) {
-            DBNSLog(@"couldn't create a device interface (%08x)\n", (int) res);
+            DBNSLog(@"couldn't create a device interface (%08x)\n", res);
             continue;
         }
         // technically should check these kr values
@@ -818,7 +818,7 @@ void USBJack::_handleDeviceRemoval(void *refCon, io_iterator_t iterator)
 {
     kern_return_t	kr;
     io_service_t	usbDevice;
-    int                 count = 0;
+    NSInteger                 count = 0;
     USBJack     *me = (USBJack*)refCon;
 
     while ((usbDevice = IOIteratorNext(iterator)))
@@ -861,7 +861,7 @@ void USBJack::_DeviceNotification(void *refCon, io_service_t service, natural_t 
 #pragma mark Loop Functions
 #pragma mark -
 
-bool USBJack::stopRun()
+BOOL USBJack::stopRun()
 {
     // No loop running
     if (_runLoop == NULL)
@@ -908,7 +908,7 @@ void USBJack::_runCFRunLoop(USBJack* me) {
         me->_runLoop = NULL;
     }
 } 
-bool USBJack::run() {
+BOOL USBJack::run() {
     pthread_t pt;
     
     _stayUp = true;

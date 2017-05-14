@@ -26,6 +26,6 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-int gethashlast2(const unsigned char *challenge, const unsigned char *response, unsigned char* endofhash);
-void NtPasswordHash(char *secret, int secret_len, unsigned char *hash);
-int testChallenge(const unsigned char* challenge, const unsigned char* response, unsigned char *zpwhash);
+NSInteger gethashlast2(const unsigned char *challenge, const unsigned char *response, unsigned char* endofhash);
+void NtPasswordHash(char *secret, NSInteger secret_len, unsigned char *hash);
+NSInteger testChallenge(const unsigned char* challenge, const unsigned char* response, unsigned char *zpwhash);

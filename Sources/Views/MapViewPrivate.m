@@ -63,7 +63,7 @@
 }
 
 - (void)_alignNetworks {
-    int i;
+    NSInteger i;
     NSArray *subviews;
     
     subviews = [_netContainer subViews];

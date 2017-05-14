@@ -67,8 +67,8 @@ struct leapClientData
 {
     char wrd[100];
     FILE* fptr = NULL;
-    unsigned int i, words, curKey = 0;
-	int keys = 0;
+    NSUInteger i, words, curKey = 0;
+	NSInteger keys = 0;
     struct leapClientData *c = NULL;
     WaveClient *wc = nil;
     UInt8 pwhash[MD4_DIGEST_LENGTH] = "";
@@ -81,7 +81,7 @@ struct leapClientData
 	}
     
     //initialize all the data structures
-	uint aClientKeysCount = [aClientKeys count];
+	NSUInteger aClientKeysCount = [aClientKeys count];
     for (i = 0; i < aClientKeysCount; ++i)
 	{
         if ([aClients[aClientKeys[i]] leapDataAvailable])
@@ -145,7 +145,7 @@ struct leapClientData
 
         if (words % 100000 == 0)
 		{
-            [im setStatusField:[NSString stringWithFormat:@"%d words tested", words]];
+            [im setStatusField:[NSString stringWithFormat:@"%@ words tested", @(words)]];
         }
 
         if (i > 31)

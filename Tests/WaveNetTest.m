@@ -35,7 +35,7 @@
 
 - (void) testWPAFunctions {
     UInt8 output[40];
-    int i, j;
+    NSInteger i, j;
     NSMutableString *ms;
     
     wpaPasswordHash("password",  (const UInt8*)"IEEE", 4, output);

@@ -62,6 +62,8 @@ NSString *const KisMACUserDefaultsChanged   = @"KisMACUserDefaultsChanged";
 NSString *const KisMACTryToSave             = @"KisMACTryToSave";
 NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
+static io_connect_t  root_port;    // a reference to the Root Power Domain IOService
+
 @implementation ScanController
 
 + (void)initialize
@@ -206,7 +208,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     NSDictionary *networkTableFieldsVisibility = [[NSUserDefaults standardUserDefaults] objectForKey:@"networkTableFieldsVisibility"];
     NSEnumerator *colsEnumerator = [[_networkTable tableColumns] objectEnumerator];
     
-    int i = 0;
+    NSInteger i = 0;
     while ((tableColumn = [colsEnumerator nextObject]))
     {
         menuItem = [menu insertItemWithTitle:[[tableColumn headerCell] title]
@@ -318,8 +320,8 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     
     [queue cancelAllOperations];
     
-    __block int row = 0;
-    __block int i = 0;
+    __block NSInteger row = 0;
+    __block NSInteger i = 0;
     __block WaveNet *net = nil;
     
     if ([_container count] != [_networkTable numberOfRows])
@@ -499,14 +501,14 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 #pragma mark Table datasource methods
 #pragma mark -
 
-- (id) tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *) aTableColumn row:(int) rowIndex
+- (id) tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *) aTableColumn row:(NSInteger) rowIndex
 {
     WaveNet *net = [_container netAtIndex:rowIndex];
     
     return [net cache][[aTableColumn identifier]];
 }
 
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
     return [_container count];
 }
@@ -577,7 +579,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
 #pragma mark -
 
-- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
 {
     return (item == nil) ? 3 : [item numberOfChildren];
 }
@@ -587,7 +589,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     return ([item numberOfChildren] != -1);
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
 {
     if (item != nil)
     {
@@ -611,7 +613,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldSelectItem:(id)item
 {
-    unsigned int tmpID[6], i;
+    NSUInteger tmpID[6], i;
     unsigned char ID[6];
     
     if (item==nil)
@@ -619,7 +621,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     
     switch ([(ScanHierarch*)item type]) {
         case 99: //BSSID selector
-            if (sscanf([[item identKey] UTF8String], "%2X%2X%2X%2X%2X%2X", &tmpID[0], &tmpID[1], &tmpID[2], &tmpID[3], &tmpID[4], &tmpID[5]) !=6 )
+            if (sscanf([[item identKey] UTF8String], "%2lX%2lX%2lX%2lX%2lX%2lX", &tmpID[0], &tmpID[1], &tmpID[2], &tmpID[3], &tmpID[4], &tmpID[5]) !=6 )
                 DBNSLog(@"Error could not decode ID %@!", [item identKey]);
             for (i=0; i<6; ++i) ID[i] = tmpID[i];
             
@@ -737,7 +739,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
 
 - (IBAction)changeSearchType:(id)sender
 {
-    int ndx;
+    NSInteger ndx;
     [_container setFilterType:[sender title]];
     NSMenu * searchMenu = [sender menu];
     for (ndx=0; ndx < [searchMenu numberOfItems]; ++ndx) {
@@ -779,7 +781,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     return NSTerminateNow;
 }
 
-- (void)reallyQuitDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)reallyQuitDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
     [self menuSetEnabled:YES menu:[NSApp mainMenu]];
     switch (returnCode) {
@@ -907,7 +909,7 @@ NSString *const KisMACGPSStatusChanged      = @"KisMACGPSStatusChanged";
     }
 }
 
-- (void)reallyCloseDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)reallyCloseDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
     [self menuSetEnabled:YES menu:[NSApp mainMenu]];
     switch (returnCode)

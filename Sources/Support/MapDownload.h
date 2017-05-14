@@ -34,7 +34,7 @@
 }
 
 + (MapDownload*)mapDownload;
-- (BOOL)downloadMapFrom:(NSString*)server forPoint:(waypoint)w resolution:(NSSize)size zoomLevel:(int)zoom;
+- (BOOL)downloadMapFrom:(NSString*)server forPoint:(waypoint)w resolution:(NSSize)size zoomLevel:(NSInteger)zoom;
 
 - (NSPoint)waypoint1Pixel;
 - (waypoint)waypoint1;

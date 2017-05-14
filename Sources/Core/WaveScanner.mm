@@ -607,7 +607,7 @@
     return ret;
 }
 
-- (BOOL) deauthenticateNetwork:(WaveNet*)net atInterval:(int)interval
+- (BOOL) deauthenticateNetwork:(WaveNet*)net atInterval:(NSInteger)interval
 {
     WavePluginDeauthentication *wavePlugin;
     BOOL ret;

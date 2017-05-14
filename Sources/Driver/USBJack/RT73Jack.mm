@@ -18,10 +18,10 @@ unsigned char   RT73_RateIdToPlcpSignal[12] = {
 
 void RT73Jack::dumpFrame(UInt8 *data, UInt16 size) {
     DBNSLog(@"--FRAME LENGTH %d--", size);
-    int idx = 0;
-    int i,j;
+    NSInteger idx = 0;
+    NSInteger i,j;
 	for (i=0;i<size;i=i+8) {
-        fprintf(stderr, "0x%.4x ", i);
+        fprintf(stderr, "0x%.4lx ", (long)i);
         for (j=0;j<8;++j) {
             if (idx < size)
                 fprintf(stderr, "%.2x ", data[idx]);
@@ -39,7 +39,7 @@ char *RT73Jack::getPlistFile() {
 
 IOReturn RT73Jack::_init() {
 	ULONG	temp;
-	unsigned int	i;
+	NSUInteger	i;
     IOReturn	ret;
 	
 	NICInitialized = false;
@@ -326,7 +326,7 @@ IOReturn	RT73Jack::RTMPSetLED(
 
 IOReturn RT73Jack::RTUSBWriteMACRegister(
 			unsigned short	Offset,
-			unsigned long	Value)
+			uint32_t	Value)
 {
 	IOReturn Status;
 //	if (Offset == TXRX_CSR2)
@@ -362,7 +362,7 @@ IOReturn	RT73Jack::RTUSBReadBBPRegister(
 				unsigned char	*pValue)
 {
 	PHY_CSR3_STRUC	PhyCsr3;
-	unsigned int			i = 0;
+	NSUInteger			i = 0;
     IOReturn ret;
     
 	// Verify the busy condition
@@ -421,7 +421,7 @@ IOReturn	RT73Jack::RTUSBWriteBBPRegister(
 				unsigned char	Value)
 {
 	PHY_CSR3_STRUC	PhyCsr3;
-	unsigned int	i = 0;
+	NSUInteger	i = 0;
 
 	// Verify the busy condition
 	do
@@ -452,10 +452,10 @@ IOReturn	RT73Jack::RTUSBWriteBBPRegister(
 }
 
 IOReturn	RT73Jack::RTUSBWriteRFRegister(
-				unsigned long	Value)
+				uint32_t	Value)
 {
 	PHY_CSR4_STRUC	PhyCsr4;
-	unsigned int	i = 0;
+	NSUInteger	i = 0;
     
 	do
 	{
@@ -594,7 +594,7 @@ IOReturn RT73Jack::NICInitializeAsic()
 IOReturn RT73Jack::NICLoadFirmware()
 {
 	IOReturn				Status = kIOReturnSuccess;
-	unsigned int 					i;
+	NSUInteger 					i;
 
 	DBNSLog(@"--> NICLoadFirmware\n");
 		
@@ -906,7 +906,7 @@ void	RT73Jack::NICReadEEPROMParameters()
 
 /*v
 	USHORT			i;
-	int			value;
+	NSInteger			value;
     unsigned char PermanentAddress[ETH_LENGTH_OF_ADDRESS];
 	EEPROM_ANTENNA_STRUC	Antenna;//blue
     //	EEPROM_VERSION_STRUC	Version;
@@ -1156,7 +1156,7 @@ void RT73Jack::NICInitAsicFromEEPROM()
 			ID = ((value & 0xff00) >> 8);
 			{
 				unsigned short	temp;
-				unsigned int	j = 0;
+				NSUInteger	j = 0;
 				do
 				{
 					RTUSBReadMACRegister(PHY_CSR8, &temp);
@@ -1338,8 +1338,8 @@ v*/	/*
 v*/
 }
 
-bool    RT73Jack::setChannel(UInt16 channel){
-	unsigned long	R3 = DEFAULT_RF_TX_POWER, R4;
+BOOL    RT73Jack::setChannel(UInt16 channel){
+	ULONG           R3 = DEFAULT_RF_TX_POWER, R4;
 	char			Bbp94 = BBPR94_DEFAULT;	
 	unsigned char	index = 0, BbpReg = 0;
 
@@ -1437,7 +1437,7 @@ bool    RT73Jack::setChannel(UInt16 channel){
 				if (channel == RF2528RegTable[index].Channel)
 				{
 					R3 = R3 | (RF2528RegTable[index].R3 & 0xffffc1ff); // set TX power
-					R4 = (RF2528RegTable[index].R4 & (~0x0003f000)) | (RfFreqOffset << 12);
+					R4 = (RF2528RegTable[index].R4 & (~0x0003f000)) | ULONG(RfFreqOffset << 12);
 					
 					// Update variables
 					LatchRfRegs.Channel = channel;
@@ -1457,7 +1457,7 @@ bool    RT73Jack::setChannel(UInt16 channel){
 				if (channel == RF5226RegTable[index].Channel)
 				{
 					R3 = R3 | (RF5226RegTable[index].R3 & 0xffffc1ff); // set TX power
-					R4 = (RF5226RegTable[index].R4 & (~0x0003f000)) | (RfFreqOffset << 12);
+					R4 = (RF5226RegTable[index].R4 & (~0x0003f000)) | ULONG(RfFreqOffset << 12);
 					
 					// Update variables
 					LatchRfRegs.Channel = channel;
@@ -1478,7 +1478,7 @@ bool    RT73Jack::setChannel(UInt16 channel){
 				if (channel == RF5225RegTable[index].Channel)
 				{
 					R3 = R3 | (RF5225RegTable[index].R3 & 0xffffc1ff); // set TX power
-					R4 = (RF5225RegTable[index].R4 & (~0x0003f000)) | (RfFreqOffset << 12);
+					R4 = (RF5225RegTable[index].R4 & (~0x0003f000)) | ULONG(RfFreqOffset << 12);
 
 					// Update variables
 					LatchRfRegs.Channel = channel;
@@ -1715,7 +1715,7 @@ bool    RT73Jack::setChannel(UInt16 channel){
 v*/
 }
 
-bool RT73Jack::getAllowedChannels(UInt16* channels) {
+BOOL RT73Jack::getAllowedChannels(UInt16* channels) {
     if (!_devicePresent) return false;
     if (!_deviceInit) return false;
     
@@ -1723,7 +1723,7 @@ bool RT73Jack::getAllowedChannels(UInt16* channels) {
     
     return true;
 }
-bool    RT73Jack::startCapture(UInt16 channel) {
+BOOL    RT73Jack::startCapture(UInt16 channel) {
 //	DBNSLog(@"Start capture : ");
 	if (NICInitialized) {
 //		DBNSLog(@"Done.\n");
@@ -1742,7 +1742,7 @@ bool    RT73Jack::startCapture(UInt16 channel) {
 
 
 
-bool RT73Jack::stopCapture(){
+BOOL RT73Jack::stopCapture(){
 //	DBNSLog(@"Stop capture : ");
 	if (NICInitialized) {
 //		DBNSLog(@"Done.\n");
@@ -1758,7 +1758,7 @@ bool RT73Jack::stopCapture(){
 }
 
 
-bool RT73Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel) {
+BOOL RT73Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel) {
 /*  pr0gg3d: A notice... {len} field that is passed
     is rounded at power of two. Don't use this for
         packet length.
@@ -1806,8 +1806,8 @@ bool RT73Jack::_massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 chan
 	return true;
 }
 void    RT73Jack::RTMPDescriptorEndianChange(unsigned char *  pData, unsigned long DescriptorType) {
-    int size = (DescriptorType == TYPE_TXD) ? TXD_SIZE : RXD_SIZE;
-    int i;
+    NSInteger size = (DescriptorType == TYPE_TXD) ? TXD_SIZE : RXD_SIZE;
+    NSInteger i;
     for (i=1; i<size/4; ++i) {
         /*
          * Handle IV and EIV with little endian
@@ -1825,10 +1825,10 @@ void    RT73Jack::RTMPDescriptorEndianChange(unsigned char *  pData, unsigned lo
     }
     *(unsigned long *)pData = SWAP32(*(unsigned long *)pData);  // Word 0; this must be swapped last
 }
-void    RT73Jack::WriteBackToDescriptor(unsigned char *Dest, unsigned char *Src, bool DoEncrypt, unsigned long DescriptorType) {
+void    RT73Jack::WriteBackToDescriptor(unsigned char *Dest, unsigned char *Src, BOOL DoEncrypt, unsigned long DescriptorType) {
         unsigned long *p1, *p2;
         unsigned char i;
-        int size = (DescriptorType == TYPE_TXD) ? TXD_SIZE : RXD_SIZE;
+        NSInteger size = (DescriptorType == TYPE_TXD) ? TXD_SIZE : RXD_SIZE;
 
         p1 = ((unsigned long *)Dest) + 1;
         p2 = ((unsigned long *)Src) + 1;
@@ -1842,18 +1842,18 @@ void    RT73Jack::RTUSBWriteTxDescriptor(
         unsigned char CipherAlg,
         unsigned char KeyTable,
         unsigned char KeyIdx,
-        bool Ack,
-        bool Fragment,
-        bool InsTimestamp,
+        BOOL Ack,
+        BOOL Fragment,
+        BOOL InsTimestamp,
         unsigned char RetryMode,
         unsigned char Ifs,
-        unsigned int Rate,
-        unsigned long Length,
+        NSUInteger Rate,
+        uint32_t Length,
         unsigned char QueIdx,
         unsigned char PID,
-        bool bAfterRTSCTS) {
+        BOOL bAfterRTSCTS) {
 
-    unsigned int Residual;
+    NSUInteger Residual;
     TXD_STRUC * pSourceTxD = (TXD_STRUC *)pptxd;
     TXD_STRUC * pTxD = pSourceTxD; 
 
@@ -1912,7 +1912,7 @@ void    RT73Jack::RTUSBWriteTxDescriptor(
     pTxD->Burst2 = pTxD->Burst;
 }
 
-int RT73Jack::WriteTxDescriptor(void* theFrame, UInt16 length, UInt8 rate){
+NSInteger RT73Jack::WriteTxDescriptor(void* theFrame, UInt16 length, UInt8 rate){
     memset(theFrame, 0, sizeof(TXD_STRUC));
     RTUSBWriteTxDescriptor(
         (TXD_STRUC *)theFrame,
@@ -1937,18 +1937,18 @@ int RT73Jack::WriteTxDescriptor(void* theFrame, UInt16 length, UInt8 rate){
 }
 
 
-bool RT73Jack::sendKFrame(KFrame *frame) {
+BOOL RT73Jack::sendKFrame(KFrame *frame) {
     UInt8 *data = frame->data;
-    int size = frame->ctrl.len;
+    NSInteger size = frame->ctrl.len;
     UInt8 aData[MAX_FRAME_BYTES];
-    unsigned int descriptorLength;
+    NSUInteger descriptorLength;
 //    DBNSLog(@"sendFrame %d", size);
 //    dumpFrame(data, size);
     descriptorLength = WriteTxDescriptor(aData, size, frame->ctrl.tx_rate);
     memcpy(aData+descriptorLength, data, size);
     //send the frame
 //	dumpFrame(aData, size + descriptorLength);
-	if (_sendFrame(aData, size + descriptorLength) != kIOReturnSuccess)
+	if (_sendFrame(aData, IOByteCount(size + descriptorLength)) != kIOReturnSuccess)
         return NO;
     return YES;
 }

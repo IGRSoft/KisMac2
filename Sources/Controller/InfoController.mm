@@ -73,13 +73,13 @@ enum _rowIndexes {
 	[aClientTable setDoubleAction:@selector(trackClient:)];
 }
 
-- (void)setDetails:(bool)visible {
+- (void)setDetails:(BOOL)visible {
     aDetailsPane=visible;
 }
 
 - (void)reloadData
 {
-    unsigned int i;
+    NSUInteger i;
     
     if (aDetailsPane) [aShortTable displayRect:[aShortTable rectOfColumn:1]];
     else [aTable displayRect:[aTable rectOfColumn:1]];
@@ -127,9 +127,9 @@ enum _rowIndexes {
 
 #pragma mark -
 
-- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 { 
-    int col;
+    NSInteger col;
     NSString *key;
     WaveClient *lWCl;
     
@@ -153,17 +153,17 @@ enum _rowIndexes {
             case indexEmptyLine1:
                  return @"";
             case indexChannel:
-                 return (col) ? NSLocalizedString(@"Channel", "table description") : [NSString stringWithFormat:@"%i", [_n channel]];
+                 return (col) ? NSLocalizedString(@"Channel", "table description") : [NSString stringWithFormat:@"%@", @([_n channel])];
             case indexOriginalChannel:
-                 return (col) ? NSLocalizedString(@"Main Channel", "table description") : [NSString stringWithFormat:@"%i", [_n originalChannel]];
+                 return (col) ? NSLocalizedString(@"Main Channel", "table description") : [NSString stringWithFormat:@"%@", @([_n originalChannel])];
             case indexSupportedDataRates:
 			     return (col) ? NSLocalizedString(@"Supported Rates", "table description") : [_n rates];
 			case indexSignal:
-                 return (col) ? NSLocalizedString(@"Signal", "table description") : [NSString stringWithFormat:@"%i", [_n curSignal]];
+                 return (col) ? NSLocalizedString(@"Signal", "table description") : [NSString stringWithFormat:@"%@", @([_n curSignal])];
             case indexMaxSignal:
-                 return (col) ? NSLocalizedString(@"MaxSignal", "table description") : [NSString stringWithFormat:@"%i", [_n maxSignal]];
+                 return (col) ? NSLocalizedString(@"MaxSignal", "table description") : [NSString stringWithFormat:@"%@", @([_n maxSignal])];
             case indexAvgSignal:
-                 return (col) ? NSLocalizedString(@"AvgSignal", "table description") : [NSString stringWithFormat:@"%i", [_n avgSignal]];
+                 return (col) ? NSLocalizedString(@"AvgSignal", "table description") : [NSString stringWithFormat:@"%@", @([_n avgSignal])];
             case indexType:
                 if (col!=0) return NSLocalizedString(@"Type", "table description");
                 else {
@@ -200,17 +200,17 @@ enum _rowIndexes {
             case indexEmptyLine3:
                  return @"";
             case indexPackets:
-                 return (col) ? NSLocalizedString(@"Packets", "table description") : [NSString stringWithFormat:@"%i", [_n packets]];
+                 return (col) ? NSLocalizedString(@"Packets", "table description") : [NSString stringWithFormat:@"%@", @([_n packets])];
             case indexDataPackets:
-                 return (col) ? NSLocalizedString(@"Data Packets", "table description") : [NSString stringWithFormat:@"%i", [_n dataPackets]];
+                 return (col) ? NSLocalizedString(@"Data Packets", "table description") : [NSString stringWithFormat:@"%@", @([_n dataPackets])];
             case indexMgmtPackets:
-                return (col) ? NSLocalizedString(@"Management Packets", "table description") : [NSString stringWithFormat:@"%i", [_n mgmtPackets]];
+                return (col) ? NSLocalizedString(@"Management Packets", "table description") : [NSString stringWithFormat:@"%@", @([_n mgmtPackets])];
             case indexCtrlPackets:
-                return (col) ? NSLocalizedString(@"Control Packets", "table description") : [NSString stringWithFormat:@"%i", [_n ctrlPackets]];
+                return (col) ? NSLocalizedString(@"Control Packets", "table description") : [NSString stringWithFormat:@"%@", @([_n ctrlPackets])];
             case indexWeakPackets:
-                 return (col) ? NSLocalizedString(@"Unique IVs", "table description") : [NSString stringWithFormat:@"%i", [_n uniqueIVs]];
+                 return (col) ? NSLocalizedString(@"Unique IVs", "table description") : [NSString stringWithFormat:@"%@", @([_n uniqueIVs])];
             case indexInjPackets:
-                 return (col) ? NSLocalizedString(@"Inj. Packets", "table description") : [NSString stringWithFormat:@"%i", (int)[[_n arpPacketsLog] count]];
+                 return (col) ? NSLocalizedString(@"Inj. Packets", "table description") : [NSString stringWithFormat:@"%@", @([[_n arpPacketsLog] count])];
             case indexBytes:
                  return (col) ? NSLocalizedString(@"Bytes", "table description") : [_n data];
             case indexKey:
@@ -237,7 +237,7 @@ enum _rowIndexes {
         if ([[aTableColumn identifier] isEqualToString:@"client"]) return key;
         else if ([[aTableColumn identifier] isEqualToString:@"vendor"]) return [lWCl vendor];
         else if ([[aTableColumn identifier] isEqualToString:@"lastseen"]) return [lWCl date];
-        else if ([[aTableColumn identifier] isEqualToString:@"signal"]) return [NSString stringWithFormat:@"%i", [lWCl curSignal]];
+        else if ([[aTableColumn identifier] isEqualToString:@"signal"]) return [NSString stringWithFormat:@"%@", @([lWCl curSignal])];
         else if ([[aTableColumn identifier] isEqualToString:@"sent"]) return [lWCl sent];
         else if ([[aTableColumn identifier] isEqualToString:@"received"]) return [lWCl received];
         else if ([[aTableColumn identifier] isEqualToString:@"ipa"]) return [lWCl getIPAddress];
@@ -256,9 +256,9 @@ enum _rowIndexes {
             case 2:
                  return @"";
             case 3:
-                 return (col) ? NSLocalizedString(@"Unique IVs", "table description") : [NSString stringWithFormat:@"%i", [_n uniqueIVs]];
+                 return (col) ? NSLocalizedString(@"Unique IVs", "table description") : [NSString stringWithFormat:@"%@", @([_n uniqueIVs])];
             case 4:
-                 return (col) ? NSLocalizedString(@"Data Packets", "table description") : [NSString stringWithFormat:@"%i", [_n dataPackets]];
+                 return (col) ? NSLocalizedString(@"Data Packets", "table description") : [NSString stringWithFormat:@"%@", @([_n dataPackets])];
             case 5:
                  return (col) ? NSLocalizedString(@"Bytes", "table description") : [_n data];
             case 6:
@@ -283,7 +283,7 @@ enum _rowIndexes {
     return @"unknown table"; 
 }
 
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
     if([aTableView isEqualTo:aTable])
         return 29;
@@ -337,7 +337,7 @@ enum _rowIndexes {
     [tableView reloadData];
 }
 
-- (BOOL)tableView:(NSTableView *)aTableView shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+- (BOOL)tableView:(NSTableView *)aTableView shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
     if ([aTableView isEqualTo:aShortTable]) {
         if (rowIndex==12)  return YES;	//only the comment field is to be edited
@@ -347,7 +347,7 @@ enum _rowIndexes {
 }
 
 
-- (void)tableView:(NSTableView *)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+- (void)tableView:(NSTableView *)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
     if([aTableView isEqualTo:aTable] || [aTableView isEqualTo:aShortTable]) {
         [_n setComment:anObject];	//save the comment
@@ -365,7 +365,7 @@ enum _rowIndexes {
 
 - (NSString *) theRow 
 {
-    SInt32 row = [aClientTable selectedRow];
+    NSInteger row = [aClientTable selectedRow];
     
 	if (row == -1)
     {

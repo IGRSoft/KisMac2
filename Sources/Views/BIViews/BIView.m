@@ -46,7 +46,7 @@
 - (void)drawRectSub:(NSRect)rect { }
 
 - (void)drawRect:(NSRect)rect {
-    int i;
+    NSInteger i;
 
 #if USECOREGRAPHICS    
     CGRect r;

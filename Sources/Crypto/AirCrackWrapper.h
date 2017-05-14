@@ -58,13 +58,13 @@ enum KoreK_attacks
     NSData *key;
     
     /* command-line parameters */
-    int debug_lvl;              /* # of keybytes fixed  */
-    int stability;              /* unstable attacks on  */
+    NSInteger debug_lvl;              /* # of keybytes fixed  */
+    NSInteger stability;              /* unstable attacks on  */
     unsigned char debug[13];    /* user-defined wepkey  */
-    int keyid;                  /* WEP KeyID            */
-    int weplen;                 /* WEP key length       */
-    int ffact;                  /* fudge threshold      */
-    int nfork;                  /* number of forks      */
+    NSInteger keyid;                  /* WEP KeyID            */
+    NSInteger weplen;                 /* WEP key length       */
+    NSInteger ffact;                  /* fudge threshold      */
+    NSInteger nfork;                  /* number of forks      */
 
     /* runtime global data */
     unsigned char buffer[65536];    /* buffer for reading packets   */
@@ -74,21 +74,21 @@ enum KoreK_attacks
     unsigned long tried;            /* total # of keys tried so far */
     int mc_pipe[LAST_BIT][2];            /* master->child control pipe   */
     int cm_pipe[LAST_BIT][2];            /* child->master results pipe   */
-    int fudge[13];                  /* bruteforce level (1 to 256)  */
-    int depth[13];                  /* how deep we are in the fudge */
-    int _votes[13][N_ATTACKS][LAST_BIT];
+    NSInteger fudge[13];                  /* bruteforce level (1 to 256)  */
+    NSInteger depth[13];                  /* how deep we are in the fudge */
+    NSInteger _votes[13][N_ATTACKS][LAST_BIT];
 
     ImportController *_im;
     
     struct byte_stat
     {
-        int index;
-        int votes;
+        NSInteger index;
+        NSInteger votes;
     }   wpoll[13][LAST_BIT];             /* FMS + Korek attacks: stats.  */
 }
 
-- (void)setKeyID:(int)keyID;
-- (void)setKeyLen:(int)keyLen;
+- (void)setKeyID:(NSInteger)keyID;
+- (void)setKeyLen:(NSInteger)keyLen;
 - (NSData*)key;
 - (void)setIVs:(NSData*)ivs;
 - (BOOL)attack;

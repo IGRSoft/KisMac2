@@ -36,7 +36,7 @@
 
 @implementation WaveNet(WEPWeakCrackExtension)
 
-- (BOOL)doWeakCrackForLen:(int)len andKeyID:(int)keyID
+- (BOOL)doWeakCrackForLen:(NSInteger)len andKeyID:(NSInteger)keyID
 {
 	AirCrackWrapper *a = [[AirCrackWrapper alloc] init];
     
@@ -54,7 +54,7 @@
         const UInt8 *k = [d bytes];
         
         _password = [NSMutableString stringWithFormat:@"%.2X", k[0]];
-        for (int i = 1 ; i < len ; ++i)
+        for (NSInteger i = 1 ; i < len ; ++i)
 		{
             [(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", k[i]]];
 		}
@@ -69,7 +69,7 @@
 {
     
 	@autoreleasepool {
-		int temp, keyID;
+		NSInteger temp, keyID;
 		enum keyLen len;
 		
 		CHECK;

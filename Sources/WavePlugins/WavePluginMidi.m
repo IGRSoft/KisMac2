@@ -32,7 +32,7 @@
 @implementation WavePluginMidi
 
 #ifdef __i386__
-    static int _numMidi;
+    static NSInteger _numMidi;
     static NoteAllocator   na, na2;
     static NoteChannel     nc, nc2;
     static NoteRequest     nr, nr2;
@@ -94,7 +94,7 @@ static NSString *trackString,*trackStringClient;
 }
 
 #ifdef __i386__
-- (void)openChannel2:(int)note 
+- (void)openChannel2:(NSInteger)note 
 {
 	ComponentResult  thisError;
     na2 = 0;
@@ -116,9 +116,9 @@ static NSString *trackString,*trackStringClient;
     thisError = NANewNoteChannel(na2, &nr2, &nc2); 	
 }
 
-- (void) playChord:(int)note
+- (void) playChord:(NSInteger)note
 {
-	int the_note = note; //  middle C == 60
+	NSInteger the_note = note; //  middle C == 60
 	NAPlayNote(na, nc, the_note, 127);     // note at velocity 80
 	[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
 	the_note = 60 + 0 - 13;
@@ -135,8 +135,8 @@ static NSString *trackString,*trackStringClient;
 	
 }
 #else
-- (void)openChannel2:(int)note {}
-- (void)playChord:(int)note {}
+- (void)openChannel2:(NSInteger)note {}
+- (void)playChord:(NSInteger)note {}
 - (void)closeChannel {}
 #endif
 

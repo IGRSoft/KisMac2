@@ -85,7 +85,7 @@ struct pointCoords {
 	NSString *creator, *version, *error;
 	id data;
 	WaveNet *net;
-	unsigned int i;
+	NSUInteger i;
 	
     NSParameterAssert(filename);
 	NSParameterAssert(container);
@@ -189,7 +189,7 @@ struct pointCoords {
 	NSString *creator, *version, *error;
 	id data;
 	WaveNet *net, *snet;
-	unsigned int i, maxID;
+	NSUInteger i, maxID;
 	
     NSParameterAssert(filename);
 	NSParameterAssert(container);
@@ -264,7 +264,7 @@ struct pointCoords {
     char databuf[1024];
     FILE* fd;
     WaveNet* net;
-    unsigned int year, month, day;
+    NSUInteger year, month, day;
     NSString *date;
     	
     NSParameterAssert(filename);
@@ -289,8 +289,8 @@ struct pointCoords {
         }
         
         if (strncmp(databuf, "# $DateGMT: ", 12)==0) {
-            if (sscanf(databuf, "# $DateGMT: %d-%d-%d", &year, &day, &month) == 3) {
-                date = [NSString stringWithFormat:@"%.4d-%.2d-%.2d", year, day, month];
+            if (sscanf(databuf, "# $DateGMT: %ld-%ld-%ld", &year, &day, &month) == 3) {
+                date = [NSString stringWithFormat:@"%.4lu-%.2lu-%.2lu", (unsigned long)year, (unsigned long)day, (unsigned long)month];
             }
         }
         if(databuf[0] == '#') continue;
@@ -313,7 +313,7 @@ struct pointCoords {
     NSString *type;
     NSString *wep;
     NSString *s, *lat, *lon;
-    unsigned int i;
+    NSUInteger i;
     NSMutableString *output;
 
 	NSParameterAssert(container);
@@ -398,7 +398,7 @@ struct pointCoords {
 	BICompressor *c;
 	NSString *error = nil;
 	NSData *data;
-	unsigned int i;
+	NSUInteger i;
 	
     NSParameterAssert(filename);
 	NSParameterAssert(container);
@@ -455,9 +455,9 @@ struct pointCoords {
 //export in netstumbler format
 + (BOOL)exportNSToFile:(NSString*)filename withContainer:(WaveContainer*)container andImportController:(ImportController*)im {
     WaveNet *net;
-    float f;
+    CGFloat f;
     char c;
-    unsigned int i;
+    NSUInteger i;
     
 	NSParameterAssert(filename);
 	NSParameterAssert(container);
@@ -480,10 +480,10 @@ struct pointCoords {
     for (i=0; i<[container count]; ++i) {
         net = [container netAtIndex:i];
         
-        if (sscanf([[net latitude] UTF8String], "%f%c", &f, &c)==2) fprintf(fd, "%c %f0\t",c,f);
+        if (sscanf([[net latitude] UTF8String], "%lf%c", &f, &c)==2) fprintf(fd, "%c %f0\t",c,f);
         else fprintf(fd, "N 0.0000000\t");
         
-        if (sscanf([[net longitude] UTF8String], "%f%c", &f, &c)==2) fprintf(fd, "%c %f0\t",c,f);
+        if (sscanf([[net longitude] UTF8String], "%lf%c", &f, &c)==2) fprintf(fd, "%c %f0\t",c,f);
         else fprintf(fd, "E 0.0000000\t");
 
         fprintf(fd, "( %s )\t", [[net SSID] UTF8String]);
@@ -514,7 +514,7 @@ struct pointCoords {
                             descriptionWithCalendarFormat:@"%H:%M:%S (GMT)\t" 
                             timeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"] 
                             locale:nil] UTF8String]);
-        fprintf(fd, "[ %u %u %u ]\t# ( %s )\t00%s%s\t0000\t0\r\n", [net maxSignal], 
+        fprintf(fd, "[ %ld %ld %d ]\t# ( %s )\t00%s%s\t0000\t0\r\n", (long)[net maxSignal],
                 [net maxSignal], 0, [[net getVendor] UTF8String],[net wep] > encryptionTypeNone ? "1": "0",
                 ([net type] == networkTypeAdHoc) ? "2": ([net type] == networkTypeManaged) ? "1" : "0");
 
@@ -528,9 +528,9 @@ struct pointCoords {
 //export in Google Earth format
 + (BOOL)exportKMLToFile:(NSString*)filename withContainer:(WaveContainer*)container andImportController:(ImportController*)im {
     WaveNet *net;
-    float f;
+    CGFloat f;
     char c;
-    unsigned int i,j;
+    NSUInteger i,j;
 	double lat,lon=0;
 	char netname[80],netesc[80];
     
@@ -670,8 +670,8 @@ struct pointCoords {
         
 		lat = 100;
 		
-        if (sscanf([[net latitude] UTF8String], "%f%c", &f, &c)==2) lat = f * (c == 'N' ? 1 : -1);		
-        if (sscanf([[net longitude] UTF8String], "%f%c", &f, &c)==2) lon = f * (c == 'E' ? 1 : -1);
+        if (sscanf([[net latitude] UTF8String], "%lf%c", &f, &c)==2) lat = f * (c == 'N' ? 1 : -1);		
+        if (sscanf([[net longitude] UTF8String], "%lf%c", &f, &c)==2) lon = f * (c == 'E' ? 1 : -1);
 		strcpy(netname,[[net SSID] cStringUsingEncoding: NSUTF8StringEncoding]);
 		
 		// now escape any ampersands or < or >...
@@ -707,7 +707,7 @@ struct pointCoords {
 			fprintf(fd,"	<Placemark>\n");
 			fprintf(fd,"		<name>%s</name>\n",netname);
 			fprintf(fd,"		<description><![CDATA[");
-			fprintf(fd,"<b>Signal:</b> %u",[net maxSignal]);
+			fprintf(fd,"<b>Signal:</b> %ld", (long)[net maxSignal]);
 			if (strcmp([[net BSSID] UTF8String],"<no bssid>") != 0) {
 				fprintf(fd,"<br><b>BSSID:</b> %s",[[net BSSID] UTF8String]);
 				fprintf(fd,"<br><b>Vendor:</b> %s",[[net getVendor] UTF8String]);
@@ -750,12 +750,12 @@ struct pointCoords {
 // now export trace (thanks to Jon Steinmetz for Objective-C coding assistance)
 	
 	NSMutableArray* xtrace = [[WaveHelper trace] trace];
-	int traceCount = [xtrace count];
+	NSInteger traceCount = [xtrace count];
 	
 	DBNSLog(@"Completed network export - beginning trace export...");
 
 	if (traceCount>0) {
-		DBNSLog(@"Traces to export: %d", traceCount);
+		DBNSLog(@"Traces to export: %@", @(traceCount));
 		fprintf(fd,"    <Style id=\"track\">\n");
 		fprintf(fd,"            <LineStyle>\n");
 		fprintf(fd,"                    <color>ff00ff33</color>\n");
@@ -763,11 +763,11 @@ struct pointCoords {
 		fprintf(fd,"            </LineStyle>\n");
 		fprintf(fd,"    </Style>\n");
 		BIValuePair* tempBIValuePair = [[BIValuePair alloc] init];
-		int i;
+		NSInteger i;
 		for (i = 0; i < traceCount; ++i) {
-			DBNSLog(@"Trace number: %d", i);
+			DBNSLog(@"Trace number: %@", @(i));
 			fprintf(fd,"<Placemark>\n");
-			fprintf(fd,"    <name>Trace %d</name>\n",i+1);
+			fprintf(fd,"    <name>Trace %ld</name>\n", (i+1));
 			fprintf(fd,"    <styleUrl>#track</styleUrl>\n");
 			fprintf(fd,"    <tesselate>1</tesselate>\n");
 			fprintf(fd,"    <LineString>\n");
@@ -776,8 +776,8 @@ struct pointCoords {
 			NSMutableData* subtrace = xtrace[i];
 			const struct pointCoords *pL = (const struct pointCoords *)[subtrace bytes];
 			
-			int subtraceCount = [subtrace length] / sizeof(struct pointCoords);
-			int j;
+			NSInteger subtraceCount = [subtrace length] / sizeof(struct pointCoords);
+			NSInteger j;
 			for (j = 0; j < subtraceCount; ++j) {
 //				DBNSLog(@"Subtrace: %d", j);
 //				DBNSLog(@"pLx, pLy: %f, %f", pL->x, pL->y);
@@ -807,7 +807,7 @@ struct pointCoords {
 + (BOOL)exportMacStumblerToFile:(NSString*)filename withContainer:(WaveContainer*)container andImportController:(ImportController*)im {
     WaveNet *net;
     NSString *ssid;
-    unsigned int i;
+    NSUInteger i;
 
 	NSParameterAssert(filename);
 	NSParameterAssert(container);
@@ -821,7 +821,7 @@ struct pointCoords {
         net = [container netAtIndex:i];
         ssid = [[net SSID] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         if ([ssid isEqualToString:@""]||[ssid isEqualToString:@"<no ssid>"]) ssid=@"(null)";        
-        fprintf(fd, "%-34s\t%17s\t%u\t%u\t", [ssid UTF8String], [[net BSSID] UTF8String], [net channel], [net maxSignal]);
+        fprintf(fd, "%-34s\t%17s\t%ld\t%ld\t", [ssid UTF8String], [[net BSSID] UTF8String], (long)[net channel], (long)[net maxSignal]);
         switch ([net type]) {
             case networkTypeUnknown:
                 fprintf(fd,"%-10s","Unknown");

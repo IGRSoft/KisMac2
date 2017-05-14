@@ -36,12 +36,12 @@
     [[self window] setDelegate:self];
 }
 
-- (void)closeWindow:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)closeWindow:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
 	//[[self window] performClose:self];
 }
 
-- (void)updateDataNS:(double)ns EW:(double)ew ELV:(double)elv numSats:(int)sats HDOP:(double)hdop VEL:(float)vel
+- (void)updateDataNS:(double)ns EW:(double)ew ELV:(double)elv numSats:(NSInteger)sats HDOP:(double)hdop VEL:(CGFloat)vel
 {
 	_vel = vel;
 	_alt = elv;
@@ -120,19 +120,19 @@
 	[[self window] display];
 }
 
-- (void)updateSatPRNForSat:(int)sat prn:(int)prn
+- (void)updateSatPRNForSat:(NSInteger)sat prn:(NSInteger)prn
 {
 	[_satinfo setPRNForSat:sat PRN:prn];
 	[_satinfo redraw];
 }
 
-- (void)updateSatSignalStrength:(int)sat signal:(int)signal
+- (void)updateSatSignalStrength:(NSInteger)sat signal:(NSInteger)signal
 {
 	[_satinfo setSignalForSat:sat signal:signal];
 	[_satinfo redraw];
 }
 
-- (void)updateSatUsed:(int)sat used:(int)used
+- (void)updateSatUsed:(NSInteger)sat used:(NSInteger)used
 {
 	[_satinfo setUsedForSat:sat used:used];
 	[_satinfo redraw];

@@ -27,65 +27,65 @@
 
 @interface GPSSatInfo : NSView
 {
-	int sat1_strength;
-	int sat1_used;
-	int sat1_prn;
+	NSInteger sat1_strength;
+	NSInteger sat1_used;
+	NSInteger sat1_prn;
 
-	int sat2_strength;
-	int sat2_used;
-	int sat2_prn;
+	NSInteger sat2_strength;
+	NSInteger sat2_used;
+	NSInteger sat2_prn;
 
-	int sat3_strength;
-	int sat3_used;
-	int sat3_prn;
+	NSInteger sat3_strength;
+	NSInteger sat3_used;
+	NSInteger sat3_prn;
 
-	int sat4_strength;
-	int sat4_used;
-	int sat4_prn;
+	NSInteger sat4_strength;
+	NSInteger sat4_used;
+	NSInteger sat4_prn;
 
-	int sat5_strength;
-	int sat5_used;
-	int sat5_prn;
+	NSInteger sat5_strength;
+	NSInteger sat5_used;
+	NSInteger sat5_prn;
 
-	int sat6_strength;
-	int sat6_used;
-	int sat6_prn;
+	NSInteger sat6_strength;
+	NSInteger sat6_used;
+	NSInteger sat6_prn;
 
-	int sat7_strength;
-	int sat7_used;
-	int sat7_prn;
+	NSInteger sat7_strength;
+	NSInteger sat7_used;
+	NSInteger sat7_prn;
 
-	int sat8_strength;
-	int sat8_used;
-	int sat8_prn;
+	NSInteger sat8_strength;
+	NSInteger sat8_used;
+	NSInteger sat8_prn;
 
-	int sat9_strength;
-	int sat9_used;
-	int sat9_prn;
+	NSInteger sat9_strength;
+	NSInteger sat9_used;
+	NSInteger sat9_prn;
 
-	int sat10_strength;
-	int sat10_used;
-	int sat10_prn;
+	NSInteger sat10_strength;
+	NSInteger sat10_used;
+	NSInteger sat10_prn;
 
-	int sat11_strength;
-	int sat11_used;
-	int sat11_prn;
+	NSInteger sat11_strength;
+	NSInteger sat11_used;
+	NSInteger sat11_prn;
 
-	int sat12_strength;
-	int sat12_used;
-	int sat12_prn;
+	NSInteger sat12_strength;
+	NSInteger sat12_used;
+	NSInteger sat12_prn;
 	
 	NSDictionary *attr;
 }
 
 - (id)initWithFrame:(NSRect)frame;
 - (void)drawRect:(NSRect)rect;
-- (int)getPRNForSat:(int)sat;
-- (void)setPRNForSat:(int)sat PRN:(int)prn;
-- (int)getUsedForSat:(int)sat;
-- (void)setUsedForSat:(int)sat used:(int)used;
-- (int)getSignalForSat:(int)sat;
-- (int)setSignalForSat:(int)sat signal:(int)signal;
+- (NSInteger)getPRNForSat:(NSInteger)sat;
+- (void)setPRNForSat:(NSInteger)sat PRN:(NSInteger)prn;
+- (NSInteger)getUsedForSat:(NSInteger)sat;
+- (void)setUsedForSat:(NSInteger)sat used:(NSInteger)used;
+- (NSInteger)getSignalForSat:(NSInteger)sat;
+- (NSInteger)setSignalForSat:(NSInteger)sat signal:(NSInteger)signal;
 - (void)redraw;
 
 

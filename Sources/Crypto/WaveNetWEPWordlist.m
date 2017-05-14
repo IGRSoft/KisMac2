@@ -41,7 +41,8 @@
 	@autoreleasepool {
 		FILE* fptr = NULL;
 		char wrd[1000];
-		unsigned int i, words, foundCRC, counter, length = 0;
+        uint32_t foundCRC = 0;
+		NSUInteger i, words, counter, length = 0;
 		UInt8 key[16], currentGuess[16], skeletonStateArray[LAST_BIT], currentStateArray[LAST_BIT];
 		UInt8 y, z, tmp, xov;
 		const char *data = nil;
@@ -151,7 +152,7 @@
 			}
 			if (words % 10000 == 0)
 			{
-				[controller setStatusField:[NSString stringWithFormat:@"%d words tested", words]];
+				[controller setStatusField:[NSString stringWithFormat:@"%@ words tested", @(words)]];
 			}
 		}
 		
@@ -166,7 +167,8 @@
 	@autoreleasepool {
 		FILE* fptr = NULL;
 		char wrd[1000];
-		unsigned int i, words, foundCRC, counter, length = 0;
+        uint32_t foundCRC = 0;
+		NSUInteger i, words, counter, length = 0;
 		UInt8 key[16], currentGuess[16], skeletonStateArray[LAST_BIT], currentStateArray[LAST_BIT];
 		UInt8 y, z, tmp, xov;
 		const char *data = nil;
@@ -282,7 +284,7 @@
 			}
 			if (words % 10000 == 0)
 			{
-				[controller setStatusField:[NSString stringWithFormat:@"%d words tested", words]];
+				[controller setStatusField:[NSString stringWithFormat:@"%@ words tested", @(words)]];
 			}
 		}
 		
@@ -297,7 +299,8 @@
 	{
 		FILE* fptr = NULL;
 		char wrd[1000];
-		unsigned int i, words, foundCRC, counter, length = 0;
+        uint32_t foundCRC = 0;
+		NSUInteger i, words, counter, length = 0;
 		unsigned char key[16], currentGuess[16], skeletonStateArray[LAST_BIT], currentStateArray[LAST_BIT];
 		unsigned char y, z, tmp, xov;
 		const char *data = nil;
@@ -409,7 +412,7 @@
 			
 			if (words % 10000 == 0)
 			{
-				[controller setStatusField:[NSString stringWithFormat:@"%d words tested", words]];
+				[controller setStatusField:[NSString stringWithFormat:@"%@ words tested", @(words)]];
 			}
 		}
 		

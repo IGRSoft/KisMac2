@@ -53,20 +53,20 @@
 
     NSRect graphRect;
     NSTimeInterval scanInterval;
-    float vScale;	// used for the vertical scaling of the graph
-    float dvScale;	// used for the sweet 'zoom' in/out
-    float stepx;	// step for horizontal lines on grid
-    float stepy;	// step for vertical lines on grid
-    float aMaximum;	// maximum bytes received
-    int buffer[MAX_YIELD_SIZE];
+    CGFloat vScale;	// used for the vertical scaling of the graph
+    CGFloat dvScale;	// used for the sweet 'zoom' in/out
+    CGFloat stepx;	// step for horizontal lines on grid
+    CGFloat stepy;	// step for vertical lines on grid
+    CGFloat aMaximum;	// maximum bytes received
+    NSInteger buffer[MAX_YIELD_SIZE];
     BOOL gridNeedsRedrawn;
 
     BOOL justSwitchedDataType;
-    int _legendMode;
-    int length;
-    int offset;
-    int maxLength;
-    int currentMode;
+    NSInteger _legendMode;
+    NSInteger length;
+    NSInteger offset;
+    NSInteger maxLength;
+    NSInteger currentMode;
     NSMutableArray* allNets;
     NSArray* colorArray;    
 }
@@ -88,9 +88,9 @@
 - (void)drawLegendForRect:(NSRect)rect;
 
 - (NSString*)stringForNetwork:(WaveNet*)net;
-- (NSString*)stringForBytes:(int)bytes;
-- (NSString*)stringForPackets:(int)bytes;
-- (NSString*)stringForSignal:(int)bytes;
+- (NSString*)stringForBytes:(NSInteger)bytes;
+- (NSString*)stringForPackets:(NSInteger)bytes;
+- (NSString*)stringForSignal:(NSInteger)bytes;
 
 @end
 

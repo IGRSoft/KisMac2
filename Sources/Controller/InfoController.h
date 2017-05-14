@@ -30,9 +30,9 @@
 
 @interface InfoController : NSObject
 {
-    bool aDetailsPane;
-    bool _ascending;
-    unsigned int  _clientCount;
+    BOOL aDetailsPane;
+    BOOL _ascending;
+    NSUInteger  _clientCount;
     
     WaveNet* _n;
     NSArray *aClientKeys;
@@ -46,7 +46,7 @@
     IBOutlet NSTextField* _commentField;
 }
 
-- (void)setDetails:(bool)visible;
+- (void)setDetails:(BOOL)visible;
 - (IBAction)showNet:(id)sender;
 - (IBAction)commentChanged:(id)sender;
 - (void)reloadData;

@@ -202,14 +202,14 @@ void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSString *
 
 - (void)changeView:(NSToolbarItem*)sender 
 {
-    int i, count;
+    NSInteger i, count;
     NSString* nibName = nil;
     NSString* className = nil;
     NSArray* itemsArray = [prefsToolbar items];
     NSView* contentView, *oldView, *controlBox;
     NSRect controlBoxFrame;
     NSRect windowFrame;
-    int newWindowHeight;
+    NSInteger newWindowHeight;
     NSRect newWindowFrame;
 
     // TODO make this more error proof

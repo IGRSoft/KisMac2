@@ -34,6 +34,6 @@
     KFrame _authFrame;
 }
 
-- (bool) startTest:(WaveNet*)net;
+- (BOOL) startTest:(WaveNet*)net;
 
 @end

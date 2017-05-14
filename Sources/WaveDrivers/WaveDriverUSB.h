@@ -33,8 +33,8 @@
 {
     USBJack *_driver;
     //stuff for timed sending
-    float           _interval;
-    bool            _transmitting;
-	int				_errors;
+    CGFloat           _interval;
+    BOOL            _transmitting;
+	NSInteger				_errors;
 }
 @end

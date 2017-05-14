@@ -29,13 +29,13 @@
 #import "KisMAC80211.h"
 
 @interface WavePluginInjecting : WavePlugin {
-    int  _injReplies;
+    NSInteger  _injReplies;
     
 	UInt8 _addr1[ETH_ALEN];
     UInt8 _addr2[ETH_ALEN];
     UInt8 _addr3[ETH_ALEN];
 	
-    int			aPacketType;
+    NSInteger			aPacketType;
     NSTimer		*_timer;
     KFrame		_kframe;
     BOOL	_checkInjectedPackets;

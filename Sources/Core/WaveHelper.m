@@ -50,7 +50,7 @@
  */
 void WirelessCryptMD5(char const *str, unsigned char *key)
 {
-    int i, j;
+    NSInteger i, j;
     u_char md5_buf[64];
     md5_context ctx;
     
@@ -86,7 +86,7 @@ static ScanController *_scanController;
 static GPSInfoController *_gc;
 
 // Converts a byte count to a human readable string
-+ (NSString *) bytesToString:(float) bytes
++ (NSString *) bytesToString:(CGFloat) bytes
 {
     if (bytes > 700000000)
         return [NSString stringWithFormat:@"%1.2fGiB",bytes/1024/1024/1024];
@@ -110,17 +110,17 @@ static GPSInfoController *_gc;
 #pragma mark -
 
 // Encode a binary string into form XX:XX:XX.....
-+ (NSString*) hexEncode:(UInt8*)data length:(int)len
++ (NSString*) hexEncode:(UInt8*)data length:(NSUInteger)len
 {
     NSParameterAssert(len > 0);
     NSParameterAssert(data);
-    int i, j;
+    NSInteger i, j;
     
     NSMutableString *ms = [NSMutableString stringWithFormat:@"%.2X", data[0]];
     
     for (i = 1; i < len; ++i) {
         j = data[i];
-        [ms appendFormat:@":%.2X", j];
+        [ms appendFormat:@":%.2lX", j];
     }
     return ms;
 }
@@ -172,7 +172,7 @@ static GPSInfoController *_gc;
 #pragma mark -
 
 //tries to speak something. if it does not work => put it to the queue
-+ (void)speakSentence:(CFStringRef)cSentence withVoice:(int)voice
++ (void)speakSentence:(CFStringRef)cSentence withVoice:(NSUInteger)voice
 {
     if (!_speechController)
     {
@@ -185,7 +185,7 @@ static GPSInfoController *_gc;
 #pragma mark Channel utility functions
 #pragma mark -
 
-+ (int)chan2freq:(int)channel
++ (NSUInteger)chan2freq:(NSUInteger)channel
 {
     if (channel == 14)
         return 2484;
@@ -196,7 +196,7 @@ static GPSInfoController *_gc;
     return 0;
 }
 
-+ (int)freq2chan:(int)frequency
++ (NSUInteger)freq2chan:(NSUInteger)frequency
 {
     if (frequency == 2484)
         return 14;
@@ -211,7 +211,7 @@ static GPSInfoController *_gc;
 #pragma mark Driver handling
 #pragma mark -
 
-+ (bool)isServiceAvailable:(char*)service
++ (BOOL)isServiceAvailable:(char*)service
 {
     mach_port_t masterPort;
     io_iterator_t iterator;
@@ -234,7 +234,7 @@ static GPSInfoController *_gc;
 }
 
 //tells us whether a driver is in the RAM
-+ (bool)isDriverLoaded:(int)driverID
++ (BOOL)isDriverLoaded:(NSUInteger)driverID
 {
     switch(driverID) {
         case 1:
@@ -256,7 +256,7 @@ static GPSInfoController *_gc;
     }
 }
 
-+ (bool)unloadAllDrivers
++ (BOOL)unloadAllDrivers
 {
     id key;
     WaveDriver *w;
@@ -278,7 +278,7 @@ static GPSInfoController *_gc;
 }
 
 //placeholder for later
-+ (bool)loadDrivers
++ (BOOL)loadDrivers
 {
     NSUserDefaults *d;
     WaveDriver *w = nil;
@@ -287,7 +287,7 @@ static GPSInfoController *_gc;
     NSString *name;
     NSString *interfaceName;
     Class driver;
-    unsigned int i, j;
+    NSUInteger i, j;
     
     //if our dictionary does not exist then create it.
     if (!_waveDrivers) {
@@ -463,8 +463,8 @@ static GPSInfoController *_gc;
 
 + (NSColor*)intToColor:(NSNumber*)c
 {
-    float r, g, b, a;
-    int i = [c intValue];
+    CGFloat r, g, b, a;
+    NSInteger i = [c intValue];
     
     a =  (i >> 24) & 0xFF;
     r =  (i >> 16) & 0xFF;
@@ -476,16 +476,16 @@ static GPSInfoController *_gc;
 
 + (NSNumber*)colorToInt:(NSColor*)c
 {
-    unsigned int i;
-    float a, r,g, b;
+    NSUInteger i;
+    CGFloat a, r,g, b;
     
     a = [c alphaComponent] * 255;
     r = [c redComponent]   * 255;
     g = [c greenComponent] * 255;
     b = [c blueComponent]  * 255;
     
-    i = ((unsigned int)floor(a) << 24) | ((unsigned int)floor(r)<< 16) | ((unsigned int)floor(g) << 8) | (unsigned int)(b);
-    return [NSNumber numberWithInt:i];
+    i = ((NSUInteger)floor(a) << 24) | ((NSUInteger)floor(r)<< 16) | ((NSUInteger)floor(g) << 8) | (NSUInteger)(b);
+    return @(i);
 }
 
 + (ImportController*) importController
@@ -514,14 +514,14 @@ static GPSInfoController *_gc;
     return ar;
 }
 
-+ (bool)runScript:(NSString*)script
++ (BOOL)runScript:(NSString*)script
 {
     return [self runScript:script withArguments:nil];
 }
 
-+ (bool)runScript:(NSString*)script withArguments:(NSArray*)args
++ (BOOL)runScript:(NSString*)script withArguments:(NSArray*)args
 {
-    bool ret = NO;
+    BOOL ret = NO;
     
     NSString* s = [NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], script];
     
@@ -543,7 +543,7 @@ static GPSInfoController *_gc;
     }
 }
 
-+ (int)showCouldNotInstaniciateDialog:(NSString*)driverName
++ (NSInteger)showCouldNotInstaniciateDialog:(NSString*)driverName
 {
     NSString *warning = NSLocalizedString(@"Could not instanciate Driver description", "LONG description");
     /*@"KisMAC has been able to load the driver (%@). Reasons for this failure could be:\n\n"
@@ -677,12 +677,12 @@ static GPSInfoController *_gc;
 {
     UInt32 size = f->ctrl.len;
     UInt8 *data = f->data;
-    DBNSLog(@"--FRAME LENGTH %d--", (int)size);
-    int idx = 0;
-    int i,j;
+    DBNSLog(@"--FRAME LENGTH %@--", @(size));
+    NSInteger idx = 0;
+    NSInteger i,j;
     for (i=0;i<size;i=i+8)
     {
-        fprintf(stderr, "0x%.4x ", i);
+        fprintf(stderr, "0x%.4lx ", i);
         for (j=0;j<8;++j)
         {
             if (idx < size)

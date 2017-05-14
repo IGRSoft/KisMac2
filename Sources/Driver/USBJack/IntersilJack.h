@@ -20,24 +20,24 @@ public:
     IOReturn    _reset();
     
     char   *getPlistFile();
-    bool    startCapture(UInt16 channel);
-    bool    stopCapture();
-    bool    getChannel(UInt16* channel);
-    bool    getAllowedChannels(UInt16* channel);
-    bool    setChannel(UInt16 channel);
-    int     WriteTxDescriptor(WLFrame * theFrame, KMRate kmrate);
-    bool    sendKFrame(KFrame *frame);
-    bool    _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);
+    BOOL    startCapture(UInt16 channel);
+    BOOL    stopCapture();
+    BOOL    getChannel(UInt16* channel);
+    BOOL    getAllowedChannels(UInt16* channel);
+    BOOL    setChannel(UInt16 channel);
+    NSInteger     WriteTxDescriptor(WLFrame * theFrame, KMRate kmrate);
+    BOOL    sendKFrame(KFrame *frame);
+    BOOL    _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);
     
     IOReturn    _doCommand(enum WLCommandCode cmd, UInt16 param0, UInt16 param1 = 0, UInt16 param2 = 0);
     IOReturn    _doCommandNoWait(enum WLCommandCode cmd, UInt16 param0, UInt16 param1 = 0, UInt16 param2 = 0);
 
 #if BYTE_ORDER == BIG_ENDIAN
-    IOReturn    _getRecord(UInt16 rid, void* buf, UInt32* n, bool swapBytes = true);
-    IOReturn    _setRecord(UInt16 rid, const void* buf, UInt32 n, bool swapBytes = true);
+    IOReturn    _getRecord(UInt16 rid, void* buf, UInt32* n, BOOL swapBytes = true);
+    IOReturn    _setRecord(UInt16 rid, const void* buf, UInt32 n, BOOL swapBytes = true);
 #else 
-    IOReturn    _getRecord(UInt16 rid, void* buf, UInt32* n, bool swapBytes = false); 
-    IOReturn    _setRecord(UInt16 rid, const void* buf, UInt32 n, bool swapBytes = false); 
+    IOReturn    _getRecord(UInt16 rid, void* buf, UInt32* n, BOOL swapBytes = false); 
+    IOReturn    _setRecord(UInt16 rid, const void* buf, UInt32 n, BOOL swapBytes = false); 
 #endif
 
     IOReturn    _getValue(UInt16 rid, UInt16* v);
@@ -45,12 +45,12 @@ public:
     IOReturn    _writeWaitForResponse(UInt32 size);
     IOReturn    _getHardwareAddress(struct WLHardwareAddress* addr);
     IOReturn    _getIdentity(WLIdentity* wli);
-    int         _getFirmwareType();
+    NSInteger         _getFirmwareType();
     IOReturn    _disable();
     IOReturn    _enable();
     
 private:
-        //int temp;
+        //NSInteger temp;
 };
 
 

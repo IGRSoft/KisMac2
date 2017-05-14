@@ -84,7 +84,7 @@
     
     // Set injection replies counters
     _injReplies = 0;
-    [responses setIntValue:_injReplies];
+    [responses setIntegerValue:_injReplies];
     
     [probeSheet orderOut:nil];
     [operation setStringValue:@"Injecting..."];
@@ -108,7 +108,7 @@
 
 - (void) stepPerformInjection: (NSTimer *)timer
 {
-    int q;
+    NSInteger q;
     NSMutableArray *p;
     NSData *f;
 
@@ -153,7 +153,7 @@
             
     // Reset injection replies to 0
     _injReplies = 0;
-    [responses setIntValue:_injReplies];
+    [responses setIntegerValue:_injReplies];
             
     if (frame->frame_ctl & IEEE80211_DIR_TODS)
 	{
@@ -235,13 +235,13 @@
     }
 }
 
-- (bool) stopTest {
+- (BOOL) stopTest {
     _stopFlag = YES;
     return YES;
 }
 
 - (WavePluginPacketResponse) gotPacket:(WavePacket *)packet fromDriver:(WaveDriver *)driver {
-    int payloadLength = [packet payloadLength];
+    NSInteger payloadLength = [packet payloadLength];
     
     if (_checkInjectedPackets == NO)
         return WavePluginPacketResponseContinue;
@@ -250,7 +250,7 @@
     if ([packet type] != IEEE80211_TYPE_DATA)
         return WavePluginPacketResponseContinue;
     
-	bool isBrokenData = false;
+	BOOL isBrokenData = false;
     if (aPacketType == 0) {        //do rst handling here
         if ((payloadLength == TCPRST_SIZE) && 
             IS_EQUAL_MACADDR([packet addr1], _addr1) && 
@@ -278,7 +278,7 @@
 	}
 
     ++_injReplies;
-    [responses setIntValue:_injReplies];
+    [responses setIntegerValue:_injReplies];
     [progIndicator setDoubleValue:(double)_injReplies];
     return WavePluginPacketResponseContinue;
 }

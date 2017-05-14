@@ -33,7 +33,7 @@ typedef struct _BBP_TUNING_PARAMETERS_STRUC
 	UCHAR			BBPR17LowSensitivity;
 	UCHAR			BBPR17MidSensitivity;
 	UCHAR			RSSIToDbmOffset;
-	bool			LargeCurrentRSSI;
+	BOOL			LargeCurrentRSSI;
 }
 BBP_TUNING_PARAMETERS_STRUC, *PBBP_TUNING_PARAMETERS_STRUC;
 
@@ -52,7 +52,7 @@ public:
                             UInt16 wIndex, 
                             void *pData,
                             UInt16 wLength,
-                            bool swap);
+                            BOOL swap);
     
     IOReturn RTUSBSingleRead(unsigned short	Offset,
                              unsigned short	* pValue);
@@ -83,20 +83,20 @@ public:
     void	NICReadEEPROMParameters();
     void    NICInitAsicFromEEPROM();
     
-    bool setChannel(UInt16 channel);
-    bool getAllowedChannels(UInt16* channels);
-    bool startCapture(UInt16 channel);
-    bool stopCapture();
+    BOOL setChannel(UInt16 channel);
+    BOOL getAllowedChannels(UInt16* channels);
+    BOOL startCapture(UInt16 channel);
+    BOOL stopCapture();
     
-    bool _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);
-    int         WriteTxDescriptor(void* theFrame, UInt16 length);
-    bool        sendKFrame(KFrame *frame);
+    BOOL _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);
+    NSInteger         WriteTxDescriptor(void* theFrame, UInt16 length);
+    BOOL        sendKFrame(KFrame *frame);
     IOReturn    _sendFrame(UInt8* data, IOByteCount size);
     void    RTMPDescriptorEndianChange(unsigned char *  pData, unsigned long DescriptorType);
     UInt32 currentRate;
     
 private:
-    //int temp;
+    //NSInteger temp;
     unsigned short EEPROMDefaultValue[NUM_EEPROM_BBP_PARMS];
     unsigned short EEPROMBBPTuningParameters[NUM_EEPROM_BBP_TUNING_PARMS];
     BBP_TUNING_PARAMETERS_STRUC			BBPTuningParameters;

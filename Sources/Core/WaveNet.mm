@@ -56,13 +56,13 @@ struct graphStruct zeroGraphData;
 struct signalCoords
 {
 	double x, y;
-	int strength;
+	NSInteger strength;
 } __attribute__((packed));
 		
 NSInteger lengthSort(id string1, id string2, void *context)
 {
-    int v1 = [(NSString*)string1 length];
-    int v2 = [(NSString*)string2 length];
+    NSUInteger v1 = [(NSString*)string1 length];
+    NSUInteger v2 = [(NSString*)string2 length];
     if (v1 < v2)
         return NSOrderedAscending;
     else if (v1 > v2)
@@ -73,7 +73,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 
 @implementation WaveNet
 
--(id)initWithID:(int)netID
+- (id)initWithID:(NSInteger)netID
 {
     waypoint cp;
     GPSController *gpsc;
@@ -142,7 +142,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 
 - (id)initWithCoder:(NSCoder *)coder {
     waypoint wp;
-    int bssid[6];
+    NSInteger bssid[6];
     NSData *data;
         
     if (![coder allowsKeyedCoding]) {
@@ -175,8 +175,10 @@ NSInteger lengthSort(id string1, id string2, void *context)
     _ctrlPackets=[coder decodeIntForKey:@"aCtrlPackets"];
     _liveCaptured=[coder decodeBoolForKey:@"_liveCaptured"];;
     
-    for(int x=0; x<14; ++x)
-        _packetsPerChannel[x]=[coder decodeIntForKey:[NSString stringWithFormat:@"_packetsPerChannel%i",x]];
+    for (NSUInteger x = 0; x < 14; ++x)
+    {
+        _packetsPerChannel[x]=[coder decodeIntForKey:[NSString stringWithFormat:@"_packetsPerChannel%@", @(x)]];
+    }
     
     _bytes = [coder decodeDoubleForKey:@"aBytes"];
     wp._lat = [coder decodeDoubleForKey:@"a_Lat"];
@@ -187,26 +189,27 @@ NSInteger lengthSort(id string1, id string2, void *context)
     aLong = [coder decodeObjectForKey:@"aLong"];
     aElev = [coder decodeObjectForKey:@"aElev"];
     
-    _ID=[coder decodeObjectForKey:@"aID"];
-    if (_ID!=nil && sscanf([_ID UTF8String], "%2X%2X%2X%2X%2X%2X", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) {
+    _ID = [coder decodeObjectForKey:@"aID"];
+    if (_ID != nil && sscanf([_ID UTF8String], "%2lX%2lX%2lX%2lX%2lX%2lX", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) {
         DBNSLog(@"Error could not decode ID %@!", _ID);
     }
     
-    for (int x=0; x<6; ++x)
+    for (NSInteger x=0; x<6; ++x)
         _rawID[x] = bssid[x];
     
     _SSID=[coder decodeObjectForKey:@"aSSID"];
     _BSSID=[coder decodeObjectForKey:@"aBSSID"];
     if (![_BSSID isEqualToString:@"<no bssid>"]) {
-        if (_BSSID!=nil && sscanf([_BSSID UTF8String], "%2X:%2X:%2X:%2X:%2X:%2X", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) 
+        if (_BSSID!=nil && sscanf([_BSSID UTF8String], "%2lX:%2lX:%2lX:%2lX:%2lX:%2lX", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6)
             DBNSLog(@"Error could not decode BSSID %@!", _BSSID);
-        for (int x=0; x<6; ++x)
+        for (NSInteger x=0; x<6; ++x)
             _rawBSSID[x] = bssid[x];
     } else {
-         for (int x=0; x<6; ++x)
+         for (NSInteger x=0; x<6; ++x)
             _rawBSSID[x] = bssid[0];
     }
-    _date=[coder decodeObjectForKey:@"aDate"];
+    
+    _date = [coder decodeObjectForKey:@"aDate"];
     aFirstDate=[coder decodeObjectForKey:@"aFirstDate"];
     
     data = [coder decodeObjectForKey:@"ivData0"];
@@ -262,21 +265,21 @@ NSInteger lengthSort(id string1, id string2, void *context)
     return self;
 }
 
-- (id)initWithNetstumbler:(const char*)buf andDate:(NSString*)date {
+- (id)initWithNetstumbler:(const char*)buf andDate:(NSString *)date {
     waypoint wp;
     char ns_dir, ew_dir;
-    float ns_coord, ew_coord;
+    CGFloat ns_coord, ew_coord;
     char ssid[255], temp_bss[8];
-    unsigned int hour, min, sec, bssid[6], channelbits = 0, flags = 0;
-    int interval = 0;
+    NSUInteger hour, min, sec, bssid[6], channelbits = 0, flags = 0;
+    NSUInteger interval = 0;
     
     self = [super init];
     
     if (!self) return nil;
     
-    if(sscanf(buf, "%c %f %c %f (%*c%254[^)]) %7s "
-    "( %2x:%2x:%2x:%2x:%2x:%2x ) %d:%d:%d (GMT) [ %d %*d %*d ] "
-    "# ( %*[^)]) %x %x %d",
+    if(sscanf(buf, "%c %lf %c %lf (%*c%254[^)]) %7s "
+    "( %2lx:%2lx:%2lx:%2lx:%2lx:%2lx ) %ld:%ld:%ld (GMT) [ %ld %*ld %*ld ] "
+    "# ( %*[^)]) %lx %lx %ld",
     &ns_dir, &ns_coord, &ew_dir, &ew_coord, ssid, temp_bss,
     &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5],
     &hour, &min, &sec,
@@ -303,16 +306,16 @@ NSInteger lengthSort(id string1, id string2, void *context)
 
     _isWep = (flags & 0x0010) ? encryptionTypeWEP : encryptionTypeNone;
 
-    _date = [NSDate dateWithString:[NSString stringWithFormat:@"%@ %.2d:%.2d:%.2d +0000", date, hour, min, sec]];
+    _date = [NSDate dateWithString:[NSString stringWithFormat:@"%@ %.2ld:%.2ld:%.2ld +0000", date, hour, min, sec]];
     aFirstDate = _date;
     
     aLat  = [NSString stringWithFormat:@"%f%c", ns_coord, ns_dir];
     aLong = [NSString stringWithFormat:@"%f%c", ew_coord, ew_dir];
     _SSID = @(ssid);
 
-    _ID = [NSString stringWithFormat:@"%2X%2X%2X%2X%2X%2X", bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5]];
-    _BSSID = [NSString stringWithFormat:@"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X", bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5]];
-    for (int x=0; x<6; ++x)
+    _ID = [NSString stringWithFormat:@"%2lX%2lX%2lX%2lX%2lX%2lX", bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5]];
+    _BSSID = [NSString stringWithFormat:@"%.2lX:%.2lX:%.2lX:%.2lX:%.2lX:%.2lX", bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5]];
+    for (NSInteger x=0; x<6; ++x)
         _rawID[x] = bssid[x];
     
     wp._lat  = ns_coord * (ns_dir == 'N' ? 1.0 : -1.0);
@@ -356,10 +359,10 @@ NSInteger lengthSort(id string1, id string2, void *context)
     return self;
 }
 
-- (id)initWithDataDictionary:(NSDictionary*)dict {
+- (id)initWithDataDictionary:(NSDictionary *)dict {
     waypoint wp;
     char ns_dir, ew_dir;
-    int bssid[6];
+    NSInteger bssid[6];
     NSData *data;
     NSMutableDictionary *clients;
 	
@@ -391,8 +394,8 @@ NSInteger lengthSort(id string1, id string2, void *context)
     _ctrlPackets = [dict[@"ctrlPackets"] intValue];
     _liveCaptured = [dict[@"liveCaptured"] boolValue];
     
-	for(int x=0; x<14; ++x)
-        _packetsPerChannel[x] = [dict[@"packetsPerChannel"][[NSString stringWithFormat:@"%.2i",x]] intValue];
+	for(NSInteger x=0; x<14; ++x)
+        _packetsPerChannel[x] = [dict[@"packetsPerChannel"][[NSString stringWithFormat:@"%.2li",(long)x]] intValue];
     
     _bytes = [dict[@"bytes"] doubleValue];
     wp._lat = [dict[@"lat"] doubleValue];
@@ -403,23 +406,23 @@ NSInteger lengthSort(id string1, id string2, void *context)
     (wp._lat < 0) ? ew_dir = 'W' :  ew_dir = 'E';
     
     _ID=dict[@"ID"];
-    if (_ID!=nil && sscanf([_ID UTF8String], "%2X%2X%2X%2X%2X%2X", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) {
+    if (_ID!=nil && sscanf([_ID UTF8String], "%2lX%2lX%2lX%2lX%2lX%2lX", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) {
         DBNSLog(@"Error could not decode ID %@!", _ID);
     }
     
-    for (int x=0; x<6; ++x)
+    for (NSInteger x=0; x<6; ++x)
         _rawID[x] = bssid[x];
     
     _SSID  = dict[@"SSID"];
     _SSIDs = dict[@"SSIDs"];
     _BSSID=dict[@"BSSID"];
     if (![_BSSID isEqualToString:@"<no bssid>"]) {
-        if (_BSSID!=nil && sscanf([_BSSID UTF8String], "%2X:%2X:%2X:%2X:%2X:%2X", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6) 
+        if (_BSSID!=nil && sscanf([_BSSID UTF8String], "%2lX:%2lX:%2lX:%2lX:%2lX:%2lX", &bssid[0], &bssid[1], &bssid[2], &bssid[3], &bssid[4], &bssid[5])!=6)
             DBNSLog(@"Error could not decode BSSID %@!", _BSSID);
-        for (int x=0; x<6; ++x)
+        for (NSInteger x=0; x<6; ++x)
             _rawBSSID[x] = bssid[x];
     } else {
-         for (int x=0; x<6; ++x)
+         for (NSInteger x=0; x<6; ++x)
             _rawBSSID[x] = bssid[0];
     }
     _date=dict[@"date"];
@@ -482,7 +485,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 		if ([d length] % sizeof(struct signalCoords) == 0) {
 			pL = (const struct signalCoords *)[d bytes];
 		
-			for (unsigned int i = 0; i < ([d length] / sizeof(struct signalCoords)); ++i) {
+			for (NSUInteger i = 0; i < ([d length] / sizeof(struct signalCoords)); ++i) {
 				vp = [BIValuePair new];
 				[vp setPairX:pL->x Y:pL->y];
 				_coordinates[vp] = @(pL->strength);
@@ -552,9 +555,9 @@ NSInteger lengthSort(id string1, id string2, void *context)
 
 	if (_packets) {
 		packetsPerChannel = [NSMutableDictionary dictionary];
-		for (int i = 0; i <14; ++i) {
+		for (NSInteger i = 0; i <14; ++i) {
 			if (_packetsPerChannel[i]) {
-				packetsPerChannel[[NSString stringWithFormat:@"%.2u", i]] = @(_packetsPerChannel[i]);
+				packetsPerChannel[[NSString stringWithFormat:@"%.2ld", (long)i]] = @(_packetsPerChannel[i]);
 			}
 		}
 	}
@@ -563,8 +566,8 @@ NSInteger lengthSort(id string1, id string2, void *context)
 	
 	dict[@"maxSignal"] = @(_maxSignal);
 	if (_curSignal > 0)  dict[@"curSignal"] = @(_curSignal);
-	dict[@"type"] = [NSNumber numberWithInt:_type];
-	dict[@"encryption"] = [NSNumber numberWithInt:_isWep];
+	dict[@"type"] = @(_type);
+	dict[@"encryption"] = @(_isWep);
 	if (_packets > 0)  dict[@"packets"] = @(_packets);
 	if (_dataPackets > 0)  dict[@"dataPackets"] = @(_dataPackets);
 	if (_mgmtPackets > 0)  dict[@"mgmtPackets"] = @(_mgmtPackets);
@@ -623,14 +626,14 @@ NSInteger lengthSort(id string1, id string2, void *context)
 
 #pragma mark -
 
-- (void)updateSSID:(NSString*)newSSID withSound:(bool)sound {
-    int lVoice;
+- (void)updateSSID:(NSString*)newSSID withSound:(BOOL)sound {
+    NSInteger lVoice;
     NSString *lSentence;
     NSString *oc;
     const char *pc;
-    unsigned int i;
-    bool isHidden = YES;
-    bool updatedSSID;
+    NSUInteger i;
+    BOOL isHidden = YES;
+    BOOL updatedSSID;
     
     if (newSSID==nil || [newSSID isEqualToString:_SSID]) return;
 
@@ -690,7 +693,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 	}
 }
 
-- (void)generalEncounterStuff:(bool)onlineCapture {
+- (void)generalEncounterStuff:(BOOL)onlineCapture {
     waypoint cp;
     GPSController *gpsc;
     BIValuePair *pV;
@@ -728,7 +731,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
                 if (_isWep == encryptionTypeWPA2) [GrowlController notifyGrowlWPANetwork:@"" SSID:_SSID BSSID:_BSSID signal:_curSignal channel:_channel];
                 if (_isWep == encryptionTypeLEAP) [GrowlController notifyGrowlLEAPNetwork:@"" SSID:_SSID BSSID:_BSSID signal:_curSignal channel:_channel];
             } else if (_SSID != nil && ([_date timeIntervalSinceNow] < -120.0)) {
-                int lVoice=[[NSUserDefaults standardUserDefaults] integerForKey:@"Voice"];
+                NSInteger lVoice=[[NSUserDefaults standardUserDefaults] integerForKey:@"Voice"];
                 if (lVoice) {
                     NSString * lSentence = [NSString stringWithFormat: NSLocalizedString(@"Reencountered network. SSID is %@", "this is for speech output"),
                         [_SSID length] == 0 ? NSLocalizedString(@"hidden", "for speech"): [_SSID uppercaseString]];
@@ -778,10 +781,10 @@ NSInteger lengthSort(id string1, id string2, void *context)
 }
 
 - (void) mergeWithNet:(WaveNet*)net {
-    int temp;
+    NSInteger temp;
     networkType tempType;
     encryptionType encType;
-    int* p;
+    NSInteger* p;
     
     temp = [net maxSignal];
     if (_maxSignal < temp) {
@@ -823,7 +826,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     if (!_liveCaptured) _liveCaptured = [net liveCaptured];
     
     p = [net packetsPerChannel];
-    for(int x=0;x<14;++x) {
+    for(NSInteger x=0;x<14;++x) {
         _packetsPerChannel[x] += p[x];
         if (_packetsPerChannel[x] == p[x]) //the net we merge with has some channel, we did not know about
             [[NSNotificationCenter defaultCenter] postNotificationName:KisMACViewItemChanged object:self];
@@ -852,11 +855,11 @@ NSInteger lengthSort(id string1, id string2, void *context)
     [_dataLock unlock];
 }
 
-- (void)parsePacket:(WavePacket*) w withSound:(bool)sound {
+- (void)parsePacket:(WavePacket*)w withSound:(BOOL)sound {
     NSString *clientid;
     WaveClient *lWCl;
     encryptionType wep;
-    unsigned int bodyLength;
+    NSUInteger bodyLength;
     UInt8 *body;
     
     // Invalidate cache
@@ -1073,7 +1076,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 			for (NSUInteger i = 0; i < 6; ++i) {
 				NSString* part = [macString substringWithRange:NSMakeRange(i * 3, 2)];
 				NSScanner* scanner = [NSScanner scannerWithString:part];
-				unsigned int data = 0;
+				unsigned data = 0;
 				if (![scanner scanHexInt:&data]) {
 					data = 0;
 				}
@@ -1091,8 +1094,8 @@ NSInteger lengthSort(id string1, id string2, void *context)
                 _rawBSSID[3], _rawBSSID[4], _rawBSSID[5]];
     }
     
-	int rssi = (int) ((NSInteger) [info rssiValue]);
-	int noise = [info noiseMeasurement];
+	NSInteger rssi = (NSInteger) ((NSInteger) [info rssiValue]);
+	NSInteger noise = [info noiseMeasurement];
 	
 	_curSignal = rssi - noise;
     if (_curSignal<0) _curSignal = 0;
@@ -1187,9 +1190,9 @@ NSInteger lengthSort(id string1, id string2, void *context)
 
 #pragma mark -
 
-- (bool)noteFinishedSweep:(int)num {
+- (BOOL)noteFinishedSweep:(NSInteger)num {
     // shuffle the values around in the aYield array
-    bool ret;
+    BOOL ret;
     BIValuePair *pV;
     waypoint cp;
     
@@ -1235,13 +1238,13 @@ NSInteger lengthSort(id string1, id string2, void *context)
     curPacketData = 0;
     curSignalData = 0;
     
-    int x = num - 120;
+    NSInteger x = num - 120;
 
     recentTraffic = 0;
     recentPackets = 0;
     recentSignal = 0;
     
-	if(x < 0) x = 0;
+	if (x < 0) x = 0;
     while(x < num) {
         recentTraffic += graphData->trafficData[x];
         recentPackets += graphData->packetData[x];
@@ -1250,13 +1253,13 @@ NSInteger lengthSort(id string1, id string2, void *context)
     }
     
     if(graphLength >= MAX_YIELD_SIZE) {
-        memcpy(graphData->trafficData, graphData->trafficData + 1, (MAX_YIELD_SIZE) * sizeof(int));
+        memcpy(graphData->trafficData, graphData->trafficData + 1, (MAX_YIELD_SIZE) * sizeof(NSInteger));
         graphData->trafficData[MAX_YIELD_SIZE] = 0;
 
-        memcpy(graphData->packetData, graphData->packetData + 1, (MAX_YIELD_SIZE) * sizeof(int));
+        memcpy(graphData->packetData, graphData->packetData + 1, (MAX_YIELD_SIZE) * sizeof(NSInteger));
         graphData->packetData[MAX_YIELD_SIZE] = 0;
 
-        memcpy(graphData->signalData, graphData->signalData + 1, (MAX_YIELD_SIZE) * sizeof(int));
+        memcpy(graphData->signalData, graphData->signalData + 1, (MAX_YIELD_SIZE) * sizeof(NSInteger));
         graphData->signalData[MAX_YIELD_SIZE] = 0;
     }
  
@@ -1321,7 +1324,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 	}
 }
 
-- (bool)isCorrectSSID {
+- (BOOL)isCorrectSSID {
 	NSString *ssid = [self SSID];
 	if (ssid && [ssid length]
 		&& ![ssid isEqualToString:NSLocalizedString(@"<tunnel>", "the ssid for tunnels")]
@@ -1408,10 +1411,10 @@ NSInteger lengthSort(id string1, id string2, void *context)
 
 - (NSString*)rates
 {
-	int i;
+	NSInteger i;
 	NSMutableArray *a = [NSMutableArray array];
 	for (i = 0; i < _rateCount; ++i) {
-		[a addObject:@(((float)(_rates[i] & 0x7F)) / 2)];
+		[a addObject:@(((CGFloat)(_rates[i] & 0x7F)) / 2)];
 	}
 	return [a componentsJoinedByString:@", "];
 }
@@ -1425,11 +1428,11 @@ NSInteger lengthSort(id string1, id string2, void *context)
     aComment = comment;
 }
 
-- (int)avgSignal
+- (NSInteger)avgSignal
 {
-    int sum = 0;
-    int i, x, c;
-    int max = (graphLength < _avgTime*4) ? graphLength : _avgTime*4;
+    NSInteger sum = 0;
+    NSInteger i, x, c;
+    NSInteger max = (graphLength < _avgTime*4) ? graphLength : _avgTime*4;
     
     c=0;
     for (i=0; i<max; ++i) {
@@ -1445,64 +1448,64 @@ NSInteger lengthSort(id string1, id string2, void *context)
     return sum / c;
 }
 
-- (int)curSignal
+- (NSInteger)curSignal
 {
     return _curSignal;
 }
 
-- (int)curPackets
+- (NSInteger)curPackets
 {
     return curPackets;
 }
-- (int)curTraffic {
+- (NSInteger)curTraffic {
     return curTraffic;
 }
-- (int)recentTraffic {
+- (NSInteger)recentTraffic {
     return recentTraffic;
 }
-- (int)recentPackets {
+- (NSInteger)recentPackets {
     return recentPackets;
 }
-- (int)recentSignal {
+- (NSInteger)recentSignal {
     return recentSignal;
 }
-- (int)maxSignal {
+- (NSInteger)maxSignal {
     return _maxSignal;
 }
-- (int)channel {
+- (NSInteger)channel {
     return _channel;
 }
-- (int)originalChannel {
+- (NSInteger)originalChannel {
     return _primaryChannel;
 }
 - (networkType)type {
     return _type;
 }
-- (void)setNetID:(int)netID {
+- (void)setNetID:(NSInteger)netID {
     _netID = netID;
 }
-- (int)netID {
+- (NSInteger)netID {
     return _netID;
 }
-- (int)packets {
+- (NSInteger)packets {
     return _packets;
 }
-- (int)uniqueIVs {
+- (NSInteger)uniqueIVs {
     return [_ivData[0] count] + [_ivData[1] count] + [_ivData[2] count] + [_ivData[3] count];
 }
-- (int)dataPackets {
+- (NSInteger)dataPackets {
     return _dataPackets;
 }
-- (int)mgmtPackets {
+- (NSInteger)mgmtPackets {
     return _mgmtPackets;
 }
-- (int)ctrlPackets {
+- (NSInteger)ctrlPackets {
     return _ctrlPackets;
 }
-- (int*)packetsPerChannel {
+- (NSInteger*)packetsPerChannel {
     return _packetsPerChannel;
 }
-- (bool)liveCaptured {
+- (BOOL)liveCaptured {
     return _liveCaptured;
 }
 - (NSArray*)cryptedPacketsLog {
@@ -1525,12 +1528,12 @@ NSInteger lengthSort(id string1, id string2, void *context)
 { 
     NSString * asciiKey = nil;
     const char *password;
-    int len; 
-    int mem = 0;
+    NSInteger len; 
+    NSInteger mem = 0;
     char ascii[14]; //the max length is 14
-    int p;
+    NSInteger p;
     char hex[5];
-    int i;
+    NSInteger i;
     
     //if it is wep but we don't have the passwd
     if ((nil == _password) && (_isWep > encryptionTypeNone))
@@ -1605,7 +1608,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
     return _password != nil;
 }
 
-- (int)challengeResponseStatus {
+- (NSInteger)challengeResponseStatus {
     return _challengeResponseStatus;
 }
 
@@ -1783,15 +1786,15 @@ NSInteger lengthSort(id string1, id string2, void *context)
     
     @synchronized(self)
     {
-        cache = @{@"id": [NSString stringWithFormat:@"%i", _netID],
+        cache = @{@"id": [NSString stringWithFormat:@"%@", @(_netID)],
                   @"ssid": [self SSID],
                   @"bssid": [self BSSID],
-                  @"signal": [NSString stringWithFormat:@"%i", _curSignal],
-                  @"avgsignal": [NSString stringWithFormat:@"%i", [self avgSignal]],
-                  @"maxsignal": [NSString stringWithFormat:@"%i", _maxSignal],
-                  @"channel": [NSString stringWithFormat:@"%i", _channel],
-                  @"primaryChannel": [NSString stringWithFormat:@"%i", _primaryChannel],
-                  @"packets": [NSString stringWithFormat:@"%i", _packets],
+                  @"signal": [NSString stringWithFormat:@"%@", @(_curSignal)],
+                  @"avgsignal": [NSString stringWithFormat:@"%@", @([self avgSignal])],
+                  @"maxsignal": [NSString stringWithFormat:@"%@", @(_maxSignal)],
+                  @"channel": [NSString stringWithFormat:@"%@", @(_channel)],
+                  @"primaryChannel": [NSString stringWithFormat:@"%@", @(_primaryChannel)],
+                  @"packets": [NSString stringWithFormat:@"%@", @(_packets)],
                   @"data": [self data],
                   @"wep": enc,
                   @"type": type,
@@ -1807,7 +1810,7 @@ NSInteger lengthSort(id string1, id string2, void *context)
 
 #pragma mark -
 
-- (bool)joinNetwork
+- (BOOL)joinNetwork
 {
     return [[WaveDriverAirport sharedInstance] joinBSSID: _rawBSSID
                                             withPassword: _password];
@@ -1888,49 +1891,49 @@ NSInteger lengthSort(id string1, id string2, void *context)
 
 #pragma mark -
 
-int compValues(int v1, int v2) {
+NSInteger compValues(NSInteger v1, NSInteger v2) {
     if (v1 < v2) return NSOrderedAscending;
     else if (v1 > v2) return NSOrderedDescending;
     else return NSOrderedSame;
 }
 
-int compFloatValues(float v1, float v2) {
+NSInteger compFloatValues(CGFloat v1, CGFloat v2) {
     if (v1 < v2) return NSOrderedAscending;
     else if (v1 > v2) return NSOrderedDescending;
     else return NSOrderedSame;
 }
 
-int idSort(WaveClient* w1, WaveClient* w2, int ascend) {
-    int v1 = [[w1 ID] intValue];
-    int v2 = [[w2 ID] intValue];
+NSInteger idSort(WaveClient* w1, WaveClient* w2, NSInteger ascend) {
+    NSInteger v1 = [[w1 ID] intValue];
+    NSInteger v2 = [[w2 ID] intValue];
     return ascend * compValues(v1,v2);
 }
 
-int clientSort(WaveClient* w1, WaveClient* w2, int ascend) {
+NSInteger clientSort(WaveClient* w1, WaveClient* w2, NSInteger ascend) {
     return ascend * [[w1 ID] compare:[w2 ID]];
 }
 
-int vendorSort(WaveClient* w1, WaveClient* w2, int ascend) {
+NSInteger vendorSort(WaveClient* w1, WaveClient* w2, NSInteger ascend) {
     return ascend * [[w1 vendor] compare:[w2 vendor]];
 }
 
-int signalSort(WaveClient* w1, WaveClient* w2, int ascend) {
+NSInteger signalSort(WaveClient* w1, WaveClient* w2, NSInteger ascend) {
     return ascend * compValues( [w1 curSignal], [w2 curSignal]);
 }
 
-int receivedSort(WaveClient* w1, WaveClient* w2, int ascend) {
+NSInteger receivedSort(WaveClient* w1, WaveClient* w2, NSInteger ascend) {
     return ascend * compFloatValues([w1 receivedBytes], [w2 receivedBytes]);
 }
 
-int sentSort(WaveClient* w1, WaveClient* w2, int ascend) {
+NSInteger sentSort(WaveClient* w1, WaveClient* w2, NSInteger ascend) {
     return ascend * compFloatValues([w1 sentBytes], [w2 sentBytes]);
 }
-int dateSort(WaveClient* w1, WaveClient* w2, int ascend) {
+NSInteger dateSort(WaveClient* w1, WaveClient* w2, NSInteger ascend) {
     return ascend * [[w1 rawDate] compare:[w2 rawDate]];
 }
-int ipSort(WaveClient* w1, WaveClient* w2, int ascend) {
+NSInteger ipSort(WaveClient* w1, WaveClient* w2, NSInteger ascend) {
     //we break the ips into sections and sort 
-    int i, ndx = 0;
+    NSInteger i, ndx = 0;
     NSArray *ip1 = [[w1 getIPAddress] componentsSeparatedByString:@"."];
     NSArray *ip2 = [[w2 getIPAddress] componentsSeparatedByString:@"."];
     if ([ip1 count] < 4) {
@@ -1949,13 +1952,13 @@ int ipSort(WaveClient* w1, WaveClient* w2, int ascend) {
     return ascend * i;
 }
 
-typedef int (*SORTFUNC)(id, id, int);
+typedef NSInteger (*SORTFUNC)(id, id, NSInteger);
 
-- (void) sortByColumn:(NSString*)ident order:(bool)ascend {
-    bool sorted = YES;
+- (void)sortByColumn:(NSString *)ident order:(BOOL)ascend {
+    BOOL sorted = YES;
     SORTFUNC sf;
-    int ret;
-    unsigned int w, x, y, _sortedCount, a;
+    NSInteger ret;
+    NSUInteger w, x, y, _sortedCount, a;
     
     if      ([ident isEqualToString:@"id"])			sf = (SORTFUNC)idSort;
     else if ([ident isEqualToString:@"client"])		sf = (SORTFUNC)clientSort;
@@ -2017,9 +2020,9 @@ typedef int (*SORTFUNC)(id, id, int);
 #pragma mark WPA/LEAP cracking
 #pragma mark -
 
-- (int)capturedEAPOLKeys {
-	int keys = 0;
-	unsigned int i;
+- (NSInteger)capturedEAPOLKeys {
+	NSInteger keys = 0;
+	NSUInteger i;
 	
     for (i = 0; i < [aClientKeys count]; ++i) {
         if ([aClients[aClientKeys[i]] eapolDataAvailable]) ++keys;
@@ -2027,9 +2030,9 @@ typedef int (*SORTFUNC)(id, id, int);
 	return keys;
 }
 
-- (int)capturedLEAPKeys {
-    int keys = 0;
-    unsigned int i;
+- (NSInteger)capturedLEAPKeys {
+    NSInteger keys = 0;
+    NSUInteger i;
 	
 	for (i = 0; i < [aClientKeys count]; ++i) {
         if ([aClients[aClientKeys[i]] leapDataAvailable]) ++keys;

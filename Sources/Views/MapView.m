@@ -85,7 +85,11 @@
     [self addSubView:_controlPanel];
     
     [self setNeedsDisplay:YES];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_updateGPSStatus:) name:KisMACGPSStatusChanged object:nil];
+    SEL _updateGPSStatusSelector = NSSelectorFromString(@"_updateGPSStatus:");
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:_updateGPSStatusSelector
+                                                 name:KisMACGPSStatusChanged
+                                               object:nil];
 	
 	[self loadFromFile:[[[NSBundle mainBundle] resourcePath] stringByAppendingString:@"/world.kismap"]];
 	_zoomFact = 1.0 / (ZOOMFACT * ZOOMFACT * ZOOMFACT * ZOOMFACT);
@@ -106,7 +110,7 @@
     NSMutableDictionary *wp[3];
     NSString *error = nil;
     NSError * err;
-    int i;
+    NSInteger i;
     
     if (!_orgImage) return NO;
     
@@ -137,8 +141,8 @@
         wp[i][@"latdir"] = ((_wp[i]._lat ) >= 0 ? @"N" : @"S");
         wp[i][@"longitude"] = [NSNumber numberWithFloat:((_wp[i]._long) >= 0 ? (_wp[i]._long) : -(_wp[i]._long)) ];
         wp[i][@"longdir"] = ((_wp[i]._long) >= 0 ? @"E" : @"W");
-        wp[i][@"xpoint"] = @((int)floor(_point[i].x));
-        wp[i][@"ypoint"] = @((int)floor(_point[i].y));
+        wp[i][@"xpoint"] = @((NSInteger)floor(_point[i].x));
+        wp[i][@"ypoint"] = @((NSInteger)floor(_point[i].y));
     }
     
     data = [NSPropertyListSerialization dataFromPropertyList:@[wp[1],wp[2]] format:NSPropertyListXMLFormat_v1_0 errorDescription:&error];
@@ -154,7 +158,7 @@
     NSString *error = nil;
     NSArray *wps;
     NSDictionary *wp;
-    int i;
+    NSInteger i;
     NSData* data;
 	NSDictionary* settings;
     NSImage* img = nil;
@@ -279,7 +283,7 @@
 	return YES;
 }
 
-- (BOOL)setWaypoint:(int)which toPoint:(NSPoint)point atCoordinate:(waypoint)coord {
+- (BOOL)setWaypoint:(NSInteger)which toPoint:(NSPoint)point atCoordinate:(waypoint)coord {
     if (which != selWaypoint1 && which != selWaypoint2) return NO;
     if (coord._lat > 90 || coord._lat < -90 || coord._long > 180 || coord._long < -180) return NO;
     

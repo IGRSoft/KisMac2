@@ -77,8 +77,8 @@ struct rtl8187_tx_hdr {
 struct ieee80211_channel {
 	short chan; /* channel number (IEEE 802.11) */
 	short freq; /* frequency in MHz */
-	int val; /* hw specific value for the channel */
-	int flag; /* flag for hostapd use (IEEE80211_CHAN_*) */
+	NSInteger val; /* hw specific value for the channel */
+	NSInteger flag; /* flag for hostapd use (IEEE80211_CHAN_*) */
 	unsigned char power_level;
 	unsigned char antenna_max;
 };
@@ -87,8 +87,8 @@ struct rtl8187_priv {
 	/* common between rtl818x drivers */
 	struct rtl818x_csr *map;
 	void (*rf_init)(struct rtl8187_priv *);
-	int mode;
-	int if_id;
+	NSInteger mode;
+	NSInteger if_id;
     
 	/* rtl8187 specific */
 	struct ieee80211_channel channels[14];
@@ -125,23 +125,23 @@ public:
     virtual ~RTL8187Jack();
     char *getPlistFile();
     IOReturn _init();
-    bool setChannel(UInt16 channel);
-    bool startCapture(UInt16 channel);    
-    bool getAllowedChannels(UInt16* channels);
-    virtual bool _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);
-    virtual void _rawFrameReceived(unsigned int len);
-    bool stopCapture();
+    BOOL setChannel(UInt16 channel);
+    BOOL startCapture(UInt16 channel);    
+    BOOL getAllowedChannels(UInt16* channels);
+    virtual BOOL _massagePacket(void *inBuf, void *outBuf, UInt16 len, UInt16 channel);
+    virtual void _rawFrameReceived(NSUInteger len);
+    BOOL stopCapture();
     
-    int         WriteTxDescriptor(void* theFrame, UInt16 length, UInt8 rate);
-    bool        sendKFrame(KFrame* frame);
+    NSInteger         WriteTxDescriptor(void* theFrame, UInt16 length, UInt8 rate);
+    BOOL        sendKFrame(KFrame* frame);
     IOReturn    _sendFrame(UInt8* data, IOByteCount size);
     void dumpFrame(UInt8 *data, UInt16 size);
     
 private:
     struct rtl8187_priv *_priv;
     
-    int rtl8187_probe(void);
-    bool	NICInitialized;        
+    NSInteger rtl8187_probe(void);
+    BOOL	NICInitialized;        
 };
 
 

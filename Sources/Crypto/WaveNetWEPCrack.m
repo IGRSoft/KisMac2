@@ -38,7 +38,8 @@
 - (void)performBruteforce40bitLow:(NSObject*)obj
 {
 	@autoreleasepool {
-		unsigned int i, foundCRC, counter, length = 0;
+        uint32_t foundCRC = 0;
+		NSUInteger i, counter, length = 0;
 		unsigned char key[16], currentGuess[16], skeletonStateArray[LAST_BIT], currentStateArray[LAST_BIT];
 		unsigned char y, z, tmp, xov;
 		const char *data = nil;
@@ -112,7 +113,7 @@
 			
 			if (i < 8)
 			{
-				for (int i = 3; i <= 7; ++i) {
+				for (NSInteger i = 3; i <= 7; ++i) {
 					if (key[i] == 32)
 					{
 						key[i] = 48;
@@ -160,7 +161,8 @@
 - (void)performBruteforce40bitAlpha:(NSObject*)obj
 {
 	@autoreleasepool {
-		unsigned int i, foundCRC, counter, length = 0;
+        uint32_t foundCRC = 0;
+		NSUInteger i, counter, length = 0;
 		unsigned char key[16], currentGuess[16], skeletonStateArray[LAST_BIT], currentStateArray[LAST_BIT];
 		unsigned char y, z, tmp, xov;
 		const char *data = nil;
@@ -237,7 +239,7 @@
 			
 			if (i < 8)
 			{
-				for (int i = 3; i <= 7; ++i) {
+				for (NSInteger i = 3; i <= 7; ++i) {
 					if (key[i] == 32)
 					{
 						key[i] = 48;
@@ -288,7 +290,8 @@
 - (void)performBruteforce40bitAll:(NSObject*)obj
 {
 	@autoreleasepool {
-		unsigned int i, foundCRC, counter, length = 0;
+        uint32_t foundCRC = 0;
+		NSUInteger i, counter, length = 0;
 		unsigned char key[16], currentGuess[16], skeletonStateArray[LAST_BIT], currentStateArray[LAST_BIT];
 		unsigned char y, z, tmp, xov;
 		const char *data = nil;
@@ -403,9 +406,10 @@
 {
 	@autoreleasepool {
 		unsigned char key[KEYNUM][KEYLENGTH + 3], skeletonStateArray[LAST_BIT], currentStateArray[LAST_BIT];
-		unsigned int i, foundCRC, counter, length = 0;
+        uint32_t foundCRC = 0;
+		NSUInteger i, counter, length = 0;
 		unsigned char y, z, tmp, xov, j, curGuess[16];
-		unsigned int w, x, q, selKey;
+		NSUInteger w, x, q, selKey;
 		const char *data = nil;
 		BOOL isInit;
 		ImportController *controller;
@@ -440,7 +444,7 @@
 			skeletonStateArray[counter] = counter;
 		}
 		
-		while(true)
+		while (YES)
 		{
 			for( i = 0 ; i < [_packetsLog count] ; ++i )
 			{
@@ -492,7 +496,7 @@
 				if (foundCRC == ERROR_FREE_ADDRESS)
 				{
 					memcpy(&curGuess, &key[selKey][0], 8);
-					isInit=NO;
+					isInit = NO;
 				}
 				else
 					break;
@@ -539,7 +543,7 @@
 					[(NSMutableString*)_password appendString:[NSString stringWithFormat:@":%.2X", curGuess[i]]];
 				}
 				
-				[(NSMutableString*)_password appendString:[NSString stringWithFormat:@" for Key %d", selKey]];
+				[(NSMutableString*)_password appendString:[NSString stringWithFormat:@" for Key %@", @(selKey)]];
 				
 				SRET;
 			}

@@ -125,7 +125,7 @@
 }
 
 - (BOOL)drawAtPoint:(NSPoint)p inRect:(NSRect)rect {
-    int i;
+    NSInteger i;
     if (!_visible) return NO;
     
     p.x += _frame.origin.x;
