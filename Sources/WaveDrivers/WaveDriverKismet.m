@@ -101,7 +101,7 @@ static NSInteger KismetInstances = 0;
             NSLocalizedString(@"Could not connect to the Kismet server", "Error dialog title"),
             NSLocalizedString(@"Socket creation failed! This really shouldn't happen!", "LONG desc"),
             OK, nil, nil);
-		return nil;
+		return NO;
 	}
 	
 	NSInteger foundhostname=0;
@@ -139,13 +139,13 @@ static NSInteger KismetInstances = 0;
 		
 	if (status == -1)
     {
-		DBNSLog(@"Could not connect to %s port %d", hostname, port);
+		DBNSLog(@"Could not connect to %s port %@", hostname, @(port));
         
         NSRunCriticalAlertPanel(NSLocalizedString(@"Could not connect to the Kismet server", "Error dialog title"),
                                 @"KisMac could not connect to the Kismet server at %s port %@. Check the IP address and port.",
                                 OK, nil, nil, hostname, @(port));
 
-		return nil;
+		return NO;
 	}
 		
 	write(sockd, initstr, strlen(initstr));
@@ -192,7 +192,7 @@ static NSInteger KismetInstances = 0;
 					bssidar = [rcvd3[1] componentsSeparatedByString:@":"]; // get the BSSID
 					
 					for (j = 0; j < 6; ++j) {
-						sscanf([bssidar[j] UTF8String], "%x", &bssidbyte); // convert it from ascii 12:34:56 into raw binary
+						sscanf([bssidar[j] UTF8String], "%lx", &bssidbyte); // convert it from ascii 12:34:56 into raw binary
 						bssidstring[j] = bssidbyte;
 					}
 					

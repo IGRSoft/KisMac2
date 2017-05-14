@@ -40,7 +40,7 @@
 
 @interface WaveDriverKismet : WaveDriver {
 	NSInteger fd;
-	NSInteger sockd;
+	int sockd;
     struct sockaddr_in serv_name;
     NSInteger status;
     struct hostent *hp;

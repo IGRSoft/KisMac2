@@ -70,7 +70,9 @@ enum _rowIndexes {
 {
     _clientCount = 0;
     [aShortTable setHeaderView:nil];
-	[aClientTable setDoubleAction:@selector(trackClient:)];
+    
+    SEL trackClientSelector = NSSelectorFromString(@"trackClient:");
+	[aClientTable setDoubleAction:trackClientSelector];
 }
 
 - (void)setDetails:(BOOL)visible {
