@@ -286,7 +286,7 @@ static GPSInfoController *_gc;
     NSDictionary *driverProps;
     NSString *name;
     NSString *interfaceName;
-    Class driver;
+    Class driverClass;
     NSUInteger i, j;
     
     //if our dictionary does not exist then create it.
@@ -310,23 +310,23 @@ static GPSInfoController *_gc;
             interfaceName = driverProps[@"driverID"];
             
             // Get the class for driver
-            driver = NSClassFromString(interfaceName);
+            driverClass = NSClassFromString(interfaceName);
             
             // Call driver Class method "loadBackend"
-            if (![driver loadBackend])
+            if (![driverClass loadBackend])
             {
-                //return NO;
+                return NO;
             }
             
             //create an interface
             for (j = 0; j < 10; ++j)
             {
-                w = [[driver alloc] init];
+                w = [[driverClass alloc] init];
                 if (w)
                 {
                     break;
                 }
-                [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.4]];
+                [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
             }
             
             if (w)

@@ -158,7 +158,7 @@ pcap_dumper_t * dumper;
 	_apeType = APExtTypeBcm;
     
      //get the api based interface for changing channels
-    NSString *interfaceName = [[CWInterface interfaceNames] allObjects][0];
+    NSString *interfaceName = [[[CWInterface interfaceNames] allObjects] firstObject];
     airportInterface =  [CWInterface interfaceWithName:interfaceName];
     [airportInterface disassociate];
     
