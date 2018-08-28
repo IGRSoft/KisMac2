@@ -1,3 +1,7 @@
+# PLEASE NOTE, THIS PROJECT IS NO LONGER BEING MAINTAINED
+
+* * *
+
 [![Build Status](https://travis-ci.org/IGRSoft/KisMac2.svg)](https://travis-ci.org/IGRSoft/KisMac2)
 [![Platform](https://img.shields.io/badge/platform-OS%20X-lightgrey.svg?style=flat)](http://www.apple.com/osx/)
 [![License](https://img.shields.io/badge/license-GPL%202.0-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
